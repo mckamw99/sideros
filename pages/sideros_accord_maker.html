@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — The Accord-Maker</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;500;600&display=swap');
+
+:root {
+  --void:#080a0b; --void-mid:#0f1314; --void-up:#161e1f;
+  --gold:#c9a84c; --gold-dim:#7a6028; --gold-bright:#e8c870;
+  --parchment:#f0e6cc; --parchment-dim:rgba(240,230,204,0.55);
+  --forge:#c87840;  --forge-dim:#7a4820; --forge-bright:#e8a060;
+  --jade:#40a878;   --jade-dim:#206040; --jade-bright:#60c898;
+  --stone:#8090a0;  --stone-dim:#485868;
+  --alpha:#d4724a; --beta:#4a8ec4; --omega:#9066c8;
+  --red:#c04040;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--parchment);line-height:1.7;min-height:100vh}
+
+/* ── HERO ── */
+.hero{
+  text-align:center;padding:4rem 1.5rem 3rem;
+  background:
+    radial-gradient(ellipse at 25% 0%,rgba(200,120,64,0.1) 0%,transparent 50%),
+    radial-gradient(ellipse at 75% 0%,rgba(64,168,120,0.08) 0%,transparent 50%);
+  border-bottom:1px solid rgba(200,120,64,0.2);
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'⚙ ✦ ⚙';
+  position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
+  font-size:11px;letter-spacing:.5em;color:rgba(200,120,64,0.25);
+}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--forge-dim);margin-bottom:.9rem}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(24px,4.5vw,40px);font-weight:500;color:var(--forge-bright);letter-spacing:.06em;margin-bottom:.4rem}
+.hero-subtitle{font-family:'Cinzel',serif;font-size:13px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:.8rem}
+.hero-sub{font-size:15px;font-style:italic;color:var(--parchment-dim);max-width:560px;margin:0 auto}
+.hero-tags{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:1.2rem}
+.hero-tag{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:4px;border:1px solid}
+
+/* ── NAV ── */
+.nav-strip{display:flex;gap:4px;flex-wrap:wrap;padding:.75rem 1rem;border-bottom:1px solid rgba(200,120,64,0.12);background:var(--void-mid);position:sticky;top:0;z-index:20}
+.nav-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;border:1px solid rgba(200,120,64,0.2);border-radius:4px;background:transparent;color:var(--parchment-dim);cursor:pointer;transition:all .15s;white-space:nowrap}
+.nav-btn:hover{background:rgba(200,120,64,0.06);color:var(--forge-dim)}
+.nav-btn.active{background:rgba(200,120,64,0.1);color:var(--forge-bright);border-color:rgba(200,120,64,0.4)}
+
+.panel{display:none}.panel.active{display:block}
+.wrap{max-width:880px;margin:0 auto;padding:2.5rem 1.25rem 4rem}
+
+/* ── TEXT ── */
+.lore{font-size:15px;color:rgba(240,230,204,0.82);line-height:1.88;margin-bottom:.9rem}
+.lore strong{color:var(--parchment);font-weight:500}
+.lore em{color:var(--forge-dim);font-style:italic}
+
+.sec{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--forge-dim);margin:1.75rem 0 .75rem;display:flex;align-items:center;gap:.7rem}
+.sec::after{content:'';flex:1;height:1px;background:rgba(200,120,64,0.15)}
+
+/* ── DUAL RESOURCE ── */
+.dual-resource{display:grid;grid-template-columns:1fr 40px 1fr;gap:0;border:1px solid rgba(200,120,64,0.2);border-radius:12px;overflow:hidden;margin-bottom:1.25rem}
+.dr-side{padding:16px 16px 14px}
+.dr-left{background:rgba(200,120,64,0.06);border-right:1px solid rgba(200,120,64,0.12)}
+.dr-right{background:rgba(64,168,120,0.05);border-left:1px solid rgba(200,120,64,0.12)}
+.dr-center{background:rgba(200,120,64,0.04);display:flex;align-items:center;justify-content:center;border-left:1px solid rgba(200,120,64,0.08);border-right:1px solid rgba(200,120,64,0.08)}
+.dr-center-icon{font-size:18px;color:var(--forge-dim)}
+.dr-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px}
+.dr-title{font-family:'Cinzel',serif;font-size:15px;font-weight:500;margin-bottom:6px;letter-spacing:.03em}
+.dr-text{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.68}
+.dr-text strong{color:var(--parchment);font-weight:500}
+
+/* ── INFUSION TABLE ── */
+.infusion-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:1rem}
+.infusion-table th{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--forge-dim);padding:7px 10px;text-align:left;border-bottom:1px solid rgba(200,120,64,0.2)}
+.infusion-table td{padding:7px 10px;border-bottom:1px solid rgba(200,120,64,0.07);color:rgba(240,230,204,0.75);vertical-align:top;line-height:1.5;font-size:12px}
+.infusion-table td:first-child{color:var(--forge-bright);font-weight:500;white-space:nowrap}
+.infusion-table td:nth-child(2){color:var(--parchment-dim);white-space:nowrap;font-style:italic}
+.infusion-table tr:last-child td{border-bottom:none}
+.infusion-table tr:hover td{background:rgba(200,120,64,0.03)}
+
+/* ── BLUEPRINT TABLE ── */
+.blueprint-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:1rem}
+.blueprint-table th{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--jade-dim);padding:7px 10px;text-align:left;border-bottom:1px solid rgba(64,168,120,0.2)}
+.blueprint-table td{padding:7px 10px;border-bottom:1px solid rgba(64,168,120,0.07);color:rgba(240,230,204,0.75);vertical-align:top;line-height:1.5;font-size:12px}
+.blueprint-table td:first-child{color:var(--jade-bright);font-weight:500;white-space:nowrap}
+.blueprint-table td:nth-child(2){color:var(--parchment-dim);white-space:nowrap;font-style:italic}
+.blueprint-table tr:last-child td{border-bottom:none}
+.blueprint-table tr:hover td{background:rgba(64,168,120,0.025)}
+
+/* ── FEATURE CARDS ── */
+.feat-grid{display:grid;gap:8px;margin-bottom:1rem}
+.feat{background:rgba(255,255,255,0.022);border:1px solid rgba(200,120,64,0.14);border-radius:9px;padding:12px 14px;cursor:pointer;overflow:hidden;transition:border-color .15s}
+.feat:hover,.feat.open{border-color:rgba(200,120,64,0.38)}
+.feat-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.feat-name{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.04em;color:var(--forge-bright)}
+.feat-depth{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:3px;border:1px solid rgba(200,120,64,0.3);color:var(--forge-dim);white-space:nowrap;flex-shrink:0}
+.feat-body{display:none;margin-top:9px;padding-top:9px;border-top:1px solid rgba(200,120,64,0.1);font-size:13px;color:rgba(240,230,204,0.75);line-height:1.72}
+.feat.open .feat-body{display:block}
+.feat-body strong{color:var(--parchment);font-weight:500}
+.feat-body em{color:var(--forge-dim)}
+
+/* ── CALLING CARDS ── */
+.calling-grid{display:grid;gap:8px;margin-bottom:1rem}
+.calling{background:rgba(255,255,255,0.02);border:1px solid rgba(200,120,64,0.15);border-radius:9px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.calling:hover,.calling.open{border-color:rgba(200,120,64,0.35)}
+.calling-head{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;gap:10px}
+.calling-name{font-family:'Cinzel',serif;font-size:13px;letter-spacing:.04em;color:var(--forge-bright)}
+.calling-tag{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:3px;border:1px solid;white-space:nowrap;flex-shrink:0}
+.calling-body{display:none;padding:0 14px 13px;border-top:1px solid rgba(200,120,64,0.1)}
+.calling.open .calling-body{display:block;padding-top:10px}
+.cb-feat{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.72;margin-bottom:7px}
+.cb-feat:last-child{margin-bottom:0}
+.cb-feat strong{color:var(--parchment);font-weight:500}
+.cb-feat em{color:var(--forge-dim)}
+
+/* ── INFO BLOCKS ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.9rem}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:.9rem}
+.info{background:rgba(255,255,255,0.02);border:1px solid rgba(200,120,64,0.13);border-radius:8px;padding:10px 13px}
+.ib-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--forge-dim);margin-bottom:4px}
+.ib-text{font-size:13px;color:rgba(240,230,204,0.78);line-height:1.62}
+.ib-text strong{color:var(--parchment);font-weight:500}
+
+/* ── NOTES ── */
+.forge-note{background:rgba(200,120,64,0.06);border:1px solid rgba(200,120,64,0.25);border-radius:8px;padding:11px 13px;margin:.75rem 0}
+.fn-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--forge-bright);margin-bottom:5px}
+.fn-text{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.65}
+.fn-text strong{color:var(--parchment);font-weight:500}
+
+.jade-note{background:rgba(64,168,120,0.05);border:1px solid rgba(64,168,120,0.22);border-radius:8px;padding:11px 13px;margin:.75rem 0}
+.jade-note .fn-title{color:var(--jade-bright)}
+.jade-note .fn-text{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.65}
+.jade-note .fn-text strong{color:var(--parchment);font-weight:500}
+
+.stone-note{background:rgba(128,144,160,0.05);border:1px solid rgba(128,144,160,0.2);border-radius:8px;padding:11px 13px;margin:.75rem 0}
+.stone-note .fn-title{color:var(--stone)}
+.stone-note .fn-text{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.65}
+.stone-note .fn-text strong{color:var(--parchment);font-weight:500}
+
+/* ── FORMULA ── */
+.formula{background:rgba(200,120,64,0.06);border:1px solid rgba(200,120,64,0.2);border-radius:8px;padding:12px 16px;font-family:'Cinzel',serif;font-size:12px;color:var(--forge-bright);letter-spacing:.05em;line-height:1.9;margin-bottom:.9rem}
+
+/* ── PROGRESSION ── */
+.prog-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:1rem}
+.prog-table th{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--forge-dim);padding:7px 10px;text-align:left;border-bottom:1px solid rgba(200,120,64,0.2)}
+.prog-table td{padding:6px 10px;border-bottom:1px solid rgba(200,120,64,0.06);color:rgba(240,230,204,0.75);vertical-align:top;line-height:1.45;font-size:12px}
+.prog-table td:first-child{color:var(--forge-bright);font-family:'Cinzel',serif;font-size:11px;white-space:nowrap}
+.prog-table tr:last-child td{border-bottom:none}
+.prog-table tr.milestone td{background:rgba(200,120,64,0.04)}
+
+.divider{height:1px;background:linear-gradient(to right,transparent,rgba(200,120,64,0.2),transparent);margin:1.5rem 0}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Sideros / Astrolan — Path Compendium · Volume IV</div>
+  <h1 class="hero-title">The Accord-Maker</h1>
+  <div class="hero-subtitle">Dunmarim · Jade Empire · The Living Machine Tradition</div>
+  <p class="hero-sub">They do not channel the Aether. They negotiate with it — building agreements between what the Aether wants to do and what physical matter can sustain.</p>
+  <div class="hero-tags">
+    <span class="hero-tag" style="color:var(--forge-bright);border-color:rgba(200,120,64,0.4);background:rgba(200,120,64,0.08)">★ Original Path</span>
+    <span class="hero-tag" style="color:var(--gold-dim);border-color:rgba(201,168,76,0.3)">Vitality Die: d8</span>
+    <span class="hero-tag" style="color:var(--beta);border-color:rgba(74,142,196,0.3)">Beta (Alchemist · Architect)</span>
+    <span class="hero-tag" style="color:var(--alpha);border-color:rgba(212,114,74,0.3)">Alpha (Armorer · Siege Engineer)</span>
+    <span class="hero-tag" style="color:var(--forge-dim);border-color:rgba(200,120,64,0.25)">Dual Resource</span>
+  </div>
+</div>
+
+<div class="nav-strip">
+  <button class="nav-btn active" onclick="show('lore',this)">The Path</button>
+  <button class="nav-btn" onclick="show('resources',this)">Dual Resource</button>
+  <button class="nav-btn" onclick="show('infusions',this)">Infusion List</button>
+  <button class="nav-btn" onclick="show('blueprints',this)">Blueprint List</button>
+  <button class="nav-btn" onclick="show('features',this)">Path Features</button>
+  <button class="nav-btn" onclick="show('callings',this)">Callings</button>
+  <button class="nav-btn" onclick="show('progression',this)">Progression</button>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- THE PATH -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel active" id="panel-lore">
+<div class="wrap">
+
+  <p class="lore">Every other Path in Sideros approaches the Aether with some form of submission — the Comet-Mage studies it, the Zodiac Priest serves it, the Star-Born was born into it, the Scion-Pledged bargains with things that channel it. The Accord-Maker does none of these things. They approach the Aether the way a Dunmarim master-smith approaches a difficult alloy: with <strong>precise knowledge of its properties, respect for what it will and won't do, and no illusions about who is in charge of the conversation.</strong> The Aether is not in charge. The Accord-Maker is.</p>
+
+  <p class="lore">The tradition emerged from two independent sources that arrived at the same conclusion by different routes. The Dunmarim apothecaries discovered, centuries after the Pantheonic Fall, that certain mineral combinations created chemical reactions that produced Aetheric effects without requiring a practitioner to weave — the Aether simply responded to the right physical conditions. They called this <em>Accord</em>: the Aether agreeing to participate in a pre-arranged arrangement. Meanwhile, the Jade Empire's Gear-Forged engineers were discovering the same principle at the macro scale — a Resonant Geode in the right physical housing didn't need a weaver to direct it. The housing itself was the direction.</p>
+
+  <p class="lore">The Accord-Maker tradition formalized when Dunmarim travelers and Jade Empire engineers met in the Stone Kingdom's deep workshops, recognized what the other was doing, and spent three generations arguing about methodology before producing the first unified practitioners. <strong>Modern Accord-Makers carry both traditions simultaneously</strong> — the Dunmarim precision with physical materials and the Jade Empire's understanding of how Resonant architecture sustains Aetheric agreements without continuous weaving. An Accord-Maker is the only practitioner in Sideros who can work effectively inside the Stillness of Dunmar — because their power doesn't require the Aether to cooperate in real time. The agreement was made before they arrived. It holds.</p>
+
+  <div class="two-col" style="margin-top:1.5rem">
+    <div class="info">
+      <div class="ib-label">The Core Distinction</div>
+      <div class="ib-text">Accord-Makers are the only Weave-capable Path that can function in Aether-Dampening Ore zones. Their Infusions and Blueprints are pre-negotiated agreements — the Aether committed to them before the suppression field existed. The field suppresses <em>active weaving</em>. It cannot un-make a deal already struck. <strong>This makes Accord-Makers uniquely valuable in Dunmarim territory and uniquely threatening to the Order of Pure Reason's anti-magic strategy.</strong></div>
+    </div>
+    <div class="info">
+      <div class="ib-label">Relationship to Gear-Forged</div>
+      <div class="ib-text">Every Gear-Forged who is not a Geode-Pilot should strongly consider the Accord-Maker Path. The two traditions share deep roots — an Accord-Maker Gear-Forged can Infuse their own frame components, create Blueprints for Geode-based constructions, and access the Grand Prime Forgeman's Precursor knowledge through a shared technical language. <strong>The Grand Prime Forgeman himself walks this Path.</strong> He has been an Accord-Maker for four centuries. No one knows which Calling he follows.</div>
+    </div>
+    <div class="info">
+      <div class="ib-label">Relationship to Dunmarim</div>
+      <div class="ib-text">Dunmarim who take the Accord-Maker Path are unusual — their Kindred trait prevents them from weaving Workings, but Accord-Maker Infusions and Blueprints are not Workings in the traditional sense. The Concordance should rule that Dunmarim Accord-Makers can use the full Path, since they are negotiating with the Aether rather than weaving it. This is the one exception to the Dunmarim's no-weaving constraint — and it is the subject of significant theological debate in Ironhearth.</div>
+    </div>
+    <div class="info">
+      <div class="ib-label">Tools as focus</div>
+      <div class="ib-text">An Accord-Maker's artisan tools are their Weaving focus — they cannot produce Infusions or activate Blueprints without their tools present. Unlike a staff or crystal, the tools are not decorative. They are load-bearing. A Dunmarim smith's tools set and a Jade Empire calibration kit serve the same function through different cultural expressions. <strong>Losing your tools mid-adventure is a genuine problem</strong> — not just a narrative inconvenience.</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- DUAL RESOURCE -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-resources">
+<div class="wrap">
+
+  <div class="dual-resource">
+    <div class="dr-side dr-left">
+      <div class="dr-label" style="color:var(--forge-dim)">Dunmarim Tradition</div>
+      <div class="dr-title" style="color:var(--forge-bright)">Infusions</div>
+      <div class="dr-text">Pre-negotiated Aetheric agreements applied to worn or carried objects — weapons, armor, tools, and focus items. An Infusion is not a permanent enchantment and not a temporary Working. It is a <strong>sustained contract</strong> between the object and a specific Aetheric property, maintained by the Accord-Maker's ongoing technical attention. Refreshed on Deep Attunement. Maximum active Infusions scales with Resonance Depth.</div>
+    </div>
+    <div class="dr-center"><div class="dr-center-icon">⚙</div></div>
+    <div class="dr-side dr-right">
+      <div class="dr-label" style="color:var(--jade-dim)">Jade Empire Tradition</div>
+      <div class="dr-title" style="color:var(--jade-bright)">Blueprints</div>
+      <div class="dr-text">Larger-scale Aetheric constructions — turrets, constructs, alchemical stations, defensive installations — built during rest from prepared schematics. A Blueprint produces a <strong>physical object</strong> that operates autonomously according to the agreement built into its design. Blueprints are permanent until destroyed; their Aetheric agreements don't require the Accord-Maker's presence to continue.</div>
+    </div>
+  </div>
+
+  <div class="sec">Infusion Rules</div>
+
+  <div class="formula">
+    INFUSION SLOTS = Resonance Depth ÷ 2 (rounded up) · Maximum 10 at Depth 20<br>
+    Each Infusion applied to one item. One item can hold only one Infusion.<br>
+    All Infusions end simultaneously on Deep Attunement — then reapplied fresh.<br>
+    An Infusion applied to an item you don't own requires the owner's willing consent.<br>
+    In Aether-Dampening Ore zones: Infusions persist. New Infusions cannot be applied.
+  </div>
+
+  <div class="two-col">
+    <div class="info">
+      <div class="ib-label">Applying an Infusion</div>
+      <div class="ib-text">Requires 1 hour of work with artisan's tools and physical contact with the item throughout. The Accord-Maker must have the Infusion in their known list (see Infusion List tab). No Aetheric Channel cost — Infusions are pre-negotiated, not actively woven. <strong>During a Brief Attunement</strong>, the Accord-Maker may apply Infusions instead of resting — they cannot do both simultaneously.</div>
+    </div>
+    <div class="info">
+      <div class="ib-label">Infusion Limits</div>
+      <div class="ib-text">The Accord-Maker knows a number of Infusion types equal to their Resonance Depth + Acuity modifier. They may apply a number of active Infusions equal to their Infusion Slots. Knowing an Infusion and having an active slot for it are separate resources — an Accord-Maker may know 12 Infusion types but only have 6 active slots.</div>
+    </div>
+  </div>
+
+  <div class="sec">Blueprint Rules</div>
+
+  <div class="formula">
+    BLUEPRINTS KNOWN = Resonance Depth ÷ 3 (rounded up) · Maximum 7 at Depth 20<br>
+    BLUEPRINTS ACTIVE = Resonance Depth ÷ 4 (rounded up) · Maximum 5 at Depth 20<br>
+    Construction time: 1 hour per Blueprint tier during Deep Attunement or downtime.<br>
+    Constructed objects persist until destroyed — they do not expire.<br>
+    Replacing a destroyed Blueprint costs materials (see Blueprint List) but not additional time.
+  </div>
+
+  <div class="two-col">
+    <div class="info">
+      <div class="ib-label">Building from a Blueprint</div>
+      <div class="ib-text">Requires artisan's tools, the specified materials (listed per Blueprint), and uninterrupted work time. The result is a physical object with Aetheric properties built in. <strong>The Aetheric agreement is in the object's structure</strong> — anyone can use it, not just the Accord-Maker, though some Blueprints are calibrated to the Accord-Maker's specific frequency and require their presence to activate.</div>
+    </div>
+    <div class="info">
+      <div class="ib-label">Blueprints vs. Infusions</div>
+      <div class="ib-text">Infusions enhance existing objects. Blueprints create new ones. An Accord-Maker can apply an Infusion to a Blueprint-created object — the two systems stack, at the cost of using both an Infusion slot and a Blueprint active slot for the combined item. <strong>A fully Infused Blueprint construct is the Accord-Maker's highest expression of craft</strong> — a new object that both exists and is enhanced beyond its base design.</div>
+    </div>
+  </div>
+
+  <div class="forge-note">
+    <div class="fn-title">The Stillness Exception — Critical Rule</div>
+    <div class="fn-text">Inside the Stillness of Dunmar (maximum Aether-Dampening Ore Sustained Resonance): <strong>existing Infusions persist, existing Blueprints function normally, and existing constructs continue operating.</strong> The Accord-Maker cannot apply new Infusions, construct new Blueprints, or use Path Features that require active weaving. But everything already built continues to work. A well-prepared Accord-Maker who enters the Stillness is not significantly weakened. An unprepared one loses access to all their tools in a single step. Preparation is the entire Path.</div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- INFUSION LIST -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-infusions">
+<div class="wrap">
+
+  <p class="lore">Infusions are listed by the minimum Resonance Depth at which they become available. The Accord-Maker learns new Infusions automatically as they advance — each new Depth unlocks additional options from the list below.</p>
+
+  <div class="sec">Available at Depth 1</div>
+  <table class="infusion-table">
+    <tr><th>Infusion Name</th><th>Item Type</th><th>Effect</th></tr>
+    <tr>
+      <td>Returning Weapon</td><td>Thrown weapon</td>
+      <td>Returns to hand immediately after being thrown. No action cost to retrieve. The Aetheric agreement ensures the weapon completes its arc and comes back.</td>
+    </tr>
+    <tr>
+      <td>Enhanced Defense</td><td>Armor or shield</td>
+      <td>+1 to Guard Rating. The agreement reinforces the object's physical integrity at the Aetheric level — impacts distribute more efficiently.</td>
+    </tr>
+    <tr>
+      <td>Enhanced Weapon</td><td>Simple or martial weapon</td>
+      <td>+1 to Strike Resonance and damage rolls. The weapon's edge, weight, or impact is Aetherically optimized.</td>
+    </tr>
+    <tr>
+      <td>Repeating Shot</td><td>Ranged weapon with ammunition</td>
+      <td>The weapon generates its own ammunition — bolts, arrows, or shots materialize as needed. Never runs out. The agreement manufactures what it needs.</td>
+    </tr>
+    <tr>
+      <td>Aetheric Tool</td><td>Artisan's tools</td>
+      <td>The tools are Aetherically attuned — crafting with them always produces work of one quality tier higher than the materials would normally allow. Identical to the Dunmarim's Master's Hand ability, made available to non-Dunmarim practitioners.</td>
+    </tr>
+    <tr>
+      <td>Cloak of Billowing</td><td>Cloak or similar garment</td>
+      <td>As a free action, the garment billows dramatically. Creatures who have not seen this before make a DC 10 Resonance Warding Resonance or are briefly distracted (Resonant Discord on their next Perception Active Resonance). This Infusion is included because the Dunmarim find it genuinely useful in negotiation contexts and the Jade Empire uses it for ceremonial purposes. The Accord-Maker community has accepted it without comment.</td>
+    </tr>
+  </table>
+
+  <div class="sec">Available at Depth 2</div>
+  <table class="infusion-table">
+    <tr><th>Infusion Name</th><th>Item Type</th><th>Effect</th></tr>
+    <tr>
+      <td>Goggles of the Forge</td><td>Eyewear or headgear</td>
+      <td>Darkvision 60 ft (or extends existing darkvision by 60 ft). Additionally: the wearer can see through nonmagical smoke, dust, and similar obscurement without penalty. The Dunmarim designed these for deep-shaft work. The applications elsewhere are obvious.</td>
+    </tr>
+    <tr>
+      <td>Boots of the Winding Path</td><td>Footwear</td>
+      <td>The wearer cannot be tracked by nonmagical means and leaves no footprints on any surface. Additionally: difficult terrain costs no extra movement for the wearer. The agreement between the boots and the ground simply redefines the terms.</td>
+    </tr>
+    <tr>
+      <td>Gauntlets of Forcefulness</td><td>Gloves or gauntlets</td>
+      <td>+1 to Forcefulness Active Resonances involving lifting, breaking, or sustained physical force. The gauntlets amplify applied force — not the wearer's strength, but the efficiency with which it transfers.</td>
+    </tr>
+    <tr>
+      <td>Aetheric Resonator</td><td>Rod, staff, or wand</td>
+      <td>The item functions as a Weaving focus and adds +1 to the Working Threshold of all Workings channeled through it. The Accord-Maker has negotiated a more efficient conduit agreement than a standard focus provides.</td>
+    </tr>
+    <tr>
+      <td>Bag of Holding</td><td>Bag or container</td>
+      <td>The interior of the container holds significantly more than its exterior suggests — up to 500 lbs, 64 cubic feet, within an extradimensional space. Standard rules apply: living creatures can survive inside for a limited time; certain combinations of bags cause catastrophic agreement failures.</td>
+    </tr>
+  </table>
+
+  <div class="sec">Available at Depth 4</div>
+  <table class="infusion-table">
+    <tr><th>Infusion Name</th><th>Item Type</th><th>Effect</th></tr>
+    <tr>
+      <td>Radiant Weapon</td><td>Simple or martial weapon</td>
+      <td>+1 to Strike Resonance and damage. Additionally: as an Instinct, shed bright light in 30 ft (or suppress it). Deals an additional 1d4 radiant damage on hits. Creatures with Light Sensitivity (Te Kapo) must make a DC 15 Endurance Warding Resonance when struck or be Sight-Severed for 1 Pulse.</td>
+    </tr>
+    <tr>
+      <td>Repulsion Shield</td><td>Shield</td>
+      <td>+1 Guard Rating. Additionally: once per Pulse, when a creature misses you with a melee Strike Resonance, use your Reflex to push that creature 10 ft away. The shield's Aetheric agreement includes a deflection clause that converts near-misses into repositioning force.</td>
+    </tr>
+    <tr>
+      <td>Aetheric Propulsion</td><td>Footwear or leg armor</td>
+      <td>Once per Pulse, the wearer may move an additional 10 ft as part of their movement without provoking Reflex Strikes — the Aetheric burst propels them through the gap before threat-response activates. Recharges at the start of each Pulse.</td>
+    </tr>
+    <tr>
+      <td>Mind Sharpener</td><td>Headgear or collar</td>
+      <td>When the wearer fails a Sustained Resonance (Concentration) check from taking damage, they may use their Reflex to immediately re-roll it — the item maintains a secondary stabilizing frequency that catches the disruption. Once per Pulse.</td>
+    </tr>
+    <tr>
+      <td>Homunculus Servant</td><td>Gem worth 100gp+ (consumed)</td>
+      <td>Creates a Tiny construct familiar — a homunculus that serves the Accord-Maker. Vitality 1 + Acuity modifier; Guard Rating 13; acts on the Accord-Maker's Moment as an Instinct. Can deliver touch Workings, scout, and carry small items. If destroyed: the gem is consumed, but the Accord-Maker may create a replacement during a Deep Attunement. See the Accord-Maker companion rules below.</td>
+    </tr>
+  </table>
+
+  <div class="sec">Available at Depth 6</div>
+  <table class="infusion-table">
+    <tr><th>Infusion Name</th><th>Item Type</th><th>Effect</th></tr>
+    <tr>
+      <td>Arcane Propulsion Armor</td><td>Armor</td>
+      <td>+1 Guard Rating. If the wearer is missing a limb, the armor provides a prosthetic replacement — fully functional, Aetherically animated, and integrated into the armor's agreement. Additionally: once per Deep Attunement, the armor can propel the wearer up to 15 ft in any direction as a free action, including vertically.</td>
+    </tr>
+    <tr>
+      <td>Spell-Refueling Ring</td><td>Ring</td>
+      <td>Once per Deep Attunement when the wearer expends a 3rd-tier or lower Aetheric Channel, that Channel immediately restores. The ring has negotiated a single Channel restoration into its agreement — a small but potentially critical efficiency in extended encounters.</td>
+    </tr>
+    <tr>
+      <td>Resistant Armor</td><td>Armor</td>
+      <td>Choose one damage type when applying this Infusion. The armor grants resistance to that damage type. The specific resistance is fixed at application time — changing it requires a full Infusion refresh (Deep Attunement).</td>
+    </tr>
+    <tr>
+      <td>Helm of Awareness</td><td>Helmet or headgear</td>
+      <td>The wearer cannot be surprised. Additionally, they always know their Pulse Order roll result before declaring their position in the Pulse — they see the Pulse's structure before it begins. The Dunmarim engineers who designed this called it "the reasonable refusal to be caught unready."</td>
+    </tr>
+  </table>
+
+  <div class="sec">Available at Depth 10+</div>
+  <table class="infusion-table">
+    <tr><th>Infusion Name</th><th>Item Type</th><th>Min. Depth</th><th>Effect</th></tr>
+    <tr>
+      <td>Armor of Magical Strength</td><td>Armor</td><td>10</td>
+      <td>+2 Guard Rating. The wearer's Forcefulness score is treated as 19 (if lower) for all purposes. The armor's Aetheric agreement includes a structural amplification clause for physical exertion.</td>
+    </tr>
+    <tr>
+      <td>Weapon of Warning</td><td>Weapon</td><td>10</td>
+      <td>The weapon alerts the wielder to danger. Cannot be surprised. Additionally: allies within 30 ft of the wielder cannot be surprised either — the weapon's Aetheric awareness extends outward as a proximity field.</td>
+    </tr>
+    <tr>
+      <td>Boots of Speed</td><td>Footwear</td><td>12</td>
+      <td>Once per Deep Attunement, as an Instinct, double movement speed for 1 minute. When effect ends, Resonant Discord on Swiftness Warding Resonances until end of next Moment (the Aetheric agreement concludes and the body compensates).</td>
+    </tr>
+    <tr>
+      <td>Aetheric Armor</td><td>Armor</td><td>14</td>
+      <td>+2 Guard Rating. Resistance to force damage. When hit by a Working, the wearer may use their Reflex to halve the damage — the armor's Aetheric field absorbs and redistributes incoming Aetheric force. The highest-tier armor Infusion in the tradition.</td>
+    </tr>
+  </table>
+
+  <div class="forge-note">
+    <div class="fn-title">The Homunculus Companion — Extended Rules</div>
+    <div class="fn-text">The Homunculus Servant is the Accord-Maker's answer to the animal companion and familiar. Unlike the Primal Accord's Beast Resonance or a conventional Working familiar, the Homunculus is a constructed being — it has no cosmic lineage, no Fate Number, no zodiac sign. It is the purest expression of Accord-Maker philosophy: <strong>a thing that works because it was built to work.</strong><br><br>
+    <strong>Statistics:</strong> Tiny construct. Vitality = 1 + Accord-Maker's Acuity modifier (increases by 1 at Depths 5, 9, 13, 17). Guard Rating 13. Immune to poison, disease, and the Corrupted condition. Does not need to eat, breathe, or sleep.<br><br>
+    <strong>Actions:</strong> Acts on the Accord-Maker's Moment as an Instinct. Can: move up to 40 ft (fly or walk); deliver a touch Working the Accord-Maker has prepared; make a Force Strike (1d4 force, +Mastery Bonus to Strike Resonance); use its Perception to extend the Accord-Maker's senses (the Accord-Maker may see and hear through it as an Instinct).<br><br>
+    <strong>Destruction and replacement:</strong> When the Homunculus is destroyed, the Accord-Maker can create a replacement during a Deep Attunement without consuming another gem — the Aetheric agreement was with the Accord-Maker, not with the specific physical form. The Homunculus remembers everything from its previous existence.</div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- BLUEPRINT LIST -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-blueprints">
+<div class="wrap">
+
+  <p class="lore">Blueprints are constructed physical objects with Aetheric properties built into their design. Each Blueprint has a tier (I through V) indicating construction complexity, material requirements, and minimum Resonance Depth. The Accord-Maker knows Blueprints selected from the list below — they do not need to discover them through play, though exceptional Blueprints (marked with ★) require either the Grand Prime Forgeman's instruction or access to Precursor-era engineering documents.</p>
+
+  <div class="sec">Tier I Blueprints — Available at Depth 1</div>
+  <table class="blueprint-table">
+    <tr><th>Blueprint</th><th>Construction</th><th>Materials</th><th>Description</th></tr>
+    <tr>
+      <td>Aetheric Turret</td><td>1 hour</td><td>50gp in metal and crystal components</td>
+      <td>A small mounted device that fires Aetheric bolts on a preprogrammed targeting protocol. Turret stats: Guard Rating 18, Vitality 15. Fires once per Pulse at a target the Accord-Maker designates within 120 ft — 2d6 force damage, +Mastery Bonus to Strike Resonance using the Accord-Maker's Acuity modifier. Activated as an Instinct when the Accord-Maker is within 60 ft. Deactivates when the Accord-Maker is further than 60 ft for more than 1 minute.</td>
+    </tr>
+    <tr>
+      <td>Aetheric Lock</td><td>30 minutes</td><td>25gp in precision metalwork</td>
+      <td>A lock and key mechanism that cannot be picked by nonmagical means and requires DC 24 Thieves' Tools Active Resonance to bypass Aetherically. The key is Infusion-linked to the Accord-Maker — only they can grant the key to another person. Up to 3 authorized keyholders at any time.</td>
+    </tr>
+    <tr>
+      <td>Alchemical Brewing Station</td><td>2 hours</td><td>75gp in glassware, tubing, and reagents</td>
+      <td>A portable brewing apparatus that reduces the time to produce alchemical items to one-quarter the standard time when used with artisan's tools. The station's Aetheric agreement accelerates the chemical reaction phases that would otherwise require careful attention. Produces 2 uses of basic healing draughts per Deep Attunement with no additional material cost.</td>
+    </tr>
+    <tr>
+      <td>Aetheric Lantern</td><td>30 minutes</td><td>15gp in glass and copper</td>
+      <td>A hand-held device emitting bright light in a 30-ft radius and dim light 60 ft beyond. Activated and deactivated as a free action. Light color adjustable (the Accord-Maker selects at construction). Lasts indefinitely — no fuel required. The simplest Blueprint, often the first one an Accord-Maker builds, and more useful in the field than it sounds.</td>
+    </tr>
+  </table>
+
+  <div class="sec">Tier II Blueprints — Available at Depth 3</div>
+  <table class="blueprint-table">
+    <tr><th>Blueprint</th><th>Construction</th><th>Materials</th><th>Description</th></tr>
+    <tr>
+      <td>Aetheric Defender</td><td>8 hours</td><td>200gp in metal, crystal, and Resonant components</td>
+      <td>A Medium construct companion — the Accord-Maker's primary battlefield partner. <strong>Defender stats:</strong> Guard Rating 15, Vitality = 2 × Accord-Maker's Resonance Depth. Acts on the Accord-Maker's Moment using their Instinct. Melee attack: 1d8 + Acuity modifier force damage. Defensive Protocol (Reflex): when the Accord-Maker is hit, the Defender may interpose — taking the damage instead if within 5 ft. Destroyed Defenders can be rebuilt during a Deep Attunement without material cost after the first construction. The Defender remembers all previous experiences.</td>
+    </tr>
+    <tr>
+      <td>Climbing Pitons (Set)</td><td>1 hour</td><td>30gp in precision spikes</td>
+      <td>A set of 10 Aetheric pitons that anchor with exceptional security — climbing using these pitons never requires an Athletics Active Resonance unless in extreme conditions. Additionally: the pitons can be activated as a free action to lock in place, preventing any creature from climbing past them without a DC 18 Athletics Active Resonance. Useful for creating defensive chokepoints on vertical surfaces.</td>
+    </tr>
+    <tr>
+      <td>Portable Workshop</td><td>4 hours</td><td>150gp in collapsible tools and Aetheric calibration equipment</td>
+      <td>A folding workshop that deploys in 10 minutes and collapses in 5. When working within the Portable Workshop, the Accord-Maker can apply Infusions in 30 minutes rather than 1 hour, and Blueprint construction time is halved. The workshop itself is immune to environmental effects (weather, dampness) that would compromise precision work.</td>
+    </tr>
+  </table>
+
+  <div class="sec">Tier III Blueprints — Available at Depth 6</div>
+  <table class="blueprint-table">
+    <tr><th>Blueprint</th><th>Construction</th><th>Materials</th><th>Description</th></tr>
+    <tr>
+      <td>Aetheric Cannon</td><td>12 hours</td><td>400gp in heavy metal and crystal arrays</td>
+      <td>A large fixed or wheeled artillery piece firing concentrated Aetheric bolts. Range 120 ft. Firing requires the Accord-Maker's Act (not Instinct). Damage: 4d8 force, DC 15 Endurance Warding Resonance or target is pushed 15 ft and knocked prone. Guard Rating 19, Vitality 50. Can be aimed by an ally using their Act (the Accord-Maker uses their Instinct to fire remotely from up to 60 ft). Requires 1 minute of recalibration after firing before it can fire again.</td>
+    </tr>
+    <tr>
+      <td>Arcane Propulsion Rig</td><td>8 hours</td><td>300gp in lightweight metal and Aetheric gyroscopes</td>
+      <td>A wearable propulsion harness granting a fly speed of 30 ft (hover capable, unlike the Avian Kindred). The Rig operates without weaving — its Aetheric agreement provides lift independently. Guard Rating is unaffected by the Rig. Weight limit: 300 lbs including the wearer and gear. Construction represents the Jade Empire's most requested export to non-Avian cultures.</td>
+    </tr>
+    <tr>
+      <td>Aetheric Forge</td><td>16 hours</td><td>600gp in specialized metalwork and Resonant heat elements</td>
+      <td>A portable forge capable of working with any material including Adamas, Black Iron, and Resonant Geode components. The forge's Aetheric agreement maintains consistent temperature and pressure impossible to achieve with mundane tools — allowing the crafting of Aetheric Artifacts of Zodiac-Touched tier or below. A Dunmarim Accord-Maker using an Aetheric Forge can produce items that would normally require the Sun-Kissed Adamas smithing conditions of Khem-Ma'at.</td>
+    </tr>
+  </table>
+
+  <div class="sec">Tier IV–V Blueprints — Available at Depths 10–14</div>
+  <table class="blueprint-table">
+    <tr><th>Blueprint</th><th>Tier</th><th>Construction</th><th>Materials</th><th>Description</th></tr>
+    <tr>
+      <td>Aetheric Colossus</td><td>IV</td><td>3 days</td><td>2,000gp</td>
+      <td>A Large construct (not a companion — not sapient). Used for heavy labor, battlefield presence, or siege work. Stats: Guard Rating 17, Vitality 80. Can be directed by the Accord-Maker as an Act from up to 60 ft. Melee strike: 2d8 + 4 bludgeoning. Carry capacity 1,200 lbs. The Jade Empire uses Colossi for construction. Accord-Makers use them for everything the Jade Empire doesn't intend.</td>
+    </tr>
+    <tr>
+      <td>★ Resonant Node Stabilizer</td><td>IV</td><td>1 week</td><td>5,000gp + Weep-Stone charges</td>
+      <td>A specialized device designed to interact with Ceque Line nodes — capable of temporarily suppressing a reactivating node's Ophiuchus energy for up to 72 hours. Requires Grand Prime Forgeman's instruction or Precursor engineering documents to learn. <strong>This is one of the most significant tools in the fight against Grid-Point Seven's reactivation.</strong> An Accord-Maker with this Blueprint is the only practitioner who can buy time for the Resonant Binding ritual without a Ceque-Keeper present.</td>
+    </tr>
+    <tr>
+      <td>★ Geode Heart Cradle</td><td>V</td><td>2 weeks</td><td>10,000gp + Grade-A Resonant Geode</td>
+      <td>A device capable of safely housing, calibrating, and transferring a Resonant Geode heart — the only tool that can perform a Gear-Forged Geode replacement without risk of permanent cognitive damage. Requires the Grand Prime Forgeman's direct instruction. <strong>Only three Geode Heart Cradles exist in the world.</strong> The Grand Prime Forgeman has one. A Jade Empire vault has one. The third was lost when the Coil sank the ship carrying it to Elethorn. An Accord-Maker who builds a fourth changes the balance of power in the Jade Empire's relationship with its own Gear-Forged.</td>
+    </tr>
+  </table>
+
+  <div class="jade-note">
+    <div class="fn-title">Blueprint Materials — Procurement</div>
+    <div class="fn-text">Blueprint materials are not abstract GP costs — they are specific physical components that must be sourced. The Concordance should require players to actually acquire the materials rather than simply spending gold. Relevant sources: Dunmarim trading houses (metals, precision tools), Jade Empire merchants (crystal arrays, Resonant components), Serpent-Kin Petal-Weavers (Weep-Stone), rare material specialists in Port Damaris. <strong>An Accord-Maker who establishes trade relationships with these suppliers</strong> is doing campaign infrastructure work — the supplier relationships become plot hooks, and the materials become leverage in faction negotiations.</div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- PATH FEATURES -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-features">
+<div class="wrap">
+
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Aetheric Tools & Infusion System</div><span class="feat-depth">Depth 1</span></div>
+      <div class="feat-body">The Accord-Maker's artisan tools become Aetherically attuned — functioning as a Weaving focus for all Path Features and Workings. The Infusion system becomes active. Begin with 2 known Infusion types (chosen from the Depth 1 list) and 2 active Infusion slots. Learn 2 additional Infusion types at each Resonance Depth.<br><br>
+      <strong>Weaving from tools:</strong> The Accord-Maker may weave Workings with a casting time of 1 Action by incorporating the Working into their tool use — the Weaving is part of the crafting motion. They must have their tools in hand. This does not require a separate Act for the focus — it is part of the same action.</div>
+    </div>
+
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Blueprint System & First Construction</div><span class="feat-depth">Depth 1</span></div>
+      <div class="feat-body">The Blueprint system becomes active. Begin with 2 known Blueprints (chosen from the Tier I list) and 1 active Blueprint slot. Additional Blueprint slots unlock at Depths 3, 6, 9, and 14.<br><br>
+      <strong>The First Construction:</strong> At Depth 1, the Accord-Maker constructs their first Aetheric Turret or Aetheric Lantern at no material cost — a practice model, produced during the session that establishes the character. This represents the training construction that completed their initiation into the tradition. The Concordance should make this moment a scene.</div>
+    </div>
+
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Aetheric Knowledge</div><span class="feat-depth">Depth 1</span></div>
+      <div class="feat-body">The Accord-Maker gains Mastery in two Disciplines from: Aetheric Lore, History, Investigation, Medicine, Nature, or Sleight of Hand. They also gain Mastery in artisan's tools of their choice (the tools that function as their focus).<br><br>
+      Additionally: the Accord-Maker always knows whether an object they examine has been Infused, Blueprinted, or otherwise Aetherically worked — and approximately when, by what tier of practitioner, and whether the agreement is still stable. This is professional recognition, not a Working.</div>
+    </div>
+
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Right Tool for the Job</div><span class="feat-depth">Depth 2</span></div>
+      <div class="feat-body">During a Brief Attunement, the Accord-Maker may produce any nonmagical artisan's tool from their portable kit without having specifically packed it — the agreement between their kit and their needs produces whatever is required. This covers any tool worth 25gp or less. It does not cover materials — only the instruments for working with them.<br><br>
+      <strong>Additionally:</strong> when the Accord-Maker succeeds on a crafting Active Resonance using their Mastered tools, they may immediately begin a second related crafting task as part of the same time period — two things built in the time one normally takes, if both use the same tool set.</div>
+    </div>
+
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Aetheric Channels — Limited Access</div><span class="feat-depth">Depth 1</span></div>
+      <div class="feat-body">Unlike most Weave-capable Paths, the Accord-Maker has a restricted Aetheric Channel pool — they are engineers, not weavers. They gain Channels as follows:<br><br>
+      <strong>Depths 1–4:</strong> Two 1st-tier Channels per Deep Attunement<br>
+      <strong>Depths 5–8:</strong> Two 1st-tier + two 2nd-tier<br>
+      <strong>Depths 9–12:</strong> Two each of 1st, 2nd, 3rd-tier<br>
+      <strong>Depths 13–16:</strong> Two each of 1st through 4th-tier<br>
+      <strong>Depths 17–20:</strong> Two each of 1st through 5th-tier<br><br>
+      The Accord-Maker does not gain higher tiers through natural progression. <strong>Infusions and Blueprints do not cost Aetheric Channels</strong> — they are pre-negotiated. Channels are used only for active Workings from the Accord-Maker's Working list, which is curated rather than comprehensive.</div>
+    </div>
+
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Accord-Maker Working List</div><span class="feat-depth">Depth 1 — Always Prepared</span></div>
+      <div class="feat-body">Unlike the Comet-Mage who prepares from a broad ledger, the Accord-Maker always has the same Working list available — a curated set of technically-oriented Workings that have been incorporated into their practice. They do not need to prepare these; they are always available as long as Channels remain.<br><br>
+      <strong>Working List (always prepared):</strong><br>
+      Ambient Workings: Guidance, Mending, Resistance (Endurance boost), Prestidigitation<br>
+      1st-tier: Cure Wounds, Detect Workings, Disguise Self, Expeditious Retreat, False Life, Feather Fall, Grease, Identify, Jump, Longstrider, Sanctuary<br>
+      2nd-tier: Aid, Arcane Lock, Blur, Continual Flame, Darkvision, Enhance Attribute, Heat Metal, Invisibility, Levitate, Magic Mouth, Rope Trick, See Invisibility, Spider Climb, Web<br>
+      3rd-tier: Blink, Dispel Working, Elemental Weapon, Fly, Glyph of Warding, Haste, Protection from Energy, Revivify, Tiny Hut, Water Breathing<br>
+      4th-tier: Fabricate, Freedom of Movement, Leomunds Secret Chest, Mordenkainen's Faithful Hound, Stone Shape, Stone Skin<br>
+      5th-tier: Animate Objects, Creation, Wall of Force</div>
+    </div>
+
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Aetheric Flash of Genius</div><span class="feat-depth">Depth 7</span></div>
+      <div class="feat-body">When a creature within 30 ft of the Accord-Maker makes an Active Resonance or Warding Resonance, the Accord-Maker may use their Reflex to add their Acuity modifier to the roll — identifying the precise physical or Aetheric adjustment that would improve the outcome and communicating it instantly. This is not a Working. It is expertise. It cannot be suppressed by Aether-Dampening Ore.<br><br>
+      <strong>Usage:</strong> Once per Pulse maximum. The Accord-Maker must be able to perceive the situation — they cannot Flash of Genius for a roll they cannot observe.</div>
+    </div>
+
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Aetheric Infusion Mastery</div><span class="feat-depth">Depth 11</span></div>
+      <div class="feat-body">When the Accord-Maker applies an Infusion, the Aetheric agreement is now so efficient that the item effectively counts as an Aetheric Artifact of Attuned tier — without requiring the recipient to spend an Attunement/Resonance Binding slot. Up to three Infused items may benefit from this simultaneously. Items beyond three still require normal Resonance Binding.<br><br>
+      Additionally: Infusions no longer end on Deep Attunement automatically. The Accord-Maker may choose to refresh them during Deep Attunement — but an Infusion maintained without refreshing gradually improves: after 30 days of continuous maintenance, the Infusion's bonus increases by 1 (a +1 weapon becomes +2, etc.). Maximum improvement through this method: +3.</div>
+    </div>
+
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Aetheric Soul</div><span class="feat-depth">Depth 14</span></div>
+      <div class="feat-body">The Accord-Maker's constant work with Aetheric agreements has integrated a persistent Aetheric field into their body. They gain the following permanent properties:<br><br>
+      <strong>• Resistance to force and Aetheric damage</strong> — the body has learned to absorb rather than receive.<br>
+      <strong>• Immunity to disease</strong> — the Aetheric field maintains biological stability.<br>
+      <strong>• The Accord-Maker does not age</strong> — time continues, but biological degradation has been negotiated away. They can still be killed. They simply won't die of old age.<br>
+      <strong>• Their Infusion limit increases by 2</strong> permanently — the Aetheric Soul provides additional bandwidth for active agreements.<br><br>
+      The Grand Prime Forgeman discovered this feature after two centuries of practice. He did not consider it remarkable — it was simply the logical conclusion of maintaining enough agreements simultaneously for long enough.</div>
+    </div>
+
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Aetheric Perfection</div><span class="feat-depth">Depth 20</span></div>
+      <div class="feat-body">The Accord-Maker's mastery has reached a point where the agreements they negotiate are so efficient that they require minimal maintenance. Once per Deep Attunement, when the Accord-Maker rolls any die for an Active Resonance, Warding Resonance, damage roll, or Working effect and dislikes the result, they may use their Reaction to reroll — keeping the new result regardless. Additionally: all Infusions the Accord-Maker maintains now function at +1 above their stated values. A +2 Infusion becomes effectively +3. A resistance Infusion grants immunity instead of resistance. The agreements are simply that good.</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- CALLINGS -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-callings">
+<div class="wrap">
+
+  <p class="lore">The four Callings of the Accord-Maker represent the four most developed specializations within the tradition — each one taking the core Infusion and Blueprint systems in a specific direction and adding tools the base Path does not provide. All four are chosen at Depth 3.</p>
+
+  <div class="calling-grid">
+
+    <!-- ALCHEMIST -->
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head">
+        <div class="calling-name">The Dunmarim Alchemist</div>
+        <span class="calling-tag" style="color:var(--beta);border-color:rgba(74,142,196,0.3);background:rgba(74,142,196,0.06)">Beta-aspected · Dunmarim Tradition</span>
+      </div>
+      <div class="calling-body">
+        <p>The Alchemist is the Accord-Maker's most distinctly Dunmarim expression — solutions that work through chemistry rather than Aetheric agreements directly, making them the only practitioner tradition that can function equally well with or without Aetheric cooperation. The Dunmarim apothecaries who developed this line of practice considered it the most honest form of the tradition: <em>if the Aether doesn't want to cooperate, use better chemistry.</em></p>
+
+        <div class="cb-feat"><strong>Alchemical Savant (Depth 3):</strong> The Alchemist gains Mastery in the Alchemist's Supplies tool and adds their Acuity modifier to the damage and healing of any Working they deliver through a potion, elixir, or alchemical preparation — including healing Workings administered as a liquid. Additionally: when the Alchemist uses a Healing Potion, it heals maximum Vitality rather than rolling. The agreement is pre-calibrated to be as efficient as possible.</div>
+
+        <div class="cb-feat"><strong>Experimental Elixir (Depth 3):</strong> At the end of each Deep Attunement, the Alchemist produces a number of Experimental Elixirs equal to their Acuity modifier (minimum 1). Roll d6 for each: 1 = Healing (2d4+2 Vitality restored), 2 = Swiftness (Resonant Fortune on Swiftness Active Resonances for 1 hour), 3 = Resilience (1d6+1 Aetheric Buffer), 4 = Boldness (immune to Dread-Struck for 1 hour), 5 = Flight (fly 10 ft per Pulse for 10 minutes), 6 = Transformation (choose one Minor Aspect from the Primal Accord's Aspect table — lasts 10 minutes). The Alchemist cannot choose the results — they can only control the quality of the reagents. The Aether agrees to participate on its own terms. Elixirs expire at the next Deep Attunement if unused.</div>
+
+        <div class="cb-feat"><strong>Restorative Reagents (Depth 5):</strong> When the Alchemist casts a healing Working by administering an elixir or potion, they may remove one of the following conditions simultaneously at no additional Channel cost: Corrupted, Dread-Struck, or one level of Aetheric Depletion. The chemistry addresses both the symptom and its Aetheric cause simultaneously.</div>
+
+        <div class="cb-feat"><strong>Chemical Mastery (Depth 9):</strong> The Alchemist gains immunity to poison and the Corrupted condition — years of working with volatile substances have produced comprehensive biological adaptation. Additionally: once per Deep Attunement, the Alchemist may produce one dose of Greater Restoration or Raise Dead as a 1-hour alchemical process requiring 300gp in reagents. These are not Workings — they are chemical solutions to biological problems. They function inside the Stillness of Dunmar.</div>
+      </div>
+    </div>
+
+    <!-- RUNIC ARMORER -->
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head">
+        <div class="calling-name">The Runic Armorer</div>
+        <span class="calling-tag" style="color:var(--alpha);border-color:rgba(212,114,74,0.3);background:rgba(212,114,74,0.06)">Alpha-aspected · Dunmarim Rune-Smith Tradition</span>
+      </div>
+      <div class="calling-body">
+        <p>The Runic Armorer takes the Dunmarim's master craft tradition and applies it to personal protection — infusing a suit of armor so thoroughly that it becomes a second body rather than an external layer. The rune-smith tradition predates the Accord-Maker's formal synthesis with Jade Empire engineering. It is the oldest continuous line of the practice and the one most Dunmarim recognize as legitimate.</p>
+
+        <div class="cb-feat"><strong>Arcane Armor (Depth 3):</strong> The Runic Armorer designates one suit of armor as their Arcane Armor — spending their Deep Attunement Infusion work on it specifically. The Arcane Armor: always fits perfectly (no disadvantage from mismatched size); can be donned or doffed as an Act rather than requiring the standard time; and functions as the Armorer's Weaving focus, meaning they do not need separate artisan's tools to apply Infusions while wearing it. The armor is always Infused — the agreement is built into the armor's fundamental structure rather than sitting on top of it.</div>
+
+        <div class="cb-feat"><strong>Armor Model (Depth 3):</strong> Choose one of two configurations for the Arcane Armor. This can be changed during a Deep Attunement:<br><br>
+        <em>Guardian Model:</em> Integrated weapon (the armor itself can deliver melee strikes — 1d8 + Forcefulness modifier thunder damage). Thunder Gauntlet ability: a struck creature has Resonant Discord on Strike Resonances against anyone except the Armorer until the start of their next Moment.<br><br>
+        <em>Infiltrator Model:</em> Integrated ranged weapon (lightning launcher built into the forearm — 1d6 + Acuity modifier lightning damage, 90-ft range). The armor enhances Stealth rather than impeding it — no Resonant Discord on Stealth Active Resonances regardless of armor type. +1 to Strike Resonance and damage while Aether-Veiled.</div>
+
+        <div class="cb-feat"><strong>Armor Modifications (Depth 3 + every 2 Depths):</strong> At Depth 3 and every even Depth thereafter, choose one Armor Modification to integrate permanently into the Arcane Armor:<br>
+        • <em>Gemini System:</em> Arcane Armor can split into two suits (duplicate armor for an ally, each with half the bonuses)<br>
+        • <em>Aetheric Propulsion:</em> Fly speed 30 ft<br>
+        • <em>Reinforced Defense:</em> +1 Guard Rating (may be taken twice)<br>
+        • <em>Blazing Beacon:</em> Emit bright light 30 ft radius; immune to radiant damage<br>
+        • <em>Dampening Field:</em> Resistance to one damage type (chosen when taken)<br>
+        • <em>Perfected Armor:</em> +1 Strike Resonance to all attacks made by the Armorer while wearing it</div>
+
+        <div class="cb-feat"><strong>Perfected Armor (Depth 15):</strong> The Arcane Armor's Infusion bonus increases to +2. Additionally: when the Armorer takes damage while wearing the Arcane Armor, they may use their Reflex to reduce that damage by 1d6 + Acuity modifier — the armor's agreements absorb and redistribute incoming force. Usable once per Pulse.</div>
+      </div>
+    </div>
+
+    <!-- SIEGE ENGINEER -->
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head">
+        <div class="calling-name">The Siege Engineer</div>
+        <span class="calling-tag" style="color:var(--alpha);border-color:rgba(212,114,74,0.3);background:rgba(212,114,74,0.06)">Alpha-aspected · Jade Empire War-Machine Tradition</span>
+      </div>
+      <div class="calling-body">
+        <p>The Jade Empire developed its Accord-Maker tradition primarily for military applications — constructs, turrets, and deployed battlefield systems that function without requiring a weaver in the line of fire. The Siege Engineer Calling is the most combat-focused expression of the tradition: an Accord-Maker who builds their battlefield before the enemy arrives and then exploits every advantage the construction provides.</p>
+
+        <div class="cb-feat"><strong>Turret Mastery (Depth 3):</strong> The Siege Engineer's Aetheric Turrets are significantly enhanced. Turret damage increases to 2d8 + Acuity modifier. Turrets can now be activated from up to 120 ft rather than 60 ft. Additionally: the Siege Engineer may deploy two Turrets simultaneously (using the same Blueprint slot) — this represents a dual-turret configuration that the standard Blueprint cannot achieve without the Engineer's specialization. The Engineer may use their Instinct to command both simultaneously.</div>
+
+        <div class="cb-feat"><strong>Flash of Tactical Genius (Depth 3):</strong> Once per Pulse, when an ally within 30 ft makes a Strike Resonance roll and misses, the Siege Engineer may use their Reflex to grant that ally an immediate reroll using Resonant Fortune — identifying the precise adjustment needed in the weapon's angle, timing, or target approach. This is the Flash of Genius feature (normally Depth 7) applied specifically to combat rolls, available early to the Siege Engineer because battlefield optimization is their entire practice.</div>
+
+        <div class="cb-feat"><strong>Fortified Position (Depth 5):</strong> The Siege Engineer can establish a Fortified Position during a Brief Attunement — deploying up to their Acuity modifier in Aetheric devices (Turrets, defensive constructs, Aetheric Locks, alarm glyphs) within a 60-ft radius as a single coordinated deployment rather than individually. The coordinated deployment costs the same Blueprint slots as individual deployment but requires only 10 minutes rather than hours. The Position remains active indefinitely but can only be established once per Brief Attunement.</div>
+
+        <div class="cb-feat"><strong>Aetheric Cannon Expertise (Depth 9):</strong> The Siege Engineer can fire their Aetheric Cannon as an Instinct rather than an Act — the pre-aimed targeting system responds to thought-level commands rather than requiring physical manipulation. Additionally: the Cannon's recalibration time between shots drops from 1 minute to 1 Pulse — it fires every round if the Engineer wishes. The cooldown represents physical heat management, not Aetheric recovery. The Engineer has solved the heat problem.</div>
+      </div>
+    </div>
+
+    <!-- RESONANT ARCHITECT -->
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head">
+        <div class="calling-name">The Resonant Architect</div>
+        <span class="calling-tag" style="color:var(--beta);border-color:rgba(74,142,196,0.3);background:rgba(74,142,196,0.06)">Beta-aspected · Grid-Integrated Construction</span>
+      </div>
+      <div class="calling-body">
+        <p>The Resonant Architect represents the Accord-Maker tradition's most ambitious extension — the application of Infusion and Blueprint principles to large-scale permanent constructions, and the integration of those constructions with the existing Aetheric grid. Where the Alchemist solves immediate problems and the Siege Engineer wins battles, the Resonant Architect builds things that last centuries. They are, in some meaningful sense, the most Kallos-influenced Calling — they are doing what the Precursor civilization did, with better understanding of why it went wrong.</p>
+
+        <div class="cb-feat"><strong>Extended Blueprint Capacity (Depth 3):</strong> The Resonant Architect's Blueprint active slots increase by 2. Additionally: they gain access to Tier IV and V Blueprints one Depth earlier than the standard progression (Depth 9 rather than 10 for Tier IV; Depth 12 rather than 14 for Tier V). The Architect's specialization compresses the learning curve for complex constructions.</div>
+
+        <div class="cb-feat"><strong>Grid Integration (Depth 3):</strong> The Resonant Architect can integrate any Blueprint-constructed object with a nearby Ceque Line node — if constructed within 300 ft of an active node, the object draws ambient power from the node rather than requiring the Accord-Maker's ongoing maintenance. Integrated objects: never expire, function at +1 above stated values, and alert the Architect (regardless of distance) when tampered with or damaged. This feature is why the Accord-Maker tradition's most accomplished Architects are found in Elethorn — and why the Coil considers them priority targets.</div>
+
+        <div class="cb-feat"><strong>Permanent Construction (Depth 5):</strong> The Resonant Architect can construct permanent structures — buildings, bridges, fortifications — with Aetheric properties integrated into their architecture. Construction requires the standard Blueprint time × the structure's scale (a room: standard time; a building: 1 week; a fortification: 1 month). Completed structures gain one Infusion-equivalent property per 10 ft of height or 100 sq ft of floor area (chosen at construction). The Resonant Binding ritual's sixth component — the Ceque-Walker circuit — is essentially a Resonant Architect's work performed at continental scale. An Architect who realizes this has understood something important about what they are.</div>
+
+        <div class="cb-feat"><strong>★ Resonant Node Stabilizer Access (Depth 9):</strong> The Resonant Architect automatically learns the Resonant Node Stabilizer Blueprint at Depth 9 without requiring the Grand Prime Forgeman's instruction or Precursor documents — their deep understanding of grid integration produces the same knowledge through applied practice. This is the earliest any Accord-Maker Calling can access this Blueprint. <strong>The Concordance should consider what it means when a player character Accord-Maker reaches Depth 9 while Grid-Point Seven is reactivating.</strong></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="stone-note">
+    <div class="fn-title">The Grand Prime Forgeman — NPC Mentor</div>
+    <div class="fn-text">Every Accord-Maker player character should consider their relationship to the Grand Prime Forgeman — the ancient Gear-Forged who escaped the Jade Empire four centuries ago and has been practicing the Accord-Maker tradition longer than any living being. He knows things about Infusion and Blueprint theory that the formal tradition has lost or never developed. <strong>He does not teach freely.</strong> He teaches when he determines a practitioner is asking the right questions — and he determines this through a technical examination that most applicants find humbling. An Accord-Maker character who establishes a relationship with the Grand Prime Forgeman gains access to advanced Blueprints (★ items) and technical knowledge that no other source provides. The Concordance should use this relationship as a long-term character development arc rather than a single encounter.</div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- PROGRESSION TABLE -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-progression">
+<div class="wrap">
+
+  <table class="prog-table">
+    <tr>
+      <th>Depth</th><th>Mastery Bonus</th><th>Infusion Slots</th><th>Infusions Known</th><th>Blueprint Slots</th><th>Blueprints Known</th><th>Features</th>
+    </tr>
+    <tr><td>1</td><td>+2</td><td>2</td><td>4</td><td>1</td><td>2</td><td>Aetheric Tools, Infusion System, Blueprint System, Aetheric Knowledge, Channel Access (2×1st)</td></tr>
+    <tr><td>2</td><td>+2</td><td>2</td><td>6</td><td>1</td><td>3</td><td>Right Tool for the Job</td></tr>
+    <tr class="milestone"><td>3</td><td>+2</td><td>3</td><td>8</td><td>2</td><td>4</td><td><strong>Calling chosen</strong> · Calling Depth 3 features · Channels: 2×1st + 2×2nd</td></tr>
+    <tr><td>4</td><td>+2</td><td>4</td><td>10</td><td>2</td><td>5</td><td>Zodiac Attunement available · Calling Depth 3 features continue</td></tr>
+    <tr><td>5</td><td>+3</td><td>4</td><td>12</td><td>2</td><td>6</td><td>Calling Depth 5 feature</td></tr>
+    <tr><td>6</td><td>+3</td><td>5</td><td>14</td><td>3</td><td>7</td><td>Tier III Blueprints available</td></tr>
+    <tr class="milestone"><td>7</td><td>+3</td><td>6</td><td>16</td><td>3</td><td>8</td><td>Aetheric Flash of Genius · Channels: 2×1st + 2×2nd + 2×3rd</td></tr>
+    <tr><td>8</td><td>+3</td><td>6</td><td>18</td><td>3</td><td>9</td><td>Calling Depth features continue</td></tr>
+    <tr><td>9</td><td>+4</td><td>7</td><td>20</td><td>4</td><td>10</td><td>Calling Depth 9 feature · Tier IV Blueprints (Architect at Depth 9, others at Depth 10)</td></tr>
+    <tr class="milestone"><td>10</td><td>+4</td><td>7</td><td>22</td><td>4</td><td>11</td><td>Tier IV Blueprints (non-Architect) · Channels: 2×1st through 2×4th</td></tr>
+    <tr><td>11</td><td>+4</td><td>8</td><td>24</td><td>4</td><td>12</td><td>Aetheric Infusion Mastery</td></tr>
+    <tr><td>12</td><td>+4</td><td>9</td><td>26</td><td>5</td><td>13</td><td>Tier IV Blueprints (★ access with Grand Prime Forgeman)</td></tr>
+    <tr class="milestone"><td>13</td><td>+5</td><td>9</td><td>28</td><td>5</td><td>14</td><td>Tier V Blueprints (Architect at Depth 12, others at Depth 14)</td></tr>
+    <tr><td>14</td><td>+5</td><td>10</td><td>30</td><td>5</td><td>15</td><td>Aetheric Soul · Channels: 2×1st through 2×5th</td></tr>
+    <tr><td>15</td><td>+5</td><td>10</td><td>32</td><td>5</td><td>16</td><td>Calling Depth 15 feature (Armorer: Perfected Armor)</td></tr>
+    <tr><td>16</td><td>+5</td><td>11</td><td>34</td><td>6</td><td>17</td><td>Additional Blueprint slot</td></tr>
+    <tr><td>17</td><td>+6</td><td>11</td><td>36</td><td>6</td><td>18</td><td>Infusion quality continues to improve</td></tr>
+    <tr><td>18</td><td>+6</td><td>12</td><td>38</td><td>7</td><td>19</td><td>Maximum Blueprint knowledge</td></tr>
+    <tr><td>19</td><td>+6</td><td>12</td><td>40</td><td>7</td><td>20</td><td>Additional Infusion slot</td></tr>
+    <tr class="milestone"><td>20</td><td>+6</td><td>12</td><td>42</td><td>7</td><td>21</td><td><strong>Aetheric Perfection</strong> — the agreements are that good</td></tr>
+  </table>
+
+  <div class="forge-note" style="margin-top:1.5rem">
+    <div class="fn-title">Starting Equipment</div>
+    <div class="fn-text">
+      <strong>Package A (Dunmarim tradition):</strong> A set of artisan's tools (your focus), leather armor, a light hammer and handaxe, a burglar's pack, 50gp in alchemical reagents, and the first Blueprint (constructed during your training — choose from Tier I).<br><br>
+      <strong>Package B (Jade Empire tradition):</strong> A set of artisan's tools (your focus), studded leather armor, a set of thieves' tools, a scholar's pack, a Homunculus Servant gem (100gp value), and a letter of introduction from either the Grand Prime Forgeman or a Jade Empire engineering guild.<br><br>
+      <strong>Always:</strong> A technical journal containing your known Blueprints and Infusion formulae in schematic form. If this journal is destroyed, the Accord-Maker must spend a Deep Attunement reconstructing each formula from memory — DC 12 Acuity Active Resonance per formula. Failure means the formula is lost and must be relearned. The journal matters.
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).style.display='block';
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+document.querySelectorAll('.panel').forEach(p=>{p.style.display='none'});
+document.getElementById('panel-lore').style.display='block';
+</script>
+</body>
+</html>

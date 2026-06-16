@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — The Beast Companion System</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;500;600&display=swap');
+
+:root {
+  --void:#08090a; --void-mid:#10130f; --void-up:#181e16;
+  --gold:#c9a84c; --gold-dim:#7a6028; --gold-bright:#e8c870;
+  --parchment:#f0e6cc; --parchment-dim:rgba(240,230,204,0.55);
+  --wild:#5a9a48;  --wild-dim:#2a5a20; --wild-bright:#7aba60;
+  --bond:#9066c8;  --bond-dim:#504070; --bond-bright:#b088e8;
+  --alpha:#d4724a; --beta:#4a8ec4; --omega:#9066c8;
+  --red:#c04040; --amber:#c87840;
+
+  /* Zodiac sign colours */
+  --aries:#c85040; --taurus:#80a040; --gemini:#80a0c0;
+  --cancer:#6080c0; --leo:#c89040; --virgo:#60a870;
+  --libra:#a080c0; --scorpio:#804060; --sagittarius:#c07040;
+  --capricorn:#607080; --aquarius:#4880a0; --pisces:#6070a8;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--parchment);line-height:1.7;min-height:100vh}
+
+/* ── HERO ── */
+.hero{
+  text-align:center;padding:4rem 1.5rem 3rem;
+  background:
+    radial-gradient(ellipse at 30% 0%,rgba(90,154,72,0.1) 0%,transparent 55%),
+    radial-gradient(ellipse at 70% 0%,rgba(144,102,200,0.08) 0%,transparent 55%);
+  border-bottom:1px solid rgba(90,154,72,0.2);
+}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--wild-dim);margin-bottom:.9rem}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(22px,4vw,36px);font-weight:500;color:var(--wild-bright);letter-spacing:.06em;margin-bottom:.4rem}
+.hero-sub{font-size:15px;font-style:italic;color:var(--parchment-dim);max-width:540px;margin:.5rem auto 0}
+
+/* ── NAV ── */
+.nav-strip{display:flex;gap:4px;flex-wrap:wrap;padding:.75rem 1rem;border-bottom:1px solid rgba(90,154,72,0.12);background:var(--void-mid);position:sticky;top:0;z-index:20}
+.nav-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;border:1px solid rgba(90,154,72,0.2);border-radius:4px;background:transparent;color:var(--parchment-dim);cursor:pointer;transition:all .15s;white-space:nowrap}
+.nav-btn:hover{background:rgba(90,154,72,0.06);color:var(--wild-dim)}
+.nav-btn.active{background:rgba(90,154,72,0.1);color:var(--wild-bright);border-color:rgba(90,154,72,0.4)}
+
+.panel{display:none}.panel.active{display:block}
+.wrap{max-width:900px;margin:0 auto;padding:2.5rem 1.25rem 4rem}
+
+/* ── TEXT ── */
+.lore{font-size:15px;color:rgba(240,230,204,0.82);line-height:1.88;margin-bottom:.9rem}
+.lore strong{color:var(--parchment);font-weight:500}
+.lore em{color:var(--wild-dim);font-style:italic}
+
+.sec{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--wild-dim);margin:1.75rem 0 .75rem;display:flex;align-items:center;gap:.7rem}
+.sec::after{content:'';flex:1;height:1px;background:rgba(90,154,72,0.15)}
+
+/* ── INFO ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.9rem}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:.9rem}
+.info{background:rgba(255,255,255,0.02);border:1px solid rgba(90,154,72,0.14);border-radius:8px;padding:10px 13px}
+.ib-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--wild-dim);margin-bottom:4px}
+.ib-text{font-size:13px;color:rgba(240,230,204,0.78);line-height:1.62}
+.ib-text strong{color:var(--parchment);font-weight:500}
+
+/* ── NOTES ── */
+.note{background:rgba(144,102,200,0.06);border:1px solid rgba(144,102,200,0.22);border-radius:8px;padding:11px 13px;margin:.75rem 0}
+.note-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--bond-bright);margin-bottom:5px}
+.note-text{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.65}
+.note-text strong{color:var(--parchment);font-weight:500}
+
+.wild-note{background:rgba(90,154,72,0.06);border:1px solid rgba(90,154,72,0.25);border-radius:8px;padding:11px 13px;margin:.75rem 0}
+.wild-note .note-title{color:var(--wild-bright)}
+
+.amber-note{background:rgba(200,120,64,0.06);border:1px solid rgba(200,120,64,0.22);border-radius:8px;padding:11px 13px;margin:.75rem 0}
+.amber-note .note-title{color:var(--amber)}
+.amber-note .note-text{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.65}
+.amber-note .note-text strong{color:var(--parchment);font-weight:500}
+
+/* ── FORMULA ── */
+.formula{background:rgba(90,154,72,0.05);border:1px solid rgba(90,154,72,0.2);border-radius:8px;padding:12px 16px;font-family:'Cinzel',serif;font-size:11px;color:var(--wild-bright);letter-spacing:.04em;line-height:1.9;margin-bottom:.9rem}
+
+/* ── COMPANION STAT BLOCK ── */
+.stat-block{border:1px solid rgba(90,154,72,0.2);border-radius:10px;overflow:hidden;margin-bottom:1rem}
+.sb-header{background:rgba(90,154,72,0.08);padding:10px 14px;border-bottom:1px solid rgba(90,154,72,0.15)}
+.sb-name{font-family:'Cinzel',serif;font-size:14px;color:var(--wild-bright);margin-bottom:2px}
+.sb-type{font-size:12px;font-style:italic;color:var(--parchment-dim)}
+.sb-body{padding:12px 14px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sb-stat{text-align:center}
+.sb-stat-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--wild-dim);margin-bottom:2px}
+.sb-stat-val{font-size:16px;font-weight:500;color:var(--parchment)}
+.sb-stat-note{font-size:10px;color:var(--parchment-dim);font-style:italic}
+.sb-traits{padding:0 14px 12px;border-top:1px solid rgba(90,154,72,0.1);padding-top:8px}
+.sb-trait{font-size:12px;color:rgba(240,230,204,0.75);line-height:1.6;margin-bottom:4px}
+.sb-trait:last-child{margin-bottom:0}
+.sb-trait strong{color:var(--parchment);font-weight:500}
+
+/* ── EVOLUTION TREES ── */
+.evo-selector{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:1rem}
+.evo-sign-btn{
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:.06em;text-transform:uppercase;
+  padding:5px 10px;border-radius:4px;border:1px solid rgba(255,255,255,0.1);
+  background:transparent;color:var(--parchment-dim);cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;gap:4px;
+}
+.evo-sign-btn:hover{background:rgba(255,255,255,0.04)}
+.evo-sign-btn.active{border-color:rgba(255,255,255,0.3);color:var(--parchment);background:rgba(255,255,255,0.06)}
+.evo-panel{display:none}.evo-panel.active{display:block}
+
+.evo-tree{display:grid;grid-template-columns:1fr 40px 1fr 40px 1fr;gap:0;align-items:stretch;margin-bottom:1rem}
+.evo-stage{border:1px solid rgba(90,154,72,0.18);border-radius:10px;overflow:hidden}
+.evo-arrow{display:flex;align-items:center;justify-content:center;color:var(--wild-dim);font-size:18px;font-family:'Cinzel',serif}
+.evo-stage-header{padding:10px 12px;border-bottom:1px solid rgba(90,154,72,0.12)}
+.esh-num{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--wild-dim);margin-bottom:3px}
+.esh-name{font-family:'Cinzel',serif;font-size:13px;font-weight:500;letter-spacing:.03em;margin-bottom:2px}
+.esh-trigger{font-size:10px;font-style:italic;color:var(--parchment-dim);line-height:1.4}
+.evo-stage-body{padding:10px 12px;font-size:12px;color:rgba(240,230,204,0.75);line-height:1.65}
+.evo-stage-body strong{color:var(--parchment);font-weight:500}
+
+.evo-stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:8px}
+.evo-stat{background:rgba(255,255,255,0.025);border:1px solid rgba(90,154,72,0.12);border-radius:5px;padding:5px 4px;text-align:center}
+.es-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:.09em;text-transform:uppercase;color:var(--wild-dim);margin-bottom:2px}
+.es-val{font-size:13px;font-weight:500;color:var(--parchment)}
+
+.ability-list{margin-top:7px;padding-top:7px;border-top:1px solid rgba(90,154,72,0.1)}
+.ability-item{font-size:12px;color:rgba(240,230,204,0.72);line-height:1.55;margin-bottom:4px;padding-left:8px;border-left:2px solid rgba(90,154,72,0.25)}
+.ability-item:last-child{margin-bottom:0}
+.ability-item strong{color:var(--wild-bright);font-weight:500}
+
+/* ── BOND STAGES ── */
+.bond-stages{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:1rem}
+.bond-stage{border-radius:9px;padding:12px 13px;border:1px solid}
+.bs-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px}
+.bs-name{font-family:'Cinzel',serif;font-size:13px;font-weight:500;margin-bottom:6px}
+.bs-desc{font-size:12px;line-height:1.62;color:rgba(240,230,204,0.72)}
+.bs-desc strong{color:var(--parchment);font-weight:500}
+
+/* ── FEAT TABLE ── */
+.feat-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:1rem}
+.feat-table th{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--wild-dim);padding:7px 10px;text-align:left;border-bottom:1px solid rgba(90,154,72,0.2)}
+.feat-table td{padding:7px 10px;border-bottom:1px solid rgba(90,154,72,0.07);color:rgba(240,230,204,0.75);vertical-align:top;line-height:1.5;font-size:12px}
+.feat-table td:first-child{color:var(--wild-bright);font-weight:500;white-space:nowrap}
+.feat-table td:nth-child(2){color:var(--parchment-dim);font-style:italic;white-space:nowrap}
+.feat-table tr:last-child td{border-bottom:none}
+.feat-table tr:hover td{background:rgba(90,154,72,0.025)}
+
+/* ── PATH INTEGRATION ── */
+.path-card{background:rgba(255,255,255,0.02);border:1px solid rgba(90,154,72,0.14);border-radius:9px;padding:12px 14px;margin-bottom:7px;cursor:pointer;overflow:hidden;transition:border-color .15s}
+.path-card:hover,.path-card.open{border-color:rgba(90,154,72,0.35)}
+.pc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.pc-name{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.04em;color:var(--wild-bright)}
+.pc-tag{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:3px;border:1px solid rgba(90,154,72,0.3);color:var(--wild-dim);white-space:nowrap;flex-shrink:0}
+.pc-body{display:none;margin-top:9px;padding-top:9px;border-top:1px solid rgba(90,154,72,0.1);font-size:13px;color:rgba(240,230,204,0.75);line-height:1.72}
+.path-card.open .pc-body{display:block}
+.pc-body strong{color:var(--parchment);font-weight:500}
+.pc-body em{color:var(--wild-dim)}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Sideros / Astrolan — Companion Systems</div>
+  <h1 class="hero-title">The Beast Companion System</h1>
+  <p class="hero-sub">The companion was not tamed. Its Fate Number drew it toward you. What it becomes depends on what you do together.</p>
+</div>
+
+<div class="nav-strip">
+  <button class="nav-btn active" onclick="show('foundation',this)">Foundation</button>
+  <button class="nav-btn" onclick="show('bond',this)">The Bond</button>
+  <button class="nav-btn" onclick="show('feats',this)">Evolution Feats</button>
+  <button class="nav-btn" onclick="show('trees',this)">Evolution Trees</button>
+  <button class="nav-btn" onclick="show('paths',this)">Path Integration</button>
+  <button class="nav-btn" onclick="show('lore',this)">Lore & Rules</button>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- FOUNDATION -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel active" id="panel-foundation">
+<div class="wrap">
+
+  <p class="lore">In Sideros, a Beast Companion is not a pet and not a tool. It is a <strong>bonded partner</strong> — a creature whose Fate Number falls close enough to its partner's that the Loom of Fate arranged their meeting. The companion didn't choose its partner in any conscious sense. Neither did the partner. The Loom wove them together because their combined frequency produces something neither could produce alone. What that something is depends entirely on what they become to each other.</p>
+
+  <p class="lore">Every Beast Companion has a <strong>zodiac sign</strong> — determined by the Concordance at the moment of first encounter, reflecting the creature's fundamental nature. A raven encountered at a crossroads might be Gemini-aspected. A wolf who appears during a winter storm might be Capricorn-aspected. A serpent found guarding a Ceque Line node is almost certainly Scorpio. The sign is not cosmetic. It is the entire architecture of what the companion will become.</p>
+
+  <div class="sec">Acquiring a Companion</div>
+
+  <p class="lore">A companion is not purchased, summoned, or created. It is <strong>encountered</strong>. The Concordance introduces potential companions as organic world events — a creature that behaves unusually, that appears repeatedly, that shows no fear when it should. The player recognizes the pattern. The encounter becomes a relationship. The relationship deepens until both parties acknowledge what has been happening between them.</p>
+
+  <div class="three-col">
+    <div class="info">
+      <div class="ib-label">The Fate Number Check</div>
+      <div class="ib-text">When a player character has a significant encounter with a creature and the Concordance determines it may be a companion candidate, roll 1d100 for the creature's Fate Number. If within 10 points of the character's Number — a natural Paired Bond range — the creature is a companion candidate. The Concordance does not reveal this roll. The player discovers it through the relationship's texture.</div>
+    </div>
+    <div class="info">
+      <div class="ib-label">The Zodiac Determination</div>
+      <div class="ib-text">The Concordance assigns the companion's zodiac sign based on: the creature's species (a bear is naturally Taurus-aspected; an eagle naturally Sagittarius; a spider naturally Scorpio), the circumstances of meeting (a companion met during a Leo-aspected event may carry Leo resonance), or a d12 roll if neither applies. The sign is fixed at first encounter and does not change.</div>
+    </div>
+    <div class="info">
+      <div class="ib-label">The Acknowledgment</div>
+      <div class="ib-text">The bond becomes active when both the character and the creature have made a deliberate choice — the character has named the creature and the creature has remained when it could have left. This is not a Working, not a ritual, not a roll. It is a narrative event. The Concordance marks it in the campaign record. The Loom marks it in the Fate Number system — the companion's Number is now linked to the character's in the world's ledger.</div>
+    </div>
+  </div>
+
+  <div class="sec">Base Companion Statistics</div>
+  <p class="lore" style="margin-bottom:.75rem">All companions begin at Stage I regardless of species. The zodiac sign determines the evolution path. The species determines cosmetic form and narrative flavor — a Scorpio-sign companion might be a spider, a scorpion, a snake, a raven, or a shadow-cat, all following the same mechanical tree.</p>
+
+  <div class="stat-block">
+    <div class="sb-header">
+      <div class="sb-name">Beast Companion — Stage I (All Species)</div>
+      <div class="sb-type">Small or Medium Beast · Bonded Creature · Zodiac Aspected</div>
+    </div>
+    <div class="sb-body">
+      <div class="sb-stat"><div class="sb-stat-label">Vitality</div><div class="sb-stat-val">5 + Partner's Resonance Depth × 2</div><div class="sb-stat-note">Increases with partner's advancement</div></div>
+      <div class="sb-stat"><div class="sb-stat-label">Guard Rating</div><div class="sb-stat-val">10 + Swiftness mod + sign bonus</div><div class="sb-stat-note">Sign bonus varies by zodiac</div></div>
+      <div class="sb-stat"><div class="sb-stat-label">Mastery Bonus</div><div class="sb-stat-val">= Partner's Mastery Bonus</div><div class="sb-stat-note">Always matches partner</div></div>
+      <div class="sb-stat"><div class="sb-stat-label">Strike Resonance</div><div class="sb-stat-val">d20 + Mastery Bonus + sign modifier</div><div class="sb-stat-note">Sign modifier varies</div></div>
+      <div class="sb-stat"><div class="sb-stat-label">Warding Resonances</div><div class="sb-stat-val">Forcefulness / Swiftness / Endurance</div><div class="sb-stat-note">d20 + modifier + Mastery Bonus</div></div>
+      <div class="sb-stat"><div class="sb-stat-label">Resonance Attributes</div><div class="sb-stat-val">Set by sign at Stage I</div><div class="sb-stat-note">Increases at Stage II and III</div></div>
+    </div>
+    <div class="sb-traits">
+      <div class="sb-trait"><strong>Bond Sense (always active):</strong> The companion always knows the partner's direction, distance, and emotional state. The partner always knows the companion's Vitality level (full / bloodied / critical) and whether it is in danger.</div>
+      <div class="sb-trait"><strong>Companion Act (uses partner's Instinct):</strong> The companion acts on the partner's Moment using the partner's Instinct. It may: move up to its speed; make one Strike Resonance; use one sign ability (if unlocked). It cannot act independently unless the Autonomous Evolution (Stage III) unlocks this.</div>
+      <div class="sb-trait"><strong>Shared Fate:</strong> When the partner succeeds on a Loom Test (Loom Test), the companion immediately gains temporary Vitality equal to the partner's Endurance modifier. When the companion reaches 0 Vitality, the partner takes psychic damage equal to the companion's Resonance Depth equivalent × 2 — the bond registers the wound.</div>
+      <div class="sb-trait"><strong>Zodiac Aspected:</strong> The companion's sign determines its starting attributes, Stage I abilities, and its complete evolution path. See the Evolution Trees tab.</div>
+    </div>
+  </div>
+
+  <div class="wild-note">
+    <div class="note-title">The Companion Is Not The Partner's Property</div>
+    <div class="note-text">The companion has its own Primal Essence (determined by the Concordance — usually Beta or Omega, occasionally Alpha). It has preferences, fears, strong responses to specific people and situations. It can be displeased. <strong>A companion that is consistently mistreated, put in danger recklessly, or used purely as a tool will withdraw its bond — dropping to Stage I regardless of evolution progress, until the relationship is genuinely repaired.</strong> The Concordance tracks this. The Loom tracks it. The companion's behavior makes it visible before the mechanical consequence arrives.</div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- THE BOND -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-bond">
+<div class="wrap">
+
+  <p class="lore">The companion's Fated Bond with its partner operates on the same tier system as all Fated Bonds — but with one critical difference. Because companion bonds are always naturally formed (no manufactured ritual, no Starbound process), they carry <strong>full Loom recognition</strong>. The Stellar Cartographer reads them as clean. The Fang of the Whisper treats them as a legitimate target — a companion bond is a vulnerability, and the Coil has learned to exploit it.</p>
+
+  <div class="sec">Bond Tier Progression</div>
+
+  <div class="bond-stages">
+    <div class="bond-stage" style="border-color:rgba(90,154,72,0.25);background:rgba(90,154,72,0.04)">
+      <div class="bs-label" style="color:var(--wild-dim)">Stage I Bond</div>
+      <div class="bs-name" style="color:var(--wild-bright)">★ Paired</div>
+      <div class="bs-desc">
+        <strong>Active from acknowledgment.</strong><br>
+        Bond Sense (both ways). Shared Fate trigger. Partner has Resonant Fortune on Attunement Active Resonances when the companion is within 30 ft. The companion has Resonant Fortune on all Warding Resonances while the partner is conscious and within 60 ft.
+      </div>
+    </div>
+    <div class="bond-stage" style="border-color:rgba(144,102,200,0.25);background:rgba(144,102,200,0.04)">
+      <div class="bs-label" style="color:var(--bond-dim)">Stage II Bond</div>
+      <div class="bs-name" style="color:var(--bond-bright)">★★ Deepened</div>
+      <div class="bs-desc">
+        <strong>Unlocked with first Evolution Feat.</strong><br>
+        All Stage I benefits. <strong>Resonant Awareness expands</strong> — partner always knows companion's exact emotional state and primary intent, not just danger status. Companion gains Resonant Fortune on Strike Resonances when partner is within 30 ft. If companion reaches 0 Vitality, partner may use Reflex to immediately stabilize it (no roll — the bond holds it).
+      </div>
+    </div>
+    <div class="bond-stage" style="border-color:rgba(201,168,76,0.25);background:rgba(201,168,76,0.04)">
+      <div class="bs-label" style="color:var(--gold-dim)">Stage III Bond</div>
+      <div class="bs-name" style="color:var(--gold-bright)">★★★ Whispered</div>
+      <div class="bs-desc">
+        <strong>Unlocked at Stage II Evolution.</strong><br>
+        All previous benefits. <strong>Whisper Thread</strong> — partner and companion share wordless communication of intent and sensation (same as Triad-tier Fated Bond Whisper Bond). Range: 1 mile. The companion can communicate urgency, direction, threat assessment, and simple requests. Not language — sensation and intent.
+      </div>
+    </div>
+    <div class="bond-stage" style="border-color:rgba(200,120,64,0.25);background:rgba(200,120,64,0.04)">
+      <div class="bs-label" style="color:var(--amber)">Stage III+ Bond</div>
+      <div class="bs-name" style="color:var(--amber)">★★★★ Resonant</div>
+      <div class="bs-desc">
+        <strong>Unlocked at Stage III Evolution.</strong><br>
+        All previous benefits. <strong>Shared Resonance</strong> — once per Pulse, when the companion makes any roll, the partner may use their Reflex to add their Mastery Bonus to that roll (or vice versa). The bond's resonance amplifies both parties' capability simultaneously. The companion is no longer animal — it is a peer.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">Bond Mechanics During Combat</div>
+  <div class="two-col">
+    <div class="info">
+      <div class="ib-label">Action Economy</div>
+      <div class="ib-text">The companion acts on the partner's Moment using the partner's <strong>Instinct</strong>. It may: move its speed; make one Strike Resonance or use one sign ability. This costs nothing else — the Instinct is the companion's, not an additional resource. A character with no other Instinct use still has this available. A character who needs their Instinct for something else must choose — the companion waits.</div>
+    </div>
+    <div class="info">
+      <div class="ib-label">Companion Down</div>
+      <div class="ib-text">When the companion reaches 0 Vitality: it is Loom-Suspended (unconscious, stable — companions do not make Loom Tests, they simply stabilize). The partner takes psychic damage (see Shared Fate). The companion can be revived with any healing Working or spending the partner's Act to tend to it — restoring 1 Vitality. Companions cannot permanently die unless the partner is also killed, or the bond is deliberately severed.</div>
+    </div>
+    <div class="info">
+      <div class="ib-label">Independent Positioning</div>
+      <div class="ib-text">Between the partner's Moments, the companion may move up to half its speed as a free action — repositioning without the partner's direction. It does not attack without the Instinct command. At Stage III Evolution, the companion gains full autonomous movement and may act without the partner's Instinct on turns when the partner is Resonance-Shattered or Loom-Suspended.</div>
+    </div>
+    <div class="info">
+      <div class="ib-label">Pack Tactics</div>
+      <div class="ib-text">When the companion and partner both target the same creature in the same Pulse, both have Resonant Fortune on their Strike Resonances against that creature. This is not a special ability — it is the natural result of coordinated pressure from two bonded combatants. The creature cannot fully defend against simultaneous attacks whose timing it cannot predict.</div>
+    </div>
+  </div>
+
+  <div class="note">
+    <div class="note-title">Void-Touched Companions</div>
+    <div class="note-text">If the Concordance rolls 13, 66, or 99 for the companion's Fate Number, the companion is Void-Touched. This is extraordinarily rare and should be treated as a significant campaign event. A Void-Touched companion: has all the standard Void-Touched bond amplification effects; can sense the Hollow Serpent's movements in its vicinity without training; and is actively sought by the Ashen Coil — Serath of the Closed Circle would consider a Void-Touched companion a high-priority intelligence asset. <strong>The Concordance should use this sparingly and deliberately.</strong> It is not a mechanical bonus. It is a story.</div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- EVOLUTION FEATS -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-feats">
+<div class="wrap">
+
+  <p class="lore">Evolution is not earned through accumulated experience. It is triggered by <strong>specific moments</strong> — events that deepen the bond, test it, or demonstrate something fundamental about the relationship. The Concordance tracks these. When the required feats for a stage are completed, the evolution occurs during the next Deep Attunement — the companion emerges from sleep changed. The partner always knows it has happened before they fully wake. The bond registers the shift.</p>
+
+  <div class="sec">Stage I → Stage II Evolution: Any Three of the Following</div>
+  <table class="feat-table">
+    <tr><th>Feat Name</th><th>Category</th><th>Requirement</th></tr>
+    <tr><td>First Defense</td><td>Combat</td><td>The companion interposes itself between the partner and a lethal Strike Resonance — taking damage that would have reduced the partner to 0 Vitality.</td></tr>
+    <tr><td>First Hunt</td><td>Combat</td><td>The companion reduces a creature to 0 Vitality without the partner's assistance — acting on its own initiative within the bond's framework.</td></tr>
+    <tr><td>Trusted Threshold</td><td>Social</td><td>The companion enters a situation it would instinctively avoid (large crowds, extreme noise, a hostile environment for its species) because the partner needed it there — and remains for at least 1 hour without withdrawing.</td></tr>
+    <tr><td>Named and Known</td><td>Narrative</td><td>The companion is named by the partner and the name is used aloud three times in front of at least one other person. The naming is witnessed. The companion responds to the name reliably.</td></tr>
+    <tr><td>Shared Wound</td><td>Bond</td><td>Both the companion and partner are reduced below half Vitality in the same encounter and both survive. They endured the same moment of danger and came through it together.</td></tr>
+    <tr><td>The Long Journey</td><td>Narrative</td><td>The partner and companion travel together for at least one month of in-game time without extended separation. The bond has had time to deepen through shared experience rather than dramatic events.</td></tr>
+    <tr><td>Received by Another</td><td>Social</td><td>A significant NPC — someone with genuine authority or social weight in the world — acknowledges the companion as a companion rather than an animal. The Loom has heard it said aloud by someone who matters.</td></tr>
+    <tr><td>Sign Recognition</td><td>Zodiac</td><td>The companion has a meaningful encounter with any creature, phenomenon, or location associated with its zodiac sign — and the partner witnesses it. A Leo-sign companion glimpses the Nemean Lion. A Scorpio-sign companion is brought to a Ceque node. The sign has been acknowledged.</td></tr>
+  </table>
+
+  <div class="sec">Stage II → Stage III Evolution: Any Two of the Following</div>
+  <p class="lore" style="margin-bottom:.75rem">Stage III feats are rarer and more demanding — they require the bond to have been genuinely tested, not merely maintained.</p>
+  <table class="feat-table">
+    <tr><th>Feat Name</th><th>Category</th><th>Requirement</th></tr>
+    <tr><td>Legendary Recognition</td><td>Zodiac</td><td>The companion directly encounters its sign's Legendary Beast — not necessarily peacefully, but face to face. The Beast acknowledges the companion's existence. This may be the most demanding feat in the system. Most Legendary Beasts would need a reason to be approached.</td></tr>
+    <tr><td>The Returned Companion</td><td>Bond</td><td>The companion is separated from the partner for at least two weeks through circumstance (captured, lost, deliberately sent away for safety) — and finds its way back without being retrieved. The companion chose to return.</td></tr>
+    <tr><td>Saved by the Bond</td><td>Bond</td><td>The partner is on the verge of a Loom Test failure (two failures recorded) and the companion's action — not a Working, not a roll, just the companion doing something — directly prevents the third failure. The companion saved the partner's life through instinct and the bond's shared awareness.</td></tr>
+    <tr><td>Known to the World</td><td>Social</td><td>The companion is known by name to at least three factions, institutions, or significant NPCs — it has become part of the world's story, not just the partner's. When the companion enters a room without the partner, someone knows who it is.</td></tr>
+    <tr><td>Sign Mastery</td><td>Zodiac</td><td>The companion uses a Stage II sign ability to produce a result that directly resolves a significant challenge — not "it helped," but "this would not have been solved without this ability." The sign's power has been demonstrated at its full expression.</td></tr>
+    <tr><td>The Hard Choice</td><td>Narrative</td><td>The partner had the opportunity to send the companion away permanently — for safety, for the companion's benefit, for any genuinely selfless reason — and chose to keep it. The choice was real, the alternative was viable, and the partner still chose the bond. The Loom records choices like this.</td></tr>
+  </table>
+
+  <div class="amber-note">
+    <div class="note-title">On Feat Tracking</div>
+    <div class="note-text">The Concordance tracks evolution feats, not the player. Players may know generally that their companion is evolving — the bond's texture changes subtly before a formal evolution occurs, and attentive players will notice behavioral shifts in the companion. But they do not have a checklist. <strong>The evolution feels like it happens because of the relationship, not because requirements were met.</strong> If a player asks directly whether their companion is close to evolving, the Concordance may answer honestly — but the answer should be given in terms of the relationship's state, not feat counts.</div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- EVOLUTION TREES -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-trees">
+<div class="wrap">
+
+  <p class="lore">Each zodiac sign produces a distinct evolution path — three stages that trace the companion's progression from bonded animal to something the world does not have a word for yet. The species is flavor. The sign is structure. Click a sign to see its complete tree.</p>
+
+  <div class="evo-selector">
+    <button class="evo-sign-btn active" onclick="showEvo('aries',this)">♈ Aries</button>
+    <button class="evo-sign-btn" onclick="showEvo('taurus',this)">♉ Taurus</button>
+    <button class="evo-sign-btn" onclick="showEvo('gemini',this)">♊ Gemini</button>
+    <button class="evo-sign-btn" onclick="showEvo('cancer',this)">♋ Cancer</button>
+    <button class="evo-sign-btn" onclick="showEvo('leo',this)">♌ Leo</button>
+    <button class="evo-sign-btn" onclick="showEvo('virgo',this)">♍ Virgo</button>
+    <button class="evo-sign-btn" onclick="showEvo('libra',this)">♎ Libra</button>
+    <button class="evo-sign-btn" onclick="showEvo('scorpio',this)">♏ Scorpio</button>
+    <button class="evo-sign-btn" onclick="showEvo('sagittarius',this)">♐ Sagittarius</button>
+    <button class="evo-sign-btn" onclick="showEvo('capricorn',this)">♑ Capricorn</button>
+    <button class="evo-sign-btn" onclick="showEvo('aquarius',this)">♒ Aquarius</button>
+    <button class="evo-sign-btn" onclick="showEvo('pisces',this)">♓ Pisces</button>
+  </div>
+
+  <!-- ARIES -->
+  <div class="evo-panel active" id="evo-aries">
+    <p class="lore" style="margin-bottom:.9rem"><strong style="color:var(--aries)">♈ Aries companions</strong> evolve toward pure initiative — they become faster, more aggressive, and increasingly difficult to stop once they begin moving. A ram, a wild horse, a fire-aspected hawk. Whatever the form, the pattern is the same: <em>it goes first and it goes hard.</em></p>
+    <div class="evo-tree">
+      <div class="evo-stage">
+        <div class="evo-stage-header">
+          <div class="esh-num">Stage I</div>
+          <div class="esh-name" style="color:var(--aries)">The Spark</div>
+          <div class="esh-trigger">From bond acknowledgment</div>
+        </div>
+        <div class="evo-stage-body">
+          <div class="evo-stat-row">
+            <div class="evo-stat"><div class="es-label">Forcefulness</div><div class="es-val">14</div></div>
+            <div class="evo-stat"><div class="es-label">Swiftness</div><div class="es-val">14</div></div>
+            <div class="evo-stat"><div class="es-label">Endurance</div><div class="es-val">12</div></div>
+            <div class="evo-stat"><div class="es-label">Speed</div><div class="es-val">40 ft</div></div>
+          </div>
+          Strike: 1d6 + Forcefulness mod · Type: piercing or bludgeoning
+          <div class="ability-list">
+            <div class="ability-item"><strong>First Striker:</strong> When combat begins, if the companion acts in the first Pulse, its first Strike Resonance has Resonant Fortune.</div>
+            <div class="ability-item"><strong>Charge:</strong> If the companion moves at least 20 ft in a straight line before striking, deal +1d6 damage.</div>
+          </div>
+        </div>
+      </div>
+      <div class="evo-arrow">→</div>
+      <div class="evo-stage">
+        <div class="evo-stage-header">
+          <div class="esh-num">Stage II</div>
+          <div class="esh-name" style="color:var(--aries)">The Rush</div>
+          <div class="esh-trigger">After 3 Stage I feats</div>
+        </div>
+        <div class="evo-stage-body">
+          <div class="evo-stat-row">
+            <div class="evo-stat"><div class="es-label">Forcefulness</div><div class="es-val">16</div></div>
+            <div class="evo-stat"><div class="es-label">Swiftness</div><div class="es-val">16</div></div>
+            <div class="evo-stat"><div class="es-label">Endurance</div><div class="es-val">14</div></div>
+            <div class="evo-stat"><div class="es-label">Speed</div><div class="es-val">50 ft</div></div>
+          </div>
+          Strike: 1d8 + Forcefulness mod · All Stage I abilities retained
+          <div class="ability-list">
+            <div class="ability-item"><strong>Blazing Charge:</strong> Charge damage increases to +2d6. Target must make DC 13 Forcefulness Warding Resonance or be knocked prone.</div>
+            <div class="ability-item"><strong>Pack Initiative:</strong> When the companion acts before all enemies in the first Pulse, the partner also acts before all enemies — the shared initiative cascades.</div>
+            <div class="ability-item"><strong>Fire Aspect (cosmetic):</strong> The companion's coat, feathers, or scales carry warm coloring — reds, golds, occasional flickers of heat-shimmer around the eyes.</div>
+          </div>
+        </div>
+      </div>
+      <div class="evo-arrow">→</div>
+      <div class="evo-stage">
+        <div class="evo-stage-header">
+          <div class="esh-num">Stage III</div>
+          <div class="esh-name" style="color:var(--aries)">The Ashen Ram's Echo</div>
+          <div class="esh-trigger">After 2 Stage II feats</div>
+        </div>
+        <div class="evo-stage-body">
+          <div class="evo-stat-row">
+            <div class="evo-stat"><div class="es-label">Forcefulness</div><div class="es-val">20</div></div>
+            <div class="evo-stat"><div class="es-label">Swiftness</div><div class="es-val">18</div></div>
+            <div class="evo-stat"><div class="es-label">Endurance</div><div class="es-val">16</div></div>
+            <div class="evo-stat"><div class="es-label">Speed</div><div class="es-val">60 ft</div></div>
+          </div>
+          Strike: 2d8 + Forcefulness mod · +1d6 fire damage · All previous abilities retained
+          <div class="ability-list">
+            <div class="ability-item"><strong>Autonomous Charge:</strong> Once per Pulse, the companion may use its Stage II Blazing Charge without the partner's Instinct — it moves and strikes independently when it senses the partner is in danger or the tactical opening is clear.</div>
+            <div class="ability-item"><strong>Ram's Presence:</strong> Creatures that the companion has struck this encounter have Resonant Discord on Strike Resonances against the partner — the companion's aggression redirects enemy attention.</div>
+            <div class="ability-item"><strong>The Beast Remembers:</strong> When the Ashen Ram's Legendary Beast is encountered, it recognizes this companion as kin. The encounter begins at neutral rather than hostile.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCORPIO — detailed example of a very different tree -->
+  <div class="evo-panel" id="evo-scorpio">
+    <p class="lore" style="margin-bottom:.9rem"><strong style="color:var(--scorpio)">♏ Scorpio companions</strong> evolve toward revelation — perceiving what is hidden, communicating hidden truths to their partner, and eventually becoming something that the world's secrets cannot keep closed. A spider, a raven, a shadow-cat, a serpent. Whatever the form: <em>it knows things it shouldn't, and eventually it tells you.</em></p>
+    <div class="evo-tree">
+      <div class="evo-stage">
+        <div class="evo-stage-header">
+          <div class="esh-num">Stage I</div>
+          <div class="esh-name" style="color:var(--scorpio)">The Watcher</div>
+          <div class="esh-trigger">From bond acknowledgment</div>
+        </div>
+        <div class="evo-stage-body">
+          <div class="evo-stat-row">
+            <div class="evo-stat"><div class="es-label">Swiftness</div><div class="es-val">16</div></div>
+            <div class="evo-stat"><div class="es-label">Attunement</div><div class="es-val">14</div></div>
+            <div class="evo-stat"><div class="es-label">Endurance</div><div class="es-val">10</div></div>
+            <div class="evo-stat"><div class="es-label">Speed</div><div class="es-val">35 ft</div></div>
+          </div>
+          Strike: 1d4 + Swiftness mod + Corrupted condition (DC 12 Endurance)
+          <div class="ability-list">
+            <div class="ability-item"><strong>Shadow Sense:</strong> The companion always knows if a creature within 60 ft is hiding something — a concealed emotion, a withheld truth, a hidden wound. It communicates this to the partner as a physical sensation (a nudge, a fixed stare, a specific sound).</div>
+            <div class="ability-item"><strong>Unseen Movement:</strong> Resonant Fortune on Stealth Active Resonances. Can move through darkness without penalty.</div>
+          </div>
+        </div>
+      </div>
+      <div class="evo-arrow">→</div>
+      <div class="evo-stage">
+        <div class="evo-stage-header">
+          <div class="esh-num">Stage II</div>
+          <div class="esh-name" style="color:var(--scorpio)">The Revealer</div>
+          <div class="esh-trigger">After 3 Stage I feats</div>
+        </div>
+        <div class="evo-stage-body">
+          <div class="evo-stat-row">
+            <div class="evo-stat"><div class="es-label">Swiftness</div><div class="es-val">18</div></div>
+            <div class="evo-stat"><div class="es-label">Attunement</div><div class="es-val">16</div></div>
+            <div class="evo-stat"><div class="es-label">Endurance</div><div class="es-val">12</div></div>
+            <div class="evo-stat"><div class="es-label">Speed</div><div class="es-val">35 ft · climb 20 ft</div></div>
+          </div>
+          Strike: 1d6 + Swiftness mod + Corrupted (DC 14) · All Stage I abilities retained
+          <div class="ability-list">
+            <div class="ability-item"><strong>Truth Sense:</strong> Shadow Sense improves — the companion now identifies the specific category of what is being concealed (a plan, a lie, a wound, a fear). The communication is still physical but more precise.</div>
+            <div class="ability-item"><strong>Stygian Mark:</strong> Once per encounter, when the companion strikes a creature, that creature must make a DC 14 Attunement Warding Resonance or have all its active deceptions visible to the partner for 1 hour — the partner sees distortions around the creature when it lies.</div>
+            <div class="ability-item"><strong>Dark Aspect (cosmetic):</strong> The companion's coloring deepens. Its eyes develop an iridescent quality that unsettles those who meet its gaze directly.</div>
+          </div>
+        </div>
+      </div>
+      <div class="evo-arrow">→</div>
+      <div class="evo-stage">
+        <div class="evo-stage-header">
+          <div class="esh-num">Stage III</div>
+          <div class="esh-name" style="color:var(--scorpio)">The Stygian's Shadow</div>
+          <div class="esh-trigger">After 2 Stage II feats</div>
+        </div>
+        <div class="evo-stage-body">
+          <div class="evo-stat-row">
+            <div class="evo-stat"><div class="es-label">Swiftness</div><div class="es-val">20</div></div>
+            <div class="evo-stat"><div class="es-label">Attunement</div><div class="es-val">18</div></div>
+            <div class="evo-stat"><div class="es-label">Endurance</div><div class="es-val">14</div></div>
+            <div class="evo-stat"><div class="es-label">Speed</div><div class="es-val">40 ft · climb 30 ft · Aether-Veiled</div></div>
+          </div>
+          Strike: 2d6 + Swiftness mod + Corrupted (DC 16) + Heart-Sting Toxin (partner's Scorpio Zodiac feat trigger)
+          <div class="ability-list">
+            <div class="ability-item"><strong>Permanent Aether-Veil:</strong> The companion is invisible by default — it chooses to be visible. At Stage III, it has learned to move entirely outside the visual spectrum. Bond Sense still locates it for the partner at all times.</div>
+            <div class="ability-item"><strong>Deep Reading:</strong> Once per Deep Attunement, the companion may spend 10 minutes observing any location and transmit its complete hidden history to the partner — Aetheric residue, concealed objects, emotional imprints. This is the companion doing what the Kore-kore tradition does, through the Scorpio frequency rather than Te Kapo training.</div>
+            <div class="ability-item"><strong>The Beast Remembers:</strong> The Stygian Scorpion's spawn recognize this companion as kin and will not attack it unprovoked. The companion can communicate neutrality to the spawn on the partner's behalf.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CANCER -->
+  <div class="evo-panel" id="evo-cancer">
+    <p class="lore" style="margin-bottom:.9rem"><strong style="color:var(--cancer)">♋ Cancer companions</strong> evolve toward absolute protection — they become living shields, eventually creating zones of safety that nothing can penetrate. A tortoise, a crab, a badger, an armadillo-like creature. Whatever the form: <em>it puts itself between its partner and harm, and it gets better at this until the harm simply cannot reach.</em></p>
+    <div class="evo-tree">
+      <div class="evo-stage">
+        <div class="evo-stage-header"><div class="esh-num">Stage I</div><div class="esh-name" style="color:var(--cancer)">The Shell</div><div class="esh-trigger">From acknowledgment</div></div>
+        <div class="evo-stage-body">
+          <div class="evo-stat-row">
+            <div class="evo-stat"><div class="es-label">Endurance</div><div class="es-val">16</div></div>
+            <div class="evo-stat"><div class="es-label">Forcefulness</div><div class="es-val">12</div></div>
+            <div class="evo-stat"><div class="es-label">Guard Rating</div><div class="es-val">15</div></div>
+            <div class="evo-stat"><div class="es-label">Speed</div><div class="es-val">25 ft · swim 25 ft</div></div>
+          </div>
+          Strike: 1d6 + Forcefulness mod · Natural armor
+          <div class="ability-list">
+            <div class="ability-item"><strong>Interpose:</strong> As a Reflex, when the partner is targeted by a melee Strike Resonance, the companion moves up to 10 ft and takes the hit instead — provided it is within range.</div>
+            <div class="ability-item"><strong>Shell Hardening:</strong> Once per Pulse, reduce damage taken by 2.</div>
+          </div>
+        </div>
+      </div>
+      <div class="evo-arrow">→</div>
+      <div class="evo-stage">
+        <div class="evo-stage-header"><div class="esh-num">Stage II</div><div class="esh-name" style="color:var(--cancer)">The Ward</div><div class="esh-trigger">After 3 Stage I feats</div></div>
+        <div class="evo-stage-body">
+          <div class="evo-stat-row">
+            <div class="evo-stat"><div class="es-label">Endurance</div><div class="es-val">18</div></div>
+            <div class="evo-stat"><div class="es-label">Forcefulness</div><div class="es-val">14</div></div>
+            <div class="evo-stat"><div class="es-label">Guard Rating</div><div class="es-val">17</div></div>
+            <div class="evo-stat"><div class="es-label">Speed</div><div class="es-val">25 ft · swim 30 ft</div></div>
+          </div>
+          Strike: 1d8 + Forcefulness mod · All Stage I abilities retained · Damage reduction increases to 4
+          <div class="ability-list">
+            <div class="ability-item"><strong>Aura of Protection:</strong> Allies within 10 ft of the companion gain +2 Guard Rating — the companion's Aetheric field extends outward as a ward.</div>
+            <div class="ability-item"><strong>Hardened Interpose:</strong> When using Interpose, the companion takes only half the damage it intercepts.</div>
+            <div class="ability-item"><strong>Shell Aspect (cosmetic):</strong> The companion's natural armor develops a faint iridescent quality — colors shifting subtly with the partner's emotional state.</div>
+          </div>
+        </div>
+      </div>
+      <div class="evo-arrow">→</div>
+      <div class="evo-stage">
+        <div class="evo-stage-header"><div class="esh-num">Stage III</div><div class="esh-name" style="color:var(--cancer)">The Adamant Echo</div><div class="esh-trigger">After 2 Stage II feats</div></div>
+        <div class="evo-stage-body">
+          <div class="evo-stat-row">
+            <div class="evo-stat"><div class="es-label">Endurance</div><div class="es-val">22</div></div>
+            <div class="evo-stat"><div class="es-label">Forcefulness</div><div class="es-val">16</div></div>
+            <div class="evo-stat"><div class="es-label">Guard Rating</div><div class="es-val">19</div></div>
+            <div class="evo-stat"><div class="es-label">Speed</div><div class="es-val">30 ft · swim 40 ft</div></div>
+          </div>
+          Strike: 2d6 + Forcefulness mod · All previous abilities · Damage reduction 6
+          <div class="ability-list">
+            <div class="ability-item"><strong>Sanctuary Shell:</strong> Once per Deep Attunement, the companion can draw in and shelter up to 2 Medium creatures inside its expanded shell-space for up to 1 hour — a pocket of absolute safety. No damage can reach creatures inside. They cannot act outward, but they are completely protected.</div>
+            <div class="ability-item"><strong>Resilient Interpose:</strong> The companion no longer takes damage when using Interpose — the Adamant frequency absorbs what the Adamant Crab's shell absorbs.</div>
+            <div class="ability-item"><strong>The Beast Remembers:</strong> The Adamant Crab does not attack this companion. In the Crab's territory, the companion is treated as a ward — other territorial creatures defer to it.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEO -->
+  <div class="evo-panel" id="evo-leo">
+    <p class="lore" style="margin-bottom:.9rem"><strong style="color:var(--leo)">♌ Leo companions</strong> evolve toward radiant dominance — they become creatures that define the space around them, that make enemies hesitate, that make allies feel invincible. A lion obviously, but also a golden eagle, a sun bear, a fire-maned horse. Whatever the form: <em>it has presence, and that presence compounds.</em></p>
+    <div class="evo-tree">
+      <div class="evo-stage">
+        <div class="evo-stage-header"><div class="esh-num">Stage I</div><div class="esh-name" style="color:var(--leo)">The Pride</div><div class="esh-trigger">From acknowledgment</div></div>
+        <div class="evo-stage-body">
+          <div class="evo-stat-row">
+            <div class="evo-stat"><div class="es-label">Forcefulness</div><div class="es-val">16</div></div>
+            <div class="evo-stat"><div class="es-label">Resonance</div><div class="es-val">14</div></div>
+            <div class="evo-stat"><div class="es-label">Guard Rating</div><div class="es-val">13</div></div>
+            <div class="evo-stat"><div class="es-label">Speed</div><div class="es-val">40 ft</div></div>
+          </div>
+          Strike: 1d8 + Forcefulness mod · Radiant damage option
+          <div class="ability-list">
+            <div class="ability-item"><strong>Intimidating Presence:</strong> Enemies within 30 ft who have not yet attacked in the encounter must make a DC 12 Resonance Warding Resonance or have Resonant Discord on their first Strike Resonance — the companion's presence gives them pause.</div>
+            <div class="ability-item"><strong>Pride Aura:</strong> Allies within 20 ft are immune to Dread-Struck while the companion is conscious.</div>
+          </div>
+        </div>
+      </div>
+      <div class="evo-arrow">→</div>
+      <div class="evo-stage">
+        <div class="evo-stage-header"><div class="esh-num">Stage II</div><div class="esh-name" style="color:var(--leo)">The Mane</div><div class="esh-trigger">After 3 Stage I feats</div></div>
+        <div class="evo-stage-body">
+          <div class="evo-stat-row">
+            <div class="evo-stat"><div class="es-label">Forcefulness</div><div class="es-val">18</div></div>
+            <div class="evo-stat"><div class="es-label">Resonance</div><div class="es-val">16</div></div>
+            <div class="evo-stat"><div class="es-label">Guard Rating</div><div class="es-val">14</div></div>
+            <div class="evo-stat"><div class="es-label">Speed</div><div class="es-val">45 ft</div></div>
+          </div>
+          Strike: 1d10 + Forcefulness mod + 1d6 radiant · All Stage I abilities retained
+          <div class="ability-list">
+            <div class="ability-item"><strong>Victory Surge:</strong> When the companion reduces a creature to 0 Vitality, all allies within 30 ft gain temporary Vitality equal to the companion's Resonance modifier (minimum 2).</div>
+            <div class="ability-item"><strong>Roar:</strong> Once per encounter as an Act, the companion roars. All enemies within 60 ft make DC 15 Resonance Warding Resonance or are Dread-Struck until the start of the companion's next Moment.</div>
+          </div>
+        </div>
+      </div>
+      <div class="evo-arrow">→</div>
+      <div class="evo-stage">
+        <div class="evo-stage-header"><div class="esh-num">Stage III</div><div class="esh-name" style="color:var(--leo)">The Nemean Echo</div><div class="esh-trigger">After 2 Stage II feats</div></div>
+        <div class="evo-stage-body">
+          <div class="evo-stat-row">
+            <div class="evo-stat"><div class="es-label">Forcefulness</div><div class="es-val">22</div></div>
+            <div class="evo-stat"><div class="es-label">Resonance</div><div class="es-val">18</div></div>
+            <div class="evo-stat"><div class="es-label">Guard Rating</div><div class="es-val">16</div></div>
+            <div class="evo-stat"><div class="es-label">Speed</div><div class="es-val">50 ft</div></div>
+          </div>
+          Strike: 2d10 + Forcefulness mod + 1d8 radiant · Resistance to non-magical damage
+          <div class="ability-list">
+            <div class="ability-item"><strong>Golden Hide:</strong> Resistance to all non-magical physical damage — the Nemean frequency is expressing through this companion's body. It is not immune, but ordinary weapons find less purchase.</div>
+            <div class="ability-item"><strong>Pack Victory:</strong> Victory Surge triggers on the partner's kills as well — the pride shares all victories.</div>
+            <div class="ability-item"><strong>The Beast Remembers:</strong> The Nemean Lion does not automatically attack this companion. It will, in fact, regard it with something resembling recognition — the same frequency, expressed in miniature. An Accord-Walker with a Stage III Leo companion approaching the Nemean Lion for their Zodiac Attunement encounter gains Resonant Fortune on the encounter's first Attunement Active Resonance.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REMAINING SIGNS — abbreviated for space; full trees follow same structure -->
+  <div class="evo-panel" id="evo-taurus">
+    <p class="lore" style="margin-bottom:.75rem"><strong style="color:var(--taurus)">♉ Taurus companions</strong> evolve toward immovable endurance — they become harder to kill, impossible to move, and eventually able to reshape the terrain around them. A bull, a boar, a tortoise, a badger. The tree: <em>Stage I: Endurance 16, cannot be knocked prone, +1d6 bludgeoning on charge. Stage II: Endurance 20, resistance to bludgeoning/piercing/slashing, trampling charge (target prone on failure). Stage III: Endurance 24, immunity to forced movement, Earth Shaker (all creatures in 20-ft radius make DC 16 Forcefulness Warding Resonance or knocked prone when companion strikes the ground), Beast Recognition (Khalkotauros).</em></p>
+  </div>
+
+  <div class="evo-panel" id="evo-gemini">
+    <p class="lore" style="margin-bottom:.75rem"><strong style="color:var(--gemini)">♊ Gemini companions</strong> evolve toward duplication and communication — they seem to be in two places simultaneously, can relay messages perfectly, and eventually operate as an extension of the partner's perception across distance. A raven, a ferret, a quick lizard, a paired-eye creature. <em>Stage I: Swiftness 16, can perfectly relay one spoken message per day. Stage II: Swiftness 18, Feint (impose Resonant Discord on one enemy's next attack as Instinct), acts twice on the partner's Moment. Stage III: Swiftness 20, can create a temporary duplicate of itself for 1 minute (duplicate has 1 Vitality but functions normally), partner sees through companion's eyes at will, Beast Recognition (Twin-Serpents).</em></p>
+  </div>
+
+  <div class="evo-panel" id="evo-virgo">
+    <p class="lore" style="margin-bottom:.75rem"><strong style="color:var(--virgo)">♍ Virgo companions</strong> evolve toward healing and analysis — they diagnose wounds, neutralize poisons, and eventually cure the uncurable. A honey bee, a white dove, a gentle deer, any creature associated with service and precision. <em>Stage I: Attunement 16, Healing Lick (1d4 Vitality restored by touch, 3/day). Stage II: Attunement 18, can cure Corrupted condition by spending 1 minute with the target, Healing Lick becomes 2d4 + 3. Stage III: Attunement 20, can cure Ashen Coil blight-rot (1/week, requires 10-minute contact), Healing Presence (all creatures within 20 ft restore 1 Vitality at start of each Pulse), Beast Recognition (Queen Bee).</em></p>
+  </div>
+
+  <div class="evo-panel" id="evo-libra">
+    <p class="lore" style="margin-bottom:.75rem"><strong style="color:var(--libra)">♎ Libra companions</strong> evolve toward balanced judgment — they can sense injustice, interrupt unfair advantages, and eventually impose cosmic equilibrium on encounters. A great bird, a two-toned creature, a creature with perfectly mirrored markings. <em>Stage I: Resonance 14, senses Avian-style when anyone lies in its presence (communicates to partner). Stage II: Resonance 16, Balance Strike (on a hit, the target loses any active Resonant Fortune effects for 1 Pulse), fly speed 30 ft. Stage III: Resonance 18, Equilibrium Aura (within 30 ft, no creature can have Resonant Fortune unless both attacker and defender have it — the field balances), Beast Recognition (Great Roc).</em></p>
+  </div>
+
+  <div class="evo-panel" id="evo-sagittarius">
+    <p class="lore" style="margin-bottom:.75rem"><strong style="color:var(--sagittarius)">♐ Sagittarius companions</strong> evolve toward navigation and range — they become tireless travelers, long-distance scouts, and eventually able to find anything anywhere. A deer, a horse, a hawk, a migratory bird. <em>Stage I: Swiftness 14, never gets lost, Resonant Fortune on Survival Active Resonances, long-range vision (read text at 200 ft). Stage II: Swiftness 16, speed 50 ft, can cover ground at double normal travel pace, once per day accurately describe a location it has visited to the partner through Bond Sense. Stage III: Swiftness 18, speed 60 ft, can travel to any named location it has previously visited in half the time, Beast Recognition (Star-Metal Stag).</em></p>
+  </div>
+
+  <div class="evo-panel" id="evo-capricorn">
+    <p class="lore" style="margin-bottom:.75rem"><strong style="color:var(--capricorn)">♑ Capricorn companions</strong> evolve toward perseverance and elevation — they climb anything, endure everything, and eventually simply refuse to stop until the goal is achieved. A mountain goat, a ram, a snow leopard, any high-altitude creature. <em>Stage I: Endurance 14, climb speed 40 ft, cannot be made to retreat (immune to forced movement away from a declared objective). Stage II: Endurance 16, requires only 2 hours of sleep, immune to environmental cold/heat, once per encounter may spend its Moment doing nothing visible — and gain Resonant Fortune on its next action. Stage III: Endurance 20, when reduced to 0 Vitality, immediately stabilizes and stands back up at 1 Vitality (once per encounter), Beast Recognition (Sea-Goat).</em></p>
+  </div>
+
+  <div class="evo-panel" id="evo-aquarius">
+    <p class="lore" style="margin-bottom:.75rem"><strong style="color:var(--aquarius)">♒ Aquarius companions</strong> evolve toward community connection — they sense networks, relay information across distances, and eventually become a living node in the Hive Attunement system. A bee obviously, or a highly social creature: wolves, dolphins, corvids. <em>Stage I: Attunement 14, always knows the number and emotional state of all creatures within 300 ft (communicated to partner as a general impression). Stage II: Attunement 16, can relay a message to any creature the partner has met, anywhere on the same continent (once per day — the message arrives within 24 hours through intermediary creatures). Stage III: Attunement 18, the companion becomes a Hive Attunement node — Accord-Walker partners gain +2 maximum Hive Attunement; all partners gain the Queen Bee's Hive Sense passive, Beast Recognition (Queen Bee, alongside Virgo — both signs are recognized).</em></p>
+  </div>
+
+  <div class="evo-panel" id="evo-pisces">
+    <p class="lore" style="margin-bottom:.75rem"><strong style="color:var(--pisces)">♓ Pisces companions</strong> evolve toward prophetic sensitivity — they dream true, navigate by future-sense, and eventually receive direct contact from the Twin Dream-Fish. An otter, a silver fish, a water-bird, any creature associated with dreams or water. <em>Stage I: Attunement 16, once per week delivers a true prophetic dream to the partner during sleep (Concordance provides one accurate detail about an imminent situation). Stage II: Attunement 18, can enter a sleeping creature's dream (partner witnesses through Bond Sense), once per day detects if any creature within 60 ft is about to act in surprise. Stage III: Attunement 20, the companion receives and relays direct contact from the Twin Dream-Fish once per month — one complete prophetic vision that the Dream-Fish considers important for the partner to have, Beast Recognition (Twin Dream-Fish — uniquely, the Fish will not attack this companion and will respond when it approaches the cenote).</em></p>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- PATH INTEGRATION -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-paths">
+<div class="wrap">
+
+  <p class="lore">Any character may bond with a companion — the Fate Number proximity is sufficient. But certain Paths have deeper mechanical integration with the companion system, either through existing features that synergize or through specific abilities that enhance companion functionality.</p>
+
+  <div class="path-card" onclick="this.classList.toggle('open')">
+    <div class="pc-head"><div class="pc-name">Void-Hunter — The Beast Companion Calling</div><span class="pc-tag">Primary Integration</span></div>
+    <div class="pc-body">The Void-Hunter's Fang of the Resistance Calling was noted as only a partial Beast Master equivalent — it became an intelligence network rather than an animal companion. With the Beast Companion system, a Void-Hunter can now take a companion alongside the intelligence network, creating the closest analog to the D&D Beast Master.<br><br>
+    <strong>Void-Hunter + Companion specific rules:</strong> The Void-Hunter's Void Quarry designation extends to the companion — both the Void-Hunter and the companion have Resonant Fortune on Strike Resonances against the current Quarry. The companion gains +1d8 bonus damage against the Quarry (matching the Void-Hunter's own bonus). <strong>Additionally:</strong> the companion's Evolution Feat triggers count one level easier for Void-Hunters — they need 2 Stage I feats for Stage II (rather than 3), and 1 Stage II feat for Stage III (rather than 2). The Void-Hunter's lifestyle produces the right conditions for rapid bond deepening.</div>
+  </div>
+
+  <div class="path-card" onclick="this.classList.toggle('open')">
+    <div class="pc-head"><div class="pc-name">Primal Accord — Companion and Aspect Interaction</div><span class="pc-tag">Deep Integration</span></div>
+    <div class="pc-body">An Accord-Walker with a companion creates a unique situation — the companion's zodiac sign and the Accord-Walker's Beast Resonance pools may overlap or diverge, producing interesting tactical combinations.<br><br>
+    <strong>Same-sign companion:</strong> If the companion's zodiac sign matches one of the Accord-Walker's known Beasts, the companion's presence in combat generates +1 Beast Resonance Point for that Beast's pool at the start of each Pulse (maximum 1 per Pulse). The companion's proximity strengthens the Accord-Walker's access to that Beast's frequency.<br><br>
+    <strong>Different-sign companion:</strong> When the Accord-Walker manifests a Full Aspect of their Primary Beast and the companion is within 30 ft, the companion gains a cosmetic aspect of that Beast as well — not mechanically significant, but the Concordance describes it. The frequencies harmonize visibly.<br><br>
+    <strong>Keeper Calling + Companion:</strong> A Keeper Accord-Walker's companion also gains the Ecosystem Reading benefit in the Keeper's chosen terrain — the companion becomes an additional sensory node in the Keeper's environmental awareness network.</div>
+  </div>
+
+  <div class="path-card" onclick="this.classList.toggle('open')">
+    <div class="pc-head"><div class="pc-name">Primal Jarl — Beast-Soul Calling Companion</div><span class="pc-tag">Calling Integration</span></div>
+    <div class="pc-body">The Beast-Soul Calling (Arcadian tradition) was designed with the companion system in mind — a Primal Jarl who walks the Beast-Soul path has a natural relationship with the animals their aspects connect them to.<br><br>
+    <strong>Beast-Soul + Companion:</strong> When the Primal Jarl enters their Wrath State and activates a Beast Aspect, their companion gains the same Minor Aspect effects for the Wrath's duration — not full transformation, but the claws or hide or sense-enhancement associated with the aspect. The companion and Jarl briefly share the same Aetheric frequency.<br><br>
+    <strong>Bestial Soul ability:</strong> The Bestial Soul Calling feature (communication with beasts while in Wrath) extends to Stage I and II companions of other players in the party — the Jarl in Wrath State can communicate with all bonded animals in the area, not just their own.</div>
+  </div>
+
+  <div class="path-card" onclick="this.classList.toggle('open')">
+    <div class="pc-head"><div class="pc-name">Accord-Maker — Homunculus vs. Companion</div><span class="pc-tag">System Clarification</span></div>
+    <div class="pc-body">The Accord-Maker's Homunculus Servant and a Beast Companion are mechanically distinct and can coexist — an Accord-Maker may have both simultaneously.<br><br>
+    The Homunculus uses an Infusion slot and is a constructed being with no Fate Number and no zodiac sign. It does not evolve. It does not have a Fated Bond. It is a tool — an excellent one, but a tool.<br><br>
+    A Beast Companion is a living creature with a Fate Number, a zodiac sign, and genuine feelings about its partner. It evolves. It has a Bond. It can be displeased.<br><br>
+    <strong>The interesting combination:</strong> An Accord-Maker with both a Homunculus and a Companion creates a three-way coordination system — the Homunculus handles delivery and precision tasks; the Companion handles perception and combat; the Accord-Maker handles construction and strategy. The action economy cost is significant (the Homunculus uses an Instinct; the Companion uses an Instinct; the Accord-Maker may want their own Instinct). A Blueprint Companion would require three separate Instinct sources — this requires either high Resonance Depth features or very careful planning.</div>
+  </div>
+
+  <div class="path-card" onclick="this.classList.toggle('open')">
+    <div class="pc-head"><div class="pc-name">Stellar Cartographer — Companion Fate Numbers</div><span class="pc-tag">Deep Interaction</span></div>
+    <div class="pc-body">A Stellar Cartographer can read their companion's Fate Number as a Instinct — which produces fascinating information about the bond they share and the companion's cosmic position.<br><br>
+    <strong>Companion reading:</strong> A companion's Fate Number reads differently from a person's — the Cartographer sees the Number and then a second resonance beneath it, the zodiac sign's frequency expressed through a living form rather than a soul-thread. It is like reading a Number written in a different hand than usual.<br><br>
+    <strong>Bond Cartography + Companion:</strong> The Bond Cartography feature at Depth 3 works fully on companion bonds — the Cartographer can map the health of their companion's bond with perfect accuracy, including whether it is strained (companion has been mistreated) or strengthening (recent Evolution Feat completed). This is the most reliable way for a Stellar Cartographer to track their companion's emotional state beyond the basic Bond Sense.<br><br>
+    <strong>Quint Bond implications:</strong> A Stellar Cartographer who notices their own companion's Fate Number falls within Quint Bond range of four other party members' companions has discovered something the Loom of Fate will need to be told about. This should not happen by accident.</div>
+  </div>
+
+  <div class="path-card" onclick="this.classList.toggle('open')">
+    <div class="pc-head"><div class="pc-name">Rāśi-Siddha — Sign Alignment</div><span class="pc-tag">Tapas Interaction</span></div>
+    <div class="pc-body">A Rāśi-Siddha whose companion shares their zodiac sign has a particularly deep attunement — their Tapas practice and the companion's sign-frequency reinforce each other.<br><br>
+    <strong>Matching sign bonus:</strong> When the Rāśi-Siddha uses a Mantra Strike within 10 ft of their companion, the strike deals +1d4 damage of their sign's elemental type — the companion's proximity amplifies the Tapas expression. This is not a Tapas cost. It is resonance.<br><br>
+    <strong>Purification touch:</strong> A Kanya-temple Siddha with a Virgo-sign companion can use their companion as a delivery vector for the Purification Touch — the companion touches the target, the Siddha spends the Tapas from any distance within Bond Sense range (1 mile). The agreement between them extends the Siddha's reach.</div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- LORE & RULES -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-lore">
+<div class="wrap">
+
+  <div class="sec">Rules Clarifications</div>
+  <div class="two-col">
+    <div class="info">
+      <div class="ib-label">Multiple Companions</div>
+      <div class="ib-text">A character may have only one fully bonded companion at a time. A second bond cannot form while the first is active — the Loom will not maintain two Paired Bonds at the companion tier simultaneously for one character. If a companion dies permanently (an extraordinarily rare event requiring specific narrative circumstances), the character may eventually form a new bond — but not before a period of genuine grief that the Concordance tracks in campaign time.</div>
+    </div>
+    <div class="info">
+      <div class="ib-label">Companion Death</div>
+      <div class="ib-text">A companion cannot permanently die as long as its partner is alive and the bond is intact. At 0 Vitality it stabilizes. Permanent death requires: the partner deliberately severs the bond (see Bond Severance), the companion is killed by a Legendary Beast, or the companion is consumed by Void-energy conversion (becoming a Void-Husk equivalent). If any of these occur, the partner gains the Bond-Severed condition for 1d6 months.</div>
+    </div>
+    <div class="info">
+      <div class="ib-label">Bond Severance</div>
+      <div class="ib-text">The partner may deliberately release the companion — sending it into the wild, returning it to its natural context, or completing the relationship intentionally rather than maintaining it out of habit. This is not death. The bond weakens to a general awareness rather than an active connection. The companion remembers the partner. The partner remembers the companion. The Loom records it. Bond Severance done with genuine care for the companion's welfare does not trigger Bond-Severed condition.</div>
+    </div>
+    <div class="info">
+      <div class="ib-label">Companion Separation</div>
+      <div class="ib-text">Partners and companions may be separated for extended periods — the bond does not break with distance. Bond Sense functions at any range on the same plane. The companion does not follow the partner into other planes automatically. A companion that has been separated for more than 30 days without contact begins to revert toward Stage I emotionally (not mechanically — the abilities remain, but the companion's behavior becomes more feral and less responsive to distant Bond Sense guidance).</div>
+    </div>
+  </div>
+
+  <div class="sec">The Companion in the World</div>
+  <p class="lore">Companions are not invisible to the world. NPCs notice them. Factions have opinions about them. The Ashen Coil recognizes companion bonds as vulnerabilities — threatening a companion is a well-documented Coil tactic for applying pressure to party members who have bonded animals. The Kallos-Sworn are fascinated by companions whose signs match the Legendary Beasts' domains — they send researchers. Lord Sagittarius of the Sagittarian Steppes has a Stage III Sagittarius-sign companion that has been with him for forty years. He does not discuss it.</p>
+
+  <div class="wild-note">
+    <div class="note-title">The Most Important Rule</div>
+    <div class="note-text">The companion is not a class feature. It is a character. The evolution system is not a progression tree. It is a relationship arc. <strong>Every mechanical threshold in this document exists to serve the fiction, not replace it.</strong> A companion that has completed all Stage II feats but whose bond feels shallow and transactional should not evolve to Stage III — the Concordance should wait until the relationship catches up to the mechanics. Conversely, a companion whose relationship with its partner is extraordinary but whose feat list is incomplete may evolve early if the Concordance feels the bond has genuinely reached that depth. The feats are a guide. The relationship is the truth.</div>
+  </div>
+
+</div>
+</div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).style.display='block';
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+function showEvo(id,btn){
+  document.querySelectorAll('.evo-panel').forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  document.querySelectorAll('.evo-sign-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('evo-'+id).style.display='block';
+  document.getElementById('evo-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+document.querySelectorAll('.panel').forEach(p=>{p.style.display='none'});
+document.getElementById('panel-foundation').style.display='block';
+document.querySelectorAll('.evo-panel').forEach(p=>{p.style.display='none'});
+document.getElementById('evo-aries').style.display='block';
+</script>
+</body>
+</html>

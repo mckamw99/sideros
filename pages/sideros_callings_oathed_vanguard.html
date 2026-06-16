@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — Oathed Vanguard · All Callings</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;500;600&display=swap');
+:root{
+  --void:#0a0b0c;--void-mid:#131416;
+  --gold:#c9a84c;--gold-dim:#7a6028;--gold-bright:#e8c870;
+  --parchment:#f0e6cc;--parchment-dim:rgba(240,230,204,0.55);
+  --vanguard:#c08040;--vanguard-dim:#785020;--vanguard-bright:#e0a060;
+  --shattered:#7040a0;--shattered-bright:#a060d0;
+  --alpha:#d4724a;--beta:#4a8ec4;--omega:#9066c8;
+  --red:#c04040;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--parchment);line-height:1.7;min-height:100vh}
+.hero{text-align:center;padding:3rem 1.5rem 2.5rem;background:radial-gradient(ellipse at 50% 0%,rgba(192,128,64,0.1) 0%,transparent 60%);border-bottom:1px solid rgba(192,128,64,0.2)}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--vanguard-dim);margin-bottom:.8rem}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(20px,3.5vw,30px);font-weight:500;color:var(--vanguard-bright);letter-spacing:.06em;margin-bottom:.4rem}
+.hero-sub{font-size:14px;font-style:italic;color:var(--parchment-dim);max-width:520px;margin:0 auto}
+.nav-strip{display:flex;gap:4px;flex-wrap:wrap;padding:.65rem .9rem;border-bottom:1px solid rgba(192,128,64,0.12);background:var(--void-mid);position:sticky;top:0;z-index:20}
+.nav-btn{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border:1px solid rgba(192,128,64,0.2);border-radius:3px;background:transparent;color:var(--parchment-dim);cursor:pointer;transition:all .15s;white-space:nowrap}
+.nav-btn:hover{background:rgba(192,128,64,0.06)}
+.nav-btn.active{background:rgba(192,128,64,0.1);color:var(--vanguard-bright);border-color:rgba(192,128,64,0.4)}
+.nav-btn.shattered-btn{border-color:rgba(112,64,160,0.3)}
+.nav-btn.shattered-btn.active{background:rgba(112,64,160,0.12);color:var(--shattered-bright);border-color:rgba(112,64,160,0.5)}
+.panel{display:none}.panel.active{display:block}
+.wrap{max-width:860px;margin:0 auto;padding:2rem 1.25rem 4rem}
+.calling-header{margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:1px solid rgba(192,128,64,0.15)}
+.ch-badge{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--vanguard-dim);margin-bottom:.6rem;display:block}
+.ch-name{font-family:'Cinzel',serif;font-size:22px;font-weight:500;letter-spacing:.04em;margin-bottom:.3rem}
+.ch-origin{font-size:13px;font-style:italic;color:var(--parchment-dim);margin-bottom:.6rem}
+.ch-essence{display:inline-block;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:3px;border:1px solid}
+.lore{font-size:14px;color:rgba(240,230,204,0.8);line-height:1.85;margin-bottom:.9rem}
+.lore strong{color:var(--parchment);font-weight:500}
+.lore em{color:var(--vanguard-dim);font-style:italic}
+.lore.shattered-lore em{color:var(--shattered-bright)}
+.sec{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--vanguard-dim);margin:1.5rem 0 .65rem;display:flex;align-items:center;gap:.6rem}
+.sec::after{content:'';flex:1;height:1px;background:rgba(192,128,64,0.12)}
+.sec.shattered-sec{color:var(--shattered);}
+.sec.shattered-sec::after{background:rgba(112,64,160,0.15)}
+.feat-grid{display:grid;gap:7px}
+.feat{background:rgba(255,255,255,0.022);border:1px solid rgba(192,128,64,0.14);border-radius:8px;padding:11px 13px;cursor:pointer;overflow:hidden;transition:border-color .15s}
+.feat:hover,.feat.open{border-color:rgba(192,128,64,0.38)}
+.feat.shattered{border-color:rgba(112,64,160,0.2)}
+.feat.shattered:hover,.feat.shattered.open{border-color:rgba(112,64,160,0.45)}
+.feat-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.feat-name{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.04em;color:var(--vanguard-bright)}
+.feat-name.shattered{color:var(--shattered-bright)}
+.feat-depth{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;padding:2px 6px;border-radius:3px;border:1px solid rgba(192,128,64,0.3);color:var(--vanguard-dim);white-space:nowrap;flex-shrink:0}
+.feat-depth.shattered{border-color:rgba(112,64,160,0.3);color:var(--shattered)}
+.feat-body{display:none;margin-top:8px;padding-top:8px;border-top:1px solid rgba(192,128,64,0.1);font-size:13px;color:rgba(240,230,204,0.75);line-height:1.7}
+.feat.shattered .feat-body{border-top-color:rgba(112,64,160,0.12)}
+.feat.open .feat-body{display:block}
+.feat-body strong{color:var(--parchment);font-weight:500}
+.feat-body em{color:var(--vanguard-dim)}
+.feat-body.shattered-body em{color:var(--shattered)}
+.already-built{background:rgba(90,154,72,0.05);border:1px solid rgba(90,154,72,0.2);border-radius:8px;padding:10px 12px;margin-bottom:1rem;font-size:13px;color:rgba(240,230,204,0.7);line-height:1.6}
+.already-built strong{color:rgba(122,186,96,0.9);font-weight:500}
+.warning{background:rgba(192,64,64,0.06);border:1px solid rgba(192,64,64,0.25);border-radius:8px;padding:11px 13px;margin:.75rem 0;font-size:13px;color:rgba(240,230,204,0.75);line-height:1.65}
+.warning-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:5px}
+.warning strong{color:var(--parchment);font-weight:500}
+.shattered-box{background:rgba(112,64,160,0.06);border:1px solid rgba(112,64,160,0.25);border-radius:8px;padding:11px 13px;margin:.75rem 0}
+.sb-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--shattered-bright);margin-bottom:5px}
+.sb-text{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.65}
+.sb-text strong{color:var(--parchment);font-weight:500}
+.note{background:rgba(192,128,64,0.05);border:1px solid rgba(192,128,64,0.2);border-radius:8px;padding:10px 12px;margin:.75rem 0;font-size:13px;color:rgba(240,230,204,0.75);line-height:1.65}
+.note strong{color:var(--parchment);font-weight:500}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Sideros · Path Compendium · Oathed Vanguard</div>
+  <h1 class="hero-title">Oathed Vanguard — All Callings</h1>
+  <p class="hero-sub">Nine oaths. Eight made before the Loom. One made in defiance of it.</p>
+</div>
+
+<div class="nav-strip">
+  <button class="nav-btn active" onclick="show('compact',this)">Solar Compact</button>
+  <button class="nav-btn" onclick="show('justice',this)">Loom's Justice</button>
+  <button class="nav-btn" onclick="show('ancients',this)">Ancient Sideros</button>
+  <button class="nav-btn" onclick="show('conquest',this)">Iron Dominion</button>
+  <button class="nav-btn" onclick="show('glory',this)">Oath of Glory</button>
+  <button class="nav-btn" onclick="show('redemption',this)">Oath of Restoration</button>
+  <button class="nav-btn" onclick="show('crown',this)">The Compact Crown</button>
+  <button class="nav-btn" onclick="show('watchers',this)">The Veil Wardens</button>
+  <button class="nav-btn shattered-btn" onclick="show('shattered',this)">The Shattered Vow</button>
+</div>
+
+<!-- ALREADY BUILT -->
+<div class="panel active" id="panel-compact">
+<div class="wrap">
+  <div class="already-built"><strong>Oath of the Solar Compact</strong> — previously built. Features: Sacred Weapons (Depth 3), Turn Void-Husks (Depth 3 Channel Divinity), Oath Aura (Depth 7). Classic devotion oath — justice, protection, turning the darkness.</div>
+</div>
+</div>
+
+<div class="panel" id="panel-justice">
+<div class="wrap">
+  <div class="already-built"><strong>Oath of the Loom's Justice</strong> — previously built. Features: Vow of Enmity (Depth 3), Misty Step variant (Depth 3 Channel Divinity), Relentless Pursuit (Depth 7). The hunter's oath — a single target, hunted without mercy.</div>
+</div>
+</div>
+
+<div class="panel" id="panel-ancients">
+<div class="wrap">
+  <div class="already-built"><strong>Oath of Ancient Sideros</strong> — previously built. Features: Nature's Wrath (Depth 3), Aura of Warding (Depth 7), Legendary Beast Accord (Depth 15). The oath to preserve the light of the zodiac and the beauty of what lives.</div>
+</div>
+</div>
+
+<!-- IRON DOMINION (Conquest) -->
+<div class="panel" id="panel-conquest">
+<div class="wrap">
+  <div class="calling-header">
+    <span class="ch-badge">Oathed Vanguard · Calling IV</span>
+    <div class="ch-name" style="color:var(--vanguard-bright)">The Iron Dominion</div>
+    <div class="ch-origin">Replacing: Oath of Conquest · Cultural home: Leonine Empire's military arm, Dunmarim siege-tradition, Order of Pure Reason's enforcement wing</div>
+    <span class="ch-essence" style="color:var(--alpha);border-color:rgba(212,114,74,0.3);background:rgba(212,114,74,0.05)">Alpha-aspected</span>
+  </div>
+  <p class="lore">The Iron Dominion does not believe fear is a failure of the enemy. It is a tactical resource — accurate information about the power differential in the room, communicated efficiently through the enemy's body rather than through negotiation. The Oath of Iron Dominion is sworn before the Loom with one tenet above all others: <strong>resistance is inefficiency, and inefficiency is preventable.</strong> The Iron Dominion ends conflicts by making continued resistance feel impossible. They are correct that this is merciful. They are less correct that mercy is their primary motivation.</p>
+  <div class="sec">Calling Features</div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Conquering Presence</div><span class="feat-depth">Depth 3</span></div>
+      <div class="feat-body"><strong>Conquering Smite (Channel Divinity):</strong> When you hit with a melee Strike Resonance, spend Channel Divinity to deal an extra 2d10 psychic damage. The target also becomes Dread-Struck until the start of your next Moment — not from magical compulsion but from the direct experience of being struck by someone who is entirely unworried about the outcome.<br><br>
+      <strong>Aura of Conquest (Depth 3, passive):</strong> While you are conscious, creatures Dread-Struck have their speed reduced to 0 and take psychic damage equal to half your Resonance modifier at the start of each of their Moments. The fear does not just freeze them — it hurts. This is not cruelty. It is a demonstration of the cost of continued resistance.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Scornful Rebuke</div><span class="feat-depth">Depth 7</span></div>
+      <div class="feat-body">When a creature hits you with a Strike Resonance while you are conscious, that creature takes psychic damage equal to your Resonance modifier — the contempt radiates outward as force. This is passive and always active. The Iron Dominion does not acknowledge pain as meaningful. That dismissal itself is weaponized.<br><br>
+      Additionally: creatures Dread-Struck within your Aura of Conquest cannot make Strike Resonances against you — they can attack other targets, or flee, but not you directly. The hierarchy has been established.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Invincible Conqueror</div><span class="feat-depth">Depth 15</span></div>
+      <div class="feat-body">Once per Deep Attunement, for 1 minute: resistance to all damage; your Aether Smite deals maximum damage without rolling; you can make one additional melee Strike Resonance on each of your Moments. During this minute, you are the demonstration — a walking proof that the outcome was never in question. When the minute ends, nothing is changed mechanically. But those who witnessed it remember what they saw.</div>
+    </div>
+  </div>
+  <div class="note"><strong>The moral complexity:</strong> The Iron Dominion oath is sworn before the Loom like all oaths — which means the Loom has acknowledged it. A Vanguard who swears to rule through fear has made a genuine cosmic commitment. The oath does not break unless they act with mercy rather than dominion. That specific irony — that mercy would break this oath — is something Iron Dominion Vanguards do not discuss openly.</div>
+</div>
+</div>
+
+<!-- OATH OF GLORY -->
+<div class="panel" id="panel-glory">
+<div class="wrap">
+  <div class="calling-header">
+    <span class="ch-badge">Oathed Vanguard · Calling V</span>
+    <div class="ch-name" style="color:var(--vanguard-bright)">Oath of Glory</div>
+    <div class="ch-origin">Replacing: Oath of Glory · Cultural home: Leonine heroic tradition, Centaur-Kin philosophical warriors, Steppe epic-song culture</div>
+    <span class="ch-essence" style="color:var(--alpha);border-color:rgba(212,114,74,0.3);background:rgba(212,114,74,0.05)">Alpha-aspected</span>
+  </div>
+  <p class="lore">The Oath of Glory is sworn on a specific understanding: that heroic deeds witnessed by the world accumulate into a kind of cosmic weight — that enough acts of genuine excellence produce a resonance in the Aetheric record that outlasts the individual. The Vanguard who swears this oath is not seeking fame. They are seeking to <strong>become the kind of story that teaches something true</strong> about what mortals can achieve when they commit entirely to being excellent at the right moment.</p>
+  <div class="sec">Calling Features</div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Peerless Athlete</div><span class="feat-depth">Depth 3</span></div>
+      <div class="feat-body">Mastery in Athletics and Acrobatics. When making an Athletics or Acrobatics Active Resonance, treat any roll of 9 or lower as a 10 — glory requires that certain things simply be done.<br><br>
+      <strong>Inspiring Smite (Channel Divinity):</strong> After dealing damage with Aether Smite, distribute temporary Vitality equal to 2d8 + Resonance modifier among any creatures of your choice within 30 ft (including yourself). The heroic act restores everyone who witnessed it.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Aura of Alacrity</div><span class="feat-depth">Depth 7</span></div>
+      <div class="feat-body">Your movement speed increases by 10 ft. Allies within 5 ft of you also gain +10 ft movement speed when they start their Moment within your aura. The Vanguard of Glory does not move alone — their momentum carries those around them.<br><br>
+      <strong>Glorious Defense:</strong> When a creature within your Aura of Oath makes a Strike Resonance against you, use your Reflex to add your Resonance modifier to your Guard Rating against that attack. If the attack misses, you may make one melee Strike Resonance against the attacker as part of the same Reflex. You have turned a near-miss into a counter-strike and a demonstration.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Living Legend</div><span class="feat-depth">Depth 15</span></div>
+      <div class="feat-body">Once per Deep Attunement, for 1 minute: immune to Dread-Struck; Resonant Fortune on all Strike Resonances; whenever you hit with a Strike Resonance, the creature struck must make a Resonance Warding Resonance (DC = 8 + Mastery + Resonance mod) or be Dread-Struck — they have encountered the legend in person and their body has registered the disparity. Allies within 30 ft who can see you are also immune to Dread-Struck for the duration. The legend's proximity is its own protection for those standing with it.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- OATH OF RESTORATION (Redemption) -->
+<div class="panel" id="panel-redemption">
+<div class="wrap">
+  <div class="calling-header">
+    <span class="ch-badge">Oathed Vanguard · Calling VI</span>
+    <div class="ch-name" style="color:var(--vanguard-bright)">Oath of Restoration</div>
+    <div class="ch-origin">Replacing: Oath of Redemption · Cultural home: Kanya Siddha tradition, Zodiac Priest peace-domain practice, post-Coil-War reconciliation movements</div>
+    <span class="ch-essence" style="color:var(--omega);border-color:rgba(144,102,200,0.3);background:rgba(144,102,200,0.05)">Omega-aspected</span>
+  </div>
+  <p class="lore">The Oath of Restoration is sworn by those who believe the most important thing a warrior can do is make violence unnecessary — not by being so powerful that no one challenges them, but by being so genuinely committed to the possibility of peace that they become the space in which peace can happen. The Restoration Vanguard does not avoid fighting. They exhaust every alternative first, with the same rigor and skill they would bring to the fight itself. <strong>When they finally draw a weapon, everyone in the room understands that everything else was tried.</strong></p>
+  <div class="sec">Calling Features</div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Emissary of Peace</div><span class="feat-depth">Depth 3</span></div>
+      <div class="feat-body">Mastery in Insight and Persuasion. When making Insight or Persuasion Active Resonances to avoid or de-escalate conflict, add your Resonance modifier twice instead of once — the oath backs the words with Aetheric weight.<br><br>
+      <strong>Rebuke the Violent (Channel Divinity):</strong> When a creature within 30 ft hits another creature with a Strike Resonance, use your Reflex to impose psychic damage equal to half the damage dealt on the attacker — the violence rebounds. The attacker chose to strike. The oath ensures the choice has a cost.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Aura of the Guardian</div><span class="feat-depth">Depth 7</span></div>
+      <div class="feat-body">When you take damage, you may transfer up to half that damage (rounded down) to a willing creature within your Aura of Oath range — they absorb it instead. This requires their willingness (Reflex to accept). The Restoration Vanguard shares the burden as naturally as they share the effort of peace.<br><br>
+      Additionally: once per Deep Attunement as an Act, you may end the Dread-Struck and Soul-Swayed conditions on all creatures within 30 ft — including enemies. The Restoration Vanguard does not use fear and compulsion as tools. They will not allow others to use them unchallenged either.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Protective Spirit</div><span class="feat-depth">Depth 15</span></div>
+      <div class="feat-body">At the start of each of your Moments, if you are below half your maximum Vitality, you regain Vitality equal to 1d6 + Resonance modifier. The oath sustains the peacekeeper so they can continue the work — it does not allow the Restoration Vanguard to be worn down by the very violence they are trying to prevent.<br><br>
+      Additionally: as an Act, impose an Aetheric peace compulsion on all creatures within 60 ft — no creature may take aggressive action for 1 minute unless they succeed on a Resonance Warding Resonance (DC = 8 + Mastery + Resonance modifier). Creatures that succeed are immune for 24 hours. This Working represents the Loom itself acknowledging that sometimes the most important action is a pause.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- THE COMPACT CROWN (Crown) -->
+<div class="panel" id="panel-crown">
+<div class="wrap">
+  <div class="calling-header">
+    <span class="ch-badge">Oathed Vanguard · Calling VII</span>
+    <div class="ch-name" style="color:var(--vanguard-bright)">The Compact Crown</div>
+    <div class="ch-origin">Replacing: Oath of the Crown · Cultural home: Duchy Compact governance tradition, Solar Throne's formal military, Libra-domain Zodiac Priest parallel</div>
+    <span class="ch-essence" style="color:var(--beta);border-color:rgba(74,142,196,0.3);background:rgba(74,142,196,0.05)">Beta-aspected</span>
+  </div>
+  <p class="lore">The Compact Crown swears not to a monarch but to the <em>idea</em> of governance — the social agreement that makes civilization possible. The Duchy Compact's fragile peace holds because certain individuals have committed, before the Loom, to defending the structures that allow people to live together. The Compact Crown Vanguard is one of those individuals. <strong>They are not a soldier. They are a load-bearing wall of the social order.</strong> When that wall fails, things collapse.</p>
+  <div class="sec">Calling Features</div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Champion Challenge</div><span class="feat-depth">Depth 3</span></div>
+      <div class="feat-body"><strong>Channel Divinity:</strong> As an Act, issue the Champion Challenge — each hostile creature within 30 ft must make a Resonance Warding Resonance (DC = 8 + Mastery + Resonance mod) or be compelled to attack only the Vanguard for 1 minute, or until the Vanguard attacks a creature other than that enemy. The Compact Crown places themselves between the threat and the institution they protect.<br><br>
+      <strong>Duty-Bound:</strong> Mastery in Athletics. If forced to fail a Warding Resonance, you may choose to succeed instead — once per Deep Attunement. The oath forbids certain failures. The Loom enforces the prohibition.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Divine Allegiance</div><span class="feat-depth">Depth 7</span></div>
+      <div class="feat-body">When a creature within 5 ft of you takes damage, use your Reflex to transfer that damage to yourself instead — no roll required. You absorb it completely. The Compact Crown does not negotiate about this. It is what they are for.<br><br>
+      Additionally: you cannot be moved against your will while conscious. Pushed, pulled, thrown — nothing works. The Compact Crown has planted themselves in the world and they are not moving until the institution they are protecting is safe.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Exalted Champion</div><span class="feat-depth">Depth 15</span></div>
+      <div class="feat-body">Once per Deep Attunement, for 1 hour: resistance to all non-magical damage; Resonant Fortune on all Warding Resonances; your melee strikes deal an additional 1d10 radiant damage. You also emit an aura of cosmic authority — creatures of the Concordance's choice (CR up to your Resonance Depth ÷ 2) within 30 ft are Soul-Swayed toward treating you as a legitimate authority, as if by a 5th-tier Working. This represents the Duchy Compact's founding principle briefly made manifest: that authority is a real Aetheric force when someone has committed their soul to upholding it.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- THE VEIL WARDENS (Watchers) -->
+<div class="panel" id="panel-watchers">
+<div class="wrap">
+  <div class="calling-header">
+    <span class="ch-badge">Oathed Vanguard · Calling VIII</span>
+    <div class="ch-name" style="color:var(--vanguard-bright)">The Veil Wardens</div>
+    <div class="ch-origin">Replacing: Oath of the Watchers · Cultural home: Kallos-Sworn field operatives, Te Kapo border-guardians, Fade-Guardian adjacent tradition</div>
+    <span class="ch-essence" style="color:var(--beta);border-color:rgba(74,142,196,0.3);background:rgba(74,142,196,0.05)">Beta-aspected</span>
+  </div>
+  <p class="lore">The Veil Wardens swear before the Loom to stand at the boundary between the material world and everything that would cross it uninvited — Otherworld incursions, extraplanar entities, Void-energy manifestations, and the Legendary Beasts when they move through populated areas without awareness of the casualties they leave. The oath does not require the Warden to destroy what crosses. It requires them to ensure the crossing is <strong>known, contained, and addressed</strong> before it becomes catastrophic. They are monitors, not executioners. Most of the time.</p>
+  <div class="sec">Calling Features</div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Watcher's Will</div><span class="feat-depth">Depth 3</span></div>
+      <div class="feat-body">Mastery in Insight and Perception. Resonant Fortune on all Warding Resonances against extraplanar entities, Otherworld creatures, Void-Husks, and Legendary Beasts — the oath creates a specific resistance to their influence that standard Aetheric training does not produce.<br><br>
+      <strong>Abjure the Otherworldly (Channel Divinity):</strong> As an Act, select one creature within 60 ft that is extraplanar, Otherworld-originated, or Void-energy manifested. That creature makes a Resonance Warding Resonance (DC = 8 + Mastery + Resonance mod). On a failure: it is banished to its plane of origin for 1 minute (if it has one) or displaced 30 ft and Dread-Struck for 1 minute (if it is from the material world but corrupted). The oath recognizes what doesn't belong and asserts the boundary.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Veil Sense</div><span class="feat-depth">Depth 7</span></div>
+      <div class="feat-body">You always know when an Otherworld entity, extraplanar being, or Void-energy manifestation is within 300 ft — the oath creates a standing Aetheric alert that cannot be suppressed. You know the direction and approximate distance, not identity or specific threat level. Additionally: creatures matching these categories have Resonant Discord on Strike Resonances against you — the oath's protection is specific to the threats it was sworn against. Your Aether Smite deals an additional 2d10 damage against these creature types.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Mortal Bulwark</div><span class="feat-depth">Depth 15</span></div>
+      <div class="feat-body">You become a walking ward against extraplanar incursion. Creatures of the Otherworld, Void-energy manifestations, and summons (creatures brought to this plane by Workings) within your Aura of Oath range have Resonant Discord on all Active Resonances — their ability to affect the material world is dampened by your proximity. Additionally: once per Deep Attunement, as an Act, seal one location (up to 60-ft radius) against extraplanar entry for 24 hours — nothing from outside the material plane can enter the sealed space. Nothing already inside can be forced out. The seal is Aetheric, not physical — the Veil Warden has temporarily made the boundary concrete.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- THE SHATTERED VOW (Oathbreaker) -->
+<div class="panel" id="panel-shattered">
+<div class="wrap">
+  <div class="calling-header">
+    <span class="ch-badge" style="color:var(--shattered)">Oathed Vanguard · Calling IX · The Darkest Path</span>
+    <div class="ch-name" style="color:var(--shattered-bright)">The Shattered Vow</div>
+    <div class="ch-origin">Replacing: Oathbreaker · This Calling is not chosen. It happens.</div>
+    <span class="ch-essence" style="color:var(--omega);border-color:rgba(112,64,160,0.3);background:rgba(112,64,160,0.06)">Omega-aspected — the bond inverts, not breaks</span>
+  </div>
+
+  <div class="shattered-box">
+    <div class="sb-title">How The Shattered Vow Works</div>
+    <div class="sb-text">An Oathed Vanguard does not choose the Shattered Vow. They commit an act so fundamentally contrary to their oath's tenets — deliberately, knowingly, with full understanding of what they are doing — that the zodiac bond cannot sustain the contradiction. The bond does not break. In Sideros, the Loom does not break threads lightly. Instead, <strong>the bond inverts</strong>.<br><br>
+    The same cosmic force that powered the Vanguard's oath-abilities still flows through them. But it flows backward now — drawn from the domain's shadow rather than its light. A Solar Compact Vanguard who betrayed the innocent finds the Leo domain's solar warmth replaced by its consuming heat. A Loom's Justice Vanguard who killed the person they were hunting finds the Scorpio domain's revelation replaced by its concealment. <strong>The power is real. The relationship has become its own opposite.</strong><br><br>
+    The Concordance does not apply the Shattered Vow mechanically — it applies it narratively. When the act is committed, the Concordance tells the player privately: "The bond has inverted." The mechanical changes take effect immediately. The other characters do not necessarily know what has happened. The Loom does.</div>
+  </div>
+
+  <div class="sec shattered-sec">The Inverted Bond — What Changes</div>
+  <div class="feat-grid">
+    <div class="feat shattered" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name shattered">Aura of Hate (replaces Aura of Oath)</div><span class="feat-depth shattered">Immediate</span></div>
+      <div class="feat-body shattered-body">The Aura of Oath inverts. Instead of granting Warding Resonance bonuses to allies, the Shattered Vow Vanguard's aura suppresses the will of others within it. Creatures within the aura (10 ft, 20 ft at Depth 18) have Resonant Discord on Warding Resonances against being Soul-Swayed and Dread-Struck. The cosmic force that once protected those nearby now makes them easier to manipulate. This applies to allies and enemies equally — the Shattered Vow does not distinguish, and the Vanguard cannot turn it off. <em>The bond inverted. Everything is in its new position.</em></div>
+    </div>
+    <div class="feat shattered" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name shattered">Channel Divinity — Inverted (replaces original Oath's Channel Divinity)</div><span class="feat-depth shattered">Immediate</span></div>
+      <div class="feat-body shattered-body">The Shattered Vow Vanguard retains two Channel Divinity uses but their effects have inverted:<br><br>
+      <strong>Animate Void-Touched (replaces Turn/Ward equivalent):</strong> Rather than turning undead and Void-Husks, the Vanguard now commands them — spending Channel Divinity to issue one directive to any Void-Husk within 30 ft. The Void-Husk obeys for 1 hour before reverting to its default behavior. The Coil's attention has been captured. A Shattered Vow Vanguard who uses this ability publicly will attract Coil recruitment within 48 hours.<br><br>
+      <strong>Conquering Presence (replaces Oath-specific Channel):</strong> As an Act, force all creatures within 30 ft to make a Resonance Warding Resonance (DC = 8 + Mastery + Resonance mod) or be Dread-Struck for 1 minute. The inverted bond radiates fear rather than courage. Allies are not exempt from this roll.</div>
+    </div>
+    <div class="feat shattered" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name shattered">Aetheric Smite — Inverted</div><span class="feat-depth shattered">Immediate</span></div>
+      <div class="feat-body shattered-body">The Aether Smite still functions — the bond still powers it. But the damage type shifts to necrotic rather than radiant, and on a hit the target makes an Attunement Warding Resonance (DC = 8 + Mastery + Resonance mod) or is Soul-Swayed toward the Vanguard for 1 minute. The inverted bond compels rather than inspires. The Vitality of the Oath pool still functions — the healing capacity remains. But healing administered by the Shattered Vow Vanguard makes the recipient mildly Soul-Swayed toward them for 1 hour. The inverted bond attaches to whatever it touches.</div>
+    </div>
+  </div>
+
+  <div class="sec shattered-sec">Restoration — Can the Vow Be Restored?</div>
+  <p class="lore shattered-lore">Yes. The Loom does not prefer inversion. It prefers truth. A Shattered Vow Vanguard who genuinely atones — not performatively, not under pressure, but with real understanding of what they did and real commitment to not doing it again — can have their bond restored. The Concordance determines the specific path of restoration based on what the oath was, what act shattered it, and what genuine amends look like in the world. <em>It is never simple. It is never quick. It is always possible.</em></p>
+  <p class="lore shattered-lore">Restoration requires: acknowledgment of the act to at least one person who matters (an NPC with genuine standing, not a convenient confessor); a concrete act of amends that costs the Vanguard something real; and a return to the Legendary Beast whose domain powers their sign — the Beast must acknowledge them again. Not forgive. Simply acknowledge. The Loom records the restoration. The Aura of Hate fades. The Aura of Oath returns.<br><br>
+  <strong>The Shattered Vow's abilities do not become unavailable after restoration</strong> — the Vanguard has walked that path and knows it. Whether they use what they learned is up to them and the Concordance to navigate. The Loom noticed. The Loom notices everything.</p>
+
+  <div class="warning">
+    <div class="warning-title">Concordance Guidance</div>
+    <strong>The Shattered Vow should never be applied as a punishment for player choices the Concordance disagrees with.</strong> It applies when a player's character makes a specific, knowing, deliberate choice that contradicts the literal tenet of their sworn oath. The player should always know what the tenets are. The moment of shatter should be discussed, not sprung. The restoration path should be collaborative. This Calling exists to make moral weight feel real — not to penalize interesting roleplay.
+  </div>
+</div>
+</div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).style.display='block';
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+document.querySelectorAll('.panel').forEach(p=>{p.style.display='none'});
+document.getElementById('panel-compact').style.display='block';
+</script>
+</body>
+</html>

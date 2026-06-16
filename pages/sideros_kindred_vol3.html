@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — Kindred Compendium Vol. III</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Cinzel:wght@400;500;600&family=Cinzel+Decorative:wght@400&display=swap');
+
+:root {
+  --void:#06080a; --void-mid:#0c1014; --void-up:#141a1e;
+  --parchment:#f2e8d0; --parchment-dim:rgba(242,232,208,0.52);
+  --gold:#c8a84a; --gold-dim:#7a6020; --gold-bright:#eacb6a;
+
+  /* Kindred accent colours */
+  --beast-desc:#b86030;   /* amber-copper — Beast-Descended */
+  --geode:#60a8b0;        /* teal — Geode-Kin */
+  --beast-kin:#7a9040;    /* earth-green — Beast-Kin */
+  --orc:#8a5040;          /* terracotta — Orc-Kin */
+  --giant:#607898;        /* steel-blue — Giant-Kin */
+  --elemental:#9868b0;    /* violet — Elemental-Kin */
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  background:var(--void);color:var(--parchment);
+  line-height:1.75;min-height:100vh;
+  background-image:
+    radial-gradient(ellipse at 20% 0%,rgba(184,96,48,0.06) 0%,transparent 45%),
+    radial-gradient(ellipse at 80% 0%,rgba(152,104,176,0.05) 0%,transparent 45%);
+}
+
+/* ── HERO ── */
+.hero{
+  text-align:center;padding:5rem 1.5rem 3.5rem;
+  border-bottom:1px solid rgba(200,168,74,0.15);
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    -45deg,
+    transparent,transparent 40px,
+    rgba(200,168,74,0.012) 40px,rgba(200,168,74,0.012) 41px
+  );pointer-events:none;
+}
+.hero-eyebrow{
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:.35em;
+  text-transform:uppercase;color:var(--gold-dim);margin-bottom:1.2rem;
+}
+.hero-title{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(18px,3.5vw,32px);font-weight:400;
+  color:var(--gold-bright);letter-spacing:.05em;
+  margin-bottom:.5rem;line-height:1.25;
+}
+.hero-vol{
+  font-family:'Cinzel',serif;font-size:11px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--gold-dim);margin-bottom:1rem;
+}
+.hero-sub{
+  font-size:16px;font-style:italic;color:var(--parchment-dim);
+  max-width:540px;margin:0 auto;
+}
+.kindred-pills{
+  display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin-top:1.5rem;
+}
+.kp{
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 10px;border-radius:2px;border:1px solid;cursor:pointer;
+  transition:all .2s;text-decoration:none;
+}
+
+/* ── NAV ── */
+.nav-strip{
+  display:flex;gap:4px;flex-wrap:wrap;padding:.7rem 1rem;
+  border-bottom:1px solid rgba(200,168,74,0.1);
+  background:var(--void-mid);position:sticky;top:0;z-index:30;
+}
+.nav-btn{
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:.09em;text-transform:uppercase;
+  padding:4px 10px;border:1px solid rgba(200,168,74,0.18);border-radius:3px;
+  background:transparent;color:var(--parchment-dim);cursor:pointer;transition:all .15s;white-space:nowrap;
+}
+.nav-btn.active{color:var(--gold-bright);border-color:rgba(200,168,74,0.45);background:rgba(200,168,74,0.08)}
+.panel{display:none}.panel.active{display:block}
+.wrap{max-width:900px;margin:0 auto;padding:2.5rem 1.25rem 5rem}
+
+/* ── KINDRED HEADER ── */
+.kh{margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(200,168,74,0.1)}
+.kh-badge{
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:.18em;text-transform:uppercase;
+  margin-bottom:.7rem;display:block;
+}
+.kh-name{
+  font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3vw,30px);
+  font-weight:400;letter-spacing:.04em;margin-bottom:.3rem;
+}
+.kh-also{font-size:13px;font-style:italic;color:var(--parchment-dim);margin-bottom:.8rem}
+.kh-tags{display:flex;flex-wrap:wrap;gap:6px}
+.kh-tag{
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:.09em;text-transform:uppercase;
+  padding:2px 8px;border-radius:2px;border:1px solid;
+}
+
+/* ── TEXT ── */
+.lore{font-size:16px;color:rgba(242,232,208,0.82);line-height:1.9;margin-bottom:1rem}
+.lore strong{color:var(--parchment);font-weight:500}
+.lore em{font-style:italic}
+
+.sec{
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--gold-dim);margin:1.75rem 0 .75rem;
+  display:flex;align-items:center;gap:.6rem;
+}
+.sec::after{content:'';flex:1;height:1px;background:rgba(200,168,74,0.12)}
+
+/* ── TRAIT CARDS ── */
+.traits{display:grid;gap:7px;margin-bottom:1rem}
+.trait{
+  background:rgba(255,255,255,0.02);border:1px solid rgba(200,168,74,0.12);
+  border-radius:8px;padding:11px 14px;cursor:pointer;
+  overflow:hidden;transition:border-color .15s;
+}
+.trait:hover,.trait.open{border-color:rgba(200,168,74,0.32)}
+.th{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.tn{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.04em;color:var(--gold-bright)}
+.tt{
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:.08em;text-transform:uppercase;
+  padding:2px 6px;border-radius:2px;border:1px solid rgba(200,168,74,0.25);
+  color:var(--gold-dim);white-space:nowrap;flex-shrink:0;
+}
+.tb{
+  display:none;margin-top:9px;padding-top:9px;
+  border-top:1px solid rgba(200,168,74,0.08);
+  font-size:14px;color:rgba(242,232,208,0.75);line-height:1.75;
+}
+.trait.open .tb{display:block}
+.tb strong{color:var(--parchment);font-weight:500}
+.tb em{color:var(--gold-dim)}
+
+/* ── SIGN TABLE ── */
+.sign-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:1rem}
+.sign-table th{
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--gold-dim);padding:7px 10px;text-align:left;
+  border-bottom:1px solid rgba(200,168,74,0.18);
+}
+.sign-table td{
+  padding:7px 10px;border-bottom:1px solid rgba(200,168,74,0.06);
+  color:rgba(242,232,208,0.75);vertical-align:top;line-height:1.5;
+}
+.sign-table td:first-child{
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:.06em;
+  color:var(--gold-bright);white-space:nowrap;
+}
+.sign-table td:nth-child(2){color:var(--parchment-dim);font-style:italic;white-space:nowrap}
+.sign-table tr:last-child td{border-bottom:none}
+.sign-table tr:hover td{background:rgba(200,168,74,0.025)}
+
+/* ── INFO BLOCKS ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
+.info{background:rgba(255,255,255,0.02);border:1px solid rgba(200,168,74,0.12);border-radius:8px;padding:11px 14px}
+.ib-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:5px}
+.ib-text{font-size:13px;color:rgba(242,232,208,0.78);line-height:1.65}
+.ib-text strong{color:var(--parchment);font-weight:500}
+
+/* ── NOTES ── */
+.note{
+  border-radius:8px;padding:12px 14px;margin:.9rem 0;
+  font-size:13px;color:rgba(242,232,208,0.75);line-height:1.68;
+}
+.note-title{
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:.13em;
+  text-transform:uppercase;margin-bottom:6px;
+}
+.note strong{color:var(--parchment);font-weight:500}
+
+/* ── STAT BLOCK ── */
+.stat-row{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:6px;
+  background:rgba(255,255,255,0.018);border:1px solid rgba(200,168,74,0.1);
+  border-radius:8px;padding:12px;margin-bottom:1rem;
+}
+.stat{text-align:center}
+.stat-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px}
+.stat-val{font-size:15px;font-weight:500;color:var(--parchment)}
+.stat-note{font-size:10px;color:var(--parchment-dim);font-style:italic;margin-top:1px}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Sideros / Astrolan — Kindred Compendium</div>
+  <h1 class="hero-title">Six New Kindreds</h1>
+  <div class="hero-vol">Volume III — The Expanded World</div>
+  <p class="hero-sub">Beast-Descended, Geode-Kin, Beast-Kin, Orc-Kin, Giant-Kin, and Elemental-Kin — completing the Kindred roster.</p>
+  <div class="kindred-pills">
+    <a class="kp" style="color:var(--beast-desc);border-color:rgba(184,96,48,0.4);background:rgba(184,96,48,0.07)" href="#" onclick="show('beastdesc',event)">Beast-Descended</a>
+    <a class="kp" style="color:var(--geode);border-color:rgba(96,168,176,0.4);background:rgba(96,168,176,0.07)" href="#" onclick="show('geode',event)">Geode-Kin</a>
+    <a class="kp" style="color:var(--beast-kin);border-color:rgba(122,144,64,0.4);background:rgba(122,144,64,0.07)" href="#" onclick="show('beastkin',event)">Beast-Kin</a>
+    <a class="kp" style="color:var(--orc);border-color:rgba(138,80,64,0.4);background:rgba(138,80,64,0.07)" href="#" onclick="show('orckin',event)">Orc-Kin</a>
+    <a class="kp" style="color:var(--giant);border-color:rgba(96,120,152,0.4);background:rgba(96,120,152,0.07)" href="#" onclick="show('giantkin',event)">Giant-Kin</a>
+    <a class="kp" style="color:var(--elemental);border-color:rgba(152,104,176,0.4);background:rgba(152,104,176,0.07)" href="#" onclick="show('elemental',event)">Elemental-Kin</a>
+  </div>
+</div>
+
+<div class="nav-strip">
+  <button class="nav-btn active" onclick="show('beastdesc',null,this)">Beast-Descended</button>
+  <button class="nav-btn" onclick="show('geode',null,this)">Geode-Kin</button>
+  <button class="nav-btn" onclick="show('beastkin',null,this)">Beast-Kin</button>
+  <button class="nav-btn" onclick="show('orckin',null,this)">Orc-Kin</button>
+  <button class="nav-btn" onclick="show('giantkin',null,this)">Giant-Kin</button>
+  <button class="nav-btn" onclick="show('elemental',null,this)">Elemental-Kin</button>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- BEAST-DESCENDED -->
+<!-- ════════════════════════════════════════ -->
+<div class="panel active" id="panel-beastdesc">
+<div class="wrap">
+  <div class="kh">
+    <span class="kh-badge" style="color:var(--beast-desc)">Kindred · Beast-Descended</span>
+    <div class="kh-name" style="color:var(--beast-desc)">The Beast-Descended</div>
+    <div class="kh-also">Replacing: Dragonborn · Also covers: Leonin, Minotaur (partial)</div>
+    <div class="kh-tags">
+      <span class="kh-tag" style="color:var(--beast-desc);border-color:rgba(184,96,48,0.35)">Medium</span>
+      <span class="kh-tag" style="color:var(--gold-dim);border-color:rgba(200,168,74,0.25)">Sign-Locked Lineage</span>
+      <span class="kh-tag" style="color:var(--gold-dim);border-color:rgba(200,168,74,0.25)">All Primal Essences</span>
+    </div>
+  </div>
+
+  <p class="lore">The Legendary Beasts are not celibate. The Pantheonic Fall distributed twelve gods into twelve forms, and those forms — vast, ancient, and operating at a frequency no mortal fully comprehends — occasionally produce offspring with mortals who encountered them during the great transition. The Beast-Descended carry that encounter in their blood four thousand years later. <strong>They are not half-animal. They are humanoid beings in whom a specific cosmic frequency expressed itself too strongly to be contained by ordinary mortal biology.</strong></p>
+
+  <p class="lore">The result is visible. A Nemean-line Beast-Descended has gold in their irises and a warmth to their skin that does not fade in winter. A Stygian-line has skin that reads slightly wrong in peripheral vision — the eye slides off them even when they are standing still. A Star-Metal-line has hair that catches light from angles it shouldn't. These are not costumes. They are the world's record of what happened to a bloodline when the divine became animal and something got through.</p>
+
+  <p class="lore">Beast-Descended know their line. The lineage is named at birth through the Loom's recording — every Beast-Descended is born with their ancestral sign burning briefly visible on their skin, which fades within hours but is recorded by midwives trained to read it. <strong>A Beast-Descended whose Fate Number sign matches their lineage sign is called Aligned — the cosmos and the bloodline agree. A Beast-Descended whose signs diverge is called Split — carrying the Lion's body and the Scorpion's fate, or the Stag's speed and the Crab's purpose.</strong> The world has opinions about both.</p>
+
+  <div class="sec" style="color:var(--beast-desc)">Kindred Traits — All Beast-Descended</div>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-label">Size</div><div class="stat-val">Medium</div><div class="stat-note">Varies by lineage</div></div>
+    <div class="stat"><div class="stat-label">Base Speed</div><div class="stat-val">30 ft</div><div class="stat-note">Modified by lineage</div></div>
+    <div class="stat"><div class="stat-label">Vitality Die</div><div class="stat-val">d10</div><div class="stat-note">Robust constitution</div></div>
+  </div>
+
+  <div class="traits">
+    <div class="trait open" onclick="this.classList.toggle('open')">
+      <div class="th"><div class="tn">Beast Frequency</div><span class="tt">Always Active</span></div>
+      <div class="tb">The Beast-Descended carries their ancestral sign's cosmic frequency as a passive Aetheric field — detectable by Stellar Cartographers, recognized by Accord-Walkers, and felt (as unease or recognition) by creatures whose zodiac sign opposes or aligns with the lineage sign. This is not a Working and cannot be suppressed. <strong>The Legendary Beast of the lineage sign will not attack a Beast-Descended unprovoked</strong> — it recognizes its own frequency, however diluted, and will instead observe before responding. Other Legendary Beasts react normally.</div>
+    </div>
+    <div class="trait" onclick="this.classList.toggle('open')">
+      <div class="th"><div class="tn">Lineage Breath</div><span class="tt">Lineage-Dependent · Instinct</span></div>
+      <div class="tb">Once per Brief Attunement, exhale a burst of the lineage Beast's elemental nature. All creatures in a 15-ft cone (or 30-ft line for certain lineages — see table) make a Warding Resonance (DC = 8 + Mastery Bonus + Endurance modifier) or take 2d6 damage of the lineage's type, halved on success. Damage increases to 3d6 at Resonance Depth 5, 4d6 at Depth 11, 5d6 at Depth 17.</div>
+    </div>
+    <div class="trait" onclick="this.classList.toggle('open')">
+      <div class="th"><div class="tn">Lineage Resistance</div><span class="tt">Always Active</span></div>
+      <div class="tb">Resistance to the lineage's elemental damage type. The frequency that the Beast-Descended exhales is also the frequency that cannot easily harm them — the blood recognizes the force and routes around it.</div>
+    </div>
+    <div class="trait" onclick="this.classList.toggle('open')">
+      <div class="th"><div class="tn">Ancestral Bearing</div><span class="tt">Social</span></div>
+      <div class="tb">Resonant Fortune on Persuasion and Intimidation Active Resonances when the other party knows the Beast-Descended's lineage. The cosmic frequency behind the bloodline communicates something that words alone do not. This cuts both ways — creatures who fear or revere the lineage's Beast respond differently to a Beast-Descended than to anyone else in the room. <strong>Aligned Beast-Descended</strong> (sign matches lineage) gain this benefit even when their lineage is not known — the alignment reads on their bearing whether or not they announce it.</div>
+    </div>
+  </div>
+
+  <div class="sec" style="color:var(--beast-desc)">Lineage by Sign — The Twelve Lines</div>
+  <table class="sign-table">
+    <tr><th>Sign</th><th>Legendary Beast Line</th><th>Breath Shape</th><th>Damage Type</th><th>Lineage Trait</th></tr>
+    <tr><td>♈ Aries</td><td>Ashen Ram</td><td>Cone 15 ft</td><td>Fire</td><td>Charge — move 20 ft before a Strike Resonance for +1d6 damage; push target 10 ft on hit</td></tr>
+    <tr><td>♉ Taurus</td><td>Khalkotauros</td><td>Cone 15 ft</td><td>Force</td><td>Bronze Hide — natural armor Guard Rating 13 + Endurance mod; cannot be knocked prone while conscious</td></tr>
+    <tr><td>♊ Gemini</td><td>Twin-Serpents</td><td>Line 30 ft</td><td>Poison</td><td>Split Attention — Resonant Fortune on Perception Active Resonances; may perceive two directions simultaneously</td></tr>
+    <tr><td>♋ Cancer</td><td>Adamant Crab</td><td>Cone 15 ft</td><td>Cold</td><td>Shell Ward — as a Reflex, grant one creature within 5 ft +3 Guard Rating until the start of your next Moment</td></tr>
+    <tr><td>♌ Leo</td><td>Nemean Lion</td><td>Cone 15 ft</td><td>Radiant</td><td>Golden Roar — once per Brief Attunement, roar as an Instinct; all enemies within 30 ft make Resonance Warding Resonance DC 13 or Dread-Struck for 1 Pulse</td></tr>
+    <tr><td>♍ Virgo</td><td>Queen Bee</td><td>Line 30 ft</td><td>Poison</td><td>Hive Sense — passively know count and emotional state of all creatures within 60 ft; Resonant Fortune on Medicine Active Resonances</td></tr>
+    <tr><td>♎ Libra</td><td>Great Roc</td><td>Cone 15 ft</td><td>Thunder</td><td>Truth Wing — always know when lied to; Resonant Fortune on Insight Active Resonances</td></tr>
+    <tr><td>♏ Scorpio</td><td>Stygian Scorpion</td><td>Line 30 ft</td><td>Necrotic</td><td>Venom Touch — unarmed strikes deliver Corrupted condition (DC 12 Endurance Warding Resonance); tremorsense 10 ft</td></tr>
+    <tr><td>♐ Sagittarius</td><td>Star-Metal Stag</td><td>Line 30 ft</td><td>Radiant</td><td>Star Sense — never lost; +10 ft movement; Resonant Fortune on Survival Active Resonances</td></tr>
+    <tr><td>♑ Capricorn</td><td>Sea-Goat</td><td>Cone 15 ft</td><td>Cold</td><td>Mountain Tread — climb speed 35 ft; Resonant Fortune on Endurance Warding Resonances; require only 4 hours sleep</td></tr>
+    <tr><td>♒ Aquarius</td><td>Kelp-Weaver</td><td>Line 30 ft</td><td>Cold</td><td>Network Tendrils — once per Pulse as an Instinct, restrain one creature within 20 ft (DC 13 Forcefulness to break free); swim speed 30 ft</td></tr>
+    <tr><td>♓ Pisces</td><td>Twin Dream-Fish</td><td>Cone 15 ft</td><td>Psychic</td><td>Dream Sense — always know if lied to; once per Deep Attunement receive one true prophetic impression about the next 24 hours from the Concordance</td></tr>
+  </table>
+
+  <div class="note" style="background:rgba(184,96,48,0.06);border:1px solid rgba(184,96,48,0.25)">
+    <div class="note-title" style="color:var(--beast-desc)">The Aligned / Split Distinction — Campaign Notes</div>
+    <strong>Aligned Beast-Descended</strong> (lineage sign = Fate Number sign) are considered auspicious in most cultures — the cosmos and the blood agree. They often find themselves treated as representatives of their lineage Beast's domain, for better or worse. The Kallos-Sworn have historically recruited them aggressively for the House matching their sign.<br><br>
+    <strong>Split Beast-Descended</strong> (lineage sign ≠ Fate Number sign) are considered philosophically interesting — two cosmic forces in one body, neither canceling the other. The Stellar Cartographers study them. The Loom of Fate tracks them with extra attention. A Split Beast-Descended who forms a Fated Bond with someone whose sign matches their lineage (not their Fate Number) is a documented Loom anomaly. Three such anomalies are currently recorded. The Loom has not explained what they mean.
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- GEODE-KIN -->
+<!-- ════════════════════════════════════════ -->
+<div class="panel" id="panel-geode">
+<div class="wrap">
+  <div class="kh">
+    <span class="kh-badge" style="color:var(--geode)">Kindred · Geode-Kin</span>
+    <div class="kh-name" style="color:var(--geode)">The Geode-Kin</div>
+    <div class="kh-also">Replacing: Gnome (Rock/Forest) + Kobold · Jade Empire biological engineers</div>
+    <div class="kh-tags">
+      <span class="kh-tag" style="color:var(--geode);border-color:rgba(96,168,176,0.35)">Small</span>
+      <span class="kh-tag" style="color:var(--gold-dim);border-color:rgba(200,168,74,0.25)">Jade Empire Adjunct</span>
+      <span class="kh-tag" style="color:var(--gold-dim);border-color:rgba(200,168,74,0.25)">All Primal Essences</span>
+    </div>
+  </div>
+
+  <p class="lore">The Geode-Kin are the smallest biological people in Sideros, and also the ones most responsible for the Jade Empire's infrastructure. They are not a sub-culture of the Gear-Forged — they are the engineers who understood Resonant Geode principles before the Gear-Forged existed, who built the first housings that made constructed sapience possible, and who have been quietly essential to every major technological development in the Empire for eight centuries while receiving a fraction of the credit. <strong>The Grand Prime Forgeman considers the Geode-Kin the most underestimated Kindred in the world. He has said this publicly. Twice.</strong></p>
+
+  <p class="lore">Geode-Kin are born with a passive sensitivity to Resonant Geode energy — they can feel a Grade-A Geode through a stone wall at twenty feet, and they can read the emotional state of a Gear-Forged's Geode heart the way a physician reads a pulse. This sensitivity is the origin of their cultural role: before calibration instruments existed, a Geode-Kin's hands were the calibration instrument. Many still are.</p>
+
+  <p class="lore">Outside the Jade Empire, Geode-Kin are found in every city that has sophisticated craft infrastructure — they follow the work. Port Damaris has a significant Geode-Kin community in its engineers' quarter. Elethorn's grid-maintenance teams employ three. Ironhearth's relationship with them is complicated — the Dunmarim respect craft excellence but the Geode-Kin's Aetheric sensitivity sits awkwardly against the Order of Pure Reason's preferences. <strong>A Geode-Kin in the Stillness of Dunmar feels the Ore's suppression as a specific physical discomfort, like standing in a room where the pressure is wrong.</strong> They can function. They do not enjoy it.</p>
+
+  <div class="sec" style="color:var(--geode)">Kindred Traits</div>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-label">Size</div><div class="stat-val">Small</div><div class="stat-note">3–4 ft, 40–60 lbs</div></div>
+    <div class="stat"><div class="stat-label">Base Speed</div><div class="stat-val">25 ft</div><div class="stat-note">Burrow 10 ft</div></div>
+    <div class="stat"><div class="stat-label">Attribute Bonus</div><div class="stat-val">+2 Acuity</div><div class="stat-note">+1 any attribute</div></div>
+  </div>
+
+  <div class="traits">
+    <div class="trait open" onclick="this.classList.toggle('open')">
+      <div class="th"><div class="tn">Geode Sense</div><span class="tt">Always Active · Passive</span></div>
+      <div class="tb">Detect any Resonant Geode, Aetheric Artifact, or active Working within 30 ft — direction and approximate intensity, not specifics. This cannot be suppressed except by the Stillness of Dunmar (full ore-saturation), which causes the Geode-Kin physical discomfort rather than simply switching the sense off. Additionally: when examining a Gear-Forged, know their Geode's current charge level, emotional state, and whether the Geode heart is healthy or degrading — no tools required, no roll required. <strong>This is the Kindred's most valuable professional trait and the reason the Jade Empire's Geode-Kin community has never been short of employment.</strong></div>
+    </div>
+    <div class="trait" onclick="this.classList.toggle('open')">
+      <div class="th"><div class="tn">Aetheric Tinkering</div><span class="tt">Innate · 3/Day</span></div>
+      <div class="tb">Cast one of the following Workings without a Channel or focus, using Acuity as the Weaving Attribute: <em>Mending</em> (repair nonmagical objects or stabilize a Gear-Forged's damaged Geode housing), <em>Prestidigitation</em>, <em>Detect Magic</em>. Usable three times per Deep Attunement. Additionally: when the Geode-Kin uses artisan's tools, they may add their Acuity modifier twice instead of once — the hands know what they are doing before the mind finishes deciding.</div>
+    </div>
+    <div class="trait" onclick="this.classList.toggle('open')">
+      <div class="th"><div class="tn">Cunning</div><span class="tt">Always Active</span></div>
+      <div class="tb">Resonant Fortune on all Acuity Warding Resonances. Additionally: cannot be Soul-Swayed or Dread-Struck by Workings — the Geode-Kin's Aetheric sensitivity produces a passive interference with mind-affecting frequencies. They can still be intimidated or persuaded through ordinary social means. The Aetheric layer simply does not reach them cleanly. <strong>Kallos-Sworn Enchanters find Geode-Kin professionally frustrating for this reason.</strong></div>
+    </div>
+    <div class="trait" onclick="this.classList.toggle('open')">
+      <div class="th"><div class="tn">Small Stature</div><span class="tt">Always Active</span></div>
+      <div class="tb">Standard Small Kindred rules apply: can move through the space of any Medium or larger creature; Resonant Discord on Strike Resonances using heavy weapons. Geode-Kin have adapted to this in their engineering practice — their tools are scaled to their hands, and their tools are better than most people's large ones. Additionally: can fit into spaces as small as 1 ft × 1 ft by squeezing — they were designed (culturally, not literally) to get into machinery housings.</div>
+    </div>
+    <div class="trait" onclick="this.classList.toggle('open')">
+      <div class="th"><div class="tn">Accord-Maker Affinity</div><span class="tt">Path Bonus</span></div>
+      <div class="tb">Geode-Kin who take the Accord-Maker Path begin with one additional Infusion slot and one additional Blueprint known beyond the standard starting allocation. The Grand Prime Forgeman will see a Geode-Kin Accord-Maker without an appointment — no other Kindred receives this concession. <strong>He does not explain why.</strong> Those who have asked report that he looks at them for a long moment before saying he simply finds them easier to teach than most.</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="info">
+      <div class="ib-label">Lifespan</div>
+      <div class="ib-text">350–400 years. The longest-lived biological Kindred after the Eldren. The Geode-Kin do not know why they live this long — their own theoretical framework suggests their Aetheric sensitivity produces a stabilizing effect on biological aging. The Grand Prime Forgeman has a theory. He has not shared it.</div>
+    </div>
+    <div class="info">
+      <div class="ib-label">The Geode-Kin and the Gear-Forged</div>
+      <div class="ib-text">The relationship is collegial and occasionally tense. Gear-Forged rely on Geode-Kin expertise for maintenance; Geode-Kin are paid well and treated as essential; neither culture fully trusts the other's motives. A Gear-Forged Geode-Pilot and a Geode-Kin Accord-Maker working together is the most technically sophisticated combination the Jade Empire produces. The Empire encourages this pairing. The individuals involved usually have to work out the power dynamics themselves.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- BEAST-KIN -->
+<!-- ════════════════════════════════════════ -->
+<div class="panel" id="panel-beastkin">
+<div class="wrap">
+  <div class="kh">
+    <span class="kh-badge" style="color:var(--beast-kin)">Kindred · Beast-Kin</span>
+    <div class="kh-name" style="color:var(--beast-kin)">The Beast-Kin</div>
+    <div class="kh-also">Replacing: Tabaxi, Leonin, Minotaur, Harengon, Tortle · Twelve zodiac morphologies</div>
+    <div class="kh-tags">
+      <span class="kh-tag" style="color:var(--beast-kin);border-color:rgba(122,144,64,0.35)">Medium</span>
+      <span class="kh-tag" style="color:var(--gold-dim);border-color:rgba(200,168,74,0.25)">Zodiac-Aspected Morphology</span>
+      <span class="kh-tag" style="color:var(--gold-dim);border-color:rgba(200,168,74,0.25)">All Primal Essences</span>
+    </div>
+  </div>
+
+  <p class="lore">Where the Beast-Descended carry a Legendary Beast's frequency in their blood while presenting as largely humanoid, the Beast-Kin carry it in their <em>form</em>. They are unmistakably animal-aspected — fur, scales, feathers, chitin, or shell expressed through a humanoid skeletal structure. The morphology is not random. It follows the zodiac. <strong>A Cancer-aspected Beast-Kin has the Adamant Crab's coloring, its carapace-like skin, and the way it moves that suggests something that would be more comfortable moving sideways if pressed.</strong> A Sagittarius-aspected Beast-Kin has antlers and the stag's ranging, searching quality of attention.</p>
+
+  <p class="lore">The Beast-Kin are found across the world in scattered communities — they have no single homeland because no single culture produced them. The best current scholarship suggests they emerged in the centuries after the Pantheonic Fall as the zodiac's newly distributed power found unexpected expression in bloodlines that had sustained contact with Legendary Beast territories. The Arcadian naturalists call this Resonant Drift. The Kallos-Sworn call it fascinating. <strong>The Beast-Kin call it Tuesday.</strong></p>
+
+  <p class="lore">Beast-Kin are distinct from Wolf-Shifters in a crucial way: the Wolf-Shifter's animal nature is fluid, shifting between Omote and Ura states. The Beast-Kin's animal nature is fixed — they are always fully themselves, with no suppressed form and no threshold to maintain. What you see is what they are. The Primal Accord tradition finds this philosophically significant. The Beast-Kin community finds the Primal Accord tradition's interest mildly flattering and occasionally exhausting.</p>
+
+  <div class="sec" style="color:var(--beast-kin)">Kindred Traits — All Beast-Kin</div>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-label">Size</div><div class="stat-val">Medium</div><div class="stat-note">Varies by sign</div></div>
+    <div class="stat"><div class="stat-label">Base Speed</div><div class="stat-val">35 ft</div><div class="stat-note">Sign-modified</div></div>
+    <div class="stat"><div class="stat-label">Attribute Bonus</div><div class="stat-val">+2 Sign Primary</div><div class="stat-note">+1 any attribute</div></div>
+  </div>
+
+  <div class="traits">
+    <div class="trait open" onclick="this.classList.toggle('open')">
+      <div class="th"><div class="tn">Natural Weapon</div><span class="tt">Always Active</span></div>
+      <div class="tb">All Beast-Kin have an unarmed strike that uses the sign's natural weapon — claws, horns, stinger, beak, shell-slam. The natural weapon deals 1d6 + Forcefulness modifier damage and counts as a finesse weapon. At Resonance Depth 5, damage increases to 1d8. At Depth 11, 1d10. The weapon's damage type matches the sign's Legendary Beast (see table). It cannot be disarmed. It does not need to be drawn.</div>
+    </div>
+    <div class="trait" onclick="this.classList.toggle('open')">
+      <div class="th"><div class="tn">Beast Sense</div><span class="tt">Always Active · Passive</span></div>
+      <div class="tb">The Beast-Kin's senses match their sign's animal — acute hearing, low-light vision, scent-tracking, or echolocation depending on the sign. All Beast-Kin have Darkvision 60 ft and Resonant Fortune on Perception Active Resonances using their primary sense (sign-dependent — sight for Sagittarius and Leo, smell for Aries and Scorpio, hearing for Gemini and Aquarius, etc.). Additionally: Beast-Kin are recognized by their sign's Legendary Beast as kin — not bonded, not protected, but recognized. The Beast will pause before attacking a Beast-Kin of its own sign. One Pulse of pause. That can be enough.</div>
+    </div>
+    <div class="trait" onclick="this.classList.toggle('open')">
+      <div class="th"><div class="tn">Sign Morphology</div><span class="tt">Sign-Dependent</span></div>
+      <div class="tb">Each sign produces a specific physical capability beyond the natural weapon and senses. See the morphology table below. This trait is passive and always active — it is part of what the Beast-Kin is, not an ability they activate.</div>
+    </div>
+    <div class="trait" onclick="this.classList.toggle('open')">
+      <div class="th"><div class="tn">Feral Instinct</div><span class="tt">Always Active</span></div>
+      <div class="tb">Beast-Kin cannot be surprised. Their animal senses process threat faster than conscious thought allows — at the start of any encounter, the Beast-Kin always acts in the first Pulse regardless of Pulse Order roll (they still roll — the roll determines position within the first Pulse, not whether they act). Additionally: Resonant Fortune on Pulse Order rolls.</div>
+    </div>
+  </div>
+
+  <div class="sec" style="color:var(--beast-kin)">Sign Morphology — The Twelve Forms</div>
+  <table class="sign-table">
+    <tr><th>Sign</th><th>Form</th><th>Primary Attribute</th><th>Natural Weapon</th><th>Sign Morphology</th></tr>
+    <tr><td>♈ Aries</td><td>Ram-Kin</td><td>Forcefulness +2</td><td>Horns · 1d6 bludgeoning</td><td>Charge — move 20 ft in a line, +1d6 damage on first hit; push target 10 ft</td></tr>
+    <tr><td>♉ Taurus</td><td>Aurochs-Kin</td><td>Endurance +2</td><td>Horns · 1d8 piercing</td><td>Immovable — cannot be pushed, pulled, or knocked prone while standing; Large-equivalent carrying capacity</td></tr>
+    <tr><td>♊ Gemini</td><td>Serpent-Kin (distinct from the full Kindred)</td><td>Swiftness +2</td><td>Bite · 1d6 piercing + Corrupted DC 12</td><td>Contortion — fit through any space a Small creature could; Resonant Fortune on Sleight of Hand</td></tr>
+    <tr><td>♋ Cancer</td><td>Crab-Kin</td><td>Endurance +2</td><td>Claw · 1d6 bludgeoning</td><td>Natural Carapace — Guard Rating 14 + Endurance modifier (no armor required); swim speed 30 ft</td></tr>
+    <tr><td>♌ Leo</td><td>Lion-Kin</td><td>Forcefulness +2</td><td>Claws · 1d6 slashing</td><td>Pounce — if moved 20 ft toward target before striking, target makes DC 13 Forcefulness Warding Resonance or falls prone; Resonant Fortune on Intimidation</td></tr>
+    <tr><td>♍ Virgo</td><td>Bee-Kin</td><td>Attunement +2</td><td>Sting · 1d4 piercing + Corrupted DC 12</td><td>Hive Touch — when healing a creature by any means, also remove one condition (Dread-Struck or Corrupted); Resonant Fortune on Medicine</td></tr>
+    <tr><td>♎ Libra</td><td>Raptor-Kin</td><td>Swiftness +2</td><td>Talon · 1d6 piercing</td><td>Glide Wings — fall at 60 ft/round (no damage); leap up to 20 ft horizontally as part of movement</td></tr>
+    <tr><td>♏ Scorpio</td><td>Scorpion-Kin</td><td>Acuity +2</td><td>Stinger · 1d6 piercing + Corrupted DC 13</td><td>Tremorsense 30 ft; immune to poison and the Corrupted condition</td></tr>
+    <tr><td>♐ Sagittarius</td><td>Stag-Kin</td><td>Swiftness +2</td><td>Antlers · 1d8 bludgeoning</td><td>Fleet — speed 40 ft; never lost; Resonant Fortune on Survival; may carry one willing rider without movement penalty</td></tr>
+    <tr><td>♑ Capricorn</td><td>Ibex-Kin</td><td>Endurance +2</td><td>Horns · 1d6 bludgeoning</td><td>Mountain Tread — climb speed 40 ft; immunity to natural environmental cold and altitude effects; cannot be made to retreat by fear effects</td></tr>
+    <tr><td>♒ Aquarius</td><td>Kelp-Kin</td><td>Resonance +2</td><td>Tendrils · 1d4 bludgeoning + Seized DC 12</td><td>Network Sense — know number and emotional state of all creatures within 300 ft; swim speed 35 ft; breathe water</td></tr>
+    <tr><td>♓ Pisces</td><td>Fish-Kin</td><td>Attunement +2</td><td>Fin-strike · 1d4 bludgeoning</td><td>Dream-Sight — cannot be surprised; once per Deep Attunement receive one true prophetic impression from the Concordance about an imminent threat; swim speed 40 ft</td></tr>
+  </table>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- ORC-KIN -->
+<!-- ════════════════════════════════════════ -->
+<div class="panel" id="panel-orckin">
+<div class="wrap">
+  <div class="kh">
+    <span class="kh-badge" style="color:var(--orc)">Kindred · Orc-Kin</span>
+    <div class="kh-name" style="color:var(--orc)">The Orc-Kin</div>
+    <div class="kh-also">Replacing: Orc / Half-Orc · Stateless, dispersed across the Duchy Compact</div>
+    <div class="kh-tags">
+      <span class="kh-tag" style="color:var(--orc);border-color:rgba(138,80,64,0.35)">Medium</span>
+      <span class="kh-tag" style="color:var(--gold-dim);border-color:rgba(200,168,74,0.25)">No Fixed Homeland</span>
+      <span class="kh-tag" style="color:var(--gold-dim);border-color:rgba(200,168,74,0.25)">Alpha-aspected (common)</span>
+    </div>
+  </div>
+
+  <p class="lore">The Orc-Kin have no nation, and this is not an accident of history — it is the result of a specific historical event that the Duchy Compact's official records describe in three sentences and the Orc-Kin oral tradition describes in three hours. The short version is that the Orc-Kin held a territory in the pre-Compact era, held it well, and lost it not to war but to a treaty that the other signatories honored in legal terms and violated in practical ones. <strong>The Orc-Kin response to this was not to fight — they had already won the war — but to disperse. If a homeland can be taken, do not have one.</strong></p>
+
+  <p class="lore">Four hundred years later, Orc-Kin are found in every major settlement in the Duchy Compact as soldiers, laborers, guards, pit-fighters, and mercenaries. They are consistently paid less than their skill warrants and consistently perform above what their employers expected. This has produced a specific cultural attitude: work harder than anyone expects, trust the people you work alongside, and know that the institution you're working for will find a way to shortchange you eventually. Plan accordingly.</p>
+
+  <p class="lore">What the Compact underestimates, consistently, is the Orc-Kin's endurance. Not just physical — ideological. <strong>A people who lost their homeland and chose dispersal over decline have a specific relationship with survival that manifests in combat, in negotiation, and in the long view of any situation.</strong> The Orc-Kin who joins an adventuring party has thought about how it ends. They have planned for when it goes wrong. They are usually the last one standing, and they are rarely surprised to be.</p>
+
+  <p class="lore-para"><strong>The Ashen-Sworn:</strong> Not all Orc-Kin chose the path of dispersal and integration. A significant population — called the <strong>Ashen-Sworn</strong> by other cultures, and something unprintable by the Dunmarim — rejected the dispersal strategy entirely and instead chose consolidation under Ashen Coil influence. Operating as warbands in the Aries March and the contested frontier zones of Elethorn, the Ashen-Sworn fight for territory, resources, and the Coil's strategic objectives simultaneously. They are not ideological converts to the Hollow Serpent's philosophy — most care nothing for Aethar's four-stage plan. They fight because the Coil offers what the Duchy Compact never did: a homeland, a banner, and an enemy they're permitted to fight openly. This makes them effective and unpredictable allies for the Coil, and a complicating factor for Orc-Kin characters who must navigate a world that assumes their Kindred's martial reputation comes entirely from the Ashen-Sworn. The Orc-Kin who fights alongside the party carries the weight of a reputation they didn't build and didn't choose.</p>
+
+  <div class="sec" style="color:var(--orc)">Kindred Traits</div>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-label">Size</div><div class="stat-val">Medium</div><div class="stat-note">6–7 ft, muscular</div></div>
+    <div class="stat"><div class="stat-label">Base Speed</div><div class="stat-val">35 ft</div><div class="stat-note">Never hindered by heavy armor</div></div>
+    <div class="stat"><div class="stat-label">Attribute Bonus</div><div class="stat-val">+2 Forcefulness</div><div class="stat-note">+1 Endurance</div></div>
+  </div>
+
+  <div class="traits">
+    <div class="trait open" onclick="this.classList.toggle('open')">
+      <div class="th"><div class="tn">Relentless Endurance</div><span class="tt">1/Deep Attunement</span></div>
+      <div class="tb">When reduced to 0 Vitality, drop to 1 Vitality instead. The Orc-Kin does not fall. They decide when they fall, and this is not the moment. Usable once per Deep Attunement — the endurance is real, not infinite. After using this ability, the Orc-Kin has Resonant Discord on all Active Resonances until the end of their next Moment — the body registered the blow even if the will refused it.</div>
+    </div>
+    <div class="trait" onclick="this.classList.toggle('open')">
+      <div class="th"><div class="tn">Savage Attack</div><span class="tt">Always Active</span></div>
+      <div class="tb">When scoring a critical hit with a melee Strike Resonance, roll one of the attack's damage dice one additional time and add it to the damage total. The Orc-Kin's strikes carry a weight that precise technique does not fully explain — something about the commitment behind the blow compounds its effect.</div>
+    </div>
+    <div class="trait" onclick="this.classList.toggle('open')">
+      <div class="th"><div class="tn">No Fixed Roof</div><span class="tt">Always Active · Social</span></div>
+      <div class="tb">The Orc-Kin's stateless existence has produced comprehensive adaptability. Mastery in one of: Athletics, Intimidation, Survival, or Insight (choose at character creation — reflecting which survival skill the Orc-Kin's specific background sharpened). Additionally: Resonant Fortune on Warding Resonances against being Dread-Struck. <strong>A people who chose dispersal over defeat have a specific relationship with fear.</strong> They know it. They have planned for it. It does not own them the way it owns people who have never had to make the choice.</div>
+    </div>
+    <div class="trait" onclick="this.classList.toggle('open')">
+      <div class="th"><div class="tn">Adrenaline</div><span class="tt">Always Active</span></div>
+      <div class="tb">When the Orc-Kin uses Combat Surge (their extra Act, available to Solar Guard and similar Paths) or takes an equivalent high-intensity action, they may move up to their full speed as part of that action without the movement counting against their normal movement for the Moment. Additionally: the Orc-Kin recovers 1 Vitality at the start of each Moment while in combat — the body prioritizes survival above everything else when the situation demands it.</div>
+    </div>
+  </div>
+
+  <div class="note" style="background:rgba(138,80,64,0.06);border:1px solid rgba(138,80,64,0.25)">
+    <div class="note-title" style="color:var(--orc)">The Long View — Campaign Notes</div>
+    The Orc-Kin have a specific relationship with every major institution in the Duchy Compact: they have worked for most of them, been shortchanged by most of them, and maintained relationships with all of them because burning bridges when you have no homeland is impractical. An Orc-Kin player character knows people in most cities. Not powerful people — <strong>reliable people</strong>. The guard who will look the other way for an old colleague. The innkeeper who will hold a message. The pit-fight promoter who owes a debt. This network is not a formal system. It is the natural result of a people who have been everywhere and remembered everyone worth remembering.
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- GIANT-KIN -->
+<!-- ════════════════════════════════════════ -->
+<div class="panel" id="panel-giantkin">
+<div class="wrap">
+  <div class="kh">
+    <span class="kh-badge" style="color:var(--giant)">Kindred · Giant-Kin</span>
+    <div class="kh-name" style="color:var(--giant)">The Giant-Kin</div>
+    <div class="kh-also">Replacing: Goliath · Boreal Expanse, Norse giant-tradition</div>
+    <div class="kh-tags">
+      <span class="kh-tag" style="color:var(--giant);border-color:rgba(96,120,152,0.35)">Medium (Large-adjacent)</span>
+      <span class="kh-tag" style="color:var(--gold-dim);border-color:rgba(200,168,74,0.25)">Boreal Expanse</span>
+      <span class="kh-tag" style="color:var(--gold-dim);border-color:rgba(200,168,74,0.25)">Alpha-aspected (predominant)</span>
+    </div>
+  </div>
+
+  <p class="lore">The Giant-Kin stand between seven and eight feet tall and weigh between 280 and 340 pounds, and they carry this mass with an ease that suggests their skeleton is doing something other skeletons are not. The Boreal naturalists have a theory — that the Giant-Kin's bone density is partially Aetheric, a residual effect of whatever giant lineage produced them. The Giant-Kin do not find this theory interesting. They are aware their bones are unusual. They have always been aware. The bones were there before the theory.</p>
+
+  <p class="lore">The Boreal Expanse's Norse cultural tradition treats the Giant-Kin as the oldest people of the north — not the first to arrive, but the first to be there, in the sense that the landscape itself seems to have been made for people their size. The Runic Knight tradition emerged specifically from Giant-Kin warriors who discovered that the rune-marks appearing naturally on their skin at puberty could be activated rather than merely observed. <strong>Every Giant-Kin carries their runic inheritance in their skin. Not all of them choose to wake it up.</strong></p>
+
+  <p class="lore">In the Duchy Compact outside the Boreal Expanse, Giant-Kin occupy an unusual social position — too large to be ignored, too rare to be common, and too self-contained to be easily categorized. They are not aggressive by default. They are simply operating at a scale that others find confrontational whether or not confrontation is intended. A Giant-Kin who has spent time in cities has learned to make themselves smaller in manner if not in body — to move carefully, speak quietly, and choose their moments. <strong>The Primal Jarl tradition is disproportionately populated by Giant-Kin who got tired of making themselves smaller.</strong></p>
+
+  <div class="sec" style="color:var(--giant)">Kindred Traits</div>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-label">Size</div><div class="stat-val">Medium</div><div class="stat-note">7–8 ft; Large-adjacent rules</div></div>
+    <div class="stat"><div class="stat-label">Base Speed</div><div class="stat-val">35 ft</div><div class="stat-note">Cannot be reduced below 30 ft</div></div>
+    <div class="stat"><div class="stat-label">Attribute Bonus</div><div class="stat-val">+2 Forcefulness</div><div class="stat-note">+1 Endurance or Attunement</div></div>
+  </div>
+
+  <div class="traits">
+    <div class="trait open" onclick="this.classList.toggle('open')">
+      <div class="th"><div class="tn">Giant's Might</div><span class="tt">1/Brief Attunement</span></div>
+      <div class="tb">As an Instinct, enter Giant's Might for 1 minute. While active: melee Strike Resonances deal +1d6 damage; Forcefulness Active Resonances have Resonant Fortune; count as Large-sized for grappling, shoving, and determining whether you can wield oversized weapons. The Giant-Kin's Aetheric bone-density expresses itself fully for a short duration rather than its normal partial expression. Giant's Might ends early if the Giant-Kin falls unconscious.</div>
+    </div>
+    <div class="trait" onclick="this.classList.toggle('open')">
+      <div class="th"><div class="tn">Runic Inheritance</div><span class="tt">Always Active + Activated</span></div>
+      <div class="tb">Natural runic marks appear on the Giant-Kin's skin at puberty — shaped like the Runic Knight's carved runes but organic, expressing the individual's sign and lineage rather than a trained selection. These marks are cosmetic unless activated.<br><br>
+      <strong>Runic Activation (1/Deep Attunement):</strong> Spend 1 minute in meditation to activate one rune from the following list — the benefit lasts 24 hours:<br>
+      • <em>Rune of Storm (Ild):</em> Resistance to fire and cold damage<br>
+      • <em>Rune of Stone (Stein):</em> +1 Guard Rating; cannot be knocked prone<br>
+      • <em>Rune of Cloud (Skye):</em> Resonant Fortune on Swiftness Warding Resonances; +5 ft speed<br>
+      • <em>Rune of Hill (Haug):</em> Resistance to all non-magical damage (lasts 1 minute, not 24 hours — too costly to sustain)</div>
+    </div>
+    <div class="trait" onclick="this.classList.toggle('open')">
+      <div class="th"><div class="tn">Large-Adjacent</div><span class="tt">Always Active</span></div>
+      <div class="tb">While technically Medium for rules purposes, the Giant-Kin's size produces several Large-equivalent effects at all times: carry capacity equals a Large creature's; reach is 10 ft rather than 5 ft for unarmed strikes and natural weapons; can wield weapons sized for Large creatures with Resonant Discord (rather than being unable to wield them at all). Standard Dungeon Constraint rules still apply — the Giant-Kin cannot navigate tunnels built for Medium creatures without crouching, and some structures require explicit Concordance rulings about access.</div>
+    </div>
+    <div class="trait" onclick="this.classList.toggle('open')">
+      <div class="th"><div class="tn">Stone's Endurance</div><span class="tt">1/Brief Attunement</span></div>
+      <div class="tb">When taking damage, use a Reflex to reduce that damage by 1d12 + Endurance modifier — the Aetheric bone-density absorbs what it can. Usable once per Brief Attunement. This is the trait the Trench Keepers of the Maw recruit Giant-Kin for specifically. Repeated structural damage to a defensive line is survivable when the front-line fighters have bones that behave like partially Aetheric material.</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="info">
+      <div class="ib-label">The Runic Knight Connection</div>
+      <div class="ib-text">Giant-Kin Runic Knights have access to their natural runic inheritance <strong>in addition to</strong> the Runic Knight Calling's learned rune-carving. Their natural marks and carved runes operate separately — a Giant-Kin Runic Knight at Depth 10 has both systems active simultaneously. The Boreal tradition considers this the fullest expression of the rune-smith practice: the marks that the body already knows, supplemented by the marks that the mind has learned.</div>
+    </div>
+    <div class="info">
+      <div class="ib-label">Social Position</div>
+      <div class="ib-text">Giant-Kin are never invisible in a crowd. This has produced two broad cultural responses: those who lean into the visibility (Alpha-aspected, often Primal Jarl or Solar Guard, using presence as a tool) and those who develop extraordinary subtlety in every domain except the physical one (Beta-aspected, often Stellar Cartographers or Resonance Seekers, working through other people). The distinction is a genuine cultural fracture within Giant-Kin communities and the source of most of their internal debate.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- ELEMENTAL-KIN -->
+<!-- ════════════════════════════════════════ -->
+<div class="panel" id="panel-elemental">
+<div class="wrap">
+  <div class="kh">
+    <span class="kh-badge" style="color:var(--elemental)">Kindred · Elemental-Kin</span>
+    <div class="kh-name" style="color:var(--elemental)">The Elemental-Kin</div>
+    <div class="kh-also">Replacing: Genasi (Air/Earth/Fire/Water) · Zodiac-aspected elemental expression</div>
+    <div class="kh-tags">
+      <span class="kh-tag" style="color:var(--elemental);border-color:rgba(152,104,176,0.35)">Medium</span>
+      <span class="kh-tag" style="color:var(--gold-dim);border-color:rgba(200,168,74,0.25)">Zodiac-Aspected</span>
+      <span class="kh-tag" style="color:var(--gold-dim);border-color:rgba(200,168,74,0.25)">All Primal Essences</span>
+    </div>
+  </div>
+
+  <p class="lore">Where the Beast-Descended carry a Legendary Beast's frequency in their blood and the Elemental-Kin carry a zodiac sign's elemental expression in their body — not morphologically like the Beast-Kin, but energetically. An Aries Elemental-Kin runs warm. Warmer than fever. Their skin is never cold, their breath carries faint heat on the coldest day, and when they are angry the temperature in the room rises measurably. <strong>They are not on fire. They contain fire. The distinction matters to them and is lost on everyone who has ever stood too close to one in a small room.</strong></p>
+
+  <p class="lore">The elemental expression follows the zodiac's physical associations rather than its personality domains. Aries and Leo carry fire; Cancer, Aquarius, and Pisces carry water; Gemini and Libra carry air; Taurus and Capricorn carry earth; Scorpio and Sagittarius carry a hybrid the Comet-Magi classify as Aetheric-elemental (lightning/void energy).</p>
+
+  <p class="lore">Elemental-Kin exist everywhere the Aetheric grid runs close to the surface — they are most common near Ceque Line nodes, and scholars of the Shifting Horizons Conclave have documented a statistically significant correlation between Elemental-Kin birth rates and grid node activity. <strong>The Ceque-Attuned Star-Born and the Elemental-Kin sometimes share a village, and the locals find this understandably alarming.</strong> Two forms of grid-expression in close proximity produces unusual Aetheric readings that the Conclave researchers find professionally exciting and the locals find uncomfortable.</p>
+
+  <div class="sec" style="color:var(--elemental)">Kindred Traits — All Elemental-Kin</div>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-label">Size</div><div class="stat-val">Medium</div><div class="stat-note">Human-range</div></div>
+    <div class="stat"><div class="stat-label">Base Speed</div><div class="stat-val">30 ft</div><div class="stat-note">+ Element movement</div></div>
+    <div class="stat"><div class="stat-label">Attribute Bonus</div><div class="stat-val">+2 Endurance</div><div class="stat-note">+1 sign primary</div></div>
+  </div>
+
+  <div class="traits">
+    <div class="trait open" onclick="this.classList.toggle('open')">
+      <div class="th"><div class="tn">Elemental Resistance</div><span class="tt">Always Active</span></div>
+      <div class="tb">Resistance to the sign's elemental damage type. The element that flows through them is the element that cannot easily harm them — the body routes around what it already contains. Fire Elemental-Kin are comfortable in temperatures that would kill a Human in minutes. Water Elemental-Kin can breathe in any moisture-containing atmosphere. Air Elemental-Kin do not suffocate in thin air. Earth Elemental-Kin are immune to being buried or crushed by nonmagical stone.</div>
+    </div>
+    <div class="trait" onclick="this.classList.toggle('open')">
+      <div class="th"><div class="tn">Elemental Touch</div><span class="tt">Always Active</span></div>
+      <div class="tb">Unarmed strikes deal additional elemental damage equal to the Elemental-Kin's Endurance modifier — the body's energy bleeds through contact. This is passive and cannot be fully suppressed (only damped to 1 point of additional damage through deliberate effort). <strong>Elemental-Kin learn to control this early or have complicated childhoods.</strong> Those who master the control can modulate it freely — warming a cold person's hands, cooling a fever, providing light in darkness from the fire that is always present. Those who do not master it are a fire hazard in specific emotional states.</div>
+    </div>
+    <div class="trait" onclick="this.classList.toggle('open')">
+      <div class="th"><div class="tn">Innate Elemental Working</div><span class="tt">3/Day</span></div>
+      <div class="tb">Cast one sign-appropriate Working three times per Deep Attunement without a Channel, using Endurance as the Weaving Attribute. Workings available by element:<br><br>
+      <strong>Fire (Aries, Leo):</strong> <em>Produce Flame</em> (Ambient), <em>Burning Hands</em> (1st)<br>
+      <strong>Water (Cancer, Aquarius, Pisces):</strong> <em>Shape Water</em> (Ambient), <em>Create/Destroy Water</em> (1st)<br>
+      <strong>Air (Gemini, Libra):</strong> <em>Gust</em> (Ambient), <em>Feather Fall</em> (1st)<br>
+      <strong>Earth (Taurus, Capricorn):</strong> <em>Mold Earth</em> (Ambient), <em>Earth Tremor</em> (1st)<br>
+      <strong>Void-Lightning (Scorpio, Sagittarius):</strong> <em>Shocking Grasp</em> (Ambient), <em>Thunderwave</em> (1st)</div>
+    </div>
+    <div class="trait" onclick="this.classList.toggle('open')">
+      <div class="th"><div class="tn">Elemental Movement</div><span class="tt">Sign-Dependent · Always Active</span></div>
+      <div class="tb">Each element grants a secondary movement mode:<br>
+      <strong>Fire:</strong> Immune to damage from nonmagical fire; can move through fire without impediment<br>
+      <strong>Water:</strong> Swim speed 30 ft; breathe water<br>
+      <strong>Air:</strong> Fall at 60 ft/round (no falling damage); Resonant Fortune on Acrobatics<br>
+      <strong>Earth:</strong> Burrow speed 20 ft through non-stone earth; tremorsense 10 ft<br>
+      <strong>Void-Lightning:</strong> When moving at least 20 ft in a straight line, the next melee strike deals +1d6 lightning damage</div>
+    </div>
+  </div>
+
+  <div class="sec" style="color:var(--elemental)">Elemental-Kin by Sign</div>
+  <table class="sign-table">
+    <tr><th>Sign</th><th>Element</th><th>Sign Primary Attribute</th><th>Elemental Appearance</th></tr>
+    <tr><td>♈ Aries</td><td>Fire</td><td>Forcefulness</td><td>Warm skin, ember-red tones in hair, eyes that catch light strangely</td></tr>
+    <tr><td>♉ Taurus</td><td>Earth</td><td>Endurance</td><td>Slightly rough texture to skin, hair the color of soil or stone, unusual density</td></tr>
+    <tr><td>♊ Gemini</td><td>Air</td><td>Swiftness</td><td>Hair that moves without wind, slightly translucent fingertips, voice carries further than it should</td></tr>
+    <tr><td>♋ Cancer</td><td>Water</td><td>Attunement</td><td>Skin holds faint moisture even in dry conditions, hair moves as if underwater, eyes are entirely one color</td></tr>
+    <tr><td>♌ Leo</td><td>Fire</td><td>Resonance</td><td>Gold or amber tones to skin, hair that seems to give off warmth, radiates comfort in cold weather</td></tr>
+    <tr><td>♍ Virgo</td><td>Earth</td><td>Acuity</td><td>Pale, mineral-smooth skin, eyes flecked with crystalline patterns, always smells faintly of clean soil</td></tr>
+    <tr><td>♎ Libra</td><td>Air</td><td>Resonance</td><td>Very light build, silver or white-toned hair, breath visible on any day as a faint shimmer</td></tr>
+    <tr><td>♏ Scorpio</td><td>Void-Lightning</td><td>Acuity</td><td>Faint static in their presence, dark complexion with occasional bioluminescent flicker, hair stands slightly</td></tr>
+    <tr><td>♐ Sagittarius</td><td>Void-Lightning</td><td>Swiftness</td><td>Crackling energy visible at fingertips under stress, bright eyes, smells of ozone after exertion</td></tr>
+    <tr><td>♑ Capricorn</td><td>Earth</td><td>Endurance</td><td>Dense, weathered appearance beyond their years, hands always feel like stone even when soft, cold-immune</td></tr>
+    <tr><td>♒ Aquarius</td><td>Water</td><td>Attunement</td><td>Shifting blue-green tones in skin, always cool to the touch, hair flows as if in current</td></tr>
+    <tr><td>♓ Pisces</td><td>Water</td><td>Attunement</td><td>Translucent patches of skin near the wrists, eyes hold depth, always faintly damp regardless of weather</td></tr>
+  </table>
+
+  <div class="note" style="background:rgba(152,104,176,0.06);border:1px solid rgba(152,104,176,0.25)">
+    <div class="note-title" style="color:var(--elemental)">Elemental-Kin and the Zodiac System</div>
+    Unlike the Beast-Descended, whose lineage sign is fixed at birth independently of their Fate Number, <strong>the Elemental-Kin's elemental nature always matches their Fate Number sign</strong> — the elemental inheritance and the cosmic fortune are the same expression. An Aries Elemental-Kin always rolls an Aries Fate Number. An Aquarius Elemental-Kin always rolls Aquarius. The Loom and the body agree, completely, in every Elemental-Kin born. This makes them unusually legible to Stellar Cartographers — there is no divergence to interpret, no Split to account for. <strong>The Kallos-Sworn find this either reassuring or suspicious depending on which House is doing the interpreting.</strong>
+  </div>
+</div>
+</div>
+
+<script>
+function show(id, e, btn) {
+  if (e) e.preventDefault();
+  document.querySelectorAll('.panel').forEach(p => { p.style.display='none'; p.classList.remove('active') });
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const panel = document.getElementById('panel-' + id);
+  if (panel) { panel.style.display = 'block'; panel.classList.add('active'); }
+  if (btn) btn.classList.add('active');
+  else {
+    document.querySelectorAll('.nav-btn').forEach(b => {
+      if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'"+id+"'")) b.classList.add('active');
+    });
+  }
+}
+// init
+document.querySelectorAll('.panel').forEach(p => { p.style.display='none'; p.classList.remove('active') });
+document.getElementById('panel-beastdesc').style.display = 'block';
+document.getElementById('panel-beastdesc').classList.add('active');
+document.querySelectorAll('.nav-btn')[0].classList.add('active');
+</script>
+</body>
+</html>

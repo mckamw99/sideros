@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — Character Creation</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Cinzel:wght@400;500;600&family=Cinzel+Decorative:wght@400&display=swap');
+
+:root {
+  --void:#080610; --void-mid:#100d1a; --void-up:#1a1528;
+  --gold:#c9a84c; --gold-dim:#7a6028; --gold-bright:#e8c870;
+  --parchment:#f2e8cf; --parchment-dim:rgba(242,232,207,0.55);
+  --silver:#a8b4c4; --silver-dim:#687480;
+  --step1:#c85040; --step2:#c89040; --step3:#80a040;
+  --step4:#4a8ec4; --step5:#9066c8; --step6:#c07844;
+  --step7:#6080c8; --step8:#60a870; --step9:#a87040;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Cormorant Garamond',Georgia,serif;background:var(--void);color:var(--parchment);line-height:1.7;min-height:100vh;font-size:16px}
+
+/* ── HERO ── */
+.hero{
+  text-align:center;padding:4.5rem 1.5rem 3.5rem;
+  background:radial-gradient(ellipse at 50% 0%,rgba(201,168,76,0.1) 0%,transparent 65%);
+  border-bottom:1px solid rgba(201,168,76,0.15);
+}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:1rem}
+.hero-title{font-family:'Cinzel Decorative',serif;font-size:clamp(24px,4.5vw,42px);color:var(--gold);letter-spacing:.05em;margin-bottom:.6rem;line-height:1.2}
+.hero-sub{font-size:17px;font-style:italic;color:var(--parchment-dim);max-width:520px;margin:0 auto 1.5rem}
+.hero-rule{display:flex;align-items:center;gap:1rem;max-width:400px;margin:0 auto}
+.hero-rule-line{flex:1;height:1px;background:linear-gradient(to right,transparent,var(--gold-dim))}
+.hero-rule-gem{color:var(--gold-dim);font-size:14px}
+
+/* ── STEP NAV ── */
+.step-nav{
+  display:flex;overflow-x:auto;gap:0;
+  border-bottom:1px solid rgba(201,168,76,0.12);
+  background:var(--void-mid);
+  position:sticky;top:0;z-index:20;
+  scrollbar-width:none;
+}
+.step-nav::-webkit-scrollbar{display:none}
+.step-btn{
+  flex-shrink:0;padding:12px 16px 10px;
+  border:none;background:transparent;cursor:pointer;
+  border-right:1px solid rgba(201,168,76,0.08);
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  transition:background .2s;min-width:72px;
+}
+.step-btn:hover{background:rgba(255,255,255,0.025)}
+.step-btn.active{background:rgba(201,168,76,0.07)}
+.step-num{font-family:'Cinzel',serif;font-size:11px;font-weight:600;letter-spacing:.05em}
+.step-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--parchment-dim);text-align:center;line-height:1.3}
+.step-btn.active .step-label{color:var(--gold-dim)}
+.step-dot{width:4px;height:4px;border-radius:50%;margin-top:3px;opacity:0;transition:opacity .2s}
+.step-btn.active .step-dot{opacity:1}
+
+/* ── PANELS ── */
+.panel{display:none}.panel.active{display:block}
+.wrap{max-width:860px;margin:0 auto;padding:2.5rem 1.25rem 5rem}
+
+/* ── STEP HEADER ── */
+.step-header{margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(201,168,76,0.12)}
+.step-badge{display:inline-flex;align-items:center;gap:.5rem;margin-bottom:.75rem}
+.step-badge-num{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.1em;padding:3px 10px;border-radius:4px;border:1px solid}
+.step-badge-tag{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--parchment-dim)}
+.step-title{font-family:'Cinzel',serif;font-size:clamp(18px,3vw,26px);font-weight:500;letter-spacing:.04em;margin-bottom:.5rem}
+.step-desc{font-size:15px;font-style:italic;color:var(--parchment-dim);max-width:580px;line-height:1.75}
+
+/* ── CONTENT ELEMENTS ── */
+.lore{font-size:15px;color:rgba(242,232,207,0.8);line-height:1.88;margin-bottom:1rem}
+.lore strong{color:var(--parchment);font-weight:500}
+.lore em{color:var(--gold-dim);font-style:italic}
+
+.sec{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin:1.75rem 0 .75rem;display:flex;align-items:center;gap:.75rem}
+.sec::after{content:'';flex:1;height:1px;background:rgba(201,168,76,0.12)}
+
+/* ── MECHANIC BOX ── */
+.mbox{background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:10px;padding:16px 18px;margin-bottom:1rem}
+.mbox-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:7px}
+.mbox-title{font-family:'Cinzel',serif;font-size:15px;color:var(--gold-bright);margin-bottom:8px;letter-spacing:.03em}
+.mbox-text{font-size:13px;color:rgba(242,232,207,0.8);line-height:1.75}
+.mbox-text strong{color:var(--parchment);font-weight:500}
+.mbox-text em{color:var(--gold-dim)}
+
+/* ── DECISION CARDS ── */
+.decision-grid{display:grid;gap:8px;margin-bottom:1rem}
+.dcard{background:rgba(255,255,255,0.022);border:1px solid rgba(201,168,76,0.14);border-radius:9px;padding:12px 14px;cursor:pointer;overflow:hidden;transition:border-color .15s}
+.dcard:hover,.dcard.open{border-color:rgba(201,168,76,0.35)}
+.dcard-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.dcard-name{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.04em}
+.dcard-tag{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:3px;border:1px solid rgba(201,168,76,0.25);color:var(--gold-dim);white-space:nowrap;flex-shrink:0}
+.dcard-body{display:none;margin-top:9px;padding-top:9px;border-top:1px solid rgba(201,168,76,0.1);font-size:13px;color:rgba(242,232,207,0.75);line-height:1.72}
+.dcard.open .dcard-body{display:block}
+.dcard-body strong{color:var(--parchment);font-weight:500}
+.dcard-body em{color:var(--gold-dim)}
+
+/* ── TWO / THREE COL ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:1rem}
+.info{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.12);border-radius:8px;padding:10px 13px}
+.info-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:4px}
+.info-text{font-size:13px;color:rgba(242,232,207,0.78);line-height:1.6}
+.info-text strong{color:var(--parchment);font-weight:500}
+
+/* ── ATTRIBUTE DISPLAY ── */
+.attr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem}
+.attr-card{background:rgba(255,255,255,0.025);border:1px solid rgba(201,168,76,0.15);border-radius:9px;padding:13px 12px;text-align:center}
+.attr-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:4px}
+.attr-score{font-family:'Cinzel',serif;font-size:32px;color:var(--gold-bright);line-height:1;margin-bottom:3px}
+.attr-mod{font-size:13px;color:var(--parchment-dim)}
+.attr-replaces{font-size:10px;font-style:italic;color:rgba(242,232,207,0.35);margin-top:4px}
+
+/* ── ORIGIN CARDS ── */
+.origin-category{margin-bottom:1.5rem}
+.cat-header{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--silver-dim);margin-bottom:.6rem;display:flex;align-items:center;gap:.6rem}
+.cat-header::after{content:'';flex:1;height:1px;background:rgba(168,180,196,0.15)}
+
+.origin-grid{display:grid;gap:7px}
+.origin{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.13);border-radius:9px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.origin:hover,.origin.open{border-color:rgba(201,168,76,0.3)}
+.origin-head{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;padding:11px 14px}
+.origin-name{font-family:'Cinzel',serif;font-size:13px;letter-spacing:.04em;color:var(--gold-bright);margin-bottom:2px}
+.origin-tagline{font-size:12px;font-style:italic;color:var(--parchment-dim)}
+.origin-pills{display:flex;flex-wrap:wrap;gap:4px}
+.origin-pill{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;border-radius:3px;border:1px solid rgba(201,168,76,0.2);color:var(--gold-dim)}
+.origin-body{display:none;border-top:1px solid rgba(201,168,76,0.08);padding:12px 14px}
+.origin.open .origin-body{display:block}
+.ob-row{display:grid;grid-template-columns:130px 1fr;gap:8px;margin-bottom:6px;font-size:13px}
+.ob-row:last-child{margin-bottom:0}
+.ob-key{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);padding-top:2px}
+.ob-val{color:rgba(242,232,207,0.78);line-height:1.6}
+.ob-val strong{color:var(--parchment);font-weight:500}
+.ob-val em{color:var(--gold-dim);font-style:italic}
+.flavor-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(201,168,76,0.08)}
+.flavor-col-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:5px}
+.flavor-item{font-size:12px;color:rgba(242,232,207,0.65);line-height:1.6;padding:3px 0;border-bottom:1px solid rgba(201,168,76,0.05)}
+.flavor-item:last-child{border-bottom:none}
+
+/* ── FATE SECTION ── */
+.fate-display{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:1rem}
+.fate-box{background:rgba(144,102,200,0.06);border:1px solid rgba(144,102,200,0.2);border-radius:9px;padding:13px 14px;text-align:center}
+.fate-box-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#a87ee8;margin-bottom:5px}
+.fate-box-val{font-size:22px;font-weight:500;color:var(--parchment);margin-bottom:3px}
+.fate-box-note{font-size:11px;color:var(--parchment-dim);line-height:1.4}
+
+/* ── CHECKLIST ── */
+.checklist{border:1px solid rgba(201,168,76,0.15);border-radius:10px;overflow:hidden;margin-bottom:1rem}
+.checklist-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-dim);padding:10px 14px;background:rgba(201,168,76,0.04);border-bottom:1px solid rgba(201,168,76,0.12)}
+.check-item{display:grid;grid-template-columns:28px 1fr;gap:8px;align-items:start;padding:9px 14px;border-bottom:1px solid rgba(201,168,76,0.06);font-size:13px;color:rgba(242,232,207,0.75);line-height:1.55;cursor:pointer;transition:background .15s}
+.check-item:last-child{border-bottom:none}
+.check-item:hover{background:rgba(255,255,255,0.02)}
+.check-item.done{color:rgba(242,232,207,0.4)}
+.check-box{width:18px;height:18px;border-radius:4px;border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--gold);flex-shrink:0;margin-top:1px;transition:all .15s}
+.check-item.done .check-box{background:rgba(201,168,76,0.15);border-color:var(--gold-dim)}
+.check-item strong{color:var(--parchment);font-weight:500}
+
+/* ── FORMULA ── */
+.formula{background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:8px;padding:12px 16px;font-family:'Cinzel',serif;font-size:12px;color:var(--gold-bright);letter-spacing:.05em;line-height:1.9;margin-bottom:.9rem}
+
+/* ── NOTE / WARNING ── */
+.note{background:rgba(144,102,200,0.05);border:1px solid rgba(144,102,200,0.2);border-radius:8px;padding:11px 13px;margin:.75rem 0}
+.note-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:#a87ee8;margin-bottom:5px}
+.note-text{font-size:13px;color:rgba(242,232,207,0.75);line-height:1.65}
+.note-text strong{color:var(--parchment);font-weight:500}
+
+.gold-note{background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.22);border-radius:8px;padding:11px 13px;margin:.75rem 0}
+.gold-note .note-title{color:var(--gold)}
+
+/* ── NEXT/PREV ── */
+.nav-buttons{display:flex;justify-content:space-between;gap:10px;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid rgba(201,168,76,0.12)}
+.nav-btn-action{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:10px 20px;border-radius:6px;border:1px solid;cursor:pointer;transition:all .2s}
+.nav-prev{color:var(--parchment-dim);border-color:rgba(201,168,76,0.2);background:transparent}
+.nav-prev:hover{background:rgba(255,255,255,0.03);color:var(--parchment)}
+.nav-next{color:var(--gold-bright);border-color:rgba(201,168,76,0.4);background:rgba(201,168,76,0.08)}
+.nav-next:hover{background:rgba(201,168,76,0.15)}
+.nav-spacer{flex:1}
+
+.divider{height:1px;background:linear-gradient(to right,transparent,rgba(201,168,76,0.18),transparent);margin:1.5rem 0}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Sideros / Astrolan — Player's Guide</div>
+  <h1 class="hero-title">Creating Your Character</h1>
+  <p class="hero-sub">Nine decisions. One soul woven into the world's pattern. Follow each step in order — the Loom works sequentially.</p>
+  <div class="hero-rule">
+    <div class="hero-rule-line"></div>
+    <div class="hero-rule-gem">✦</div>
+    <div class="hero-rule-line"></div>
+  </div>
+</div>
+
+<!-- STEP NAV -->
+<div class="step-nav" id="stepNav">
+  <button class="step-btn active" onclick="show(1,this)">
+    <div class="step-num" style="color:var(--step1)">I</div>
+    <div class="step-label">Concept</div>
+    <div class="step-dot" style="background:var(--step1)"></div>
+  </button>
+  <button class="step-btn" onclick="show(2,this)">
+    <div class="step-num" style="color:var(--step2)">II</div>
+    <div class="step-label">Kindred</div>
+    <div class="step-dot" style="background:var(--step2)"></div>
+  </button>
+  <button class="step-btn" onclick="show(3,this)">
+    <div class="step-num" style="color:var(--step3)">III</div>
+    <div class="step-label">Path</div>
+    <div class="step-dot" style="background:var(--step3)"></div>
+  </button>
+  <button class="step-btn" onclick="show(4,this)">
+    <div class="step-num" style="color:var(--step4)">IV</div>
+    <div class="step-label">Attributes</div>
+    <div class="step-dot" style="background:var(--step4)"></div>
+  </button>
+  <button class="step-btn" onclick="show(5,this)">
+    <div class="step-num" style="color:var(--step5)">V</div>
+    <div class="step-label">Fate</div>
+    <div class="step-dot" style="background:var(--step5)"></div>
+  </button>
+  <button class="step-btn" onclick="show(6,this)">
+    <div class="step-num" style="color:var(--step6)">VI</div>
+    <div class="step-label">Origin</div>
+    <div class="step-dot" style="background:var(--step6)"></div>
+  </button>
+  <button class="step-btn" onclick="show(7,this)">
+    <div class="step-num" style="color:var(--step7)">VII</div>
+    <div class="step-label">Depth 1</div>
+    <div class="step-dot" style="background:var(--step7)"></div>
+  </button>
+  <button class="step-btn" onclick="show(8,this)">
+    <div class="step-num" style="color:var(--step8)">VIII</div>
+    <div class="step-label">Equipment</div>
+    <div class="step-dot" style="background:var(--step8)"></div>
+  </button>
+  <button class="step-btn" onclick="show(9,this)">
+    <div class="step-num" style="color:var(--step9)">IX</div>
+    <div class="step-label">The Thread</div>
+    <div class="step-dot" style="background:var(--step9)"></div>
+  </button>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- STEP I: CONCEPT -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel active" id="panel-1">
+<div class="wrap">
+  <div class="step-header">
+    <div class="step-badge">
+      <span class="step-badge-num" style="color:var(--step1);border-color:rgba(200,80,64,0.3);background:rgba(200,80,64,0.06)">Step I</span>
+      <span class="step-badge-tag">Before You Begin</span>
+    </div>
+    <h2 class="step-title" style="color:var(--step1)">The Concept</h2>
+    <p class="step-desc">Who were you before the Path found you? What does the world look like from where you stand?</p>
+  </div>
+
+  <p class="lore">In Sideros, a character is not built — they are <strong>discovered</strong>. The mechanical decisions you make in the following steps will be more meaningful if you begin with a sense of who this person is before those mechanics are applied. You don't need a complete story. You need a seed.</p>
+
+  <p class="lore">Three questions to answer before proceeding. Write a sentence for each. These answers will guide every decision that follows.</p>
+
+  <div class="sec">Three Questions</div>
+  <div class="decision-grid">
+    <div class="dcard open" onclick="this.classList.toggle('open')">
+      <div class="dcard-head"><div class="dcard-name" style="color:var(--step1)">What do you want?</div><span class="dcard-tag">Drives the Path</span></div>
+      <div class="dcard-body">Not a goal — a <em>want</em>. Safety. Recognition. Understanding. Justice for a specific wrong. The restoration of something lost. To be left alone. To never be left alone again. This want will determine which Path the character has been called to, and which Calling within that Path resonates most strongly. <strong>A character without a want is a character without direction.</strong> The want doesn't have to be noble. It has to be real.</div>
+    </div>
+    <div class="dcard" onclick="this.classList.toggle('open')">
+      <div class="dcard-head"><div class="dcard-name" style="color:var(--step1)">What have you lost?</div><span class="dcard-tag">Drives the Origin</span></div>
+      <div class="dcard-body">Every compelling character in Sideros is defined partly by absence. A home. A person. A belief about how the world worked. A version of themselves. Loss is not backstory padding — it is the <em>pressure</em> that shapes what you've become. What your character has lost will inform their Origin, their bonds, and the flavor entries that make them feel like a person rather than a stat block.</div>
+    </div>
+    <div class="dcard" onclick="this.classList.toggle('open')">
+      <div class="dcard-head"><div class="dcard-name" style="color:var(--step1)">What does the Loom want with you?</div><span class="dcard-tag">Drives the Fate Number</span></div>
+      <div class="dcard-body">The Loom of Fate weaves every soul into the world's pattern for a reason. You don't have to know what that reason is yet — in fact, it's better if you don't. But consider: does your character feel watched? Do they have a recurring sense that things happen around them, not to them? Do they attract people who seem to need something from them? This intuition will become the Fate Number in Step V. For now, just notice it.</div>
+    </div>
+  </div>
+
+  <div class="sec">A Note on the World</div>
+  <p class="lore">You are creating a character for <strong>Sideros</strong> — a world in its fourth and most precarious era. The twelve gods fell. The Legendary Beasts who were those gods wander the earth. An organization called the Ashen Coil is actively working to dissolve the seals holding the worst of what the Fall released. The Kallos-Sworn exist to prevent another catastrophe. The Loom of Fate is watching. The Quint Bond prophecy is in motion.</p>
+  <p class="lore">Your character does not need to know any of this. Most people don't. What they know is their corner of the world — their city, their people, their work, their losses. <strong>The larger pattern will find them.</strong> That is what the Loom does.</p>
+
+  <div class="nav-buttons">
+    <div class="nav-spacer"></div>
+    <button class="nav-btn-action nav-next" onclick="show(2,document.querySelectorAll('.step-btn')[1])">Kindred — Step II →</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- STEP II: KINDRED -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-2">
+<div class="wrap">
+  <div class="step-header">
+    <div class="step-badge">
+      <span class="step-badge-num" style="color:var(--step2);border-color:rgba(200,144,64,0.3);background:rgba(200,144,64,0.06)">Step II</span>
+      <span class="step-badge-tag">Cosmic Lineage</span>
+    </div>
+    <h2 class="step-title" style="color:var(--step2)">Choose Your Kindred</h2>
+    <p class="step-desc">The cosmic lineage you were born into — what the Aether wrote into your blood before you had a say in it.</p>
+  </div>
+
+  <p class="lore">Your Kindred is not your personality. It is the <strong>Aetheric frequency your body carries</strong> — the cosmic inheritance of your lineage that shapes how you interact with the world's forces. A Wolf-Shifter with a gentle soul is still a Wolf-Shifter. A Dunmarim who has left Dunmar is still Aether-hardened. The Kindred is the instrument. You decide how it's played.</p>
+
+  <div class="sec">What Your Kindred Gives You</div>
+  <div class="two-col">
+    <div class="info">
+      <div class="info-label">Kindred Traits</div>
+      <div class="info-text">A set of passive and active abilities unique to your lineage. These are always active — they cannot be suppressed except by specific effects described in each trait.</div>
+    </div>
+    <div class="info">
+      <div class="info-label">Attribute Increases</div>
+      <div class="info-text">Each Kindred increases two Resonance Attributes. These are applied <em>after</em> you generate your base scores in Step IV.</div>
+    </div>
+    <div class="info">
+      <div class="info-label">Vitality Die</div>
+      <div class="info-text">Your Kindred sets your base Vitality Die — but your Path may override it if the Path's die is larger. Always use the higher of the two.</div>
+    </div>
+    <div class="info">
+      <div class="info-label">Kindred-Zodiac Resonance</div>
+      <div class="info-text">Once you choose a zodiac sign in Step V, your Kindred and sign combination produces a unique bonus ability. This is determined automatically.</div>
+    </div>
+  </div>
+
+  <div class="sec">The Twenty Kindreds — Summary</div>
+
+  <div class="decision-grid">
+  <div class="dcard" onclick="this.classList.toggle('open')"><div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Human · The Unwritten</div><span class="dcard-tag">d8 · +1 two Attributes · Player's choice</span></div><div class="dcard-body">No inherited cosmic gifts — which means no inherited limits. Extra Attunement at Depth 1, extra Disciplines throughout, and the unique ability to swap a Mastered Discipline during Brief Attunement. <em>Best for: players who want maximum flexibility.</em></div></div>
+  <div class="dcard" onclick="this.classList.toggle('open')"><div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Eldren · The Long Memory</div><span class="dcard-tag">d8 · +2 Attunement +1 Acuity</span></div><div class="dcard-body">Survivors of the Kallos civilization. Born with a Siddha Ambient Working, Attunement Sense (passive Aetheric detection), and once-per-rest access to ancestral memory. Resonant Fortune on ancient history; Resonant Discord on anything newer than 100 years. <em>Best for: deep lore engagement, Omega-aspected scholar.</em></div></div>
+  <div class="dcard" onclick="this.classList.toggle('open')"><div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Dunmarim · The Ore-Kin</div><span class="dcard-tag">d10 · +2 Endurance +1 Forcefulness</span></div><div class="dcard-body">Cannot weave Workings — ever. d10 Vitality, natural magic resistance (Working Thresholds −2 against them), Master's Hand crafting, passive ore detection. The only Kindred immune to the Aether's chaos. <em>Best for: the immovable wall who isn't interested in magic.</em></div></div>
+  <div class="dcard" onclick="this.classList.toggle('open')"><div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Wolf-Shifter · The Two-Skinned</div><span class="dcard-tag">d10 · +2 Forcefulness +1 Attunement</span></div><div class="dcard-body">The Omote-Ura Gauge — managing tension between human discipline and wolf instinct. Three forms (human/hybrid/wolf) switchable as an Instinct. Pack Resonance, Shōgun-Kami bond, primal senses. Most mechanically demanding Kindred. <em>Best for: resource tension and moment-to-moment roleplay.</em></div></div>
+  <div class="dcard" onclick="this.classList.toggle('open')"><div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Gear-Forged · The Heart-Born</div><span class="dcard-tag">d10 · +2 Endurance +1 Acuity</span></div><div class="dcard-body">A constructed being powered by a Resonant Geode heart pre-calibrated to a zodiac sign — born knowing their sign, receive Zodiac Attunement at Depth 1. Frame Modifications as they level. Dormancy (not death) at 0 Vitality. <em>Best for: Jade Empire storyline, questions about personhood.</em></div></div>
+  <div class="dcard" onclick="this.classList.toggle('open')"><div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Ashé-Touched · The Orisha-Marked</div><span class="dcard-tag">d8 · +2 Resonance +1 Attunement</span></div><div class="dcard-body">Divine biology — a patron Orisha's energy flows through them visibly. Orisha Domain abilities, Community Root Channel restore, and Living Ashé (2d8 psychic damage entering anti-magic fields). <em>Best for: players who want power that is inherently political.</em></div></div>
+  <div class="dcard" onclick="this.classList.toggle('open')"><div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Serpent-Kin · The Coil-Walkers</div><span class="dcard-tag">d8 · +2 Attunement +1 Swiftness</span></div><div class="dcard-body">Ancient civilization, prophetic biology. Natural armor with scale-shedding Reflex, automatic prophetic fragments each rest, amphibious, and The Long Game immunity to being rushed. <em>Best for: the long-game character with patience that unnerves others.</em></div></div>
+  <div class="dcard" onclick="this.classList.toggle('open')"><div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Avian · The Sky-Kin</div><span class="dcard-tag">d8 · +2 Resonance +1 Swiftness · Fly 30 ft</span></div><div class="dcard-body">Wings, extraordinary vision, Asha-touched truth sense — always know when being lied to. Judicial Authority (compel one truthful answer per rest), Raptor's Eye, Chinvat Oath-Binding. <em>Best for: social and aerial superiority.</em></div></div>
+  <div class="dcard" onclick="this.classList.toggle('open')"><div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Fae-Blooded · The Twilight Kindred</div><span class="dcard-tag">d6 · +2 Attunement +1 Resonance · 35 ft</span></div><div class="dcard-body">Lowest Vitality Die — partially exists in the Otherworld at all times. Twilight Step, Noctilith Resonance, Seasonal Attunement, Fae Bargain (once per session: get almost anything for a personal cost). Vulnerable to unworked iron. <em>Best for: high-risk/high-reward, Otherworld mechanics.</em></div></div>
+  <div class="dcard" onclick="this.classList.toggle('open')"><div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Moana-kin · The Wayfinders</div><span class="dcard-tag">d8 · +2 Attunement +1 Swiftness · Swim 40 ft</span></div><div class="dcard-body">Ara Moana navigation system — always know where they are and where everything is going. Two navigation abilities at creation, ocean-adapted body, Pre-Fall Star Charts, Waka Community (Help gives Resonant Fortune to both parties). <em>Best for: the party's compass.</em></div></div>
+  <div class="dcard" onclick="this.classList.toggle('open')"><div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Te Kapo · The Void-Readers</div><span class="dcard-tag">d8 · +2 Attunement +1 Acuity · Blindsight 30 ft</span></div><div class="dcard-body">Dark-zodiac perception and Kore-kore void sense — passive detection of hidden doors, invisible creatures, and the Hollow Serpent's movements. Light Sensitive (Resonant Discord in bright light). <em>Best for: the party's eyes in the dark and the Obsidian Deep storyline.</em></div></div>
+  <div class="dcard" onclick="this.classList.toggle('open')"><div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Lizard-Folk · The Patient Hunters</div><span class="dcard-tag">d10 · +2 Forcefulness +1 Endurance · Regeneration</span></div><div class="dcard-body">Swamp predators — Bog Predator stealth, Environmental Reading (passive awareness of all creatures within 300 ft), and Regeneration (1 Vitality per Pulse below half; stops with fire). <em>Best for: the wilderness specialist, near-unkillable in prolonged encounters.</em></div></div>
+  <div class="dcard" onclick="this.classList.toggle('open')"><div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Kuri · The Overlooked</div><span class="dcard-tag">d6 · +2 Swiftness +1 Acuity · Small · 25 ft</span></div><div class="dcard-body">Social invisibility in urban environments, Infrastructure Knowledge (know the structural weaknesses of any city), Improvisation Mastery, Toxin Resistance. They survive by never being hit. <em>Best for: urban infiltration specialist.</em></div></div>
+  <div class="dcard" onclick="this.classList.toggle('open')"><div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Centaur-Kin · The Steppe-Born</div><span class="dcard-tag">d10 · +2 Forcefulness +1 Attunement · Large · 50 ft</span></div><div class="dcard-body">Fastest Kindred at 50 ft. Charge (+2d6 damage, target prone), Stellar Cartography, Running Dialogue (Resonant Fortune after full-speed move), Natural Archer (ranged strike as Instinct). Cannot enter standard dungeons. <em>Best for: open-terrain dominance.</em></div></div>
+  <div class="dcard" onclick="this.classList.toggle('open')"><div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Beast-Descended · The Marked Lineage</div><span class="dcard-tag">d10 · +2 Attunement +1 by Beast lineage</span></div><div class="dcard-body">Bloodline connection to one of the twelve Legendary Beasts. Twelve lineages (one per zodiac sign), each with a Lineage Breath and unique passive Beast ability. Beast Resonance Pool builds near sacred Beast sites. Fate Number always falls within your Beast's zodiac range. <em>Best for: mythic lineage with ability and complication.</em></div></div>
+  <div class="dcard" onclick="this.classList.toggle('open')"><div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Geode-Kin · The Constructed Flesh</div><span class="dcard-tag">d10 · +2 Endurance +1 Acuity</span></div><div class="dcard-body">Fully organic but biologically resonant with Geode frequency — a classified Jade Empire engineering program several generations old. Geode Resonance (Geode-powered items work 1 tier higher), Construct Empathy, Enhanced Frame (+50% Frame Vitality pool). The Jade Empire considers you classified. <em>Best for: organic-but-construct-adjacent, Gear-Forged cold war access.</em></div></div>
+  <div class="dcard" onclick="this.classList.toggle('open')"><div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Beast-Kin · The Zodiac Morphology</div><span class="dcard-tag">d8 · +2 by morphology · Sign-Locked</span></div><div class="dcard-body">One of twelve zodiac animal morphologies — partially animal, fully humanoid. Ram-Kin, Bull-Kin, Twin-Kin, Crab-Kin, Lion-Kin, Bee-Kin, Bird-Kin, Scorpion-Kin, Stag-Kin, Goat-Kin, Water-Bearer-Kin, Fish-Kin. Zodiac sign always matches morphology. Legendary Beasts of your sign treat you as familiar. <em>Best for: distinct physical zodiac presence from Depth 1.</em></div></div>
+  <div class="dcard" onclick="this.classList.toggle('open')"><div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Orc-Kin · The Dispersed People</div><span class="dcard-tag">d10 · +2 Forcefulness +1 Endurance</span></div><div class="dcard-body">A stateless, dispersed people with no homeland. Relentless Endurance (once per rest, drop to 1 Vitality instead of 0), Menacing Presence (Resonant Fortune on Intimidation after being seen in combat), Pack Tactics (Resonant Fortune on strikes against targets adjacent to an ally). <em>Best for: physically resilient frontline with no institutional allegiances.</em></div></div>
+  <div class="dcard" onclick="this.classList.toggle('open')"><div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Giant-Kin · The Old Blood</div><span class="dcard-tag">d12 · +2 Forcefulness +1 Endurance · Large-adjacent</span></div><div class="dcard-body">The highest Vitality Die of any Kindred. Frost giant lineage, Boreal Expanse. Giant's Resilience (cold resistance; Resonant Fortune on extreme environment Warding Resonances), Stone Throw (d10 bludgeoning, 30/60 ft), Jarl's Authority (Resonant Fortune on Intimidation where size matters). <em>Best for: the largest and most resilient character.</em></div></div>
+  <div class="dcard" onclick="this.classList.toggle('open')"><div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Elemental-Kin · The Aspected Body</div><span class="dcard-tag">d8 · +2 Attunement +1 by aspect</span></div><div class="dcard-body">Four elemental aspects (Fire, Earth, Air, Water) tied to the four Duchies. Elemental Resistance, Elemental Expression (minor Working once per rest, no Aetheric Channel required), Duchy Attunement (Resonant Fortune on Persuasion and Insight with your Duchy's NPCs). Zodiac sign always falls within your element's Duchy. <em>Best for: elemental identity tied to the Duchy political structure.</em></div></div>
+  </div>
+
+  <div class="mbox" style="margin-top:.5rem"><div class="mbox-text"><strong>Kindred-Zodiac Resonance:</strong> All twenty Kindreds produce a unique bonus ability combined with a specific zodiac sign (240 combinations). This is Concordance-improvised at character creation based on the Kindred's Aetheric nature and the sign's cosmic domain. There is no master table — the combination is a Session Zero conversation.</div></div>
+
+  <div class="nav-buttons">
+    <button class="nav-btn-action nav-prev" onclick="show(2,document.querySelectorAll('.step-btn')[1])">← Step II</button>
+    <div class="nav-spacer"></div>
+    <button class="nav-btn-action nav-next" onclick="show(3,document.querySelectorAll('.step-btn')[2])">Path — Step III →</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- STEP III: PATH -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-3">
+<div class="wrap">
+  <div class="step-header">
+    <div class="step-badge">
+      <span class="step-badge-num" style="color:var(--step3);border-color:rgba(96,160,96,0.3);background:rgba(96,160,96,0.06)">Step III</span>
+      <span class="step-badge-tag">The Cosmic Road</span>
+    </div>
+    <h2 class="step-title" style="color:var(--step3)">Choose Your Path</h2>
+    <p class="step-desc">The cosmic road the Aether has called you toward. Not a job — a fundamental orientation of the soul. Your answer to "what do you want?" in Step I should point toward your Path.</p>
+  </div>
+
+  <div class="two-col" style="margin-bottom:1rem">
+    <div class="info"><div class="info-label">Path Features</div><div class="info-text">Abilities that unlock as your Resonance Depth increases. At Depth 1, you receive your first features — enough to play. More unlock at each Depth.</div></div>
+    <div class="info"><div class="info-label">Core Resource</div><div class="info-text">Every Path has a primary resource powering its most distinctive abilities — Aetheric Channels, Tapas Points, Wrath State uses, Lead-Scale Gauge, and others.</div></div>
+    <div class="info"><div class="info-label">Vitality Die</div><div class="info-text">Your Path sets a Vitality Die. Use the higher of your Kindred's die and your Path's die when calculating Vitality.</div></div>
+    <div class="info"><div class="info-label">Calling (at Depth 3)</div><div class="info-text">Your Path's specific direction — the particular expression of your cosmic calling. Not chosen until Depth 3, but knowing your options at Depth 1 helps you play toward it.</div></div>
+  </div>
+
+  <div class="sec">The Seventeen Paths — Summary</div>
+
+  <div class="decision-grid">
+  <div class="dcard" onclick="this.classList.toggle('open')">
+    <div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">★ Stellar Cartographer · Fate-Mapper</div><span class="dcard-tag">d8 · Fate-Knots · Omega</span></div>
+    <div class="dcard-body">Store natural 20s and 1s as Fate-Knots; redistribute them to any creature within 60 ft. Read Fate Numbers as an Instinct. Map Fated Bonds. Eventually identify Quint Bond cluster members on sight. <strong>Callings:</strong> Loom's Hand (fate-agent), The Unwritten (fate-eraser, includes Number Masking), Star-Reader (celestial-scholar). <em>Best for: players who want to engage with the Fated Bond system as a core mechanic and enjoy probabilistic manipulation.</em></div>
+  </div>
+  <div class="dcard" onclick="this.classList.toggle('open')">
+    <div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">★ Ashé-Medium · The Vessel</div><span class="dcard-tag">d8 · Ashé Vessel 0–10 · Omega</span></div>
+    <div class="dcard-body">Invite Orisha presence rather than weaving Workings. Fill the Ashé Vessel through communal acts; spend it on Invocations and Full Possession (Concordance-controlled for 3 rounds). Power cannot be suppressed by Aether-Dampening Ore. <strong>Callings:</strong> Community Healer, War-Medium, Ancestor-Speaker. <em>Best for: players who want to engage with the Ashélands storyline and enjoy a Path where the power source is relational.</em></div>
+  </div>
+  <div class="dcard" onclick="this.classList.toggle('open')">
+    <div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">★ Coil-Stalker · The Controlled Corruption</div><span class="dcard-tag">d10 · Lead-Scale Gauge 0–20 · Beta</span></div>
+    <div class="dcard-body">Carry Void-energy as a weapon — the gauge fills with power and approaches dissolution simultaneously. Five corruption stages (Cold/Tempered/Burning/Searing/Void-Husk threshold) each granting escalating combat bonuses and escalating risks. Siderium Quartz reduces the gauge. <strong>Callings:</strong> Infiltrator, Purgator, Scion-Hunter. <em>Best for: players who enjoy high-risk resource management and want the most morally complex Path in the game.</em></div>
+  </div>
+  <div class="dcard" onclick="this.classList.toggle('open')">
+    <div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">★ Geode-Pilot · The Frame-Bonded</div><span class="dcard-tag">d8 + Frame Pool · Frame Modes · Beta</span></div>
+    <div class="dcard-body">Bond with a Resonant Geode-powered mechanical Frame — a second body with its own Vitality pool. Three modes (Sentinel/Scout/Resonance), Frame Modifications at every even Depth, Overclock (once per rest), and Resonant Cascade (devastating area discharge). <strong>Callings:</strong> Sentinel, Engineer, Scout. <em>Best for: players who want a mech-pilot fantasy and enjoy managing a complex secondary system.</em></div>
+  </div>
+  <div class="dcard" onclick="this.classList.toggle('open')">
+    <div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Primal Jarl · The Threshold-Walker</div><span class="dcard-tag">d12 · Wrath State · Alpha</span></div>
+    <div class="dcard-body">Highest Vitality Die. Wrath State — release the filter between will and full Aetheric force. Resonant Fortune on Forcefulness, damage resistance, no Weaving abilities while Wrathing. <strong>Callings:</strong> Berserker (Norse), Steppe Sovereign (Centaur), Beast-Soul (Arcadian). <em>Best for: players who want to be the front-line physical force and enjoy a Path with a clear power fantasy.</em></div>
+  </div>
+  <div class="dcard" onclick="this.classList.toggle('open')">
+    <div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Resonance Seeker · The Harmony-Finder</div><span class="dcard-tag">d8 · Resonant Chord · Omega</span></div>
+    <div class="dcard-body">Resonant Chord (bonus die given to any ally per rest — scales from d6 to d12). Frequency Mastery, Countersong. The Path most naturally aligned with the Fated Bond system — Bond Chord gives enlarged dice to Bonded allies. <strong>Callings:</strong> Lore-Keeper, Valor-Singer, Bond-Harmonist (can facilitate Bond formation). <em>Best for: players who want to support the party and engage with the world's lore and Bond systems.</em></div>
+  </div>
+  <div class="dcard" onclick="this.classList.toggle('open')">
+    <div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Zodiac Priest · The Domain-Tender</div><span class="dcard-tag">d8 · Aetheric Benediction · Omega · Epic Tier</span></div>
+    <div class="dcard-body">Tends the memory of what the fallen gods were. Twelve Callings (one per zodiac sign domain). Aetheric Benediction (not suppressible by Ore). Legendary Beast Communion at Depth 7. Domain Embodiment at Depth 17. Epic Tier extends to Depth 30. <em>Best for: players who want the most cosmically connected Path and don't mind that their power grows slowly but reaches extraordinary heights.</em></div>
+  </div>
+  <div class="dcard" onclick="this.classList.toggle('open')">
+    <div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Fade-Guardian · The Veil-Watcher</div><span class="dcard-tag">d10 · Veil Walk · Omega · Paladin Subclass</span></div>
+    <div class="dcard-body">Veil Walk (step halfway into the Otherworld), Veil Smite, Seasonal Power (enhanced abilities during birth-tree season). Guards the threshold between worlds. <em>Best for: players who want a Paladin with Druid-adjacent flavor and deep Tuathan Otherworld connections.</em></div>
+  </div>
+  <div class="dcard" onclick="this.classList.toggle('open')">
+    <div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Solar Guard · The Prepared</div><span class="dcard-tag">d10 · Surge of Will · Alpha/Beta</span></div>
+    <div class="dcard-body">Most versatile warrior. Surge of Will (Vitality restore as Instinct; extra Act 2x/rest). Extra Strikes at Depths 5/11/20. Indomitable (reroll failed Warding Resonances). No cosmic inheritance — pure trained will. <strong>Callings:</strong> Solar Chivalry, Psi-Warrior (Jade), Runic Knight (Norse). <em>Best for: players who want the highest damage output and fewest mechanical complications.</em></div>
+  </div>
+  <div class="dcard" onclick="this.classList.toggle('open')">
+    <div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Rāśi-Siddha · The Ascetic</div><span class="dcard-tag">d8 · Tapas Points · Omega · Most Complete</span></div>
+    <div class="dcard-body">Internal fire as a resource. Three expenditure tiers (Satvic/Rajasic/Tamasic). Kanya Temple can cure Ashen Coil blight-rot. Unarmored Guard Rating from Attunement. Twelve Temple Callings (one per sign). <em>Best for: players who want a discipline-based martial artist with deep connection to the Scattered Temples and zodiac traditions.</em></div>
+  </div>
+  <div class="dcard" onclick="this.classList.toggle('open')">
+    <div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Oathed Vanguard · The Sworn</div><span class="dcard-tag">d10 · Vitality of the Oath · Alpha</span></div>
+    <div class="dcard-body">Power contingent on an Oath sworn before the Loom of Fate. Vitality of the Oath (healing pool), Aether Smite (radiant damage on strikes), Aura of Oath (Warding Resonance bonus to nearby allies). <strong>Callings:</strong> Solar Compact (devotion), Loom's Justice (vengeance), Ancient Sideros (nature/protection). <em>Best for: players who want the Paladin fantasy with Sideros-specific divine stakes.</em></div>
+  </div>
+  <div class="dcard" onclick="this.classList.toggle('open')">
+    <div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Void-Hunter · The Coil-Tracker</div><span class="dcard-tag">d10 · Void Quarry · Beta</span></div>
+    <div class="dcard-body">Void Quarry (bonus damage and tracking against Coil operatives and Void-Husks). Terrain Attunement. Always knows the Quarry's direction within 1 mile. <strong>Callings:</strong> Void-Slayer, Stalker's Eye, Fang of the Resistance (intelligence network). <em>Best for: players who want to engage directly with the Ashen Coil as their primary antagonist.</em></div>
+  </div>
+  <div class="dcard" onclick="this.classList.toggle('open')">
+    <div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Fate-Breaker · The Probability Thief</div><span class="dcard-tag">d8 · Probability Strike · Beta</span></div>
+    <div class="dcard-body">Number Masking (suppress a Fate Number from being read). Probability Strike (bonus damage scaling to 10d6). Cunning Act, Uncanny Dodge, Reliable Discipline. <strong>Callings:</strong> Probability Thief, Loom Operative (assassin), Street Philosopher (scout). <em>Best for: players who want the rogue fantasy with Fate Number system integration.</em></div>
+  </div>
+  <div class="dcard" onclick="this.classList.toggle('open')">
+    <div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Star-Born · The Uncontrolled</div><span class="dcard-tag">d6 · Zodiac Surge Points · Omega</span></div>
+    <div class="dcard-body">Born already weaving — Surge Points convert to/from Aetheric Channels. Wild Surges on natural 1s (or deliberate pushing). Quickened/Empowered/Extended Workings. <strong>Callings:</strong> Zodiac Bloodline, Wild Surge Master, The Veil-Touched (shadow). <em>Best for: players who want raw weaving power with an element of productive unpredictability.</em></div>
+  </div>
+  <div class="dcard" onclick="this.classList.toggle('open')">
+    <div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Scion-Pledged · The Contract</div><span class="dcard-tag">d8 · Patron Channels · Omega</span></div>
+    <div class="dcard-body">Patron Channels (refresh on Brief Attunement — the Patron owns the power). Patron's Mark (free ranged Working). Scion Boons (permanent abilities from deepening the contract). Patrons: Legendary Beast, one of the 13 Scions, or Aethar himself. <em>Best for: players who want the warlock fantasy with high political stakes and a patron relationship that drives campaign plot.</em></div>
+  </div>
+  <div class="dcard" onclick="this.classList.toggle('open')">
+    <div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">Comet-Mage · The Formulation Scholar</div><span class="dcard-tag">d6 · Weave Recovery · Beta</span></div>
+    <div class="dcard-body">The Kallos-Sworn's scholarly tradition. Formulation Ledger (prepared Workings from research). Weave Recovery (partial Channel restore on Brief Attunement). Three Conclaves as Callings — Shifting Horizons (Aethar's former Conclave), Earthly Core, Veil-Walkers. <em>Best for: players who want the wizard fantasy, Argent Spire storyline access, and depth of Working variety.</em></div>
+  </div>
+  <div class="dcard" onclick="this.classList.toggle('open')">
+    <div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">★ Primal Accord · The Accord-Walker</div><span class="dcard-tag">d8 · Aspect Manifestation · Alpha/Beta split</span></div>
+    <div class="dcard-body">The Accord-Walker does not worship the Legendary Beasts — they walk in accord with what the Beasts already are. Arcadian theology reads the Pantheonic Fall as a choice: the twelve gods redistributed their divinity into distributed biological presence. Dual resource: Aspect Manifestation (nature Working-equivalents) and Beast Resonance Pool (builds near Legendary Beast sacred sites). <strong>Callings:</strong> Grove-Tender, Storm-Caller, Moon-Walker, Earth-Shaper, Spore-Accord, Kore-kore Walker, Waka-tōhora. <em>Best for: players who want the Druid fantasy with deep Legendary Beast connections and Arcadia Major storyline access.</em></div>
+  </div>
+  <div class="dcard" onclick="this.classList.toggle('open')">
+    <div class="dcard-head"><div class="dcard-name" style="color:var(--gold-bright)">★ Accord-Maker · The Living Machine Tradition</div><span class="dcard-tag">d8 · Infusions + Blueprints · Beta/Alpha</span></div>
+    <div class="dcard-body">Approaches the Aether the way a Dunmarim master-smith approaches a difficult alloy — with precise knowledge of its properties and no illusions about who is in charge. Dual resource: Infusion List (temporary Aetheric properties on weapons, armor, items) and Blueprint List (permanent constructs built between sessions, Tier I through V). Operates in Aether-Dampening Ore zones at reduced tier rather than failing. <strong>Callings:</strong> Alchemist, Architect, Armorer (Dunmarim), Siege Engineer. <em>Best for: players who want the Artificer/Inventor fantasy — rewards between-session preparation.</em></div>
+  </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="nav-btn-action nav-prev" onclick="show(2,document.querySelectorAll('.step-btn')[1])">← Step II</button>
+    <div class="nav-spacer"></div>
+    <button class="nav-btn-action nav-next" onclick="show(4,document.querySelectorAll('.step-btn')[3])">Attributes — Step IV →</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- STEP IV: ATTRIBUTES -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-4">
+<div class="wrap">
+  <div class="step-header">
+    <div class="step-badge">
+      <span class="step-badge-num" style="color:var(--step4);border-color:rgba(74,142,196,0.3);background:rgba(74,142,196,0.06)">Step IV</span>
+      <span class="step-badge-tag">Cosmic Resonance</span>
+    </div>
+    <h2 class="step-title" style="color:var(--step4)">Generate Resonance Attributes</h2>
+    <p class="step-desc">The six dimensions of how your soul aligns with cosmic forces — generated by the Loom's Gift, then shaped by your Kindred.</p>
+  </div>
+
+  <div class="sec">The Fated Scores Method</div>
+  <div class="mbox">
+    <div class="mbox-label">The Loom's Gift — Hybrid Generation</div>
+    <div class="mbox-title">Roll once per Attribute · Then swap two scores</div>
+    <div class="mbox-text">
+      <strong>Step 1 — Roll:</strong> Roll <em>4d6 and drop the lowest die</em> six times. Record each result next to a Resonance Attribute in the order rolled — Forcefulness, Swiftness, Endurance, Acuity, Attunement, Resonance.<br><br>
+      <strong>Step 2 — Read:</strong> Before assigning, look at your six scores as they fell. This is the Loom's first suggestion for who you are.<br><br>
+      <strong>Step 3 — Swap:</strong> You may swap exactly <em>two scores</em> with each other — moving one score to a different Attribute. Only one swap is permitted. This represents the soul asserting one truth about itself against fate's initial arrangement.<br><br>
+      <strong>Step 4 — Apply Kindred increases:</strong> Add your Kindred's Attribute bonuses to the final scores.<br><br>
+      <strong>The philosophy:</strong> The dice set the Loom's pattern. The swap is you. The Kindred bonus is blood. The final number is the soul.
+    </div>
+  </div>
+
+  <div class="sec">The Six Resonance Attributes</div>
+  <div class="attr-grid">
+    <div class="attr-card">
+      <div class="attr-name" style="color:var(--alpha)">Forcefulness</div>
+      <div class="attr-score" style="color:var(--alpha)">—</div>
+      <div class="attr-mod">modifier = (score − 10) ÷ 2</div>
+      <div class="attr-replaces">Replaces: Strength</div>
+    </div>
+    <div class="attr-card">
+      <div class="attr-name" style="color:var(--beta)">Swiftness</div>
+      <div class="attr-score" style="color:var(--beta)">—</div>
+      <div class="attr-mod">modifier = (score − 10) ÷ 2</div>
+      <div class="attr-replaces">Replaces: Dexterity</div>
+    </div>
+    <div class="attr-card">
+      <div class="attr-name" style="color:var(--gold)">Endurance</div>
+      <div class="attr-score" style="color:var(--gold)">—</div>
+      <div class="attr-mod">modifier = (score − 10) ÷ 2</div>
+      <div class="attr-replaces">Replaces: Constitution</div>
+    </div>
+    <div class="attr-card">
+      <div class="attr-name" style="color:var(--green)">Acuity</div>
+      <div class="attr-score" style="color:var(--green)">—</div>
+      <div class="attr-mod">modifier = (score − 10) ÷ 2</div>
+      <div class="attr-replaces">Replaces: Intelligence</div>
+    </div>
+    <div class="attr-card">
+      <div class="attr-name" style="color:var(--omega)">Attunement</div>
+      <div class="attr-score" style="color:var(--omega)">—</div>
+      <div class="attr-mod">modifier = (score − 10) ÷ 2</div>
+      <div class="attr-replaces">Replaces: Wisdom</div>
+    </div>
+    <div class="attr-card">
+      <div class="attr-name" style="color:var(--alpha)">Resonance</div>
+      <div class="attr-score" style="color:var(--alpha)">—</div>
+      <div class="attr-mod">modifier = (score − 10) ÷ 2</div>
+      <div class="attr-replaces">Replaces: Charisma</div>
+    </div>
+  </div>
+
+  <div class="sec">Derived Statistics</div>
+  <div class="formula">
+    VITALITY MAXIMUM = Accumulated total of (Vitality Die roll + Endurance modifier) at each Resonance Depth.<br>
+    At Depth 1: roll your Vitality Die, add Endurance modifier. Minimum 1. That is your starting Vitality.<br>
+    At each new Depth: roll your Vitality Die again, add Endurance modifier, add to your accumulated total.<br>
+    Always use the higher of your Kindred's Vitality Die or your Path's Vitality Die.<br><br>
+    GUARD RATING = 10 + armor bonus + Swiftness modifier (light/no armor)<br>
+    Unarmored Siddha: 10 + Attunement modifier + Mastery Bonus (while Tapas pool is full)<br>
+    Gear-Forged: 10 + Endurance modifier (constructed frame)<br><br>
+    MASTERY BONUS = +2 at Depths 1–4 · +3 at Depths 5–8 · +4 at Depths 9–12<br>
+    +5 at Depths 13–16 · +6 at Depths 17–20<br><br>
+    AMBIENT ATTUNEMENT = 10 + Attunement modifier + Mastery Bonus (if Perception Mastered)
+  </div>
+
+  <div class="sec">Which Attribute Matters Most for Your Path</div>
+  <div class="decision-grid">
+    <div class="dcard" onclick="this.classList.toggle('open')">
+      <div class="dcard-head"><div class="dcard-name">Forcefulness-primary Paths</div><span class="dcard-tag">Physical Force</span></div>
+      <div class="dcard-body"><strong>Primal Jarl, Solar Guard, Oathed Vanguard (for strikes).</strong> Put your highest score here if you want to hit hard and often. Forcefulness also governs Athletics and most physical feats of strength. Primal Jarl in Wrath State adds Forcefulness to melee damage — every point matters.</div>
+    </div>
+    <div class="dcard" onclick="this.classList.toggle('open')">
+      <div class="dcard-head"><div class="dcard-name">Attunement-primary Paths</div><span class="dcard-tag">Cosmic Sensitivity</span></div>
+      <div class="dcard-body"><strong>Rāśi-Siddha, Zodiac Priest, Ashé-Medium, Stellar Cartographer, most Omega Paths.</strong> Attunement governs Tapas Points, Perception, Insight, healing, and most Warding Resonances against mental forces. If your Path is about perceiving and responding to the world rather than imposing force on it, Attunement is your primary Attribute.</div>
+    </div>
+    <div class="dcard" onclick="this.classList.toggle('open')">
+      <div class="dcard-head"><div class="dcard-name">Resonance-primary Paths</div><span class="dcard-tag">Magnetic Presence</span></div>
+      <div class="dcard-body"><strong>Ashé-Medium, Stellar Cartographer, Resonance Seeker, Star-Born, Scion-Pledged.</strong> Resonance governs all social Disciplines, the Fated Bond Active Resonances, and Weaving for Paths that use it as their Weaving Attribute. A high Resonance is the difference between a Resonance Seeker who gives their allies d6 Chords and one who gives d12s.</div>
+    </div>
+    <div class="dcard" onclick="this.classList.toggle('open')">
+      <div class="dcard-head"><div class="dcard-name">Acuity-primary Paths</div><span class="dcard-tag">Pattern Recognition</span></div>
+      <div class="dcard-body"><strong>Comet-Mage, Geode-Pilot.</strong> Acuity governs Aetheric Lore, Investigation, History, Nature, and the Weaving Attribute for Paths that draw on analytical intelligence. A high Acuity Comet-Mage prepares more Formulations per Deep Attunement and has a higher Working Threshold for everything they weave.</div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="nav-btn-action nav-prev" onclick="show(3,document.querySelectorAll('.step-btn')[2])">← Step III</button>
+    <div class="nav-spacer"></div>
+    <button class="nav-btn-action nav-next" onclick="show(5,document.querySelectorAll('.step-btn')[4])">Fate — Step V →</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- STEP V: FATE -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-5">
+<div class="wrap">
+  <div class="step-header">
+    <div class="step-badge">
+      <span class="step-badge-num" style="color:var(--step5);border-color:rgba(144,102,200,0.3);background:rgba(144,102,200,0.06)">Step V</span>
+      <span class="step-badge-tag">The Loom's Designation</span>
+    </div>
+    <h2 class="step-title" style="color:var(--step5)">Roll Your Fate</h2>
+    <p class="step-desc">Three numbers the Loom assigns before you have any say. They define your cosmic position — who is drawn to you, what risks you carry, and what the universe has planned.</p>
+  </div>
+
+  <div class="fate-display">
+    <div class="fate-box">
+      <div class="fate-box-label">Fate's Mate Number</div>
+      <div class="fate-box-val">1d100</div>
+      <div class="fate-box-note">Determines Fated Bond compatibility with other characters. Numbers within margin = natural bond.</div>
+    </div>
+    <div class="fate-box">
+      <div class="fate-box-label">Primal Essence</div>
+      <div class="fate-box-val">1d6</div>
+      <div class="fate-box-note">1 = Alpha · 2–5 = Beta · 6 = Omega. The soul's fundamental Aetheric orientation.</div>
+    </div>
+    <div class="fate-box">
+      <div class="fate-box-label">Zodiac Sign</div>
+      <div class="fate-box-val">Choose</div>
+      <div class="fate-box-note">The twelve zodiac signs. Player's choice — or use the Fate Number to determine (see table below).</div>
+    </div>
+  </div>
+
+  <div class="sec">Fate's Mate Number — The Bond System</div>
+  <p class="lore">Roll 1d100. Record this number — it is yours permanently. It never changes except through extraordinary cosmic intervention.</p>
+
+  <div class="two-col">
+    <div class="info">
+      <div class="info-label">Fated Bond Tiers</div>
+      <div class="info-text">
+        <strong>★ Paired Bond</strong> — within 10 points of another character. Shared Pulse, Resonant Awareness.<br>
+        <strong>★★★ Triad</strong> — three characters within 7 points. Whisper Bond telepathy, Vitality transfer.<br>
+        <strong>★★★★ Quad</strong> — four characters within 5 points. Full telepathy, Death Resistance.<br>
+        <strong>★★★★★ Quint</strong> — five souls within 3 points. Never recorded. The prophecy calls them "the Five Who Remember."
+      </div>
+    </div>
+    <div class="info">
+      <div class="info-label">Void-Touched Numbers</div>
+      <div class="info-text">Numbers <strong>13, 66,</strong> and <strong>99</strong> carry the Hollow Serpent's resonance. Void-Touched characters: bond abilities operate at one tier higher than their bond tier; the bond is unpredictable (d6 table each session); Stellar Cartographers feel the Hollow Serpent's frequency behind the Number when they read it.</div>
+    </div>
+  </div>
+
+  <div class="sec">Primal Essence</div>
+  <div class="three-col">
+    <div class="info" style="border-color:rgba(212,114,74,0.3);background:rgba(212,114,74,0.04)">
+      <div class="info-label" style="color:var(--alpha)">Alpha · Roll 1</div>
+      <div class="info-text">Leaders, vanguards, initiators. Naturally take charge, naturally draw others into motion. Not necessarily domineering — some Alphas lead by example, some by force, some by being the one who speaks first. <strong>+2 to Resonance Discipline checks when leading a group.</strong></div>
+    </div>
+    <div class="info" style="border-color:rgba(74,142,196,0.3);background:rgba(74,142,196,0.04)">
+      <div class="info-label" style="color:var(--beta)">Beta · Rolls 2–5</div>
+      <div class="info-text">Community backbone. Most characters are Beta — adaptable, functional, the ones who actually keep things running. Not a lesser designation. The Kallos-Sworn's institutional memory is primarily Beta. Drava Nullsong, the Coil Triad's load-bearing wall, is Beta. <strong>+1 to all Discipline checks when assisting another character.</strong></div>
+    </div>
+    <div class="info" style="border-color:rgba(144,102,200,0.3);background:rgba(144,102,200,0.04)">
+      <div class="info-label" style="color:var(--omega)">Omega · Roll 6</div>
+      <div class="info-text">Introspective catalysts. Rare — roughly 1 in 6. Deep Aetheric sensitivity, natural access to weaving, carry the world's emotional weather in their bodies. Male Omegas can carry children when in a recognized Fated Bond with an Alpha. <strong>Weaving Attributes are treated as one tier higher for the purpose of Working Threshold calculations.</strong></div>
+    </div>
+  </div>
+
+  <div class="sec">Zodiac Sign — Choose or Determine</div>
+  <p class="lore">Your zodiac sign is the cosmic force the Loom has designated you to express. It determines your Zodiac Attunement (Feat) at Depth 4, your Kindred-Zodiac Resonance ability, and which Legendary Beast will eventually recognize you as a peer.</p>
+
+  <div class="note">
+    <div class="note-title">Gear-Forged Exception</div>
+    <div class="note-text">Gear-Forged do not choose their sign — it is determined by their Geode heart's calibration, decided at construction. A Gear-Forged player chooses their sign at character creation as part of deciding what their Geode was calibrated to. They receive their Zodiac Attunement at Depth 1 rather than Depth 4.</div>
+  </div>
+
+  <div class="decision-grid">
+    <div class="dcard" onclick="this.classList.toggle('open')">
+      <div class="dcard-head"><div class="dcard-name">Determining Sign from Fate Number (optional)</div><span class="dcard-tag">Loom Method</span></div>
+      <div class="dcard-body">
+        If you want fate to determine your sign: divide your Fate Number by 100, multiply by 12, round up. Or use this table:<br><br>
+        <strong>1–8:</strong> ♈ Aries · <strong>9–17:</strong> ♉ Taurus · <strong>18–25:</strong> ♊ Gemini · <strong>26–33:</strong> ♋ Cancer<br>
+        <strong>34–41:</strong> ♌ Leo · <strong>42–50:</strong> ♍ Virgo · <strong>51–58:</strong> ♎ Libra · <strong>59–67:</strong> ♏ Scorpio<br>
+        <strong>68–75:</strong> ♐ Sagittarius · <strong>76–83:</strong> ♑ Capricorn · <strong>84–92:</strong> ♒ Aquarius · <strong>93–100:</strong> ♓ Pisces<br><br>
+        The Loom method produces a character whose sign and number share a domain — they are doubly designated by the same force.
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="nav-btn-action nav-prev" onclick="show(4,document.querySelectorAll('.step-btn')[3])">← Step IV</button>
+    <div class="nav-spacer"></div>
+    <button class="nav-btn-action nav-next" onclick="show(6,document.querySelectorAll('.step-btn')[5])">Origin — Step VI →</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- STEP VI: ORIGIN -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-6">
+<div class="wrap">
+  <div class="step-header">
+    <div class="step-badge">
+      <span class="step-badge-num" style="color:var(--step6);border-color:rgba(192,120,68,0.3);background:rgba(192,120,68,0.06)">Step VI</span>
+      <span class="step-badge-tag">The Life Before</span>
+    </div>
+    <h2 class="step-title" style="color:var(--step6)">Choose Your Origin</h2>
+    <p class="step-desc">The thread of your life before the Path found you — where you came from, what shaped you, what the Loom was doing with you before you knew to look.</p>
+  </div>
+
+  <p class="lore">Your Origin is not your Path. It is what came before — the experiences and relationships and choices that made you the kind of person the Path would eventually call. A Comet-Mage with a Merchant Origin brings a particular kind of pragmatism to their formulations. A Primal Jarl with a Scholarly Origin fights differently than one with a Wanderer Origin. <strong>The Origin shapes the person; the Path shapes the power.</strong></p>
+
+  <div class="sec">What Your Origin Gives You</div>
+  <div class="two-col">
+    <div class="info">
+      <div class="info-label">Two Mastered Disciplines</div>
+      <div class="info-text">Specific Disciplines from the list below — fully Mastered from the start. Add your full Mastery Bonus to these rolls.</div>
+    </div>
+    <div class="info">
+      <div class="info-label">One Tool or Language</div>
+      <div class="info-text">Either Mastery in a specific tool set (artisan's tools, thieves' tools, musical instrument, etc.) or fluency in one additional language.</div>
+    </div>
+    <div class="info">
+      <div class="info-label">Origin Ability</div>
+      <div class="info-text">A specific passive or active ability unique to this Origin — something the character learned to do well enough that it carries into their adventuring life.</div>
+    </div>
+    <div class="info">
+      <div class="info-label">Flavor Profile</div>
+      <div class="info-text">Four personality traits, two ideals, two bonds, and two flaws to choose from. Pick one from each list, or write your own using these as seeds.</div>
+    </div>
+  </div>
+
+  <!-- SCHOLARLY ORIGINS -->
+  <div class="origin-category">
+    <div class="cat-header">Scholarly · Academic · Celestial</div>
+    <div class="origin-grid">
+
+    <div <div class="mbox" style="margin-bottom:1rem">
+    <div class="mbox-text">The full Origins document (<em>sideros_origins.html</em>) contains complete mechanics, equipment, personality flavor, ideals, bonds, flaws, and three narrative hooks for each entry. The summaries below give the essential shape of each Origin for character creation decisions.</div>
+  </div>
+
+<div class="origin-grid">
+  <div class="sec">Scholarly · 5 Origins</div>
+  <div class="origin" onclick="this.classList.toggle('open')">
+    <div class="origin-head">
+      <div>
+        <div class="origin-name">Comet-Magi Initiate</div>
+        <div class="origin-tagline">Argent Spire · Former Student</div>
+      </div>
+    </div>
+    <div class="origin-body">
+      <div class="ob-val">Trained at Argent Spire — not long enough to reach a significant Circle, but long enough to carry a suppressed Formulation Fragment. <strong>Disciplines:</strong> Aetheric Lore, History. <strong>Feature:</strong> Once per Deep Attunement, attempt to express a suppressed Formulation (DC 15 Working Threshold check) — success produces a 2nd-tier Working effect; failure deals 1d6 psychic damage. Equipment: Scholar's pack, Comet-Magi initiate's robe, personal Formulation Ledger, 15 Gold Marks.</div>
+    </div>
+  </div>
+  <div class="origin" onclick="this.classList.toggle('open')">
+    <div class="origin-head">
+      <div>
+        <div class="origin-name">Siddha Acolyte</div>
+        <div class="origin-tagline">Scattered Temples · Temple Tradition</div>
+      </div>
+    </div>
+    <div class="origin-body">
+      <div class="ob-val">Raised in or drawn to one of the Twelve Scattered Temples — absorbed the tradition's rhythms, mantras, and cosmological framework without reaching full Siddha status. <strong>Disciplines:</strong> Religion (Siddha tradition), Medicine. <strong>Feature:</strong> Temple Blessing — once per Deep Attunement, 10 minutes of meditation invokes your sign's temple blessing as a minor Working requiring no Aetheric Channel. Equipment: Prayer beads, healer's kit (10 uses), traveler's clothes, 10 Gold Marks.</div>
+    </div>
+  </div>
+  <div class="origin" onclick="this.classList.toggle('open')">
+    <div class="origin-head">
+      <div>
+        <div class="origin-name">Loom Analyst</div>
+        <div class="origin-tagline">Loom of Fate · Intelligence</div>
+      </div>
+    </div>
+    <div class="origin-body">
+      <div class="ob-val">Worked for the Loom of Fate as an analyst — Fate Numbers, bond patterns, probability clusters. Found something you weren't supposed to see. <strong>Disciplines:</strong> Investigation, Insight. <strong>Feature:</strong> Pattern Recognition — on a successful Insight Active Resonance, ask the Concordance one yes/no question about whether the situation contains a concealed element. Cannot use twice in the same scene. Equipment: Forgery kit, coded journal, Loom contact cipher, 20 Gold Marks.</div>
+    </div>
+  </div>
+  <div class="origin" onclick="this.classList.toggle('open')">
+    <div class="origin-head">
+      <div>
+        <div class="origin-name">Order of Pure Reason Researcher</div>
+        <div class="origin-tagline">Dunmarim · Anti-Working Tradition</div>
+      </div>
+    </div>
+    <div class="origin-body">
+      <div class="ob-val">Was part of the Order of Pure Reason's research division — studying the world scientifically, attempting to explain Aetheric effects through natural philosophy. Left, expelled, or stopped believing. <strong>Disciplines:</strong> Nature, Investigation. <strong>Feature:</strong> Scientific Method — Resonant Fortune on Warding Resonances against being surprised or affected by Aetheric phenomena; identify any Aetheric Artifact's school and tier by examining it for 1 minute. Equipment: Alchemist's supplies, research journal (valuable to multiple factions), Order credentials, 15 Gold Marks.</div>
+    </div>
+  </div>
+  <div class="origin" onclick="this.classList.toggle('open')">
+    <div class="origin-head">
+      <div>
+        <div class="origin-name">Stellar Observer</div>
+        <div class="origin-tagline">Celestial Study · Independent</div>
+      </div>
+    </div>
+    <div class="origin-body">
+      <div class="ob-val">Spent years watching the sky from a tower, a hillside, or the back of a cart. You think in patterns that span centuries. <strong>Disciplines:</strong> Aetheric Lore, Perception. <strong>Feature:</strong> Celestial Memory — under open sky, always know exact time, date, season, and geographic position without tools. Resonant Fortune on Aetheric Lore Active Resonances related to astronomical or zodiac timing. Equipment: Navigator's tools, a years-long personal star log, traveler's clothes, 12 Gold Marks.</div>
+    </div>
+  </div>
+  <div class="sec">Merchant · 4 Origins</div>
+  <div class="origin" onclick="this.classList.toggle('open')">
+    <div class="origin-head">
+      <div>
+        <div class="origin-name">Silk Road Guild Operative</div>
+        <div class="origin-tagline">Trans-Continental Trade</div>
+      </div>
+    </div>
+    <div class="origin-body">
+      <div class="ob-val">The Silk Road Guild officially connects every major trading hub. Unofficially, it also moves information, people, and goods that don't appear on manifests. <strong>Disciplines:</strong> Persuasion, Deception. <strong>Feature:</strong> Guild Contacts — in any city or major post, find a Guild contact within 1d4 hours for commodity prices, safe house, or hiring intelligence. The contact operates on mutual benefit, not loyalty — favors cost favors. Equipment: Guild signet ring, merchant's scale, letter of credit worth 50 Gold Marks, fine clothes, 25 Gold Marks.</div>
+    </div>
+  </div>
+  <div class="origin" onclick="this.classList.toggle('open')">
+    <div class="origin-head">
+      <div>
+        <div class="origin-name">Dunmarim Master-Smith</div>
+        <div class="origin-tagline">Stone Kingdom Craft</div>
+      </div>
+    </div>
+    <div class="origin-body">
+      <div class="ob-val">Trained under a Dunmarim master-smith — not necessarily Dunmarim yourself, but absorbed enough of the tradition to carry it. Your hands know things your mind hasn't caught up with. <strong>Disciplines:</strong> Athletics, History (material culture). <strong>Feature:</strong> Master's Hand — crafting results are always one quality tier higher than materials would normally allow; identify origin, age, and quality of any worked metal or stone in 1 minute. Equipment: Smith's tools, a masterwork personal weapon or tool, Dunmarim letter of reference, 15 Gold Marks.</div>
+    </div>
+  </div>
+  <div class="origin" onclick="this.classList.toggle('open')">
+    <div class="origin-head">
+      <div>
+        <div class="origin-name">Port Damaris Shadow-Council Agent</div>
+        <div class="origin-tagline">Underground Economy</div>
+      </div>
+    </div>
+    <div class="origin-body">
+      <div class="ob-val">Port Damaris runs on a dual economy — the legitimate layer, and the Shadow-Council layer that actually controls the city. You worked for the latter. <strong>Disciplines:</strong> Deception, Intimidation. <strong>Feature:</strong> City Infrastructure — after 24 hours in a new city, identify one safe house, one bribeable official (and their price), and one black market contact. The Concordance provides these as specific NPCs. Equipment: Thieves' tools, dark common clothes, Shadow-Council token, 30 Gold Marks.</div>
+    </div>
+  </div>
+  <div class="origin" onclick="this.classList.toggle('open')">
+    <div class="origin-head">
+      <div>
+        <div class="origin-name">Far-Trade Factor</div>
+        <div class="origin-tagline">Cross-Cultural Intermediary</div>
+      </div>
+    </div>
+    <div class="origin-body">
+      <div class="ob-val">Managed trade relationships across cultural lines — you know how different peoples value different things and why. You've sat at tables where every assumption was wrong, and survived on the difference. <strong>Disciplines:</strong> Deception, Insight. <strong>Feature:</strong> Cultural Fluency — NPCs from Kindreds you've traded with start at Friendly disposition; Resonant Fortune on Insight Active Resonances to understand cultural or social motives. Equipment: Fine clothes (two regions), trading ledger with coded contacts, 20 Gold Marks.</div>
+    </div>
+  </div>
+  <div class="sec">Shadow · 4 Origins</div>
+  <div class="origin" onclick="this.classList.toggle('open')">
+    <div class="origin-head">
+      <div>
+        <div class="origin-name">Coil-Adjacent Operative</div>
+        <div class="origin-tagline">Ashen Coil (Former)</div>
+      </div>
+    </div>
+    <div class="origin-body">
+      <div class="ob-val">You worked for an organization that was — you now realize — directly part of the Ashen Coil or one of its front operations. You didn't know at the time. Or you knew and chose not to look too closely. <strong>Disciplines:</strong> Stealth, Deception. <strong>Feature:</strong> Coil Pattern Recognition — Resonant Fortune on Insight and Investigation when investigating Coil activity; once per session, ask if a specific person/place/org has Coil connection. Equipment: Dark travel clothes, forged identity document, a Coil dead-letter drop location, 20 Gold Marks.</div>
+    </div>
+  </div>
+  <div class="origin" onclick="this.classList.toggle('open')">
+    <div class="origin-head">
+      <div>
+        <div class="origin-name">Trench Keeper Deserter</div>
+        <div class="origin-tagline">Military · The Maw</div>
+      </div>
+    </div>
+    <div class="origin-body">
+      <div class="ob-val">You served in the Trench Keepers — the garrison holding the line between the world and whatever the Maw contains. You left before your tour ended. What you saw down there is the reason. <strong>Disciplines:</strong> Athletics, Survival. <strong>Feature:</strong> Void-Hardened — Resonant Fortune on Warding Resonances against Void-Touched Exposure and Dread-Struck effects; automatically sense Void-energy within 30 ft. Equipment: Medium armor (garrison issue), personal weapon, Trench Keeper's compass (always points toward the Maw's center), 10 Gold Marks.</div>
+    </div>
+  </div>
+  <div class="origin" onclick="this.classList.toggle('open')">
+    <div class="origin-head">
+      <div>
+        <div class="origin-name">Outlander</div>
+        <div class="origin-tagline">Beyond Institutional Reach</div>
+      </div>
+    </div>
+    <div class="origin-body">
+      <div class="ob-val">You grew up outside every institution — in the Kurgan Bog's margins, in the deep Boreal wilderness, in a nomadic community that avoided settlements, or simply alone in a landscape the Compact's maps mark as empty. <strong>Disciplines:</strong> Survival, Nature. <strong>Feature:</strong> Wanderer's Memory — always find food and water in natural environments; cannot be lost in natural terrain; Resonant Fortune on Investigation to find exits or natural resources in built environments. Equipment: Staff, hunting trap, bedroll, traveler's clothes, a personal trophy, 10 Gold Marks.</div>
+    </div>
+  </div>
+  <div class="origin" onclick="this.classList.toggle('open')">
+    <div class="origin-head">
+      <div>
+        <div class="origin-name">Noble House Exile</div>
+        <div class="origin-tagline">Political Fall</div>
+      </div>
+    </div>
+    <div class="origin-body">
+      <div class="ob-val">You had position, wealth, or both — until you didn't. The fall was real. What you did with it afterward is what actually defines you, though your former world hasn't figured that out yet. <strong>Disciplines:</strong> Persuasion, History. <strong>Feature:</strong> Position of Privilege — NPCs give you benefit of the doubt in formal situations; once per session invoke a former contact who owes you something. Equipment: Fine clothes (worn quality), former house signet ring, letter of introduction to one surviving ally, 15 Gold Marks.</div>
+    </div>
+  </div>
+  <div class="sec">Wanderer · 5 Origins</div>
+  <div class="origin" onclick="this.classList.toggle('open')">
+    <div class="origin-head">
+      <div>
+        <div class="origin-name">Moana-kin Navigator-Initiate</div>
+        <div class="origin-tagline">Ara Moana Tradition</div>
+      </div>
+    </div>
+    <div class="origin-body">
+      <div class="ob-val">Trained in the Ara Moana navigation tradition — not as a full Waka-tōhora practitioner, but enough to absorb the foundational framework. The ocean is a different kind of landscape when you understand how to read it. <strong>Disciplines:</strong> Survival (navigation), Perception. <strong>Feature:</strong> Ara Moana Attunement — foundational Shelter Sense (always know direction and distance to genuine safety); cannot be lost under open sky. Equipment: Navigator's tools, a partial Pre-Fall Star Chart, sailor's clothes, 15 Gold Marks.</div>
+    </div>
+  </div>
+  <div class="origin" onclick="this.classList.toggle('open')">
+    <div class="origin-head">
+      <div>
+        <div class="origin-name">Steppe Rider</div>
+        <div class="origin-tagline">Sagittarian Steppes</div>
+      </div>
+    </div>
+    <div class="origin-body">
+      <div class="ob-val">You grew up on the Sagittarian Steppes — a landscape of impossible distances and constant movement. You learned to ride before you learned to read. <strong>Disciplines:</strong> Animal Handling, Athletics. <strong>Feature:</strong> Born to the Saddle — Resonant Fortune on Animal Handling for mounts; mounted movement speed +10 ft; cannot be dismounted without consent; make ranged strikes while mounted without Resonant Discord. Equipment: A Steppe-bred riding horse, shortbow with 40 arrows, Steppe riding clothes, clan-mark brand/tattoo, 10 Gold Marks.</div>
+    </div>
+  </div>
+  <div class="origin" onclick="this.classList.toggle('open')">
+    <div class="origin-head">
+      <div>
+        <div class="origin-name">Kallos-Sworn Field Agent</div>
+        <div class="origin-tagline">Kallos-Sworn · Former Agent</div>
+      </div>
+    </div>
+    <div class="origin-body">
+      <div class="ob-val">Trained with the Kallos-Sworn and served as a field agent — not at a high Circle, but long enough to carry their methods and their responsibilities. <strong>Disciplines:</strong> Aetheric Lore, Persuasion or Stealth. <strong>Feature:</strong> Kallos-Sworn Access — credentials at Circles 1–4; access to House common rooms, non-restricted libraries, and communication relays in any city with a Kallos-Sworn House. Equipment: Credential seal, Kallos-Sworn working clothes, a copy of the founding vow, 15 Gold Marks.</div>
+    </div>
+  </div>
+  <div class="origin" onclick="this.classList.toggle('open')">
+    <div class="origin-head">
+      <div>
+        <div class="origin-name">Ceque-Walker</div>
+        <div class="origin-tagline">Elethorn Grid · Practice</div>
+      </div>
+    </div>
+    <div class="origin-body">
+      <div class="ob-val">You've walked the sacred lines of Elethorn — as pilgrimage, duty, or because the grid felt like the only honest geography. Distinct from Ceque Line Born (biology); this is about deliberate practice. <strong>Disciplines:</strong> Aetheric Lore, Survival. <strong>Feature:</strong> Grid Sense (Practiced) — sense Ceque Line nodes within 300 ft; know dormant vs. active vs. corrupted; carry one partial line's attunement (Resonant Fortune in that sign's domain). Equipment: Cartographer's tools, personal walking map, sturdy traveling boots, 10 Gold Marks.</div>
+    </div>
+  </div>
+  <div class="origin" onclick="this.classList.toggle('open')">
+    <div class="origin-head">
+      <div>
+        <div class="origin-name">Waka Navigator</div>
+        <div class="origin-tagline">Deep Ocean · Born to the Water</div>
+      </div>
+    </div>
+    <div class="origin-body">
+      <div class="ob-val">You learned to read the ocean before you learned to read text. Unlike the Navigator-Initiate (formal training), the Waka Navigator grew up on the water — the tradition is in your body. <strong>Disciplines:</strong> Perception, Survival. <strong>Feature:</strong> Ocean Reading — predict weather 48 hours in advance without a roll; always know position under open sky; travel time on crewed vessels reduced 20%. The Mirror Sea blocks this entirely. Equipment: Navigator's tools, a lashing kit, sailor's clothes, a carved wayfinding compass, 12 Gold Marks.</div>
+    </div>
+  </div>
+  <div class="sec">Marked · 6 Origins</div>
+  <div class="origin" onclick="this.classList.toggle('open')">
+    <div class="origin-head">
+      <div>
+        <div class="origin-name">Legendary Beast Witness</div>
+        <div class="origin-tagline">Zodiac · Rare</div>
+      </div>
+    </div>
+    <div class="origin-body">
+      <div class="ob-val">You were present at a Legendary Beast encounter — not as a practitioner seeking it, but as a bystander. The Beast looked at you. You survived. You have been different since. <strong>Disciplines:</strong> Nature, Survival. <strong>Feature:</strong> Beast Mark — already qualify for Zodiac Attunement Feat prerequisite; your sign's Beast does not aggress toward you by default (one Pulse of non-aggressive status). Equipment: A physical token of the encounter, traveler's clothes, a journal entry written at character creation, 10 Gold Marks.</div>
+    </div>
+  </div>
+  <div class="origin" onclick="this.classList.toggle('open')">
+    <div class="origin-head">
+      <div>
+        <div class="origin-name">Quint Bond Adjacent</div>
+        <div class="origin-tagline">Fate Number · Concordance-Assigned</div>
+      </div>
+    </div>
+    <div class="origin-body">
+      <div class="ob-val"><em>Assigned by the Concordance, not selected by the player.</em> Your Fate Number falls in the 55–58 range. You may be one of the Five Who Remember. <strong>Disciplines:</strong> Insight, plus one of player's choice. <strong>Feature:</strong> Loom's Weight — Stellar Cartographers always read your Number twice; Resonant Fortune on Warding Resonances against Number masking; once per session, a brief accurate prophetic vision at a dramatically appropriate moment. Equipment: Normal Path starting equipment only — this Origin adds no physical items.</div>
+    </div>
+  </div>
+  <div class="origin" onclick="this.classList.toggle('open')">
+    <div class="origin-head">
+      <div>
+        <div class="origin-name">Orisha-Touched Lineage</div>
+        <div class="origin-tagline">Ashélands · Spiritual</div>
+      </div>
+    </div>
+    <div class="origin-body">
+      <div class="ob-val">Your lineage carries a specific Orisha's favour — not the full Ashé-Touched biological expression, but enough that the Orisha communicates in dreams and crisis moments. <strong>Disciplines:</strong> Religion (Orisha tradition), Insight. <strong>Feature:</strong> Orisha's Eye — once per Deep Attunement, patron Orisha communicates one accurate relevant piece of information in non-verbal symbolic form (Concordance delivers); Resonant Fortune on Insight to understand emotional truth. Equipment: Portable Orisha shrine, patron-themed personal item, 15 Gold Marks.</div>
+    </div>
+  </div>
+  <div class="origin" onclick="this.classList.toggle('open')">
+    <div class="origin-head">
+      <div>
+        <div class="origin-name">Ceque Line Born</div>
+        <div class="origin-tagline">Precursor Grid · Biology</div>
+      </div>
+    </div>
+    <div class="origin-body">
+      <div class="ob-val">You were born within a Ceque Line node's active range during a period of unusual activity. The grid's Aetheric frequency expressed itself in your biology. Distinct from the Ceque-Walker (practice) — this is what you are, not what you chose. <strong>Disciplines:</strong> History (Precursor civilization), Aetheric Lore. <strong>Feature:</strong> Grid Resonance (Innate) — sense active/reactivating Ceque nodes within 1 mile physically; grid-walking effects accumulate twice as fast. Equipment: Cartographer's tools, partially completed Ceque Line map, 10 Gold Marks.</div>
+    </div>
+  </div>
+  <div class="origin" onclick="this.classList.toggle('open')">
+    <div class="origin-head">
+      <div>
+        <div class="origin-name">Void-Touched Survivor</div>
+        <div class="origin-tagline">Exposure · Recovery</div>
+      </div>
+    </div>
+    <div class="origin-body">
+      <div class="ob-val">Exposed to something that left a mark on your Fate Number — not enough to make you Void-Touched, but enough that you've felt the Hollow Serpent's attention. You are not corrupted. You are changed. <strong>Disciplines:</strong> Insight, Perception. <strong>Feature:</strong> Hollow Resonance — sense Lead-Scale Corruption at Tempered stage or higher within 30 ft without a roll; Void-Husks take one Pulse to assess you as non-Coil; Resonant Fortune on Warding Resonances against Void-Touched Exposure. Equipment: Healer's kit, dark travelling clothes, a Weep-Stone (1 charge), 10 Gold Marks.</div>
+    </div>
+  </div>
+  <div class="origin" onclick="this.classList.toggle('open')">
+    <div class="origin-head">
+      <div>
+        <div class="origin-name">Kallos Dreamer</div>
+        <div class="origin-tagline">Precursor Memory</div>
+      </div>
+    </div>
+    <div class="origin-body">
+      <div class="ob-val">You dream the Precursor civilization — not histories, not facts, but the texture of a world that died four thousand years ago. You don't know why. The Eldren find it deeply unsettling when they learn of it. <strong>Disciplines:</strong> Aetheric Lore, Insight. <strong>Feature:</strong> Dream Archive — once per week during sleep, receive an accurate historical fact about the Kallos era, the global grid, or the Four Architects. Always relevant to your current situation, always non-verbal, always comes when it comes. Equipment: Extensive dream journal, calligrapher's supplies, 10 Gold Marks.</div>
+    </div>
+  </div>
+</div>
+<div class="nav-buttons">
+    <button class="nav-btn-action nav-prev" onclick="show(5,document.querySelectorAll('.step-btn')[4])">← Step V</button>
+    <div class="nav-spacer"></div>
+    <button class="nav-btn-action nav-next" onclick="show(7,document.querySelectorAll('.step-btn')[6])">Depth 1 — Step VII →</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- STEP VII: DEPTH 1 FEATURES -->
+<!-- ══════════════════════════════════════ -->
+<!-- STEP VII: DEPTH 1 FEATURES -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-7">
+<div class="wrap">
+  <div class="step-header">
+    <div class="step-badge">
+      <span class="step-badge-num" style="color:var(--step7);border-color:rgba(96,128,200,0.3);background:rgba(96,128,200,0.06)">Step VII</span>
+      <span class="step-badge-tag">What You Have Now</span>
+    </div>
+    <h2 class="step-title" style="color:var(--step7)">Resonance Depth 1</h2>
+    <p class="step-desc">Everything your character begins with — the full starting package before any advancement.</p>
+  </div>
+
+  <div class="mbox">
+    <div class="mbox-label">At Resonance Depth 1, every character has</div>
+    <div class="mbox-title">The Starting Package</div>
+    <div class="mbox-text">
+      <strong>From Kindred:</strong> All Kindred Traits (passive and active). Kindred Attribute increases applied to your base scores. Your Vitality Die type.<br><br>
+      <strong>From Path:</strong> All Depth 1 Path Features. Your Path's primary resource system (Tapas Points, Wrath State uses, Ashé Vessel, etc.). Your Path's Vitality Die (use the higher of Kindred or Path die).<br><br>
+      <strong>From Attributes:</strong> All six Resonance Attribute modifiers. Guard Rating. Starting Vitality (roll Vitality Die + Endurance modifier; minimum 1). Mastery Bonus (+2). Ambient Attunement.<br><br>
+      <strong>From Origin:</strong> Two Mastered Disciplines. One tool or language. Origin Ability.<br><br>
+      <strong>From Fate:</strong> Fate's Mate Number. Primal Essence. Zodiac Sign. Kindred-Zodiac Resonance ability.<br><br>
+      <strong>Disciplines:</strong> Your Path may grant additional Mastered Disciplines at Depth 1 (Rāśi-Siddha, Comet-Mage, Solar Guard all grant Path-specific Discipline Mastery at Depth 1). Check your Path.<br><br>
+      <strong>Zodiac Attunement:</strong> Not yet available — this requires encountering your sign's Legendary Beast and occurs at Depth 4. <em>Exception: Gear-Forged receive it at Depth 1.</em>
+    </div>
+  </div>
+
+  <div class="sec">Mastered Disciplines — Full List</div>
+  <div class="two-col">
+    <div class="info">
+      <div class="info-label">Forcefulness Disciplines</div>
+      <div class="info-text"><strong>Athletics</strong> — climbing, swimming, jumping, physical feats<br><strong>Intimidation</strong> — threatening presence and forceful demands</div>
+    </div>
+    <div class="info">
+      <div class="info-label">Swiftness Disciplines</div>
+      <div class="info-text"><strong>Acrobatics</strong> — balance, tumbling, agile movement<br><strong>Sleight of Hand</strong> — picking pockets, prestidigitation<br><strong>Stealth</strong> — moving unseen and unheard</div>
+    </div>
+    <div class="info">
+      <div class="info-label">Attunement Disciplines</div>
+      <div class="info-text"><strong>Animal Handling</strong> — calming, directing creatures<br><strong>Insight</strong> — reading people, sensing true intent<br><strong>Medicine</strong> — diagnosing, stabilizing, treating<br><strong>Perception</strong> — noticing, detecting, observing<br><strong>Survival</strong> — tracking, foraging, navigating wilds</div>
+    </div>
+    <div class="info">
+      <div class="info-label">Acuity Disciplines</div>
+      <div class="info-text"><strong>Aetheric Lore</strong> — magic, zodiac, cosmic systems<br><strong>History</strong> — events, institutions, notable figures<br><strong>Investigation</strong> — searching, deducing, evidence-reading<br><strong>Nature</strong> — plants, animals, terrain, weather</div>
+    </div>
+    <div class="info">
+      <div class="info-label">Resonance Disciplines</div>
+      <div class="info-text"><strong>Deception</strong> — lying, misdirecting, misleading<br><strong>Performance</strong> — entertaining, inspiring, captivating<br><strong>Persuasion</strong> — convincing, negotiating, charming</div>
+    </div>
+    <div class="info">
+      <div class="info-label">Endurance Disciplines</div>
+      <div class="info-text">Endurance has no Discipline list — it expresses through <strong>Vitality maximum</strong> and <strong>Warding Resonances</strong> against physical harm, poison, and disease.</div>
+    </div>
+  </div>
+
+  <div class="sec">The Calling Decision</div>
+  <p class="lore">Your Calling — the specific direction within your Path — is chosen at <strong>Depth 3</strong>, not Depth 1. This is intentional. The first two Depths of play are the character discovering which aspect of their Path resonates most deeply. You should know your options now (they're listed in the Path document), but the choice itself happens through play.</p>
+
+  <div class="nav-buttons">
+    <button class="nav-btn-action nav-prev" onclick="show(6,document.querySelectorAll('.step-btn')[5])">← Step VI</button>
+    <div class="nav-spacer"></div>
+    <button class="nav-btn-action nav-next" onclick="show(8,document.querySelectorAll('.step-btn')[7])">Equipment — Step VIII →</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- STEP VIII: EQUIPMENT -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-8">
+<div class="wrap">
+  <div class="step-header">
+    <div class="step-badge">
+      <span class="step-badge-num" style="color:var(--step8);border-color:rgba(96,168,112,0.3);background:rgba(96,168,112,0.06)">Step VIII</span>
+      <span class="step-badge-tag">What You Carry</span>
+    </div>
+    <h2 class="step-title" style="color:var(--step8)">Starting Equipment</h2>
+    <p class="step-desc">What your character begins with — shaped by both their Path and their Origin.</p>
+  </div>
+
+  <p class="lore">Choose one of your Path's starting packages, then take the equipment listed for your Origin category. You may also take the <strong>starting Gold Marks option</strong> instead of your Path's package if you prefer to purchase equipment directly.</p>
+
+  <div class="sec">Starting Gold Marks Option</div>
+  <div class="two-col">
+    <div class="info">
+      <div class="info-label">Instead of a Package</div>
+      <div class="info-text">Take starting Gold Marks and purchase equipment from the equipment lists. Gold Mark amounts by Path type: <strong>Warrior Paths</strong> (Primal Jarl, Solar Guard, Oathed Vanguard, Void-Hunter): 5d4 × 10 Gold Marks. <strong>Skilled Paths</strong> (Fate-Breaker, Resonance Seeker): 4d4 × 10 Gold Marks. <strong>Weaving Paths</strong> (Comet-Mage, Star-Born, Zodiac Priest): 4d4 × 10 Gold Marks. <strong>Unique Paths</strong> (Stellar Cartographer, Ashé-Medium, Coil-Stalker, Geode-Pilot, Rāśi-Siddha): 3d4 × 10 Gold Marks. <strong>Nature Paths</strong> (Primal Accord): 4d4 × 10 Gold Marks. <strong>Craft Paths</strong> (Accord-Maker): 4d4 × 10 Gold Marks.</div>
+    </div>
+    <div class="info">
+      <div class="info-label">Origin Equipment Bonus</div>
+      <div class="info-text">Every character adds one Origin-specific item regardless of package: <strong>Scholarly:</strong> A reference tome and writing materials. <strong>Merchant:</strong> A trading license and 10 extra Gold Marks. <strong>Shadow:</strong> A set of dark, unremarkable clothing and a fake identity document. <strong>Wanderer:</strong> A detailed map of one region and a reliable compass. <strong>Marked:</strong> A protective talisman (no mechanical benefit — personal significance only).</div>
+    </div>
+  </div>
+
+  <div class="sec">Equipment Packages by Path</div>
+  <div class="decision-grid">
+    <div class="dcard" onclick="this.classList.toggle('open')">
+      <div class="dcard-head"><div class="dcard-name">Warrior Path Package</div><span class="dcard-tag">Primal Jarl · Solar Guard · Oathed Vanguard · Void-Hunter</span></div>
+      <div class="dcard-body">
+        <strong>Package A (front-line):</strong> Chain mail or scale mail, a martial weapon of choice, a shield, 5 javelins, an adventurer's pack (bedroll, mess kit, tinderbox, 10 torches, 10 days' rations, waterskin, 50 ft hempen rope).<br><br>
+        <strong>Package B (mobile):</strong> Leather armor, two martial weapons, a light crossbow with 20 bolts, an adventurer's pack.<br><br>
+        <strong>Void-Hunter specific addition:</strong> A Hunter's Journal (contains notes on one Coil operative's known location — outdated but a starting lead).
+      </div>
+    </div>
+    <div class="dcard" onclick="this.classList.toggle('open')">
+      <div class="dcard-head"><div class="dcard-name">Weaving Path Package</div><span class="dcard-tag">Comet-Mage · Star-Born · Zodiac Priest · Stellar Cartographer · Ashé-Medium</span></div>
+      <div class="dcard-body">
+        <strong>Package A (scholar):</strong> A quarterstaff, a component pouch, an explorer's pack, a Formulation Ledger (Comet-Mage) or ritual journal (other Paths), a set of robes in your house colors (Kallos-Sworn) or plain traveling clothes (others).<br><br>
+        <strong>Package B (traveler):</strong> A dagger, an arcane focus (zodiac-aspected crystal or carved wooden focus), a diplomat's pack, a letter of introduction from a relevant institution (Argent Spire, a Scattered Temple, the Ifá tradition).<br><br>
+        <strong>Ashé-Medium specific addition:</strong> A ritual bundle (materials for Orisha Invocation — specific to your patron Orisha, assembled with a priest's guidance).
+      </div>
+    </div>
+    <div class="dcard" onclick="this.classList.toggle('open')">
+      <div class="dcard-head"><div class="dcard-name">Skilled Path Package</div><span class="dcard-tag">Fate-Breaker · Resonance Seeker · Rāśi-Siddha</span></div>
+      <div class="dcard-body">
+        <strong>Package A (performer/operative):</strong> A rapier or shortsword, a light crossbow with 20 bolts, leather armor, a musical instrument or thieves' tools (based on Path and Calling direction), an entertainer's pack or burglar's pack.<br><br>
+        <strong>Package B (wandering):</strong> Two daggers, leather armor, a lute or deck of fortune-telling cards (narrative item), a diplomat's pack.<br><br>
+        <strong>Rāśi-Siddha specific:</strong> No weapon required — unarmed strikes are your weapon. Replace weapon with: a meditation mat, a set of prayer beads (Tapas Point tracking aid), and your Temple's traveler's robe.
+      </div>
+    </div>
+    <div class="dcard" onclick="this.classList.toggle('open')">
+      <div class="dcard-head"><div class="dcard-name">Unique Path Packages</div><span class="dcard-tag">Coil-Stalker · Geode-Pilot · Scion-Pledged · Fade-Guardian</span></div>
+      <div class="dcard-body">
+        <strong>Coil-Stalker:</strong> Dark leather armor, two shortswords, a vial of Siderium Quartz (2 charges — the only thing keeping your gauge in check), a burglar's pack, and a dossier on your current target.<br><br>
+        <strong>Geode-Pilot:</strong> Your Resonant Frame (already bonded — it is you), artisan's tools (for Frame maintenance), a navigator's pack, and a letter of introduction from the Jade Empire or the Grand Prime Forgeman (your choice).<br><br>
+        <strong>Scion-Pledged:</strong> Any light armor, a weapon of choice, a scholar's pack, and a contract document (sealed — the actual terms are between you and your Patron; the Concordance has seen them).<br><br>
+        <strong>Fade-Guardian:</strong> Any armor permitted by your Paladin base, a martial weapon, a holy symbol (Otherworld-aspected — a silver branch, a knot-worked disk), a priest's pack.
+      </div>
+    </div>
+  </div>
+
+    <div class="mbox">
+    <div class="mbox-label">Primal Accord Path Package</div>
+    <div class="info-label">Accord-Walker · All Callings</div>
+      <p class="lore"><strong>Package A (grove-tender / ocean-walker):</strong> Leather armor or hide armor, a druidic focus (zodiac-aspected carved wooden staff or beast-talisman), an explorer's pack, a healer's kit (10 uses), a herbalism kit, a Beast-Resonance Journal (blank — for recording Legendary Beast observations during play).</div>
+      <p class="lore"><strong>Package B (storm-caller / void-walker):</strong> Leather armor, a quarterstaff, a druidic focus, a diplomat's pack, a collection of natural materials from three different ecosystems (Concordance determines significance of each).</div>
+      <div class="note-text">All Accord-Walker Callings add: A preserved fragment from a Legendary Beast encounter site — not from the Beast itself, but from its territory. Not a magical item. An acknowledgment that the Beasts are colleagues, not objects of pursuit.
+  </div>
+
+  <div class="mbox">
+    <div class="mbox-label">Accord-Maker Path Package</div>
+    <div class="info-label">Accord-Maker · All Callings</div>
+      <p class="lore"><strong>Package A (Alchemist / Architect):</strong> Leather armor, a dagger, an alchemist's kit, a set of artisan's tools (smith's or tinker's by Calling direction), an explorer's pack, an Infusion Ledger (blank), and one starting Tier I Blueprint (mechanical trap or alchemical device — determined with Concordance at Session Zero).</div>
+      <p class="lore"><strong>Package B (Armorer / Siege Engineer):</strong> Scale mail (self-modified — includes one built-in Infusion agreed with Concordance at Session Zero), a hand crossbow with 20 bolts, a medium shield, armorer's tools, an explorer's pack, an Infusion Ledger.</div>
+      <div class="note-text">All Accord-Maker Callings add: A letter of introduction from either the Jade Empire (imperial tradition) or the Grand Prime Forgeman's Conclave (independent tradition). The two letters open different doors — and close different ones. You cannot have both.
+  </div>
+
+<div class="nav-buttons">
+    <button class="nav-btn-action nav-prev" onclick="show(7,document.querySelectorAll('.step-btn')[6])">← Step VII</button>
+    <div class="nav-spacer"></div>
+    <button class="nav-btn-action nav-next" onclick="show(9,document.querySelectorAll('.step-btn')[8])">The Thread — Step IX →</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- STEP IX: THE THREAD -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-9">
+<div class="wrap">
+  <div class="step-header">
+    <div class="step-badge">
+      <span class="step-badge-num" style="color:var(--step9);border-color:rgba(168,112,64,0.3);background:rgba(168,112,64,0.06)">Step IX</span>
+      <span class="step-badge-tag">The Final Weaving</span>
+    </div>
+    <h2 class="step-title" style="color:var(--step9)">Your Thread in the Loom</h2>
+    <p class="step-desc">The last step — pulling everything together into a person rather than a stat block.</p>
+  </div>
+
+  <p class="lore">The Loom has woven your cosmic position — your Kindred, your sign, your Fate Number, your Essence. Your Path has named the road. Your Origin has given you a past. What remains is the person at the intersection of all of these.</p>
+
+  <div class="sec">Final Checklist</div>
+  <div class="checklist">
+    <div class="checklist-title">Character Creation — Completion Checklist</div>
+    <div class="check-item" onclick="this.classList.toggle('done')"><div class="check-box">✓</div><div><strong>Concept:</strong> Three questions answered — want, loss, and Loom's design on you</div></div>
+    <div class="check-item" onclick="this.classList.toggle('done')"><div class="check-box">✓</div><div><strong>Kindred:</strong> Chosen, traits recorded, Vitality Die noted</div></div>
+    <div class="check-item" onclick="this.classList.toggle('done')"><div class="check-box">✓</div><div><strong>Path:</strong> Chosen, Depth 1 features recorded, Calling options reviewed</div></div>
+    <div class="check-item" onclick="this.classList.toggle('done')"><div class="check-box">✓</div><div><strong>Attributes:</strong> Six scores generated (4d6 drop lowest × 6), swap applied, Kindred bonuses added, modifiers calculated</div></div>
+    <div class="check-item" onclick="this.classList.toggle('done')"><div class="check-box">✓</div><div><strong>Derived stats:</strong> Vitality maximum, Guard Rating, Mastery Bonus (+2), Ambient Attunement calculated</div></div>
+    <div class="check-item" onclick="this.classList.toggle('done')"><div class="check-box">✓</div><div><strong>Fate's Mate Number:</strong> 1d100 rolled and recorded</div></div>
+    <div class="check-item" onclick="this.classList.toggle('done')"><div class="check-box">✓</div><div><strong>Primal Essence:</strong> 1d6 rolled — Alpha (1), Beta (2–5), or Omega (6)</div></div>
+    <div class="check-item" onclick="this.classList.toggle('done')"><div class="check-box">✓</div><div><strong>Zodiac Sign:</strong> Chosen or determined by Fate Number</div></div>
+    <div class="check-item" onclick="this.classList.toggle('done')"><div class="check-box">✓</div><div><strong>Kindred-Zodiac Resonance:</strong> Bonus ability established with Concordance at Session Zero — 240 combinations across twenty Kindreds and twelve signs; the Concordance improvises based on the thematic intersection of your Kindred's Aetheric nature and your sign's domain. No master table exists; this is a Session Zero conversation.</div></div>
+    <div class="check-item" onclick="this.classList.toggle('done')"><div class="check-box">✓</div><div><strong>Origin:</strong> Chosen, two Disciplines Mastered, tool or language recorded, Origin Ability recorded</div></div>
+    <div class="check-item" onclick="this.classList.toggle('done')"><div class="check-box">✓</div><div><strong>Flavor:</strong> One personality trait, one ideal, one bond, one flaw selected or written</div></div>
+    <div class="check-item" onclick="this.classList.toggle('done')"><div class="check-box">✓</div><div><strong>Equipment:</strong> Starting package selected, Origin equipment bonus added</div></div>
+    <div class="check-item" onclick="this.classList.toggle('done')"><div class="check-box">✓</div><div><strong>Languages:</strong> All languages recorded (Common + Kindred language + Origin language if applicable)</div></div>
+    <div class="check-item" onclick="this.classList.toggle('done')"><div class="check-box">✓</div><div><strong>Name and appearance:</strong> Something worth saying aloud at the table</div></div>
+  </div>
+
+  <div class="sec">Three Questions the Concordance Will Ask</div>
+  <div class="decision-grid">
+    <div class="dcard" onclick="this.classList.toggle('open')">
+      <div class="dcard-head"><div class="dcard-name">What brings you to this place, at this moment?</div><span class="dcard-tag">Session Zero</span></div>
+      <div class="dcard-body">Every character in Sideros begins somewhere specific. A city. A crossroads. A ruin. The Concordance needs to know not just who you are but how you arrived where the story begins. This is not backstory — it is the last step before the first step. Be specific. Be present. Arrive.</div>
+    </div>
+    <div class="dcard" onclick="this.classList.toggle('open')">
+      <div class="dcard-head"><div class="dcard-name">What do you know about the Ashen Coil?</div><span class="dcard-tag">World Awareness</span></div>
+      <div class="dcard-body">Every character knows something — even if it's just rumor, even if it's wrong. The Ashen Coil's existence is an open secret in most regions. What your character has heard, believed, dismissed, or personally experienced will shape how they respond when the Coil becomes directly relevant. Most characters underestimate. Some have been touched by it. One or two may have worked for it. All of these are valid starting positions.</div>
+    </div>
+    <div class="dcard" onclick="this.classList.toggle('open')">
+      <div class="dcard-head"><div class="dcard-name">Who would notice if you disappeared?</div><span class="dcard-tag">Connections</span></div>
+      <div class="dcard-body">Name one person, organization, or creature — real, in the world, with an opinion about your existence. This is not your backstory. This is your thread in the Loom. The Concordance will use this. It will become relevant. The Loom noticed you before you noticed the Loom — and whoever would notice your disappearance is part of the pattern that holds you in the world's weave.</div>
+    </div>
+  </div>
+
+  <div class="sec">On Fated Bonds with Party Members</div>
+  <p class="lore">After all players have rolled their Fate's Mate Numbers, compare them as a group. Numbers within 10 points of each other form a natural Paired Bond between those characters. The Concordance tracks whether characters acknowledge this or not — an unacknowledged bond still exists; both characters simply haven't named what they've been feeling.</p>
+
+  <div class="note">
+    <div class="note-title">The Concordance's First Look</div>
+    <div class="note-text">Before the first session begins, the Concordance should review the party's combined Fate Numbers. They are looking for: natural bond clusters, any Void-Touched Numbers (13, 66, 99), any Quint Bond potential (five Numbers within 3 of each other — extraordinarily rare; if this occurs, the Concordance should consider building the campaign arc around it), and the party's combined Primal Essence distribution. A party of all Alphas has different dynamics than a mixed group. The Concordance doesn't force dynamics — they <strong>notice</strong> them and let the story find them.</div>
+  </div>
+
+  <div class="gold-note">
+    <div class="note-title">You Are Ready</div>
+    <div class="note-text">Your thread is in the Loom. The Loom was already weaving before you arrived — it will keep weaving after you leave. What you do between those two moments is the only part that is entirely yours. <strong>The Concordance awaits.</strong></div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="nav-btn-action nav-prev" onclick="show(8,document.querySelectorAll('.step-btn')[7])">← Step VIII</button>
+    <div class="nav-spacer"></div>
+  </div>
+</div>
+</div>
+</div>
+
+<script>
+function show(n, btn) {
+  document.querySelectorAll('.panel').forEach(p => { p.style.display = 'none'; p.classList.remove('active'); });
+  document.querySelectorAll('.step-btn').forEach(b => b.classList.remove('active'));
+  const panel = document.getElementById('panel-' + n);
+  if (panel) { panel.style.display = 'block'; panel.classList.add('active'); }
+  if (btn) btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+document.querySelectorAll('.panel').forEach(p => { p.style.display = 'none'; });
+document.getElementById('panel-1').style.display = 'block';
+</script>
+</body>
+</html>

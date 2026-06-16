@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — Mechanics Codex</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;500;600&display=swap');
+:root{
+  --void:#080a0c;--void-mid:#101418;--parchment:#f0e6cc;--parchment-dim:rgba(240,230,204,0.55);
+  --gold:#c9a84c;--gold-dim:#7a6028;--gold-bright:#e8c870;
+  --t1:#b06030;--t2:#507090;--t3:#508060;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--parchment);line-height:1.75;min-height:100vh}
+.hero{text-align:center;padding:3.5rem 1.5rem 3rem;border-bottom:1px solid rgba(201,168,76,0.15)}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:.8rem}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(20px,3.5vw,28px);font-weight:500;color:var(--gold-bright);letter-spacing:.05em;margin-bottom:.4rem}
+.hero-sub{font-size:14px;font-style:italic;color:var(--parchment-dim);max-width:500px;margin:0 auto}
+.nav-strip{display:flex;gap:4px;flex-wrap:wrap;padding:.65rem .9rem;border-bottom:1px solid rgba(201,168,76,0.1);background:var(--void-mid);position:sticky;top:0;z-index:20}
+.nav-btn{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border:1px solid rgba(201,168,76,0.18);border-radius:3px;background:transparent;color:var(--parchment-dim);cursor:pointer;transition:all .15s;white-space:nowrap}
+.nav-btn.active{background:rgba(201,168,76,0.08);color:var(--gold-bright);border-color:rgba(201,168,76,0.4)}
+.panel{display:none}.panel.active{display:block}
+.wrap{max-width:880px;margin:0 auto;padding:2rem 1.25rem 4rem}
+.lore{font-size:14px;color:rgba(240,230,204,0.8);line-height:1.85;margin-bottom:.9rem}
+.lore strong{color:var(--parchment);font-weight:500}
+.sec{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:1.5rem 0 .65rem;display:flex;align-items:center;gap:.6rem}
+.sec::after{content:'';flex:1;height:1px;background:rgba(201,168,76,0.1)}
+.feat-grid{display:grid;gap:7px}
+.feat{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.12);border-radius:8px;padding:11px 13px;cursor:pointer;overflow:hidden;transition:border-color .15s}
+.feat:hover,.feat.open{border-color:rgba(201,168,76,0.32)}
+.feat-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.feat-name{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.04em;color:var(--gold-bright)}
+.feat-tag{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;border-radius:3px;border:1px solid rgba(201,168,76,0.25);color:var(--gold-dim);white-space:nowrap;flex-shrink:0}
+.feat-body{display:none;margin-top:9px;padding-top:9px;border-top:1px solid rgba(201,168,76,0.08);font-size:13px;color:rgba(240,230,204,0.75);line-height:1.72}
+.feat.open .feat-body{display:block}
+.feat-body strong{color:var(--parchment);font-weight:500}
+.feat-body em{color:var(--gold-dim)}
+.tier-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.15em;text-transform:uppercase;padding:4px 10px;border-radius:3px;margin-bottom:.75rem;display:inline-block}
+.data-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:1rem}
+.data-table th{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);padding:6px 10px;text-align:left;border-bottom:1px solid rgba(201,168,76,0.18)}
+.data-table td{padding:6px 10px;border-bottom:1px solid rgba(201,168,76,0.06);color:rgba(240,230,204,0.75);vertical-align:top;line-height:1.5;font-size:12px}
+.data-table td:first-child{color:var(--parchment);font-weight:500}
+.data-table tr:last-child td{border-bottom:none}
+.note{background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.2);border-radius:7px;padding:10px 12px;margin:.75rem 0;font-size:12px;color:rgba(240,230,204,0.75);line-height:1.65}
+.note strong{color:var(--parchment);font-weight:500}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-eyebrow">Sideros / Astrolan — Game Mechanics</div>
+  <h1 class="hero-title">The Mechanics Codex</h1>
+  <p class="hero-sub">Fourteen systems resolved and converted to full Sideros terminology. The rules and the fiction are the same thing.</p>
+</div>
+<div class="nav-strip">
+  <button class="nav-btn active" onclick="show('t1',this)">Tier I — Play-Blocking</button>
+  <button class="nav-btn" onclick="show('t2',this)">Tier II — Campaign</button>
+  <button class="nav-btn" onclick="show('t3',this)">Tier III — World Depth</button>
+  <button class="nav-btn" onclick="show('zodiac',this)">Zodiac Attunement Feats</button>
+</div>
+
+<!-- TIER I -->
+<div class="panel active" id="panel-t1"><div class="wrap">
+<div class="tier-label" style="background:rgba(176,96,48,0.1);color:var(--t1);border:1px solid rgba(176,96,48,0.3)">Tier I — Play-Blocking · Cannot run a session without these</div>
+
+<div class="feat-grid">
+
+<div class="feat open" onclick="this.classList.toggle('open')">
+  <div class="feat-head"><div class="feat-name">I — Tapas Points (Rāśi-Siddha Resource)</div><span class="feat-tag">Rāśi-Siddha</span></div>
+  <div class="feat-body">
+    Tapas is ascetic heat — the internal fire generated by discipline, sacrifice, and sustained meditation. Unlike neutral spiritual energy, Tapas carries moral and intentional weight. Using it violently costs more. Using it selflessly sometimes restores it.<br><br>
+    <strong>Pool Size:</strong> Mastery Bonus × Attunement modifier (minimum 2). Increases by 2 at each new Resonance Depth. A Depth 5 Siddha with +3 Mastery and +3 Attunement has 9 Tapas Points.<br><br>
+    <strong>Regeneration:</strong> Full restore on Deep Attunement. Partial restore (half, rounded down) on Brief Attunement only if spent in meditation — no combat, no movement, no speech. The Stillness of Dunmar suppresses regeneration entirely.<br><br>
+    <strong>The Three Expenditure Tiers:</strong> Every Tapas ability is tagged Satvic (pure — lower cost), Rajasic (active — standard cost), or Tamasic (corrupting — higher cost, risk of Tapas Depletion). Siddha who spend too many Tamasic points in one encounter must make an Endurance Warding Resonance (DC 12 + Tamasic points spent) or suffer Tapas Depletion — Resonant Discord on all Active Resonances until next Deep Attunement.
+    <table class="data-table" style="margin-top:.75rem">
+      <tr><th>Ability</th><th>Cost</th><th>Tag</th><th>Effect</th></tr>
+      <tr><td>Mantra Strike</td><td>1 TP</td><td>Rajasic</td><td>Unarmed strike deals +1d6 sign-aspected damage</td></tr>
+      <tr><td>Flurry of Mantras</td><td>2 TP</td><td>Rajasic</td><td>After Strike Act, make two unarmed strikes as Instinct</td></tr>
+      <tr><td>Purification Touch</td><td>1 TP</td><td>Satvic</td><td>Remove one condition from willing creature; restore 1 TP if Bonded to you</td></tr>
+      <tr><td>Mantric Ward</td><td>2 TP</td><td>Satvic</td><td>Instinct; Resonant Discord on next strike against you until your next Moment</td></tr>
+      <tr><td>Elemental Surge</td><td>3 TP</td><td>Rajasic</td><td>30-ft cone, sign element, 3d8 damage (Endurance Warding DC = 8 + Mastery + Attunement for half)</td></tr>
+      <tr><td>Deep Tapas Burn</td><td>4 TP</td><td>Tamasic</td><td>Double all damage dice on one Mantra Strike. Make Endurance Warding Resonance or suffer Tapas Depletion</td></tr>
+      <tr><td>Ascetic Stillness</td><td>0 TP</td><td>Satvic</td><td>Passive: at full pool, Guard Rating = 10 + Attunement + Mastery (if higher than armor)</td></tr>
+      <tr><td>Siddha Sight</td><td>1 TP</td><td>Satvic</td><td>Instinct: perceive all Aetheric auras within 60 ft for 1 minute, no Sustained Resonance</td></tr>
+      <tr><td>Void Resistance</td><td>Special</td><td>Satvic</td><td>Passive (Omega Siddha only): Tapas functions normally in the Stillness; regenerates at half rate in Ore zones</td></tr>
+    </table>
+    <div class="note"><strong>The Kanya Exception:</strong> Rāśi-Siddha of the Kanya sanctum (Virgo) treat all Purification Touch and removal abilities as Satvic regardless of context — healing never carries Tamasic risk. They can also spend 3 TP to cure Ashen Coil blight-rot, which no other tradition can do.</div>
+  </div>
+</div>
+
+<div class="feat" onclick="this.classList.toggle('open')">
+  <div class="feat-head"><div class="feat-name">II — The Omote-Ura Gauge (Wolf-Shifter Tension)</div><span class="feat-tag">Wolf-Shifter</span></div>
+  <div class="feat-body">
+    Every Wolf-Shifter carries a soul divided between Omote — the disciplined human surface-self — and Ura — the wolf instinct that predates language. The gauge tracks where a character sits between these two states. Neither extreme is safe.<br><br>
+    <strong>Scale:</strong> 1–2 Full Omote · 3–4 High Omote · 5–6 Balanced · 7–8 High Ura · 9–10 Full Ura<br><br>
+    <strong>Starting Position:</strong> All Wolf-Shifters begin each session at 5 (Balanced), or clan default — Pine Shadow Clan starts at 4, Deep Earth Clan at 6.
+    <table class="data-table" style="margin-top:.75rem">
+      <tr><th>Trigger</th><th>Gauge Shift</th></tr>
+      <tr><td>Use a social Discipline (Persuasion, Deception, Insight) successfully</td><td>−1 toward Omote</td></tr>
+      <tr><td>Spend full Brief Attunement in ritual grooming / clan ceremony</td><td>−2 toward Omote</td></tr>
+      <tr><td>Spend Deep Attunement in the Den (home territory)</td><td>Reset to clan default</td></tr>
+      <tr><td>Deal damage exceeding your Endurance modifier in one hit</td><td>+1 toward Ura</td></tr>
+      <tr><td>Take damage exceeding half your maximum Vitality in one hit</td><td>+2 toward Ura</td></tr>
+      <tr><td>Witness a Bonded party member drop to 0 Vitality</td><td>+2 toward Ura</td></tr>
+      <tr><td>Smell fresh blood in combat</td><td>+1 toward Ura</td></tr>
+      <tr><td>Successfully suppress an Ura compulsion</td><td>−1 toward Omote</td></tr>
+      <tr><td>Act against pack hierarchy (disobey Bonded Alpha)</td><td>+1 toward Ura</td></tr>
+      <tr><td>Kill a creature larger than yourself</td><td>+1 toward Ura</td></tr>
+    </table>
+    <strong>Omote Bonuses (1–4):</strong> +2 to Persuasion and Insight Active Resonances · Resonant Fortune on Warding Resonances vs. fear · Can use Shōgun-Kami ritual Working · Social NPC reactions improved by one tier · Wolf form unavailable<br><br>
+    <strong>Ura Bonuses (7–9):</strong> +2 to Strike Resonances in wolf/hybrid form · Resonant Fortune on Perception (scent, hearing) · Damage dice increased by one size · Shōgun-Kami unavailable · Must make Attunement Warding Resonance DC 13 to use social Disciplines<br><br>
+    <strong>Full Ura (Segment 10):</strong> The player loses conscious control — the Concordance runs the character as a feral wolf predator. Another Wolf-Shifter may attempt DC 15 Athletics Active Resonance (Resonant Fortune if Bonded) as an Act; each success drops gauge by 2, failure drops the attempting character's gauge by 1.<br><br>
+    <strong>Full Omote (Segment 1):</strong> Wolf senses shut down entirely. If character drops to 0 Vitality at Full Omote, they skip Loom Tests and go directly to 1 Vitality as the Ura surges reflexively (gauge jumps to 7). The Deep Earth Clan calls this "the wolf's mercy."
+  </div>
+</div>
+
+<div class="feat" onclick="this.classList.toggle('open')">
+  <div class="feat-head"><div class="feat-name">III — Ceque Line Walking (Elethorn Navigation)</div><span class="feat-tag">All · Ceque-Keepers</span></div>
+  <div class="feat-body">
+    Walking a Ceque Line is a ritual act of alignment — the walker's body becomes a conductor for their sign's zodiac energy as it flows through Elethorn's geography. The mantras of the Siddha, spoken aloud while walking, double all effects — proof that the two traditions are halves of one system.
+    <table class="data-table" style="margin-top:.75rem">
+      <tr><th>Distance Walked</th><th>Duration</th><th>Effect</th></tr>
+      <tr><td>1 Node (~2 miles)</td><td>24 hours</td><td>+1 to all Active Resonances using the line's sign domain. Awareness of the line's direction from anywhere on the continent.</td></tr>
+      <tr><td>3 Nodes (~6 miles)</td><td>1 week</td><td>All above + Zodiac Attunement Feat active for duration even if not possessed. Resonant Fortune on one sign-domain Discipline.</td></tr>
+      <tr><td>Half Line (~15 miles)</td><td>1 month</td><td>All above + one use of the sign's Cultural Variant Feat per day. Concordance describes a vision of the line's historical memory.</td></tr>
+      <tr><td>Full Line (~30 miles)</td><td>Permanent</td><td>Zodiac Attunement Feat permanently granted regardless of character sign. One-time: Siddha mantra spoken at walk's end triggers communion with the Legendary Beast — it is aware of the walker for 24 hours.</td></tr>
+    </table>
+    <strong>Node Encounters:</strong> Every Ceque Line has 8–12 nodes where the grid's original infrastructure partially survives.<br>
+    • <em>Dormant Node:</em> 10-minute transit; removes one level of Depletion; restores 1d6 Vitality. Meditation (1 hour) grants Discipline Mastery in the sign's domain for 1 week.<br>
+    • <em>Active Node:</em> Resonant Fortune on all sign-domain Active Resonances for 24 hours. Roll d6: 1–2 a Coil agent has sensed it; 3–4 a territorial creature guards it; 5–6 a Ceque-Keeper is already present and may be hostile.<br>
+    • <em>Reactivating Node (Grid-Point Seven):</em> Anyone within 60 ft makes an Attunement Warding Resonance DC 14 or gains 1 Void-Touched Exposure — Resonant Discord on Insight and faint awareness of the Hollow Serpent's direction for 24 hours. A character with 3+ Exposures begins to hear the Core's signal.
+  </div>
+</div>
+
+<div class="feat" onclick="this.classList.toggle('open')">
+  <div class="feat-head"><div class="feat-name">IV — Ara Moana Navigation (Moana-kin Wayfinding)</div><span class="feat-tag">Moana-kin</span></div>
+  <div class="feat-body">
+    Moana-kin navigation Working is not cast — it is read. The Waka-tōhora practitioner attunes to the Ara Moana path system and gains directional abilities that function in any environment including spirit realms, the Otherworld, and underground — anywhere there is movement to read.
+    <table class="data-table" style="margin-top:.75rem">
+      <tr><th>Ability</th><th>Action Cost</th><th>Mechanic</th></tr>
+      <tr><td>The First Step (Aries)</td><td>Reflex</td><td>When you initiate an action first (first to act in combat, first to speak in negotiation, first to open a door), it automatically succeeds at its initial outcome. Once per Deep Attunement.</td></tr>
+      <tr><td>Deep Reading (Taurus)</td><td>10 minutes</td><td>Determine the origin, approximate timing, and magnitude of any large-scale event by reading current environmental effects. DC 12 Survival Active Resonance; success gives one accurate detail per point above DC.</td></tr>
+      <tr><td>Triangulation (Gemini)</td><td>1 minute</td><td>Identify two reference points and locate a third related point with perfect accuracy. No roll — it is geometry, not Working. Unlimited uses.</td></tr>
+      <tr><td>Shelter Sense (Cancer)</td><td>Passive</td><td>Always know the direction and approximate distance to the nearest genuine safety. Cannot be deceived by illusions or Aetheric concealment. Not suppressible by Ore — it is not Working, it is Ara Moana attunement.</td></tr>
+      <tr><td>Season Reading (Sagittarius)</td><td>1 hour meditation</td><td>Identify the optimal time window for a specific action. Concordance secretly rolls; success reveals a window between now and one year with a specific trigger condition. Always accurate to current conditions.</td></tr>
+      <tr><td>Horizon Sight (Pisces)</td><td>Instinct</td><td>See one step further than current perception allows. In combat: know the result of the next Pulse Order roll before it happens. Out of combat: sense one immediate threat before it manifests, gaining 1 minute to respond. Once per Brief Attunement.</td></tr>
+    </table>
+    <div class="note"><strong>The Mirror Sea Penalty:</strong> Within the Mirror Sea's expanding void zone, all Ara Moana abilities fail completely — not suppressed but absent. A Waka-tōhora practitioner who exits the Mirror Sea alive gains a permanent bonus: sense the Mirror Sea's boundary from up to 100 miles away.</div>
+  </div>
+</div>
+
+<div class="feat" onclick="this.classList.toggle('open')">
+  <div class="feat-head"><div class="feat-name">V — Kore-kore (Te Kapo Void Perception)</div><span class="feat-tag">Te Kapo</span></div>
+  <div class="feat-body">
+    The Te Kapo do not see the Hollow Serpent — they sense the absence of even darkness where it moves. This is not a Working; it is a trained perceptual skill that took their civilization generations to develop. Other Kindreds cannot learn it from description — it requires years of habituation to absolute darkness.<br><br>
+    <strong>Passive Kore-kore Sense:</strong> Always active within the Obsidian Deep. On the surface: functions within 300 ft, but Perception Active Resonance DC 15 required to distinguish Hollow Serpent void-signature from normal Aether absence. In Aether-Dampening Ore zones: the ore's total suppression creates a baseline against which the Serpent's void-within-void is more distinct — DC drops to 10.<br><br>
+    <strong>Active Kore-kore Reading:</strong> 1 minute of stillness and concentration. No roll required.
+    <table class="data-table" style="margin-top:.75rem">
+      <tr><th>Result</th><th>Information</th></tr>
+      <tr><td>No void-signature</td><td>Area is clean. Can state this with certainty.</td></tr>
+      <tr><td>Faint void-signature</td><td>Coil was here. DC 13 Acuity Active Resonance to determine how long ago.</td></tr>
+      <tr><td>Active void-signature</td><td>Coil corruption is present now. Gain exact direction and rough distance. Track as Survival Active Resonance with Resonant Fortune.</td></tr>
+      <tr><td>Hollow Serpent movement</td><td>The void-within-void sensation. Direction of the Abyssal Leviathan's recent movement, magnitude of its dreaming activity, and Attunement Warding Resonance DC 15 or gain 1 Void-Touched Exposure.</td></tr>
+      <tr><td>Kore-kore overload</td><td>Occurs when too much void-energy is present simultaneously (near the Maw). Attunement Warding Resonance DC 18 or reading fails and character is Resonance-Locked for 1 Pulse. Matuā-kore is immune — 80 years of practice.</td></tr>
+    </table>
+  </div>
+</div>
+
+</div></div><!-- end Tier I -->
+
+<!-- TIER II -->
+<div class="panel" id="panel-t2"><div class="wrap">
+<div class="tier-label" style="background:rgba(80,112,144,0.1);color:var(--t2);border:1px solid rgba(80,112,144,0.3)">Tier II — Campaign-Shaping · Needed for mid-to-late arcs</div>
+
+<div class="feat-grid">
+
+<div class="feat open" onclick="this.classList.toggle('open')">
+  <div class="feat-head"><div class="feat-name">VI — The Maw of the Hollow Serpent (Ophiuchus's Physical Lair)</div><span class="feat-tag">All · Worldbuilding · Campaign</span></div>
+  <div class="feat-body">
+    The <strong>Maw of the Hollow Serpent</strong> is the Abyssal Leviathan of Chaos's physical prison and lair — the deepest, absolute-dark ocean trench beneath the Ship's Graveyard in the Abyssal Sea of Tiamat. It is not merely a deep-sea location. It is a wound in the world's Aetheric fabric where the boundary between the physical realm and the void between stars has permanently thinned.<br><br>
+
+    <strong>What the Maw is:</strong> The Abyssal Leviathan (Ophiuchus, the thirteenth sign, the God of the Void Between Stars and Unmaking) was not destroyed at the Pantheonic Fall — it was imprisoned. The Trench Keepers' garrison exists specifically to hold the seals on the Maw. The Hollow Serpent's Crystalline Core fragment beneath Argent Spire is a piece that escaped before the sealing. The Maw is where the rest of it waits.<br><br>
+
+    <strong>Environmental effects by proximity:</strong>
+    <table class="data-table" style="margin-top:.5rem">
+      <tr><th>Zone</th><th>Distance from Maw</th><th>Effect</th></tr>
+      <tr><td>Ocean Approach</td><td>More than 50 miles</td><td>No mechanical effect. Ship's Graveyard begins here — unusually frequent wreck debris, currents that run the wrong direction.</td></tr>
+      <tr><td>Outer Trench</td><td>10–50 miles</td><td>Attunement Warding Resonance DC 10 each Deep Attunement or gain 1 Void-Touched Exposure. Light sources dim. Te Kapo's Kore-kore sense activates even without concentration.</td></tr>
+      <tr><td>Trench Entrance</td><td>1–10 miles</td><td>Void-Touched Exposure accumulates 1 per Pulse of Weaving without a Protective Working. Resonant Discord on all Workings that restore or heal. Undead creatures supercharged — treat as one tier higher in power.</td></tr>
+      <tr><td>The Maw itself</td><td>0–1 mile</td><td>Complete Aetheric inversion — healing Workings cause harm, harm causes healing, Warding Resonances and Active Resonances swap. All Weaving produces Wild Surges regardless of tier. Attunement Warding Resonance DC 20 each Pulse or act on the Leviathan's impulse.</td></tr>
+    </table>
+    <br>
+    <strong>The Trench Keepers:</strong> The garrison holds the Maw's Outer Trench boundary — they do not enter the Trench Entrance zone. When seals weaken (which Regent Ophiomorph is quietly allowing through unknown bargains), the Outer Trench effects expand outward. Regent Ichthyes's fractured visions are the most accurate real-time intelligence on seal integrity that exists.<br><br>
+    <strong>Maw-sourced Void-Touched Exposure</strong> is distinguishable from standard Coil exposure by any Te Kapo practitioner. Characters carrying it attract Void-Husks that approach rather than attack (conflicting signals) and resonate more strongly with the Crystalline Core fragment beneath Argent Spire.
+  </div>
+</div>
+
+<div class="feat" onclick="this.classList.toggle('open')">
+  <div class="feat-head"><div class="feat-name">VII — The Crystalline Core (Argent Spire's Secret)</div><span class="feat-tag">Comet-Mage · Worldbuilding</span></div>
+  <div class="feat-body">
+    Beneath Argent Spire, sealed by the Three Conclaves' combined Aetheric pressure, lies a fragment of Ophiuchus's raw entropic consciousness — the Crystalline Core. It does not communicate in words. It communicates in pattern recognition. For minds trained to see systems (Omega Comet-Magi, Stellar Cartographers, Void-Touched practitioners), the Core's signal is not noise. It is the clearest thing they have ever heard.<br><br>
+    <strong>Core Exposure Mechanic:</strong> Characters who spend significant time near the Core's resonance field accumulate Exposure. Reading suppressed Comet-Magi documents about the Core, spending a Deep Attunement in Argent Spire's lower levels, or being within 30 ft of the Crystalline Core itself each produce 1 Exposure. At 3 Exposures: Resonant Discord on Insight Active Resonances and awareness of the Hollow Serpent's direction. At 5 Exposures: the Core communicates directly — the Concordance may, once per session, deliver a compelling argument through the character that the character must actively resist (Attunement Warding Resonance DC 15).<br><br>
+    <strong>The Warming Vents:</strong> The warmth making Argent Spire habitable is a byproduct of the sealing pressure on the Core below. If the seals weaken, the vents cool — a slow creeping winter the Conclaves dare not explain to the city's population.
+  </div>
+</div>
+
+<div class="feat" onclick="this.classList.toggle('open')">
+  <div class="feat-head"><div class="feat-name">VIII — Aether-Dampening Ore (The Stillness of Dunmar)</div><span class="feat-tag">All · Dunmarim</span></div>
+  <div class="feat-body">
+    Aether-Dampening Ore is a naturally occurring mineral found in dense deposits throughout the Stone Kingdom of Dunmar. When refined and processed by the Order of Pure Reason, it creates a suppression field that interferes with Aetheric resonance — preventing active Weaving within range.<br><br>
+    <strong>Suppression Effects by Concentration:</strong>
+    <table class="data-table" style="margin-top:.5rem">
+      <tr><th>Concentration Level</th><th>Effect</th></tr>
+      <tr><td>Trace (unrefined, natural deposits)</td><td>Working Threshold DC increases by 2. No other effect.</td></tr>
+      <tr><td>Moderate (refined, standard installation)</td><td>Cannot Weave Workings of 3rd tier or higher. Aetheric Channels of lower tiers function but feel effortful — like pushing through water.</td></tr>
+      <tr><td>Heavy (military-grade, Order of Pure Reason installations)</td><td>No Workings of any tier. Sustained Resonance Workings end immediately. Aetheric Artifacts cease functioning. Tapas regeneration halved.</td></tr>
+      <tr><td>The Stillness (maximum concentration, Ironhearth core districts)</td><td>All Working suppressed. Tapas regeneration stopped. Ashé gauge drains 1 per hour. Gear-Forged Geode hearts operate at 50% efficiency. Accord-Maker Infusions and Blueprints continue functioning (pre-negotiated agreements). Elemental-Kin feel physical discomfort — the pressure is wrong.</td></tr>
+    </table>
+    <div class="note"><strong>Accord-Maker Exception:</strong> Infusions and Blueprints are pre-negotiated Aetheric agreements — they persist through the Stillness because the agreement was made before the suppression field existed. This makes the Accord-Maker tradition uniquely valuable in Dunmarim territory and uniquely threatening to the Order of Pure Reason's anti-Working strategy.</div>
+  </div>
+</div>
+
+<div class="feat" onclick="this.classList.toggle('open')">
+  <div class="feat-head"><div class="feat-name">IX — Mycelian Resonance (The Brood's Hive Network)</div><span class="feat-tag">Great Kurgan Bog · All</span></div>
+  <div class="feat-body">
+    The Mycelian Brood is a vast fungal network beneath the Great Kurgan Bog that has achieved distributed consciousness — a collective intelligence operating through chemical signals, spore transmission, and Aetheric resonance. It is not malicious. It is territorial and expansionist, following biological imperatives that predate mortal civilization.<br><br>
+    <strong>Brood Influence Zones:</strong>
+    <table class="data-table" style="margin-top:.5rem">
+      <tr><th>Zone</th><th>Distance from Bog Centre</th><th>Effect</th></tr>
+      <tr><td>Peripheral</td><td>More than 50 miles</td><td>Spore concentration undetectable. No mechanical effect.</td></tr>
+      <tr><td>Outer Network</td><td>20–50 miles</td><td>Passive Perception Active Resonances receive faint chemical signals — dreamlike impressions of the Brood's sensory data. Can be read by trained practitioners (Accord-Walker Ecosystem Reading, Kore-kore, etc.).</td></tr>
+      <tr><td>Inner Network</td><td>5–20 miles</td><td>All living creatures must make Endurance Warding Resonance DC 12 each Deep Attunement or gain 1 Spore Exposure (Resonant Discord on Insight and faint compulsion to move toward the Bog's centre). Accord-Walkers are immune — the Brood recognizes their frequency as kin.</td></tr>
+      <tr><td>Brood Heart</td><td>0–5 miles</td><td>Active Brood consciousness intrusion. Attunement Warding Resonance DC 15 each Pulse or the character acts on the Brood's current priority (usually: move toward a contested territory, attack a perceived rival network). Spore-Accord practitioners can communicate deliberately with the Brood heart. <strong>Additionally: all telepathy, Scrying, and divination Working within the Brood Heart zone is completely hijacked by the hive-mind.</strong> Any practitioner attempting to use these Workings has their mind flooded with the Brood's collective sensory data — they learn nothing about their intended target, gain 2 Spore Exposure stacks, and cannot attempt divination Working again for 24 hours. This makes the Brood Heart zone a total intelligence blind spot for every spy network in the world, including the Loom of Fate. The Scorpion-Inquisitor's extended stall in the Sunken Peat-Cavern is partially explained by this — his pattern-analysis tools simply do not function correctly inside the Inner Network.</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="feat" onclick="this.classList.toggle('open')">
+  <div class="feat-head"><div class="feat-name">X — The Shōgun-Kami Bond (Wolf-Shifter Ritual Working)</div><span class="feat-tag">Wolf-Shifter · Primal Jarl</span></div>
+  <div class="feat-body">
+    The Shōgun-Kami is the Wolf-Shifter's manufactured approach to the Fated Bond — a ritual Working that produces a structured bond between a Wolf-Shifter and one willing companion. It is not a natural Fated Bond and reads differently to Stellar Cartographers — the thread is visible but carries a manufacturing mark the natural bond does not.<br><br>
+    <strong>Requirements:</strong> Both parties willing and present. The ritual requires 1 hour, the Wolf-Shifter's Omote-Ura gauge at exactly 5 (Balanced), and a shared sacrifice of genuine value (not monetary — meaningful).<br><br>
+    <strong>Shōgun-Kami Bond Abilities:</strong><br>
+    • Always know the bonded partner's direction and approximate distance<br>
+    • Resonant Fortune on all Warding Resonances while within 30 ft of partner<br>
+    • When partner drops to 0 Vitality, Wolf-Shifter's gauge shifts +3 toward Ura immediately<br>
+    • At Omote-Ura Gauge 7–9, the Wolf-Shifter may make one Strike Resonance through the partner's position as if they were adjacent (pack coordination)<br>
+    • The bond cannot be severed except by mutual deliberate agreement or one party's permanent death<br><br>
+    <strong>The Kallos-Sworn's Starbound Bond is a parallel system</strong> — a manufactured bond for their Mage-Warrior pairs. It reads similarly to Stellar Cartographers. Approximately 1 in 40 Starbound bonds accidentally becomes a genuine Fated Bond over time — the Kallos-Sworn tracks these cases with specific interest.
+  </div>
+</div>
+
+<div class="feat" onclick="this.classList.toggle('open')">
+  <div class="feat-head"><div class="feat-name">XI — The Fade-Bleed (Otherworld Proximity Effects)</div><span class="feat-tag">Tuathan Archipelago · All</span></div>
+  <div class="feat-body">
+    The Fade-Bleed occurs when the boundary between the material world and the Otherworld thins to the point where the two planes bleed into each other. It is not a location — it is a condition that affects locations, ranging from mild atmospheric eeriness to full planar overlap.<br><br>
+    <strong>Fade-Bleed Intensity Scale:</strong>
+    <table class="data-table" style="margin-top:.5rem">
+      <tr><th>Intensity</th><th>Signs</th><th>Mechanical Effect</th></tr>
+      <tr><td>Whisper</td><td>Lights flicker; sounds from nowhere; animals uneasy</td><td>Fae-Blooded and Eldren perceive Otherworld entities as shadows. No mechanical effect on others.</td></tr>
+      <tr><td>Thin</td><td>Visible distortions; time feels unreliable; mild nausea</td><td>Workings with Otherworld components (Fade-Guardian abilities, Otherworld-Walker) have Resonant Fortune. Resonant Discord on Perception Active Resonances for non-fae-attuned creatures.</td></tr>
+      <tr><td>Torn</td><td>Otherworld geography overlaps material; creatures from both planes visible simultaneously</td><td>Creatures without Othersight must make Attunement Warding Resonance DC 13 each Pulse or attack the wrong target (targeting an Otherworld entity instead of a material one, or vice versa).</td></tr>
+      <tr><td>Full Overlap</td><td>Cannot distinguish which plane is "real"</td><td>All Workings have a 50% chance of resolving in the wrong plane. Stable ground cannot be assumed. Quad Bond and above Fated Bond holders are immune — their resonance anchors them to consensus reality.</td></tr>
+    </table>
+    <div class="note"><strong>The Aetheric Anchor ability</strong> (Quad Bond) specifically suppresses Fade-Bleed within 300 ft of a gathered Quad Bond — this is why the Kallos-Sworn considers locating any Quad Bond to be their highest intelligence priority outside of Coil operations.<br><br><strong>The Argentum Fade-Bleed Zone:</strong> The most severe localized Fade-Bleed currently active in the world surrounds the <strong>Fallen Star</strong> within the Republic of Argentum's borders. The crashed celestial body has worn the veil completely thin in its immediate vicinity — producing a permanent Full Overlap condition in the innermost zone and a Torn condition in the surrounding district. The Order of Pure Reason has cordoned the area and is studying it, framing the continuous spirit manifestations as useful data. The Kanya Siddha consider it a catastrophic Aetheric wound that should be sealed, not studied. The Fade-Guardian tradition considers it the most important threshold-guardianship site on the continent and has requested access. The Order has denied the request.</div>
+  </div>
+</div>
+
+</div></div><!-- end Tier II -->
+
+<!-- TIER III -->
+<div class="panel" id="panel-t3"><div class="wrap">
+<div class="tier-label" style="background:rgba(80,128,96,0.1);color:var(--t3);border:1px solid rgba(80,128,96,0.3)">Tier III — World Depth · Enriches but does not block play</div>
+
+<div class="feat-grid">
+
+<div class="feat open" onclick="this.classList.toggle('open')">
+  <div class="feat-head"><div class="feat-name">XII — Ashé Biology (The Orisha-Touched Body)</div><span class="feat-tag">Ashé-Touched · Ashélands</span></div>
+  <div class="feat-body">
+    Ashé is not a resource the Ashé-Touched access — it is what they are. The Orisha's energy is biological, not spiritual in the abstract sense. This produces specific physiological realities that other Kindreds lack and that the Order of Pure Reason's anti-Working fields cannot fully account for.<br><br>
+    <strong>Ashé Vessel mechanics:</strong> The Ashé-Touched maintains a Vessel gauge (0–10) tracking current spiritual capacity. Filled by communal acts, service, and ritual. Drained by Orisha abilities.<br>
+    • Orisha Invocation (Act, 3+ Ashé): Partial Orisha presence for 1 minute — gain Orisha's domain bonus (Ogun: +1d6 force damage on strikes; Yemaya: 10-ft healing aura for allies; Oshun: immunity to Soul-Swayed + Resonant Fortune on social Active Resonances). Vessel drains 1 per Pulse.<br>
+    • Full Possession (Act, 8 Ashé, once per Deep Attunement): The Orisha inhabits the Medium for 3 Pulses — the Concordance runs the Orisha through the character's body. When possession ends, character drops to 0 Vitality (stabilizes immediately). Ashé gauge resets to 0.<br>
+    • Regeneration: 1 Ashé per hour of community-focused activity. 3 Ashé for completing a ritual sacrifice (costs something of genuine value). Full restore on Deep Attunement in the Ashélands or at an Orisha shrine.<br><br>
+    <strong>Order of Pure Reason anti-Working field:</strong> Drains the Ashé gauge to 0 instantly and deals 2d8 psychic damage. This cannot be suppressed — Ashé is biological, not Aetheric. The Order knows this and considers it a necessary cost of their operations in proximity to Ashé-Touched communities. The Ashé-Touched community considers it a declaration of war.
+  </div>
+</div>
+
+<div class="feat" onclick="this.classList.toggle('open')">
+  <div class="feat-head"><div class="feat-name">XIII — The Lead-Scale Corruption Gauge (Coil-Stalker Void Integration)</div><span class="feat-tag">Coil-Stalker</span></div>
+  <div class="feat-body">
+    The Lead-Scale Corruption Gauge (0–20) tracks accumulated Void-energy in the Coil-Stalker's body. It starts at 0. Certain abilities require minimum corruption to activate. The gauge fills with power and approaches dissolution simultaneously — the most mechanically honest system in the game.
+    <table class="data-table" style="margin-top:.5rem">
+      <tr><th>Stage</th><th>Gauge</th><th>Bonuses</th><th>Penalties</th></tr>
+      <tr><td>Cold</td><td>0–5</td><td>None</td><td>None — carrying void-energy but not integrated</td></tr>
+      <tr><td>Tempered</td><td>6–10</td><td>+1d4 necrotic on all strikes; resistance to necrotic and poison; detect Coil agents within 60 ft passively</td><td>None</td></tr>
+      <tr><td>Burning</td><td>11–15</td><td>+1d8 necrotic on all strikes; Void-Husks will not attack you unless ordered</td><td>Glow faintly with purple void-light — Stealth has Resonant Discord</td></tr>
+      <tr><td>Searing</td><td>16–19</td><td>+2d6 necrotic; Void-Frenzy available</td><td>Resonant Discord on Attunement Warding Resonances — Coil compulsions more effective against you</td></tr>
+      <tr><td>Void-Husk Threshold</td><td>20</td><td>—</td><td>Attunement Warding Resonance DC 18 at start of each Moment or become a Void-Husk. On success, gauge drops to 15.</td></tr>
+    </table>
+    <strong>Void-Frenzy</strong> (requires 16+ gauge, Instinct): For 1 minute — extra strike per Act, strikes deal maximum necrotic damage, Attunement Warding Resonance DC 14 each Pulse to choose targets (fail = nearest creature). Gauge increases by 3. Expend Siderium Quartz (1 charge) to end early.<br><br>
+    <strong>Gauge Reduction:</strong> Siderium Quartz use (−2 per charge); Kanya Siddha purification ritual (−1d4); Deep Attunement in Coil-free area (−2). Not reducible through ordinary rest alone.
+  </div>
+</div>
+
+<div class="feat" onclick="this.classList.toggle('open')">
+  <div class="feat-head"><div class="feat-name">XIV — The Resonant Frame (Geode-Pilot Mechanics)</div><span class="feat-tag">Geode-Pilot · Jade Empire</span></div>
+  <div class="feat-body">
+    The Geode-Pilot bonds with a mechanical suit powered by a Resonant Geode heart. The suit is an extension of the pilot's body — it has its own Vitality pool (Resonance Depth × 5) that must be repaired between combat encounters (artisan's tools, 10 minutes per 10 Vitality restored).<br><br>
+    <strong>Frame Modes</strong> (switch as Instinct):<br>
+    • <em>Sentinel (heavy):</em> +4 Guard Rating, half speed, Resonant Fortune on Athletics, can grapple Large creatures<br>
+    • <em>Scout (light):</em> Normal Guard Rating, full speed, Resonant Fortune on Stealth and Acrobatics<br>
+    • <em>Resonance (open):</em> No Guard Rating bonus, but all Geode abilities cost 1 fewer Aetheric Channel tier<br><br>
+    <strong>Geode Pulse</strong> (Act, expend 1 Aetheric Channel): Emit resonant energy in a 20-ft radius. All creatures make Endurance Warding Resonance DC = 8 + Mastery + Acuity or be Sight-Severed and take 1d6 thunder per Channel tier expended.<br><br>
+    <strong>Jade Empire Requirement:</strong> All Geode-Pilots must have encountered a functioning Gear-Forged — the suit's resonant calibration requires understanding how Geode-heart technology behaves in a fully integrated construct. A Geode-Pilot who has never met a Gear-Forged is, in the Jade Empire's technical assessment, flying blind.
+  </div>
+</div>
+
+<div class="feat" onclick="this.classList.toggle('open')">
+  <div class="feat-head"><div class="feat-name">XV — Weep-Stone (Siderium Quartz) Economy</div><span class="feat-tag">K'uh-la'an · Coil-Stalker · All</span></div>
+  <div class="feat-body">
+    Siderium Quartz — called Weep-Stone by the Petal-Weaver Castes of K'uh-la'an and by common merchants across Terra Firma — is a crystalline mineral that absorbs and stores Void-energy, making it the primary counter-agent to Lead-Scale Corruption and one of the most valuable trade commodities in the world.<br><br>
+    <strong>Weep-Stone Properties:</strong><br>
+    • Absorbs 1d6 Lead-Scale Corruption points on contact (Coil-Stalker use: −2 per charge, up to 3 charges per stone)<br>
+    • Disrupts Void-Husk coordination — a Weep-Stone thrown into a group of Void-Husks forces Attunement Warding Resonance DC 14 or lose coordinated behavior for 1 Pulse<br>
+    • Can be used by the Kanya Siddha as a component in blight-rot purification (along with the 3 Tapas expenditure)<br>
+    • Resonant Geodes in proximity to Weep-Stone operate at 25% reduced efficiency — important for Accord-Maker and Geode-Pilot equipment management<br><br>
+    <strong>Supply:</strong> Weep-Stone is exclusively mined in K'uh-la'an and controlled by the Petal-Weaver Castes. Export is tightly regulated. The Ashen Coil has been attempting to disrupt K'uh-la'an's supply routes for two generations — the Spirit Route between the Ashélands and K'uh-la'an is their primary target. An uninterrupted Weep-Stone supply is a strategic objective that the party may not initially recognize as significant.<br><br>
+    <strong>Pricing:</strong> 1 Weep-Stone (3 charges): 400 Gold Marks in most markets. In K'uh-la'an: 150 Gold Marks. In the Stone Kingdom of Dunmar: not sold at any price (the Order of Pure Reason has banned import).
+  </div>
+</div>
+
+</div></div><!-- end Tier III -->
+
+<!-- ZODIAC ATTUNEMENT FEATS -->
+<div class="panel" id="panel-zodiac"><div class="wrap">
+  <p class="lore">At Resonance Depth 4, any character may take a Zodiac Attunement Feat corresponding to their zodiac sign — provided they have encountered their sign's Legendary Beast at least once (even from a distance). The encounter need not be peaceful. The awakening requires recognition, not approval.</p>
+
+  <div class="feat-grid">
+
+  <div class="feat open" onclick="this.classList.toggle('open')">
+    <div class="feat-head"><div class="feat-name">♈ Mesha's Charge — Aries</div><span class="feat-tag">Prerequisite: Ashen Ram encountered</span></div>
+    <div class="feat-body">When you move at least 20 ft toward a creature and hit it with a melee Strike Resonance in the same Moment, the target makes a Forcefulness Warding Resonance (DC = 8 + Mastery + Forcefulness modifier) or is knocked prone. Additionally: you may Dash as an Instinct once per Moment. This feat's power activates first — before any other Path feature — representing Aries energy as pure initiative.</div>
+  </div>
+
+  <div class="feat" onclick="this.classList.toggle('open')">
+    <div class="feat-head"><div class="feat-name">♉ Khalkotauros's Endurance — Taurus</div><span class="feat-tag">Prerequisite: Khalkotauros encountered</span></div>
+    <div class="feat-body">Your maximum Vitality increases by 2 per Resonance Depth you have, and by 2 each new Depth thereafter. When reduced to 0 Vitality but not killed outright, you may choose to drop to 1 Vitality instead — once per Deep Attunement. You count as one size larger for carrying capacity and all grapple and shove Active Resonances.</div>
+  </div>
+
+  <div class="feat" onclick="this.classList.toggle('open')">
+    <div class="feat-head"><div class="feat-name">♊ Twin-Serpents' Duality — Gemini</div><span class="feat-tag">Prerequisite: Twin-Serpents encountered</span></div>
+    <div class="feat-body">You can maintain two Sustained Resonance Workings simultaneously. If you take damage while maintaining both, make one Endurance Warding Resonance (DC = 10 or half the damage, whichever is higher) for both; on failure, you lose the most recently woven Working. Additionally: once per Deep Attunement when you fail an Active Resonance, you may immediately reroll and use either result.</div>
+  </div>
+
+  <div class="feat" onclick="this.classList.toggle('open')">
+    <div class="feat-head"><div class="feat-name">♋ Adamant's Ward — Cancer</div><span class="feat-tag">Prerequisite: Adamant Crab encountered</span></div>
+    <div class="feat-body">As a Reflex when a creature within 5 ft of you is targeted by a Strike Resonance, impose Resonant Discord on that Strike Resonance. When you do, the attacker must make an Attunement Warding Resonance DC 12 or target you instead. Additionally: you always know the exact position of every creature within 30 ft — this sense cannot be defeated by invisibility, though it gives no other information.</div>
+  </div>
+
+  <div class="feat" onclick="this.classList.toggle('open')">
+    <div class="feat-head"><div class="feat-name">♌ Nemean's Glory — Leo</div><span class="feat-tag">Prerequisite: Nemean Lion encountered</span></div>
+    <div class="feat-body">When you reduce a creature to 0 Vitality, all allies who can see you gain temporary Vitality equal to your Resonance modifier (minimum 1) and Resonant Fortune on their next Strike Resonance. Additionally: you are immune to the Dread-Struck condition. Creatures who target you with fear effects make a Resonance Warding Resonance (DC = 8 + Mastery + Resonance) or become Dread-Struck of you instead for 1 minute.</div>
+  </div>
+
+  <div class="feat" onclick="this.classList.toggle('open')">
+    <div class="feat-head"><div class="feat-name">♍ Queen Bee's Precision — Virgo</div><span class="feat-tag">Prerequisite: Queen Bee encountered</span></div>
+    <div class="feat-body">Once per Moment when you deal damage, add your Attunement modifier to the damage roll. When you use the Help action, the creature you assist gains Resonant Fortune on two different Active Resonances this Moment (not just one). Additionally: you can diagnose any Aetheric curse, disease, or condition in 1 minute of examination — learning its source, progression, and cure (if one exists) even if the cure is beyond your ability to provide.</div>
+  </div>
+
+  <div class="feat" onclick="this.classList.toggle('open')">
+    <div class="feat-head"><div class="feat-name">♎ Great Roc's Equilibrium — Libra</div><span class="feat-tag">Prerequisite: Great Roc encountered</span></div>
+    <div class="feat-body">When you make an Active Resonance or Warding Resonance and roll within 3 of the DC (either side), you may choose to treat it as a success with a complication of the Concordance's choice — you succeed but accept the consequence. Additionally: once per Deep Attunement, declare a Binding Judgment — two creatures make a Resonance Warding Resonance (DC = 8 + Mastery + Resonance) or cannot make Strike Resonances against each other for 1 minute.</div>
+  </div>
+
+  <div class="feat" onclick="this.classList.toggle('open')">
+    <div class="feat-head"><div class="feat-name">♏ Stygian Revelation — Scorpio</div><span class="feat-tag">Prerequisite: Stygian Scorpion encountered</span></div>
+    <div class="feat-body">Read the emotional history of any object or location by touching it for 1 minute (Psychometry — not a Working, not suppressible by Ore). When you deal damage to a creature, you learn one piece of information they are actively concealing. Additionally: Resonant Fortune on all Deception and Insight Active Resonances simultaneously. You always know when being lied to, but may choose not to reveal this.</div>
+  </div>
+
+  <div class="feat" onclick="this.classList.toggle('open')">
+    <div class="feat-head"><div class="feat-name">♐ Star-Stag's Horizon — Sagittarius</div><span class="feat-tag">Prerequisite: Star-Metal Stag encountered</span></div>
+    <div class="feat-body">Your ranged Strike Resonances and Working attacks ignore all cover. Your movement speed increases by 10 ft. Once per Deep Attunement, ask the Concordance one question about a location you are traveling toward — they must answer honestly about one specific factual aspect (a threat present, a resource available, a notable feature). This is celestial navigation, not prophecy.</div>
+  </div>
+
+  <div class="feat" onclick="this.classList.toggle('open')">
+    <div class="feat-head"><div class="feat-name">♑ Sea-Goat's Ascent — Capricorn</div><span class="feat-tag">Prerequisite: Sea-Goat encountered</span></div>
+    <div class="feat-body">Climb speed equal to your walking speed; climb any surface without requiring an Active Resonance except in extreme conditions. When you declare a long-term goal at the start of a session (aloud at the table), you have Resonant Fortune on all Active Resonances directly related to that goal for the session. Additionally: you require only 4 hours of sleep to gain the benefits of a Deep Attunement.</div>
+  </div>
+
+  <div class="feat" onclick="this.classList.toggle('open')">
+    <div class="feat-head"><div class="feat-name">♒ Kelp-Weaver's Network — Aquarius</div><span class="feat-tag">Prerequisite: Kelp-Weaver encountered</span></div>
+    <div class="feat-body">Maintain telepathic contact with up to 5 willing creatures simultaneously (range: same plane, no Sustained Resonance required). Each creature communicates one-way to you at will; you broadcast to all simultaneously as an Instinct. This is the Fated Bond's Whisper Bond ability at Paired tier, granted by cosmic resonance rather than bond formation — and it stacks additively with actual Fated Bond abilities.</div>
+  </div>
+
+  <div class="feat" onclick="this.classList.toggle('open')">
+    <div class="feat-head"><div class="feat-name">♓ Dream-Fish's Sight — Pisces</div><span class="feat-tag">Prerequisite: Twin Dream-Fish encountered (or approached their cenote)</span></div>
+    <div class="feat-body">Once per Deep Attunement, enter a prophetic trance during a Brief Attunement. Ask the Concordance one yes/no question about the immediate future (next 24 hours) — answered truthfully as the world currently projects; events may change if actions change. Additionally: communicate with sleeping creatures within 1 mile as per the Dream Working, once per Deep Attunement, without expending an Aetheric Channel.</div>
+  </div>
+
+  </div>
+
+  <div class="note" style="margin-top:1rem"><strong>Cross-Cultural Feat Variants:</strong> A character trained in a second cultural tradition for their sign (a Moana-kin Aries practitioner who also studied the Mesha Siddha tradition) may take a Cultural Variant of their feat at Resonance Depth 8, unlocking the second culture's Unique Access ability as a once-per-Deep-Attunement power. This is the mechanical expression of cross-cultural zodiac synthesis — the most powerful feat upgrade in the system.</div>
+
+</div></div><!-- end Zodiac -->
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).style.display='block';
+  document.getElementById('panel-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
+}
+document.querySelectorAll('.panel').forEach(p=>{p.style.display='none'});
+document.getElementById('panel-t1').style.display='block';
+document.getElementById('panel-t1').classList.add('active');
+document.querySelectorAll('.nav-btn')[0].classList.add('active');
+</script>
+</body>
+</html>

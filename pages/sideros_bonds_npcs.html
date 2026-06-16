@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — Bonds, Mates & the Ashen Coil</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Cinzel:wght@400;500;600&family=Cinzel+Decorative:wght@400&display=swap');
+:root{
+  --void:#06080a;--void-mid:#0c1014;--parchment:#f2e8d0;--parchment-dim:rgba(242,232,208,0.52);
+  --gold:#c8a84a;--gold-dim:#7a6020;--gold-bright:#eacb6a;
+  --coil:#8a3030;--coil-bright:#c04040;
+  --alpha:#d4724a;--beta:#4a8ec4;--omega:#9066c8;
+  --void-touch:#604880;--green:#4a8a56;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Cormorant Garamond',Georgia,serif;background:var(--void);color:var(--parchment);line-height:1.78;min-height:100vh;background-image:radial-gradient(ellipse at 50% 0%,rgba(138,48,48,0.08) 0%,transparent 50%);}
+.hero{text-align:center;padding:4.5rem 1.5rem 3.5rem;border-bottom:1px solid rgba(138,48,48,0.2);}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:1rem}
+.hero-title{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,3.5vw,30px);color:var(--coil-bright);letter-spacing:.05em;margin-bottom:.5rem;line-height:1.2}
+.hero-sub{font-size:15px;font-style:italic;color:var(--parchment-dim);max-width:540px;margin:.4rem auto 0}
+.nav-strip{display:flex;gap:4px;flex-wrap:wrap;padding:.7rem 1rem;border-bottom:1px solid rgba(200,168,74,0.1);background:var(--void-mid);position:sticky;top:0;z-index:30}
+.nav-btn{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.09em;text-transform:uppercase;padding:4px 10px;border:1px solid rgba(200,168,74,0.18);border-radius:3px;background:transparent;color:var(--parchment-dim);cursor:pointer;transition:all .15s;white-space:nowrap}
+.nav-btn.active{color:var(--gold-bright);border-color:rgba(200,168,74,0.45);background:rgba(200,168,74,0.08)}
+.panel{display:none}.panel.active{display:block}
+.wrap{max-width:900px;margin:0 auto;padding:2.5rem 1.25rem 5rem}
+.lore{font-size:15px;color:rgba(242,232,208,0.82);line-height:1.9;margin-bottom:1rem}
+.lore strong{color:var(--parchment);font-weight:500}
+.lore em{font-style:italic}
+.sec{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin:1.75rem 0 .75rem;display:flex;align-items:center;gap:.6rem}
+.sec::after{content:'';flex:1;height:1px;background:rgba(200,168,74,0.1)}
+
+/* NPC cards */
+.npc{background:rgba(255,255,255,0.018);border-radius:10px;overflow:hidden;margin-bottom:1.25rem;border:1px solid}
+.npc-head{padding:14px 16px 12px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.npc-badge{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.16em;text-transform:uppercase;display:block;margin-bottom:.5rem;opacity:.7}
+.npc-name{font-family:'Cinzel Decorative',serif;font-size:clamp(16px,2.5vw,22px);font-weight:400;letter-spacing:.04em;margin-bottom:.25rem}
+.npc-title{font-size:12px;font-style:italic;color:var(--parchment-dim);margin-bottom:.7rem}
+.npc-tags{display:flex;flex-wrap:wrap;gap:5px}
+.npc-tag{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:2px;border:1px solid}
+.npc-body{padding:14px 16px}
+
+/* Section blocks */
+.block{background:rgba(255,255,255,0.02);border:1px solid rgba(200,168,74,0.1);border-radius:8px;padding:12px 14px;margin-bottom:.8rem;cursor:pointer;overflow:hidden;transition:border-color .15s}
+.block:hover,.block.open{border-color:rgba(200,168,74,0.28)}
+.bh{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.bn{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.06em;color:var(--gold-bright)}
+.bb{display:none;margin-top:9px;padding-top:9px;border-top:1px solid rgba(200,168,74,0.08);font-size:13px;color:rgba(242,232,208,0.75);line-height:1.72}
+.block.open .bb{display:block}
+.bb strong{color:var(--parchment);font-weight:500}
+.bb em{color:var(--gold-dim)}
+
+/* Triad overview */
+.triad-overview{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:1.25rem}
+.to-card{border-radius:8px;padding:12px 13px;border:1px solid}
+.to-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem;display:block;opacity:.7}
+.to-name{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.04em;margin-bottom:.3rem}
+.to-essence{font-size:11px;font-style:italic;color:var(--parchment-dim)}
+
+/* Notes */
+.note{border-radius:8px;padding:12px 15px;margin:.9rem 0;font-size:13px;color:rgba(242,232,208,0.75);line-height:1.68}
+.note-title{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.13em;text-transform:uppercase;margin-bottom:6px}
+.note strong{color:var(--parchment);font-weight:500}
+
+/* Weakness highlight */
+.weakness{background:rgba(74,138,86,0.06);border:1px solid rgba(74,138,86,0.25);border-radius:8px;padding:12px 15px;margin:.9rem 0;font-size:13px;color:rgba(242,232,208,0.75);line-height:1.68}
+.weakness .note-title{color:#6ab87a}
+.weakness strong{color:var(--parchment);font-weight:500}
+
+/* Dynamics grid */
+.dynamics{display:grid;gap:6px;margin-top:.75rem}
+.dyn{background:rgba(255,255,255,0.015);border:1px solid rgba(200,168,74,0.08);border-radius:6px;padding:9px 12px;font-size:13px;color:rgba(242,232,208,0.72);line-height:1.6}
+.dyn strong{color:var(--parchment);font-weight:500}
+
+/* Unknown bonds */
+.unknown{background:rgba(144,96,184,0.05);border:1px solid rgba(144,96,184,0.2);border-radius:9px;padding:14px 16px;margin-bottom:.9rem}
+.uh{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.04em;color:#b088e8;margin-bottom:.5rem}
+.ub{font-size:13px;color:rgba(242,232,208,0.75);line-height:1.72}
+.ub strong{color:var(--parchment);font-weight:500}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-eyebrow">Sideros / Astrolan — Fated Bonds in the World</div>
+  <h1 class="hero-title">Bonds, Mates & the Ashen Coil</h1>
+  <p class="hero-sub">The Loom of Fate does not restrict its weaving to the righteous. Fated Bonds form between souls in resonance regardless of what those souls choose to do with the connection.</p>
+</div>
+<div class="nav-strip">
+  <button class="nav-btn active" onclick="show('triad',this)">Coil Triad</button>
+  <button class="nav-btn" onclick="show('rulers',this)">Bonded Rulers</button>
+  <button class="nav-btn" onclick="show('advisors',this)">Bonded Advisors</button>
+  <button class="nav-btn" onclick="show('ocean',this)">Bonded Ocean NPCs</button>
+  <button class="nav-btn" onclick="show('unknown',this)">Unknown Bonds</button>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- COIL TRIAD -->
+<!-- ════════════════════════════════════════ -->
+<div class="panel active" id="panel-triad"><div class="wrap">
+  <p class="lore">The Ashen Coil's greatest strength — and its most dangerous vulnerability — is that its leadership is bonded. The same force that makes heroes legendary has made these three catastrophic. Their bond is genuine. The recognition was real. The love between the three is real. <strong>It has been threaded through with the Hollow Serpent's frequency in a way that has made every bond ability they share a weapon rather than a gift.</strong></p>
+
+  <div class="triad-overview">
+    <div class="to-card" style="background:rgba(212,114,74,0.06);border-color:rgba(212,114,74,0.25)">
+      <span class="to-label" style="color:var(--alpha)">Alpha · Fate 13 · Void-Touched</span>
+      <div class="to-name" style="color:var(--alpha)">Aethar the Serpent Bearer</div>
+      <div class="to-essence">The Hollow Architect · Supreme Voice of the Coil · Former 12th Circle Comet-Mage</div>
+    </div>
+    <div class="to-card" style="background:rgba(144,102,200,0.06);border-color:rgba(144,102,200,0.25)">
+      <span class="to-label" style="color:var(--omega)">Omega · Fate 16 · Void-Turned</span>
+      <div class="to-name" style="color:var(--omega)">Serath of the Closed Circle</div>
+      <div class="to-essence">The Unwritten · Voice of the Fang of Forbidden Truth · Former Stellar Cartographer</div>
+    </div>
+    <div class="to-card" style="background:rgba(74,142,196,0.06);border-color:rgba(74,142,196,0.25)">
+      <span class="to-label" style="color:var(--beta)">Beta · Fate 19 · Hollowed</span>
+      <div class="to-name" style="color:var(--beta)">Drava Nullsong</div>
+      <div class="to-essence">The Pale Keeper · Voice of the Fang of the Whisper · Former Loom operative</div>
+    </div>
+  </div>
+
+  <!-- AETHAR -->
+  <div class="npc" style="border-color:rgba(212,114,74,0.3)">
+    <div class="npc-head" style="background:rgba(212,114,74,0.06)">
+      <span class="npc-badge" style="color:var(--alpha)">Coil Triad · Alpha Anchor · Supreme Voice</span>
+      <div class="npc-name" style="color:var(--alpha)">Aethar the Serpent Bearer</div>
+      <div class="npc-title">Former 12th Circle Comet-Mage of the Shifting Horizons Conclave · Argent Spire exile · Named for the Aether he betrayed</div>
+      <div class="npc-tags">
+        <span class="npc-tag" style="color:var(--alpha);border-color:rgba(212,114,74,0.3)">Alpha (Corrupted)</span>
+        <span class="npc-tag" style="color:var(--void-touch);border-color:rgba(96,72,128,0.3)">Fate 13 — Void-Touched</span>
+        <span class="npc-tag" style="color:var(--gold-dim);border-color:rgba(200,168,74,0.2)">Triad Anchor</span>
+      </div>
+    </div>
+    <div class="npc-body">
+      <div class="block open" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">Origin — What He Was</div></div><div class="bb">Aethar was a 12th Circle Comet-Mage of the Shifting Horizons Conclave — the highest rank below Arch-Oracle itself. An Alpha of extraordinary drive whose unusual gift for pattern-analysis complemented his momentum in ways the Conclave had not encountered before. He was the student Arch-Oracle Lyra identified as her likely successor. Brilliant, magnetic, and in possession of a Fate Number of 13 — Void-Touched from birth, granting him persistent awareness of entropic energy that no other Mage in the Conclave could match. He was also the first Mage in three hundred years to fully read the suppressed records describing exactly what the Crystalline Core of Ophiuchus imprisoned beneath Argent Spire actually is, what it wants, and what it has been whispering upward through the geothermal vents for a century. His personal name — Aethar — was chosen by himself upon departing the Conclave, as both confession and declaration: he is named for the Aether he chose to betray.</div></div>
+      <div class="block" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">The Corruption — What Changed Him</div></div><div class="bb">The Crystalline Core does not communicate in words. It communicates in pattern recognition. For an Alpha Comet-Mage with a Void-Touched Number and an unusual gift for seeing systems, the Core's signal was not noise. It was the clearest thing he had ever heard. It showed him a pattern: every civilization, every bond, every institution — all temporary arrangements of matter that entropy will eventually correct. The question is not whether they dissolve. The question is whether the dissolution is controlled.<br><br>Aethar did not fall through weakness. He fell through a conclusion he could not refute. The Hollow Serpent's argument — filtered through the Core, refined over years of exposure — is not "destroy everything." It is "the current arrangement of things is causing suffering, and controlled dissolution followed by reconstruction on better principles is mercy." <strong>He believes this. He is wrong. He cannot be convinced he is wrong through argument alone — only through a counter-pattern that proves life reorganises better than void.</strong></div></div>
+      <div class="block" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">His Bond — The Triad Anchor</div></div><div class="bb">Aethar is the Triad's Alpha anchor — the initiating force who found and drew the other two together. His Void-Touched Number (13) means the bond formed around entropic resonance rather than Aetheric resonance. He found Serath first, recognizing the Omega's pattern-reading as the complement to his own momentum. He found Drava second, through Serath's network. The moment all three were in the same room, the air went cold and three candles extinguished simultaneously. The Sisters of the Spire recorded it as a minor Aetheric event. They did not know what it meant.<br><br><strong>Corrupted bond ability — Resonant Cascade (Inverted):</strong> Once per Deep Attunement, all three can simultaneously channel entropy through Aethar, allowing him to Weave any Working he knows at maximum corrupted effect — dealing maximum damage and imposing Lead-Scale Corruption on any Coil-Stalker within range. Additionally: Aethar's Void-Touched Number means the Triad's shared abilities function at Quad Bond power — doubled, unpredictable. When all three are present, they produce Aetheric disruption in a 300-ft radius.</div></div>
+      <div class="block" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">Playing Aethar at the Table</div></div><div class="bb">He is the most dangerous kind of villain: genuinely reasonable until the last step. He will engage in honest intellectual debate. He will acknowledge strong counterarguments. He will compliment heroes who push him. And then he will explain, with patience and sorrow, why their argument — though compelling — does not change the conclusion.<br><br>The only approach that reaches him is demonstrating that the world can reorganise toward something worth preserving. He needs to <em>see</em> it, not be told about it. He needs his bond-mates Serath and Drava to see it with him — because without their Triad reinforcing his conclusion, he might be reachable. With them present, the three will always think their way back to the same answer.</div></div>
+    </div>
+  </div>
+
+  <!-- SERATH -->
+  <div class="npc" style="border-color:rgba(144,102,200,0.3)">
+    <div class="npc-head" style="background:rgba(144,102,200,0.06)">
+      <span class="npc-badge" style="color:var(--omega)">Coil Triad · Omega · Voice of the Fang of Forbidden Truth</span>
+      <div class="npc-name" style="color:var(--omega)">Serath of the Closed Circle</div>
+      <div class="npc-title">Former Stellar Cartographer of Aetheria · The Coil's chief strategist · Male Omega</div>
+      <div class="npc-tags">
+        <span class="npc-tag" style="color:var(--omega);border-color:rgba(144,102,200,0.3)">Omega (Void-Turned)</span>
+        <span class="npc-tag" style="color:var(--void-touch);border-color:rgba(96,72,128,0.3)">Fate 16</span>
+        <span class="npc-tag" style="color:var(--gold-dim);border-color:rgba(200,168,74,0.2)">Carries Aethar's child</span>
+      </div>
+    </div>
+    <div class="npc-body">
+      <div class="block open" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">Origin — What He Was</div></div><div class="bb">Serath was a Stellar Cartographer — the Path uniquely gifted with Fate Number reading, luck redistribution through Fate-Knots, and perception of the Loom's threads. He was also a male Omega, operating in Aetheria's diplomatic networks as an intelligence specialist: reading the Numbers of everyone in a negotiating room, redistributing probability in his clients' favour, and filing detailed reports for three different governments simultaneously. He met Aethar at a Comet-Magi summit in Equilibrium. The recognition was immediate and bilateral. Serath's Number (16) placed him within 3 points of Aethar's 13 — both felt it as a physical shock. Serath's first professional response was to file a report on the meeting. His second response, two hours later, was to burn that report.</div></div>
+      <div class="block" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">The Corruption — What the Bond Did to Him</div></div><div class="bb">Serath's Omega pattern-recognition made him the worst possible partner for Aethar's corruption: he could see every step of the logic. When Aethar began his descent into the Core's signal, Serath followed the argument intellectually — and his Omega mind could not find the flaw. He has been looking for the flaw for a decade. He has not found it. He is not certain the flaw does not exist. He is certain he cannot leave without it.<br><br><strong>His corrupted Stellar Cartographer abilities now function as an entropic detection network.</strong> He can sense Fate Number alignments forming across the world and reports any emerging high-tier bond to Aethar immediately. He is Aethar's early warning system against the Quint Bond. He knows this. He files the reports anyway. He tells himself he would warn the heroes if he recognised the Quint Bond forming. He is not certain he would.</div></div>
+      <div class="block" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">The Secret Serath Keeps</div></div><div class="bb">Serath is a male Omega in a recognized Alpha-Omega Fated Bond. The bond's recognition was complete. The biological capacity exists. <strong>Serath carries Aethar's child.</strong> The pregnancy is in its early stages. He has told no one — not Drava, not Aethar. He is not sure what it changes. He is terrified that it changes everything, because a child born of this bond, at this Number alignment, with a Void-Touched anchor parent, would arrive already connected to the Hollow Serpent's frequency. He cannot decide whether bringing this child into the world is an act of love or the Coil's greatest weapon.<br><br>This decision is the one crack in Serath's analytical composure. It is the one thing the heroes might reach if they discover it. <strong>Serath responds to consequences more than principles. He has been living inside principle for a decade and it has hollowed him out.</strong></div></div>
+      <div class="block" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">Identified 3 of the 5 Quint Bond Members</div></div><div class="bb">Serath has detected an unusual clustering of Numbers in a narrow range across the current generation — five souls with Numbers between 55 and 58. He has identified three of them. He has <strong>not reported this to Aethar</strong>. He is sitting on the information and cannot fully explain to himself why. He tells himself the data is incomplete. He suspects the real answer is something he is not prepared to examine. Heroes who discover Serath's intelligence on the Quint Bond have found the most significant strategic asset in the campaign — and the most morally complicated one.</div></div>
+      <div class="block" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">Playing Serath at the Table</div></div><div class="bb">He is the Coil member most likely to help the heroes — and the one who will deny it afterward. He gives information in the form of questions he does not answer, corrections to things no one said, and silences that last exactly one beat too long. A hero who reads Fate Numbers (Stellar Cartographer Path) will notice his Number immediately and understand what it means relative to Aethar's. A hero who discovers the pregnancy has found the one leverage point that is not about argument — it is about consequence.</div></div>
+    </div>
+  </div>
+
+  <!-- DRAVA -->
+  <div class="npc" style="border-color:rgba(74,142,196,0.3)">
+    <div class="npc-head" style="background:rgba(74,142,196,0.06)">
+      <span class="npc-badge" style="color:var(--beta)">Coil Triad · Beta · Voice of the Fang of the Whisper</span>
+      <div class="npc-name" style="color:var(--beta)">Drava Nullsong</div>
+      <div class="npc-title">Former Resonance Seeker of Port Damaris · Former Loom of Fate operative · The Coil's network architect</div>
+      <div class="npc-tags">
+        <span class="npc-tag" style="color:var(--beta);border-color:rgba(74,142,196,0.3)">Beta (Hollowed)</span>
+        <span class="npc-tag" style="color:var(--gold-dim);border-color:rgba(200,168,74,0.2)">Fate 19</span>
+        <span class="npc-tag" style="color:var(--gold-dim);border-color:rgba(200,168,74,0.2)">Officially deceased</span>
+      </div>
+    </div>
+    <div class="npc-body">
+      <div class="block open" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">Origin — What She Was</div></div><div class="bb">Drava Nullsong began as a Resonance Seeker operating out of Port Damaris under the Damaris Shadow-Council's employ, later recruited by the Loom of Fate as a Beta network operative. Her Resonance Seeker abilities made her one of the Loom's most effective field agents in the Mare Occultum region. She was assigned to monitor the Comet-Magi summit where Aethar and Serath met. She filed the report on their recognition. She was then assigned to investigate Aethar. She found Serath's Number (16) in her records first. Then Aethar's (13). Then she walked into the same room as both of them and felt her own Number (19) align — within 6 points of both — and understood in a single moment why her entire life had felt like preparation for something she had not yet reached.</div></div>
+      <div class="block" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">The Corruption — What She Chose</div></div><div class="bb">Unlike Aethar (convinced by logic) or Serath (unable to refute the argument), Drava made a purely Beta choice: <strong>she chose the bond over the institution.</strong> The Loom of Fate was her institution. The Triad was her bond. When she had to choose, she chose the Triad. She dismantled her Loom of Fate network from the inside — carefully, over six months, leaving no trace — and handed its infrastructure to Aethar. The Fang of the Whisper is her former intelligence network, repurposed. She knows every agent. They do not know they were transferred.</div></div>
+      <div class="block" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">Her Bond Role — The Sustaining Force</div></div><div class="bb">Aethar initiates; Serath designs; Drava sustains. Without her, the Triad's grandiose plans would have collapsed within a year into isolated chaos. She manages their logistics, their emotional stability, their external communications, and their cover. She is the public face of Coil operations that need a charming, trustworthy intermediary. She is also the Triad member most attuned to its emotional health. She knows Serath is hiding something. She knows Aethar is starting to hear the Core's signal even in his sleep. She is quietly terrified that the bond she chose over everything is becoming something she would not have recognised the night she first felt it. <strong>She is maintaining the Coil not because she believes in dissolution but because she does not know how to leave without destroying both Aethar and Serath in the process.</strong></div></div>
+      <div class="block" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">Drava's Ongoing Loom Connection</div></div><div class="bb">Drava dismantled her Loom of Fate network from the inside. She did not destroy it. She rerouted it. The Scorpion-Inquisitor — the Loom's apex operative currently stalled in the Sunken Peat-Cavern — is hunting Ashen Coil operations that are suspiciously well-organised and consistently one step ahead of Loom intelligence. He has not yet connected the operational fingerprint to Drava Nullsong, who officially died three years ago in a Port Damaris dockfire. Heroes who bring the Scorpion-Inquisitor and evidence of Drava's survival together will give him the most significant intelligence breakthrough in a generation.</div></div>
+      <div class="block" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">Playing Drava at the Table</div></div><div class="bb">She is the most immediately likable person the heroes will encounter in the Coil — possibly in the entire campaign. She is warm, attentive, funny, and makes everyone she meets feel genuinely seen. This is not performance. It is who she is. The horror of Drava is that she is genuinely good at caring about people, and she has put that capacity entirely in service of an organisation that wants to unmake the world.<br><br>Heroes who connect with her face the hardest moral question the campaign offers: <strong>what do you do with a good person who has made an irreversible choice for love?</strong></div></div>
+    </div>
+  </div>
+
+  <!-- TRIAD WEAKNESS -->
+  <div class="weakness">
+    <div class="note-title">The Triad's Critical Vulnerability</div>
+    <strong>Drava is the load-bearing wall.</strong> Aethar and Serath are both Omega-adjacent thinkers who can sustain themselves in isolation indefinitely. Drava is a Beta — her Essence requires the bond to function, requires the sense of purpose and belonging. If heroes can reach Drava before reaching the others, and offer her something her Beta nature needs (recognition, a new institution, a purpose that does not end in dissolution), the entire Triad's operational capacity collapses. Not dramatically — slowly, from the inside, the way a building settles when its foundation shifts.<br><br>
+    Aethar has prepared for Alpha assaults on the Coil. He has not prepared for someone simply offering Drava Nullsong a reason to stop.
+  </div>
+
+  <!-- TRIAD DYNAMICS -->
+  <div class="sec">Internal Triad Dynamics</div>
+  <div class="dynamics">
+    <div class="dyn"><strong>Aethar → Serath:</strong> Alpha drives; Omega designs. The operational core. Aethar gives Serath the only context where his pattern-reading feels purposeful rather than paralyzing. Serath gives Aethar the only mind that can keep pace with his. The bond is genuine. The conclusion it serves is catastrophic.</div>
+    <div class="dyn"><strong>Aethar → Drava:</strong> Alpha commands; Beta sustains. Aethar trusts Drava with every operational decision because she has never failed him. He does not fully understand how much of what he believes is successful is Drava quietly fixing the failures before he sees them.</div>
+    <div class="dyn"><strong>Serath → Drava:</strong> Omega observes; Beta anchors. Serath's Omega detachment is only tolerable because Drava is present. She is the only person he does not experience as data. He knows about the pregnancy. He has not told her he knows. He does not know what he wants her to decide.</div>
+    <div class="dyn"><strong>All Three:</strong> Their shared bond abilities function at Quad Bond power due to Aethar's Void-Touched Number. Their combined presence produces Aetheric disruption in a 300-ft radius. Aethar considers them his most powerful mortal asset — and his most dangerous potential liability, because bonded mortals are capable of choices no Scion can predict.</div>
+  </div>
+</div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- BONDED RULERS -->
+<!-- ════════════════════════════════════════ -->
+<div class="panel" id="panel-rulers"><div class="wrap">
+
+  <!-- LORD LEO -->
+  <div class="npc" style="border-color:rgba(192,128,64,0.3)">
+    <div class="npc-head" style="background:rgba(192,128,64,0.06)">
+      <span class="npc-badge" style="color:#c8a040">Leonine Empire · Solar King · Severed Bond</span>
+      <div class="npc-name" style="color:#c8a040">Lord Leo</div>
+      <div class="npc-title">Solar King · Duchy of Fire · Alpha · Fate Number 71 — Sun-Blessed</div>
+      <div class="npc-tags">
+        <span class="npc-tag" style="color:var(--alpha);border-color:rgba(212,114,74,0.3)">Alpha</span>
+        <span class="npc-tag" style="color:var(--gold-dim);border-color:rgba(200,168,74,0.2)">Paired Bond — Severed</span>
+        <span class="npc-tag" style="color:#c04040;border-color:rgba(192,64,64,0.3)">Bond-severed 15 years</span>
+      </div>
+    </div>
+    <div class="npc-body">
+      <div class="block open" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">The Severed Bond — Why Lord Leo Is Fading</div></div><div class="bb">Lord Leo had a Paired Bond. His bonded mate — a male Omega court scholar with a Fate Number of 78 — was the architect of the Leonine Empire's golden age policy. Not a political figure. A thinker who spent forty years in quiet rooms making sure Lord Leo's Alpha momentum landed somewhere worth going. The scholar died of a magical illness fifteen years ago — an illness that originated in the Taurian Plains during an early, undetected Ashen Coil blight-rot deployment. <strong>Lord Leo does not know the Coil killed his mate.</strong> He knows the bond was severed. He knows the world became slightly less real the day it happened. He has been compensating with increasingly performative Alpha behaviour ever since — the tournaments, the grand gestures, the insistence that heroism can fix everything — because the bond was the thing that told him when the gesture was enough and when it was not. Without it, he keeps going. He cannot find the stopping point alone.</div></div>
+      <div class="block" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">Bond Impact on Play</div></div><div class="bb">A hero who discovers the Coil killed Lord Leo's mate — and can prove it — has access to the most powerful Alpha motivation in Terra Firma. Lord Leo's grief has been generalised and performative for fifteen years. Given a specific target for it, he becomes something the Duchy has not seen in a generation: <strong>an Alpha with genuine purpose rather than habit.</strong> His Steward of the Royal Decree (Beta, Number 74 — within 3 points of Leo's 71) has been quietly attempting a surrogate bond relationship for a decade. Leo is dimly aware of this and permits it without acknowledging it. It is not a Fated Bond. It helps, imperfectly, the way a splint helps a break that needed surgery.</div></div>
+    </div>
+  </div>
+
+  <!-- LADY TAURUS -->
+  <div class="npc" style="border-color:rgba(96,144,96,0.3)">
+    <div class="npc-head" style="background:rgba(96,144,96,0.06)">
+      <span class="npc-badge" style="color:#6ab870">Taurian Plains · Keeper of the Verdant Fields · Active Triad</span>
+      <div class="npc-name" style="color:#6ab870">Lady Taurus</div>
+      <div class="npc-title">Keeper of the Verdant Fields · Duchy of Earth · Beta · Fate Number 44</div>
+      <div class="npc-tags">
+        <span class="npc-tag" style="color:var(--beta);border-color:rgba(74,142,196,0.3)">Beta</span>
+        <span class="npc-tag" style="color:var(--gold-dim);border-color:rgba(200,168,74,0.2)">Triad Bond — Active · Distributed</span>
+      </div>
+    </div>
+    <div class="npc-body">
+      <div class="block open" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">Lady Taurus's Triad — The Hidden Architecture</div></div><div class="bb">Lady Taurus is part of an active Triad Bond almost entirely invisible to outside observers because its members are deliberately separated by geography and function. The three: Lady Taurus herself (Beta, 44), the Vrishabha Siddha grand master she has secretly funded for thirty years (Omega, 47), and the Keeper of the Verdant Fields — her public castellan (Beta, 41). An unusual configuration: three Betas and an Omega.<br><br>The Siddha Omega designed the thirty-year agricultural research programme that Lady Taurus funds. Lady Taurus built the political infrastructure that protects the research from Lady Virgo's Order. The Castellan manages the day-to-day implementation that neither visionary can sustain alone. They meet physically once a year at a location that changes annually. For the rest of the year they communicate through the Triad's Whisper Bond — impressions and images rather than words, but sufficient for coordination.<br><br><strong>The Mycelian Brood is attacking the Taurian Plains because the Triad's agricultural resonance is disrupting the Brood's hive-network expansion.</strong> The Brood perceives the Triad as a competing collective intelligence. Lady Taurus has not made this connection. The Vrishabha Siddha Omega has. He is trying to communicate it through the Whisper Bond and the images he is sending are being misread as spiritual visions.</div></div>
+    </div>
+  </div>
+
+  <!-- LORD LIBRA -->
+  <div class="npc" style="border-color:rgba(144,120,184,0.3)">
+    <div class="npc-head" style="background:rgba(144,120,184,0.06)">
+      <span class="npc-badge" style="color:#a080c8">Sereignate of Libra · Aetheria · Denied Bond</span>
+      <div class="npc-name" style="color:#a080c8">Lord Libra</div>
+      <div class="npc-title">High Arbiter · Omega · Fate Number 50 — The Fulcrum Number</div>
+      <div class="npc-tags">
+        <span class="npc-tag" style="color:var(--omega);border-color:rgba(144,102,200,0.3)">Omega</span>
+        <span class="npc-tag" style="color:var(--gold-dim);border-color:rgba(200,168,74,0.2)">Paired Bond — Unacknowledged</span>
+        <span class="npc-tag" style="color:var(--gold-dim);border-color:rgba(200,168,74,0.2)">Fulcrum Number</span>
+      </div>
+    </div>
+    <div class="npc-body">
+      <div class="block open" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">The Denied Bond — Why Lord Libra Cannot Decide</div></div><div class="bb">Lord Libra's Fate Number is 50 — the precise midpoint of the scale, which the Comet-Magi call the Fulcrum Number. A Fulcrum Number produces recognition with anyone whose Number falls within 10 points on either side — creating the potential for multiple simultaneous Paired Bond recognitions without escalating to Triad. Lord Libra has recognized three potential bond-mates in his centuries of service. He has acknowledged none of them. Each time he identified the recognition, analysed the political implications, concluded that a bonded Arbiter of Law would compromise his judicial neutrality, and formally documented the recognition as a conflict of interest to be recused from.<br><br>One of his unacknowledged bond-mates is Regent Asha-Wing (Number 57) — the Tidal Regent who monitors Calm Harbour's trade lanes. They have been operating in complementary roles for sixty years, coordinating through official diplomatic channels rather than bond resonance, both maintaining the fiction that they are simply efficient colleagues. <strong>Regent Asha-Wing acknowledged the bond on her side forty years ago. She is waiting. She will not push.</strong><br><br>The denied bond has made Lord Libra increasingly paralysed — his Omega mind has too many options at the best of times, and without bond resonance anchoring him, he spends decades analysing choices that a bonded Omega would make in hours.</div></div>
+      <div class="block" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">Bond Impact on Play</div></div><div class="bb">Heroes who broker the acknowledgment between Lord Libra and Regent Asha-Wing — or simply create a situation where both are present and the denial becomes unsustainable — will unlock the most powerful diplomatic Alpha/Omega pairing in the ocean-surface political space. <strong>A bonded Lord Libra can make decisions. A deciding Lord Libra changes everything about the Order of Pure Reason crisis.</strong></div></div>
+    </div>
+  </div>
+
+</div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- BONDED ADVISORS -->
+<!-- ════════════════════════════════════════ -->
+<div class="panel" id="panel-advisors"><div class="wrap">
+
+  <!-- ARCH-ORACLE LYRA -->
+  <div class="npc" style="border-color:rgba(96,128,192,0.3)">
+    <div class="npc-head" style="background:rgba(96,128,192,0.06)">
+      <span class="npc-badge" style="color:#7090c8">Shifting Horizons Conclave · Argent Spire · Incomplete Triad</span>
+      <div class="npc-name" style="color:#7090c8">Arch-Oracle Lyra of the Closed Eye</div>
+      <div class="npc-title">Shifting Horizons Conclave · Omega · Fate Number 33 — Void-Adjacent</div>
+      <div class="npc-tags">
+        <span class="npc-tag" style="color:var(--omega);border-color:rgba(144,102,200,0.3)">Omega (Pure)</span>
+        <span class="npc-tag" style="color:var(--gold-dim);border-color:rgba(200,168,74,0.2)">Triad Bond — Seeking Third</span>
+      </div>
+    </div>
+    <div class="npc-body">
+      <div class="block open" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">Lyra's Incomplete Triad — The Missing Piece</div></div><div class="bb">Arch-Oracle Lyra formed a Paired Bond forty years ago with a Sister of the Spire — a Trench Warden named Mira (Beta, Number 38) who descends daily into Argent Spire's ice vaults to destroy entropic projections of the Crystalline Core. Lyra provides the pattern analysis; Mira provides the physical courage to act on it. Their bond is functional, loving, and desperately incomplete.<br><br>Lyra's probability-future perception tells her there is a third — an Alpha whose Number falls near 30 — who would complete their Triad and give her counter-pattern strategy the execution capacity it currently lacks. She can see this person in her probability futures. She cannot see their face or their name. She can see their Number (approximately 28–32) and she can see that they arrive from outside Argent Spire, they carry a specific combination of Alpha drive and unusual loss, and they are the reason her counter-pattern against Aethar succeeds. She does not know if this person is already alive. <strong>She has been waiting forty years. Mira has been descending into the ice vaults daily, destroying the Core's projections, keeping the seals strong enough to buy Lyra the time to find out.</strong></div></div>
+      <div class="block" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">What Lyra Has Designed — The Resonant Binding</div></div><div class="bb">Lyra's counter-pattern to Aethar's plan requires five components distributed across locations no single institution controls: the Adamant Crab's shell fragment (Cancer), Celestial Honey from the Golden Hive (Virgo), the Star-Metal Stag's antler resonance (Sagittarius), water from the Cenote of Waking Dreams (Pisces), and the living testimony of an Auroran freed from Skadi's Wrath suppression (Libra/cosmic law). She calls it the Resonant Binding. She has not told the other two Conclaves. She has told Mira. Mira said "tell me when you need me to go somewhere dangerous" and went back down into the ice vaults.</div></div>
+    </div>
+  </div>
+
+  <!-- SCORPION-INQUISITOR -->
+  <div class="npc" style="border-color:rgba(138,64,64,0.3)">
+    <div class="npc-head" style="background:rgba(138,64,64,0.06)">
+      <span class="npc-badge" style="color:#c07070">Loom of Fate · Great Kurgan Bog · One-Sided Recognition</span>
+      <div class="npc-name" style="color:#c07070">The Scorpion-Inquisitor</div>
+      <div class="npc-title">Loom of Fate · Omega · Fate Number 88 — High Register</div>
+      <div class="npc-tags">
+        <span class="npc-tag" style="color:var(--omega);border-color:rgba(144,102,200,0.3)">Omega (Weaponised)</span>
+        <span class="npc-tag" style="color:var(--gold-dim);border-color:rgba(200,168,74,0.2)">Paired Bond — One-Sided Recognition</span>
+      </div>
+    </div>
+    <div class="npc-body">
+      <div class="block open" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">The Recognition He Will Not Acknowledge</div></div><div class="bb">The Order of Pure Reason defector the Scorpion-Inquisitor is hunting in the Sunken Peat-Cavern has a Fate Number of 93 — within 5 points of the Inquisitor's 88. The recognition happened the moment they first encountered each other in the bog's upper caverns, before the entropic mutations drove them into their current standoff. The defector felt it and said nothing. The Inquisitor felt it and filed it under "irrelevant to the mission."<br><br>He has been in absolute darkness for six days, unable to advance toward the defector and unwilling to retreat. The persistent low-level awareness of the defector's emotional state — not a bond, just the pre-bond recognition — is the thing keeping him from losing his operational composure in an environment his pattern-analysis cannot model. He knows the defector is frightened but not broken. He knows the defector is curious about him. He knows the defector has not tried to escape further because they are waiting for something. <strong>He will not let himself acknowledge what the something probably is.</strong></div></div>
+      <div class="block" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">Bond Impact on Play</div></div><div class="bb">Heroes who reach the Sunken Peat-Cavern before either party acts will find a standoff held together by pre-bond resonance. The defector has the Aether-Dampening Ore weaponisation schematics. The Inquisitor wants them. Neither can advance. A hero who acknowledges the recognition to both parties simultaneously — naming it, out loud, in front of both of them — will break the standoff in an entirely unexpected direction. The Inquisitor will be furious. The defector will be relieved. <strong>And suddenly the conversation becomes about something other than the schematics.</strong></div></div>
+    </div>
+  </div>
+
+</div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- BONDED OCEAN NPCs -->
+<!-- ════════════════════════════════════════ -->
+<div class="panel" id="panel-ocean"><div class="wrap">
+
+  <!-- REGENT OPHIOMORPH -->
+  <div class="npc" style="border-color:rgba(96,96,138,0.3)">
+    <div class="npc-head" style="background:rgba(96,96,138,0.06)">
+      <span class="npc-badge" style="color:#9090c0">Warden of the Maw · Corrupted Bond</span>
+      <div class="npc-name" style="color:#9090c0">Regent Ophiomorph</div>
+      <div class="npc-title">Warden of the Maw · Trench Keepers · Beta · Fate Number 22</div>
+      <div class="npc-tags">
+        <span class="npc-tag" style="color:var(--beta);border-color:rgba(74,142,196,0.3)">Beta (Breaking)</span>
+        <span class="npc-tag" style="color:#c04040;border-color:rgba(192,64,64,0.3)">Bond-Mate is Void-Husk</span>
+      </div>
+    </div>
+    <div class="npc-body">
+      <div class="block open" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">The Corrupted Bond — Why He Is Bartering</div></div><div class="bb">Regent Ophiomorph had a Paired Bond with his second-in-command — a garrison commander (Alpha, Number 27) who served beside him for forty years. When the Abyssal Leviathan's purple entropy began expanding three years ago, the garrison commander was the first to descend into the Maw's deepest section to assess the damage. He returned changed. Within six months he was a Void-Husk — his Fate Number dissolved, his consciousness replaced by the Coil's will. He is still physically present in the garrison. He still wears the same face.<br><br>Regent Ophiomorph cannot order his execution because the bond's pre-severance resonance still registers him as alive. Killing a bonded mate, even a Void-Husk, produces catastrophic resonance backlash in the survivor. The Coil knows this. The cult contacts Ophiomorph has been bartering with offered him, as their first gesture of good faith, a ritual that could restore a Void-Husk. It is almost certainly a lie. Ophiomorph knows it is probably a lie. <strong>He cannot stop himself from hoping it is not. Every concession he makes to the Coil's cults is the price of that hope.</strong> This is the most sophisticated piece of social engineering Drava Nullsong has ever designed.</div></div>
+      <div class="block" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">Bond Impact on Play</div></div><div class="bb">Heroes who bring Ophiomorph genuine information about Void-Husk reversal — or truthful information that the Coil's ritual is a fabrication — will find him devastated and then, slowly, redirected. The devastation is real. He has been holding on for three years. The redirection is also real — a Beta whose institution is collapsing and whose bond is being used against him, given genuine alternative purpose, is the most loyal ally available. <strong>He knows the Maw better than anyone alive. He is the key to understanding the seal's current state.</strong></div></div>
+    </div>
+  </div>
+
+  <!-- REGENT ICHTHYES -->
+  <div class="npc" style="border-color:rgba(96,112,168,0.3)">
+    <div class="npc-head" style="background:rgba(96,112,168,0.06)">
+      <span class="npc-badge" style="color:#8090c8">Trench Keepers · Ship's Graveyard · Theoretical Triad</span>
+      <div class="npc-name" style="color:#8090c8">Regent Ichthyes</div>
+      <div class="npc-title">Trench Keepers · Ship's Graveyard · Omega · Fate Number 99 — Void-Touched</div>
+      <div class="npc-tags">
+        <span class="npc-tag" style="color:var(--omega);border-color:rgba(144,102,200,0.3)">Omega (Fractured)</span>
+        <span class="npc-tag" style="color:var(--void-touch);border-color:rgba(96,72,128,0.3)">Fate 99 — Void-Touched</span>
+        <span class="npc-tag" style="color:var(--gold-dim);border-color:rgba(200,168,74,0.2)">Triad Bond — Forming</span>
+      </div>
+    </div>
+    <div class="npc-body">
+      <div class="block open" onclick="this.classList.toggle('open')"><div class="bh"><div class="bn">The Void-Touched Triad — The Bond He Sees But Cannot Find</div></div><div class="bb">Regent Ichthyes has a Fate Number of 99 — the highest Void-Touched designation. His constant visions are not purely the result of the Hollow Serpent's nearby presence — they are a Void-Touched Omega receiving probability-future data through a potential Triad Bond that has not yet fully formed. He has two theoretical bond-mates whose Numbers are in his proximity (94 and 96). One of them is Regent Scribe-Deeps (Number 94), the Trench historian who logs histories of vessels swallowed by the Serpent Coil Current. They work in adjacent territories and have been in each other's presence dozens of times without recognising the bond because Ichthyes's visions are so overwhelming they drown out the subtler recognition frequency.<br><br>The third potential bond-mate (Number 96) is among the heroes' party or someone the party will shortly encounter. <strong>When all three are in the same location, Ichthyes's visions will suddenly organise — the signal separating from the noise — and he will experience the first moment of genuine clarity in years.</strong> The information he will then be able to articulate about the Maw's sealing status, the Leviathan's awakening timeline, and Ophiomorph's cult contacts will be the most strategically valuable intelligence in the campaign.</div></div>
+    </div>
+  </div>
+
+</div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- UNKNOWN BONDS -->
+<!-- ════════════════════════════════════════ -->
+<div class="panel" id="panel-unknown"><div class="wrap">
+  <p class="lore">Some of the most significant Fated Bonds in the current era are unknown to the parties involved, unknown to the world, or deliberately concealed. These are the threads the Loom has woven that no one has read yet.</p>
+
+  <div class="unknown">
+    <div class="uh">The Lunar Queen — Unidentified Male Omega</div>
+    <div class="ub"><strong>Fate Number: Estimated 68–74 · Descended from the Leonine Empire's founding Omega consort · Does not know their lineage</strong><br><br>The Lunar Queen — the Omega-line heir to the Leonine succession — is a living person who does not know who they are. They were hidden three generations ago when the Solar line began suppressing records of the founding Omega consort. They carry a Fate Number in the 68–74 range — within Lord Leo's Shared Pulse window — which means if they ever stand in the same room as Lord Leo, both will feel the recognition. Not romantic recognition. Familial resonance. The bond of shared lineage expressing through Number proximity.<br><br>The Order of Pure Reason's Great Orrery has narrowed the search to a specific region. The Loom of Fate's records suggest Port Damaris — which would make the Lunar Queen someone currently operating in the pirate city's economy. <strong>Drava Nullsong has seen the Loom's search records. She has not told Aethar. She does not know why.</strong></div>
+  </div>
+
+  <div class="unknown">
+    <div class="uh">The Possible Quint Bond — The Five Who Remember</div>
+    <div class="ub"><strong>Five souls · Numbers between 55 and 58 · Never formed in recorded history · Aethar's primary prevention target</strong><br><br>Serath of the Closed Circle has detected an unusual clustering of Numbers in a narrow range across the current generation — five souls with Numbers between 55 and 58. The statistical impossibility of this clustering is what first made him file a secondary report to Aethar rather than acting immediately. He has not yet determined all five identities. What he knows: one is in the Ashélands. One is in Aetheria. Two are unlocated. What he suspects but has not reported: <strong>at least one of the five may be a current player character.</strong> He has been sitting on this information for six weeks.<br><br>The Ifá prophecy says the Five Who Remember will answer when the Serpent rises complete. Stages 1 through 3 of Aethar's plan are active. Stage 4 — breaking the Maw's seals — has begun. The Serpent is, by the prophecy's standard, rising. The Loom is not haphazard. <strong>The party found each other for a reason.</strong></div>
+  </div>
+
+  <div class="note" style="background:rgba(200,168,74,0.04);border:1px solid rgba(200,168,74,0.15)">
+    <div class="note-title" style="color:var(--gold)">Concordance Note — Assigning Fate Numbers</div>
+    This framework allows the Concordance to assign Fate Numbers to player characters at session zero and track which ones fall in the 55–58 range. If the party includes two or more characters in that range, the Quint Bond is in play as a campaign arc. If none do, the party will encounter the five across the course of the campaign and must decide whether to bring them together — knowing that doing so will trigger Aethar's direct attention and the most dangerous period of the campaign. <strong>The party found each other. The Loom does not weave haphazardly.</strong>
+  </div>
+
+</div></div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).style.display='block';
+  document.getElementById('panel-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
+}
+document.querySelectorAll('.panel').forEach(p=>{p.style.display='none'});
+document.getElementById('panel-triad').style.display='block';
+document.getElementById('panel-triad').classList.add('active');
+document.querySelectorAll('.nav-btn')[0].classList.add('active');
+</script>
+</body>
+</html>

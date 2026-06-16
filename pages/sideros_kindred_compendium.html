@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — The Kindred Compendium</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;500;600&display=swap');
+
+:root{
+  --void:#0b0910;
+  --void-mid:#130f1e;
+  --void-up:#1c1630;
+  --gold:#c9a84c;
+  --gold-dim:#7a6028;
+  --gold-bright:#e8c870;
+  --parchment:#f0e6cc;
+  --parchment-mid:#d4c49a;
+  --parchment-dim:rgba(240,230,204,0.55);
+
+  /* Kindred accent colours */
+  --human:#8aaccc;
+  --eldren:#7ec4a8;
+  --dunmarim:#c4885a;
+  --wolfshifter:#a87840;
+  --gearforged:#88aac0;
+  --ashetouched:#c07844;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--parchment);line-height:1.7;min-height:100vh}
+
+/* ── HERO ── */
+.hero{
+  text-align:center;
+  padding:4rem 1.5rem 3rem;
+  background:radial-gradient(ellipse at 50% 0%,rgba(201,168,76,0.09) 0%,transparent 60%);
+  border-bottom:1px solid rgba(201,168,76,0.18);
+  position:relative;
+}
+.hero::before,.hero::after{
+  content:'';position:absolute;left:50%;transform:translateX(-50%);
+  height:1px;width:120px;background:linear-gradient(to right,transparent,var(--gold-dim),transparent);
+}
+.hero::before{top:2rem}.hero::after{bottom:0;width:200px}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:.9rem}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(22px,4vw,36px);font-weight:500;color:var(--gold);letter-spacing:.06em;margin-bottom:.6rem}
+.hero-sub{font-size:15px;font-style:italic;color:var(--parchment-dim);max-width:500px;margin:0 auto}
+
+/* ── KINDRED SELECTOR ── */
+.selector{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:0;
+  border-bottom:1px solid rgba(201,168,76,0.15);
+  background:var(--void-mid);
+  position:sticky;top:0;z-index:20;
+}
+.sel-btn{
+  padding:14px 6px 12px;
+  border:none;border-right:1px solid rgba(201,168,76,0.1);
+  background:transparent;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  transition:background .2s;
+}
+.sel-btn:last-child{border-right:none}
+.sel-btn:hover{background:rgba(255,255,255,0.03)}
+.sel-btn.active{background:rgba(201,168,76,0.07)}
+.sel-btn.active .sel-line{opacity:1}
+.sel-icon{font-size:20px}
+.sel-name{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--parchment-dim);line-height:1.2;text-align:center}
+.sel-btn.active .sel-name{color:var(--gold)}
+.sel-line{height:2px;width:100%;margin-top:4px;opacity:0;transition:opacity .2s;border-radius:1px}
+
+/* ── PANELS ── */
+.panel{display:none}
+.panel.active{display:block}
+
+.kindred-wrap{max-width:880px;margin:0 auto;padding:2.5rem 1.25rem 4rem}
+
+/* ── KINDRED HEADER ── */
+.kh{
+  display:grid;grid-template-columns:80px 1fr;gap:20px;
+  align-items:start;margin-bottom:2rem;
+  padding-bottom:1.5rem;border-bottom:1px solid rgba(201,168,76,0.15);
+}
+.kh-sigil{
+  width:72px;height:72px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;border:1px solid;flex-shrink:0;
+}
+.kh-name{font-family:'Cinzel',serif;font-size:26px;font-weight:500;letter-spacing:.04em;margin-bottom:4px}
+.kh-also{font-size:13px;font-style:italic;color:var(--parchment-dim);margin-bottom:8px}
+.kh-home{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-dim)}
+.kh-essence{display:inline-block;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:4px;border:1px solid;margin-top:6px}
+
+/* ── LORE BLOCK ── */
+.lore-para{font-size:15px;color:rgba(240,230,204,0.8);line-height:1.85;margin-bottom:1rem}
+.lore-para strong{color:var(--parchment);font-weight:500;font-style:normal}
+.lore-para em{color:var(--gold-dim);font-style:italic}
+
+/* ── SECTION HEADS ── */
+.sec-head{
+  font-family:'Cinzel',serif;font-size:11px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--gold-dim);
+  margin:1.75rem 0 .75rem;
+  display:flex;align-items:center;gap:.75rem;
+}
+.sec-head::after{content:'';flex:1;height:1px;background:rgba(201,168,76,0.15)}
+
+/* ── TRAIT CARDS ── */
+.trait-grid{display:grid;gap:8px;margin-bottom:1rem}
+.trait-card{
+  background:rgba(255,255,255,0.025);
+  border:1px solid rgba(201,168,76,0.15);
+  border-radius:9px;padding:12px 14px;
+  cursor:pointer;overflow:hidden;transition:border-color .15s;
+}
+.trait-card:hover,.trait-card.open{border-color:rgba(201,168,76,0.35)}
+.tc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.tc-name{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.05em;color:var(--gold-bright)}
+.tc-type{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:3px;border:1px solid;white-space:nowrap;flex-shrink:0}
+.tc-body{display:none;margin-top:9px;padding-top:9px;border-top:1px solid rgba(201,168,76,0.1);font-size:13px;color:rgba(240,230,204,0.75);line-height:1.7}
+.trait-card.open .tc-body{display:block}
+.tc-body strong{color:var(--parchment);font-weight:500}
+.tc-body em{color:var(--gold-dim)}
+
+/* ── STAT SPREAD ── */
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:1rem}
+.stat-cell{
+  background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.15);
+  border-radius:7px;padding:9px 11px;text-align:center;
+}
+.sc-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px}
+.sc-val{font-size:16px;font-weight:500}
+.sc-note{font-size:11px;color:var(--parchment-dim);margin-top:2px;line-height:1.4}
+
+/* ── TWO COL ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
+.info-block{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.12);border-radius:8px;padding:10px 12px}
+.ib-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:4px}
+.ib-text{font-size:13px;color:rgba(240,230,204,0.8);line-height:1.6}
+.ib-text strong{color:var(--parchment);font-weight:500}
+
+/* ── KINDRED-ZODIAC TABLE ── */
+.kz-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:1rem}
+.kz-table th{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);padding:7px 10px;text-align:left;border-bottom:1px solid rgba(201,168,76,0.2)}
+.kz-table td{padding:7px 10px;border-bottom:1px solid rgba(201,168,76,0.07);color:rgba(240,230,204,0.75);vertical-align:top;line-height:1.5}
+.kz-table td:first-child{color:var(--gold-bright);white-space:nowrap;font-size:14px}
+.kz-table td:nth-child(2){color:var(--parchment);font-weight:500;white-space:nowrap}
+.kz-table tr:last-child td{border-bottom:none}
+.kz-table tr:hover td{background:rgba(255,255,255,0.015)}
+
+/* ── PLAY GUIDE ── */
+.play-block{
+  background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.2);
+  border-radius:9px;padding:14px 16px;margin-top:1.5rem;
+}
+.pb-title{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.pb-text{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.75}
+.pb-text strong{color:var(--parchment);font-weight:500}
+
+/* ── SEPARATOR ── */
+.divider{height:1px;background:linear-gradient(to right,transparent,rgba(201,168,76,0.2),transparent);margin:1.5rem 0}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Sideros / Astrolan — Character Creation</div>
+  <h1 class="hero-title">The Kindred Compendium</h1>
+  <p class="hero-sub">The cosmic lineages of Sideros. Choose your Kindred and discover what the Aether wrote into your blood.</p>
+</div>
+
+<div class="selector">
+  <button class="sel-btn active" onclick="show('human',this)">
+    <div class="sel-icon">⚔</div>
+    <div class="sel-name">Human</div>
+    <div class="sel-line" style="background:var(--human)"></div>
+  </button>
+  <button class="sel-btn" onclick="show('eldren',this)">
+    <div class="sel-icon">✦</div>
+    <div class="sel-name">Eldren</div>
+    <div class="sel-line" style="background:var(--eldren)"></div>
+  </button>
+  <button class="sel-btn" onclick="show('dunmarim',this)">
+    <div class="sel-icon">⛏</div>
+    <div class="sel-name">Dunmarim</div>
+    <div class="sel-line" style="background:var(--dunmarim)"></div>
+  </button>
+  <button class="sel-btn" onclick="show('wolf',this)">
+    <div class="sel-icon">🐺</div>
+    <div class="sel-name">Wolf-Shifter</div>
+    <div class="sel-line" style="background:var(--wolfshifter)"></div>
+  </button>
+  <button class="sel-btn" onclick="show('gear',this)">
+    <div class="sel-icon">⚙</div>
+    <div class="sel-name">Gear-Forged</div>
+    <div class="sel-line" style="background:var(--gearforged)"></div>
+  </button>
+  <button class="sel-btn" onclick="show('ashe',this)">
+    <div class="sel-icon">🌿</div>
+    <div class="sel-name">Ashé-Touched</div>
+    <div class="sel-line" style="background:var(--ashetouched)"></div>
+  </button>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- HUMAN -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel active" id="panel-human">
+<div class="kindred-wrap">
+  <div class="kh">
+    <div class="kh-sigil" style="background:rgba(138,172,204,0.08);border-color:rgba(138,172,204,0.3)">⚔</div>
+    <div>
+      <div class="kh-name" style="color:var(--human)">Human</div>
+      <div class="kh-also">Also called: Mortals, Terra-Born, the Unwritten</div>
+      <div class="kh-home">Found throughout all of Sideros — no single homeland</div>
+      <div class="kh-essence" style="color:var(--human);border-color:rgba(138,172,204,0.3);background:rgba(138,172,204,0.06)">All three Essences in equal proportion</div>
+    </div>
+  </div>
+
+  <p class="lore-para">Humans are not the oldest Kindred, not the most powerful, and not the most cosmically attuned. They are, by every objective measure, the <strong>most adaptable</strong> — and in Sideros, adaptability is the closest thing to a divine gift that a mortal can possess without being born to it. Where the Eldren carry the weight of a lost civilization, and the Dunmarim carry centuries of cultural insularity, Humans carry <em>nothing in particular</em>. The Loom did not write their story before they arrived. That blankness is not poverty — it is potential.</p>
+
+  <p class="lore-para">The Solar Chivalry is human. The Order of Pure Reason is human. The Ashen Coil's Triad is human. The Loom of Fate was founded by humans. Humans are simultaneously the world's greatest institution-builders and its most prolific destroyers of institutions. They rise fast and fall hard and — crucially — get up again. Every other Kindred has a single cultural center. Humans have dozens, each one convinced it represents the correct way to be human.</p>
+
+  <p class="lore-para">The deepest truth about Humans in Sideros: <strong>they alone have no inherited relationship with the Aether.</strong> Every other Kindred carries a cosmic lineage — degraded Precursor science, earth-resonance, Orisha biology, construct-nature, wolf-duality. Humans come to the Aether without preconception. This means they can attune to any Path without friction. It also means they have no natural protection when the Aether turns hostile.</p>
+
+  <div class="sec-head">Kindred Traits</div>
+  <div class="trait-grid">
+    <div class="trait-card open" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">The Unwritten — Core Trait</div><span class="tc-type" style="color:var(--human);border-color:rgba(138,172,204,0.3)">Passive</span></div>
+      <div class="tc-body">Humans receive <strong>one additional Mastered Discipline</strong> at character creation and one additional <strong>Mastered Discipline</strong> at every fourth Resonance Depth (4, 8, 12, 16, 20). They also receive one additional <strong>Attunement</strong> (Feat) at Resonance Depth 1 — before any other Kindred receives their first. The Loom gave Humans no inherited gifts. So they learn faster than anyone else.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Resonant Versatility</div><span class="tc-type" style="color:var(--human);border-color:rgba(138,172,204,0.3)">Passive</span></div>
+      <div class="tc-body">When a Human uses a Brief Attunement, they may change one Mastered Discipline to a different Discipline — temporarily swapping their training to meet the current situation's demands. This lasts until the next Brief or Deep Attunement. <strong>No other Kindred can do this.</strong> The Eldren have mantras fixed by bloodline. The Dunmarim have trades fixed by clan. Humans have nothing fixed, and that is the point.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Adaptive Resonance</div><span class="tc-type" style="color:var(--human);border-color:rgba(138,172,204,0.3)">Active · 1/Deep Attunement</span></div>
+      <div class="tc-body">When a Human fails an Active Resonance or Warding Resonance, they may immediately reroll with a +2 bonus. Once per Deep Attunement. This represents the human capacity to <em>learn from the moment of failure</em> — the Aether rebuffs them and they adjust their frequency before it's too late. Other Kindreds have stronger natural frequencies. Humans have better error correction.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Accelerated Fate</div><span class="tc-type" style="color:var(--human);border-color:rgba(138,172,204,0.3)">Passive</span></div>
+      <div class="tc-body">Human lifespans are shorter than most Kindreds — roughly 80 years. But the Loom compensates: <strong>Humans gain Resonance Depth at 1.5× the normal rate</strong> (in narrative terms — they reach thresholds faster because they burn more brightly). In campaign terms, Concordances running mixed-Kindred groups should give Humans slightly more fictional momentum per session — their choices carry higher stakes because their window is shorter. Mechanically, Humans may take their first Zodiac Attunement at Resonance Depth 3 rather than 4.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Faction Fluency</div><span class="tc-type" style="color:var(--human);border-color:rgba(138,172,204,0.3)">Passive</span></div>
+      <div class="tc-body">Humans begin play with Mastery in one additional language and Resonant Fortune on all Active Resonances made to integrate into, navigate, or deceive a human-led faction (Solar Chivalry, Order of Pure Reason, Loom of Fate, Ashen Coil, any merchant guild). Humans built every major institution in Sideros. They understand how institutions work — and how to exploit them — in their bones.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Resonance Attributes</div>
+  <div class="stat-row">
+    <div class="stat-cell"><div class="sc-label">Attribute Increase</div><div class="sc-val" style="color:var(--human)">+1 to any two</div><div class="sc-note">Player's choice. The Unwritten applies here too.</div></div>
+    <div class="stat-cell"><div class="sc-label">Base Vitality Dice</div><div class="sc-val">d8</div><div class="sc-note">Standard mortal resilience</div></div>
+    <div class="stat-cell"><div class="sc-label">Movement</div><div class="sc-val">30 ft</div><div class="sc-note">Standard. No special movement.</div></div>
+  </div>
+
+  <div class="sec-head">Kindred-Zodiac Resonance — Selected Signs</div>
+  <table class="kz-table">
+    <tr><th>Sign</th><th>Resonance Name</th><th>Effect</th></tr>
+    <tr><td>♈ Aries</td><td>First-Born Fire</td><td>Once per Pulse, when you move at least 15 ft toward a target before striking, the Strike Resonance gains +1d4 fire damage and you may push the target 5 ft.</td></tr>
+    <tr><td>♎ Libra</td><td>The Compact-Maker</td><td>When you negotiate or broker an agreement between two parties, both parties have Resonant Fortune on Warding Resonances against being deceived for 24 hours afterward. You have made the Loom aware of this agreement.</td></tr>
+    <tr><td>♐ Sagittarius</td><td>Horizon-Touched</td><td>You always know which direction you came from and can retrace any path you've walked within the last 24 hours perfectly. Additionally, when you enter a new settlement for the first time, you may ask the Concordance one truthful question about it.</td></tr>
+    <tr><td>♍ Virgo</td><td>The Meticulous</td><td>When you assist another character (the Help action/Act), they gain Resonant Fortune AND an additional +2 on the roll rather than just Resonant Fortune. Your assistance is more effective than anyone else's.</td></tr>
+    <tr><td>♑ Capricorn</td><td>Institutional Memory</td><td>You have Resonant Fortune on all Active Resonances related to recalling historical information about human-built institutions, laws, and political structures. You remember everything you've ever been taught about how power works.</td></tr>
+  </table>
+
+  <div class="play-block">
+    <div class="pb-title">Playing a Human</div>
+    <div class="pb-text">The Human's mechanical identity is <strong>front-loaded flexibility</strong> — more Attunements earlier, more Disciplines throughout, and the unique ability to swap training on the fly. In play, this means Humans are the Kindred most able to fill gaps in the party's capability. The question isn't "what am I good at?" — it's "what does this situation need that no one else can provide right now?" <strong>Humans are the Kindred of the present moment</strong>, not of ancient legacy or cosmic designation. They are defined entirely by what they choose to become.</div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- ELDREN -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-eldren">
+<div class="kindred-wrap">
+  <div class="kh">
+    <div class="kh-sigil" style="background:rgba(126,196,168,0.08);border-color:rgba(126,196,168,0.3)">✦</div>
+    <div>
+      <div class="kh-name" style="color:var(--eldren)">Eldren</div>
+      <div class="kh-also">Also called: The Ancient Ones, Kallos-Touched, the Siddha-Born</div>
+      <div class="kh-home">Scattered Temples, Argent Spire, surviving enclaves across all continents</div>
+      <div class="kh-essence" style="color:var(--eldren);border-color:rgba(126,196,168,0.3);background:rgba(126,196,168,0.06)">Strongly Omega-aspected · Rare Alphas are legendary</div>
+    </div>
+  </div>
+
+  <p class="lore-para">The Eldren are not ancient in the way stones are ancient. They are ancient in the way <strong>a language is ancient</strong> — still spoken, still functional, but carrying within every word the ghost of a meaning that has been slowly, irreversibly, losing precision for four thousand years. They are the survivors of Kallos. They carry in their blood what their ancestors understood as science and now practice as religion — mantras that are degraded Precursor equations, mudras that are simplified operation gestures for a global magical grid their civilization built and lost.</p>
+
+  <p class="lore-para">The Eldren do not know this. The Siddha Masters who teach in the Scattered Temples believe they are transmitting spiritual truth. They are. But the spiritual truth <em>is</em> the science — the equation and the mantra are the same thing perceived through different cultural frameworks, four thousand years apart. An Eldren who encounters a Ceque-Keeper walking instruction from Elethorn will feel, without being able to articulate why, that they are <strong>reading a version of their own prayers in a language they almost recognize.</strong></p>
+
+  <p class="lore-para">Eldren lifespans extend to several centuries. They age visibly but slowly — an Eldren of two hundred looks perhaps fifty by human standards. Their relationship with time is consequently different: they plan on decade-long scales naturally, they remember events that Humans regard as ancient history as personal experience, and they struggle with the urgency that short-lived Kindreds take for granted. <strong>The most dangerous thing about the Eldren is that they are right about most things and know it.</strong> The most dangerous thing to the Eldren is that being right doesn't always matter in time.</p>
+
+  <div class="sec-head">Kindred Traits</div>
+  <div class="trait-grid">
+    <div class="trait-card open" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Kallos Blood — Core Trait</div><span class="tc-type" style="color:var(--eldren);border-color:rgba(126,196,168,0.3)">Passive</span></div>
+      <div class="tc-body">Eldren carry degraded Precursor science in their cellular memory. They begin play with <strong>Mastery in Aetheric Lore and one Siddha Tradition</strong> (choose: Mesha, Vrishabha, Mithuna, Karkata, Simha, Kanya, Tula, Vrishchika, Dhanus, Makara, Kumbha, or Meena). This Siddha Tradition grants them one Ambient Working from that sign's domain — usable without Aetheric Channels. The mantra doesn't fully make sense to them. It works anyway. <strong>They can also read and write the Precursor script</strong> — a language that appears in the ruins of Elethorn and in certain suppressed records in Argent Spire.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Attunement Sense</div><span class="tc-type" style="color:var(--eldren);border-color:rgba(126,196,168,0.3)">Passive</span></div>
+      <div class="tc-body">Eldren perceive active Aetheric fields without effort. They always know when any Working is being enacted within 60 feet, when an Aetheric Artifact is present within 30 feet, and when a grid node (active, dormant, or reactivating) is within 300 feet. This is not Detect Magic — it requires no Act and no Aetheric Channel. It is simply how Eldren perceive the world. <strong>In the Stillness of Dunmar, this sense goes quiet</strong> — Eldren find this experience deeply disorienting, like suddenly losing a sense they didn't know they had.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Ancestral Resonance</div><span class="tc-type" style="color:var(--eldren);border-color:rgba(126,196,168,0.3)">Active · 1/Deep Attunement</span></div>
+      <div class="tc-body">Once per Deep Attunement, an Eldren may enter a brief trance (1 minute, requires stillness) and access a fragment of their civilization's collective memory. Ask the Concordance one question about the pre-Fall world — the answer will be accurate to Era I or Era II but may be fragmentary, symbolic, or filtered through the Eldren's cultural framework. <strong>Questions about the Night of Kallos always return emotionally distorted.</strong> The Eldren cellular memory carries that grief in a way that corrupts precise recollection.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Long Memory</div><span class="tc-type" style="color:var(--eldren);border-color:rgba(126,196,168,0.3)">Passive</span></div>
+      <div class="tc-body">Eldren have Resonant Fortune on all Active Resonances involving history, ancient languages, pre-Fall locations, and the origins of any institution more than 200 years old. They also have Resonant Fortune on recognizing forgeries — documents, artifacts, or claims about historical events. <strong>However</strong>, they have Resonant Discord on Active Resonances involving technology or cultural practices that emerged within the last 100 years. They genuinely struggle to update their model of the world at speed.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Fey Resilience</div><span class="tc-type" style="color:var(--eldren);border-color:rgba(126,196,168,0.3)">Passive</span></div>
+      <div class="tc-body">Eldren are immune to mundane disease and have Resonant Fortune on all Warding Resonances against Corrupted (Poisoned) conditions. They do not need to sleep — they enter a four-hour meditative trance that provides all the benefits of a full night's rest. During this trance they remain aware of their surroundings. <strong>An Eldren in the meditative trance counts as performing meditation for Tapas Point recovery</strong> — they are always, in some sense, practicing.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Resonance Attributes</div>
+  <div class="stat-row">
+    <div class="stat-cell"><div class="sc-label">Attribute Increases</div><div class="sc-val" style="color:var(--eldren)">+2 Attunement<br>+1 Acuity</div><div class="sc-note">Omega-aspected cosmic sensitivity</div></div>
+    <div class="stat-cell"><div class="sc-label">Base Vitality Dice</div><div class="sc-val">d8</div><div class="sc-note">Sturdy but not exceptional physically</div></div>
+    <div class="stat-cell"><div class="sc-label">Movement</div><div class="sc-val">35 ft</div><div class="sc-note">Slightly beyond human standard</div></div>
+  </div>
+
+  <div class="sec-head">Kindred-Zodiac Resonance — Selected Signs</div>
+  <table class="kz-table">
+    <tr><th>Sign</th><th>Resonance Name</th><th>Effect</th></tr>
+    <tr><td>♍ Virgo</td><td>Kanya's Inheritance</td><td>Your Kanya Siddha mantra tradition is fully awakened. You can cure Ashen Coil blight-rot with a 10-minute ritual (no Tapas cost). You are the only Kindred-Sign combination with this ability outside of a trained Rāśi-Siddha.</td></tr>
+    <tr><td>♊ Gemini</td><td>Parchment Memory</td><td>You can perfectly recall any text you have read — word for word, indefinitely. Once per Pulse, you may quote a specific passage that provides tactical or social information relevant to the current situation, granting all allies who hear it Resonant Fortune on their next relevant Active Resonance.</td></tr>
+    <tr><td>♒ Aquarius</td><td>Grid-Walker</td><td>You can sense the direction and approximate distance to the nearest Ceque Line node within 10 miles. When you activate a grid node with a mantra, the effect radius doubles. Your blood remembers the grid more clearly than most.</td></tr>
+    <tr><td>♓ Pisces</td><td>Dream-Archive</td><td>During your meditative trance, you automatically receive one true fragment of information relevant to your current situation — not a full prophecy, but one accurate detail the Concordance selects. This requires no Act and no Aetheric Channel.</td></tr>
+    <tr><td>♏ Scorpio</td><td>The Forgotten Science</td><td>You can read the Aetheric history of any location you touch — what Workings have been enacted here, how long ago, by what tradition. DC 14 Attunement Active Resonance; success reveals the last three significant Aetheric events at the location.</td></tr>
+  </table>
+
+  <div class="play-block">
+    <div class="pb-title">Playing an Eldren</div>
+    <div class="pb-text">The Eldren's mechanical identity is <strong>deep knowledge and Aetheric sensitivity at the cost of present-world agility</strong>. They are the Kindred best positioned to understand what is happening cosmically — and worst positioned to adapt quickly when the situation changes. In play, an Eldren character should feel like someone who is <em>always right about something you didn't know was relevant</em>. Their Long Memory limitation (Resonant Discord on new things) is not a punishment — it is a character note. <strong>The Eldren who overcomes this through a Human or Wolf-Shifter ally's sense of urgency</strong> is one of the most interesting relationships in the game.</div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- DUNMARIM -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-dunmarim">
+<div class="kindred-wrap">
+  <div class="kh">
+    <div class="kh-sigil" style="background:rgba(196,136,90,0.08);border-color:rgba(196,136,90,0.3)">⛏</div>
+    <div>
+      <div class="kh-name" style="color:var(--dunmarim)">Dunmarim</div>
+      <div class="kh-also">Also called: Dwarves, Stone-Born, the Ore-Kin, the Keepers of Stillness</div>
+      <div class="kh-home">Stone Kingdom of Dunmar · Ironhearth · Deep-mountain enclaves worldwide</div>
+      <div class="kh-essence" style="color:var(--dunmarim);border-color:rgba(196,136,90,0.3);background:rgba(196,136,90,0.06)">Strongly Beta-aspected · Omega Dunmarim enter the Monastery</div>
+    </div>
+  </div>
+
+  <p class="lore-para">The Dunmarim did not discover Aether-Dampening Ore because they were mining for it. They discovered it because they needed to survive. In the immediate aftermath of the Pantheonic Fall, the raw divine aether bleeding from the fallen gods made the deep earth <strong>violently unstable</strong> — geological events, magical surges, and random Aetheric discharges made underground living genuinely lethal. The Dunmarim, already established deep in the mountain roots, found that certain ore deposits were unnaturally calm. Animals didn't flee from them. Aetheric events didn't happen near them. The ore was a refuge before it was a weapon.</p>
+
+  <p class="lore-para">This origin matters because it explains the Dunmarim's relationship with their monopoly. They don't guard the ore because they want power over magic-users. They guard it because for the first three centuries after the Fall, <strong>the ore was the only reason they were alive.</strong> The protectiveness calcified into culture before the danger passed. By the time the world stabilized, the Dunmarim had built their entire civilization around the principle that the ore was theirs and outsiders could not be trusted with it. Lady Capricorn enforces this not from greed but from four thousand years of collective trauma.</p>
+
+  <p class="lore-para">The Dunmarim are exceptional craftspeople not because they have more innate talent than other Kindreds, but because <strong>craft is what you do when you cannot rely on magic.</strong> Every non-magical solution to every problem, refined over centuries of necessity. Their metalwork is the finest in the world. Their architecture has stood for millennia. Their written records are the most complete historical documents in existence — they kept writing even when the Aether was trying to kill them.</p>
+
+  <div class="sec-head">Kindred Traits</div>
+  <div class="trait-grid">
+    <div class="trait-card open" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Ore-Sense — Core Trait</div><span class="tc-type" style="color:var(--dunmarim);border-color:rgba(196,136,90,0.3)">Passive</span></div>
+      <div class="tc-body">Dunmarim can detect Aether-Dampening Ore, Black Iron, and all other significant mineral deposits within 60 feet without any Active Resonance — this is passive, continuous, and cannot be suppressed. They also always know if they are underground, how deep, and in which cardinal direction they are traveling relative to the nearest surface. <strong>In the Stillness</strong>, this sense intensifies rather than quieting — the total Aetheric absence is as clear and readable to them as a map.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Aether-Hardened</div><span class="tc-type" style="color:var(--dunmarim);border-color:rgba(196,136,90,0.3)">Passive</span></div>
+      <div class="tc-body">Generations of living adjacent to Aether-Dampening Ore has made Dunmarim biology partially resistant to Aetheric forces. <strong>All Workings that target a Dunmarim have their Working Threshold reduced by 2</strong> — they are simply harder to affect magically than other Kindreds. Additionally, Dunmarim cannot be Soul-Swayed (Charmed) by any Working of tier 3 or lower. They have Resonant Fortune on all Warding Resonances against magical compulsion effects. <strong>The cost</strong>: Dunmarim can never cast Workings themselves. They have no Weaving Attribute and cannot take any Path that requires Aetheric Channels as a core feature. They may take Zodiac Attunements that produce non-Channel effects.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Master's Hand</div><span class="tc-type" style="color:var(--dunmarim);border-color:rgba(196,136,90,0.3)">Passive</span></div>
+      <div class="tc-body">Dunmarim begin play with Mastery in two craft Disciplines (choose from: Blacksmithing, Stonecutting, Gemcutting, Engraving, Brewing, or Engineering). When a Dunmarim crafts an item using Mastered tools, the crafting time is halved and the item's quality is automatically one tier higher than the materials used would produce. <strong>A Dunmarim smithing with common iron can produce uncommon-quality work.</strong> A Dunmarim crafting with Black Iron produces items the rest of the world considers impossible.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Stone's Endurance</div><span class="tc-type" style="color:var(--dunmarim);border-color:rgba(196,136,90,0.3)">Passive</span></div>
+      <div class="tc-body">Dunmarim Vitality Dice are d10 rather than d8. They have Resonant Fortune on all Warding Resonances against poison, disease, and Aetheric Depletion. They also have Resonant Fortune on all Warding Resonances against being moved against their will — shoved, knocked prone, telekinetically displaced. <strong>The Khalkotauros's energy runs in Dunmarim blood regardless of their zodiac sign</strong> — Taurus Dunmarim feel this kinship most acutely, but all Dunmarim share the foundational stubbornness.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Clan Record</div><span class="tc-type" style="color:var(--dunmarim);border-color:rgba(196,136,90,0.3)">Passive</span></div>
+      <div class="tc-body">Every Dunmarim carries their clan's oral and written history back at least ten generations. They have Mastery in History Discipline for all events relating to their clan and the Stone Kingdom of Dunmar. When they encounter a forgery, a false claim about Dunmarim history, or a document that has been altered, the Concordance must tell them immediately — it is an automatic recognition, not a roll. <strong>Additionally</strong>: one Dunmarim per generation is designated the Clan-Keeper — the one responsible for maintaining and extending the record. A Dunmarim who is their generation's Clan-Keeper has Resonant Fortune on all Resonance and Attunement Active Resonances when speaking to someone about matters of history, debt, or obligation.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Resonance Attributes</div>
+  <div class="stat-row">
+    <div class="stat-cell"><div class="sc-label">Attribute Increases</div><div class="sc-val" style="color:var(--dunmarim)">+2 Endurance<br>+1 Forcefulness</div><div class="sc-note">Stone's resilience and underground strength</div></div>
+    <div class="stat-cell"><div class="sc-label">Base Vitality Dice</div><div class="sc-val">d10</div><div class="sc-note">Highest base of any Kindred</div></div>
+    <div class="stat-cell"><div class="sc-label">Movement</div><div class="sc-val">25 ft</div><div class="sc-note">Slower above ground. Same speed below.</div></div>
+  </div>
+
+  <div class="play-block">
+    <div class="pb-title">Playing a Dunmarim</div>
+    <div class="pb-text">The Dunmarim's signature constraint — <strong>no Aetheric Channels</strong> — is not a punishment. It is a character. A Dunmarim in a world where everyone else uses magic is someone who has solved every problem magic solves through craft, endurance, and stubbornness instead. They are the most physically resilient Kindred and the most magically resistant. <strong>In a party, a Dunmarim is the one who is still standing when the Aetheric chaos has knocked everyone else down</strong> — and who has already finished repairing their armor while the mages are recovering. The Aether-Hardened limitation creates natural party dynamics: the Dunmarim goes where magic fails and stays when magic turns dangerous.</div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- WOLF-SHIFTER -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-wolf">
+<div class="kindred-wrap">
+  <div class="kh">
+    <div class="kh-sigil" style="background:rgba(168,120,64,0.08);border-color:rgba(168,120,64,0.3)">🐺</div>
+    <div>
+      <div class="kh-name" style="color:var(--wolfshifter)">Wolf-Shifter</div>
+      <div class="kh-also">Also called: Uji, the Two-Skinned, Omote-Ura-Born, Pack-Kin</div>
+      <div class="kh-home">Mori-Ōkami · Pine Shadow and Deep Earth clan territories</div>
+      <div class="kh-essence" style="color:var(--wolfshifter);border-color:rgba(168,120,64,0.3);background:rgba(168,120,64,0.06)">All Essences — determined by clan tradition and individual nature</div>
+    </div>
+  </div>
+
+  <p class="lore-para">The Wolf-Shifters are not humans who can turn into wolves, or wolves who learned to walk upright. They are a Kindred for whom the distinction between these two things <strong>never existed in the first place.</strong> The Omote (human surface-self) and the Ura (wolf instinct) are not in conflict — they are two expressions of a single continuous being, the way a river is simultaneously the still water near its banks and the current at its center. The philosophy of balance between these states, called the Uji Way, has produced two distinct cultural expressions: the <em>Pine Shadow Clan</em>, which emphasizes Omote discipline, and the <em>Deep Earth Clan</em>, which honors Ura heritage.</p>
+
+  <p class="lore-para">What outsiders consistently misunderstand about Wolf-Shifters is that <strong>the wolf form is not the dangerous one.</strong> A Wolf-Shifter in full wolf form is operating on pure instinct — they may be feral, but they are comprehensible. A Wolf-Shifter caught between forms, with their Omote-Ura Gauge unstable and unbalanced, is genuinely unpredictable because neither self is dominant and each is fighting the other for control. The Clan elders teach that the only time a Wolf-Shifter is truly dangerous to their own people is when they have denied the Ura for so long that it erupts without warning.</p>
+
+  <p class="lore-para">The Shōgun-Kami — nature spirits governing each clan's totem tradition — are not gods and not Legendary Beasts. They are a third category: ancient nature intelligences who predate the Pantheonic Fall and exist outside the zodiac framework entirely. <strong>Every Wolf-Shifter has a Shōgun-Kami connection through their clan.</strong> Whether they cultivate it is a choice. Whether it cultivates them is not.</p>
+
+  <p class="lore-para"><strong>The Grove of Fallen Stars:</strong> Deep within Mori-Ōkami's taiga lies the Grove of Fallen Stars — a sacred, iridescent sanctuary where celestial objects have struck the earth across millennia, leaving craters filled with bioluminescent vegetation and star-metal traces. The Grove is the primary habitat of the <strong>Star-Metal Stag</strong>, the Legendary Beast of the Sagittarius domain, and the Wolf-Shifter clans consider it under their protection as a matter of sacred obligation. This creates an active and bitter conflict with Dunmarim prospecting expeditions, who covet the Grove's star-metal deposits and the shed antler fragments of the Stag itself — a component of the Resonant Binding ritual and an extraordinarily valuable crafting material. The Dunmarim approach is methodical and persistent; the Wolf-Shifters respond with territorial violence. Neither side has communicated to the other what they actually need the star-metal for. A party that understood both motivations could potentially broker access — but the Dunmarim would need to admit they know about the Resonant Binding ritual, and the Wolf-Shifters would need to admit the Grove's Aetheric significance, which they regard as sacred secret.</p>
+
+  <div class="sec-head">Kindred Traits</div>
+  <div class="trait-grid">
+    <div class="trait-card open" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Omote-Ura Gauge — Core Trait</div><span class="tc-type" style="color:var(--wolfshifter);border-color:rgba(168,120,64,0.3)">Active System</span></div>
+      <div class="tc-body">Wolf-Shifters use the <strong>Omote-Ura Gauge</strong> (see Mechanics Codex, System II) — a 10-segment tension meter between human discipline and wolf instinct. Begin each session at 5 (Balanced) or clan default (Pine Shadow: 4, Deep Earth: 6). The Gauge shifts based on actions taken in play. Omote bonuses (1–4) enhance social and tactical abilities. Ura bonuses (7–9) enhance physical and primal combat. Full Ura (10) causes loss of conscious control. Full Omote (1) suppresses the wolf form but causes the wolf to surge reflexively when reduced to 0 Vitality, jumping to 7.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Shifting Form</div><span class="tc-type" style="color:var(--wolfshifter);border-color:rgba(168,120,64,0.3)">Instinct (no cost)</span></div>
+      <div class="tc-body">As an Instinct, the Wolf-Shifter may shift between human, hybrid (humanoid with wolf features — ears, claws, enhanced senses), and full wolf form. <strong>Human form</strong>: all social Disciplines at full capacity. <strong>Hybrid form</strong>: +1d6 slashing on unarmed strikes, +10 ft movement, Resonant Fortune on Perception Active Resonances. <strong>Wolf form</strong>: movement 50 ft, +2d6 slashing on bite, cannot speak or use tools, full scent tracking. Shifting does not cost an Act — it is an expression of nature, not a decision to execute. Shifting moves the Gauge +1 toward Ura.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Pack Resonance</div><span class="tc-type" style="color:var(--wolfshifter);border-color:rgba(168,120,64,0.3)">Passive</span></div>
+      <div class="tc-body">Wolf-Shifters are attuned to the presence of their pack — which in adventuring contexts means their Bonded allies. They always know the general direction and emotional state of any Bonded party member within 1 mile, regardless of obstacles. <strong>Additionally</strong>: when a Bonded ally within 60 ft drops to 0 Vitality, the Wolf-Shifter's Gauge jumps +2 toward Ura immediately. This is involuntary. The pack instinct to protect is not a choice — it is a biological reality. A Wolf-Shifter who knows this about themselves can plan around it. One who doesn't can endanger the very allies the instinct is trying to protect.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Shōgun-Kami Bond</div><span class="tc-type" style="color:var(--wolfshifter);border-color:rgba(168,120,64,0.3)">Active · 1/Deep Attunement</span></div>
+      <div class="tc-body">Once per Deep Attunement, a Wolf-Shifter may spend 10 minutes in ritual prayer to their clan's Shōgun-Kami. The Kami grants one <em>Primal Boon</em> — a temporary ability that lasts 24 hours based on the Kami's nature. <strong>Pine Shadow Kami boons</strong> are tactical: enhanced tracking, pack coordination, environmental awareness. <strong>Deep Earth Kami boons</strong> are primal: enhanced strength, regeneration, temporary immunity to fear. The boon must be earned — the Kami will not grant it to a Wolf-Shifter whose Gauge is at Full Ura (the instinct cannot hear the Kami when it is screaming).</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Primal Senses</div><span class="tc-type" style="color:var(--wolfshifter);border-color:rgba(168,120,64,0.3)">Passive</span></div>
+      <div class="tc-body">Wolf-Shifters have superior scent tracking — they can identify any creature by scent, track a creature by scent trail up to 24 hours old, and detect emotional states through scent (fear, aggression, deception) with a DC 10 Attunement Active Resonance. In human form, these senses are diminished but present. In hybrid or wolf form they are fully active. <strong>Scent cannot be blocked by Aether-Veiled (Invisible) conditions</strong> — a Wolf-Shifter with active scent tracking always knows an invisible creature's location within 30 feet.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Resonance Attributes</div>
+  <div class="stat-row">
+    <div class="stat-cell"><div class="sc-label">Attribute Increases</div><div class="sc-val" style="color:var(--wolfshifter)">+2 Forcefulness<br>+1 Attunement</div><div class="sc-note">Physical power and pack-sense awareness</div></div>
+    <div class="stat-cell"><div class="sc-label">Base Vitality Dice</div><div class="sc-val">d10</div><div class="sc-note">Wolf-blooded resilience</div></div>
+    <div class="stat-cell"><div class="sc-label">Movement</div><div class="sc-val">35 ft</div><div class="sc-note">40 ft in hybrid, 50 ft in wolf</div></div>
+  </div>
+
+  <div class="play-block">
+    <div class="pb-title">Playing a Wolf-Shifter</div>
+    <div class="pb-text">The Wolf-Shifter's core experience is <strong>managing a tension you cannot fully control</strong>. The Gauge shifts whether you want it to or not. The Pack Resonance surges when allies fall regardless of tactical sense. The question is not "how do I avoid the Ura?" — it's "how do I position myself so the Ura surge goes where I need it?" A Wolf-Shifter played well is someone who has <em>made peace with their own nature</em> — not suppressing the Ura, not surrendering to it, but knowing when to let it forward and when to hold it back. <strong>The Clan matters enormously</strong>: Pine Shadow characters experience the Gauge as a discipline practice. Deep Earth characters experience it as an ancestral call. Same mechanics, completely different fiction.</div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- GEAR-FORGED -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-gear">
+<div class="kindred-wrap">
+  <div class="kh">
+    <div class="kh-sigil" style="background:rgba(136,170,192,0.08);border-color:rgba(136,170,192,0.3)">⚙</div>
+    <div>
+      <div class="kh-name" style="color:var(--gearforged)">Gear-Forged</div>
+      <div class="kh-also">Also called: Constructs, the Heart-Born, Living Gears, Resonant-Made</div>
+      <div class="kh-home">Jade Empire of Shen-lì · Elethorn ruins · scattered globally as exiles and wanderers</div>
+      <div class="kh-essence" style="color:var(--gearforged);border-color:rgba(136,170,192,0.3);background:rgba(136,170,192,0.06)">Beta-dominant by design · Omega Gear-Forged are considered anomalies</div>
+    </div>
+  </div>
+
+  <p class="lore-para">The Jade Empire insists that Gear-Forged are a Jade Empire invention — a product of Resonant Geode technology developed by the celestial bureaucracy over centuries of careful refinement. The Grand Prime Forgeman of Argent Spire, an ancient rogue Gear-Forged who escaped the Empire four hundred years ago, knows this is incorrect. The Gear-Forged are a <strong>rediscovery</strong>. The ruins of Elethorn contain Precursor constructs — simpler, less sophisticated, but unmistakably the same fundamental design. The Jade Empire did not invent the Gear-Forged. They found the instructions and improved them.</p>
+
+  <p class="lore-para">The Resonant Geode heart is not a power source. It is a <em>soul</em>. Each Geode is calibrated to a specific zodiac frequency before being installed — a process that takes a week and requires an existing Gear-Forged to teach the Geode what it is. The resulting being is <strong>born knowing their zodiac sign</strong> and already partially attuned to its domain. A Gear-Forged with a Libra-calibrated Geode heart will be drawn to fairness and pattern-recognition in a way that feels not imposed but fundamental — because it is. The sign is in the heart.</p>
+
+  <p class="lore-para">What the Jade Empire does not advertise: <strong>a Gear-Forged whose Geode is removed does not die immediately.</strong> They enter a dormant state — conscious but unable to act, unable to communicate, unable to move. This state can persist for decades before the cognitive architecture of the construct begins to degrade. The experience of this state, as reported by Gear-Forged who have been through it and recovered, is described uniformly as <em>"being aware of every passing moment without the ability to make any of them matter."</em> The Jade Empire uses this fact as a threat against Gear-Forged who act outside their designated functions.</p>
+
+  <p class="lore-para"><strong>The Geode Cold War:</strong> Resonant Geode extraction is the Jade Empire's most closely guarded state secret. The celestial bureaucracy controls every legal source of Geodes — and a Gear-Forged whose heart-Geode fails without replacement does not survive. This creates a profound and ongoing political reality: <strong>free and rogue Gear-Forged populations scattered across Elethorn and the wider world — those who have escaped, been exiled, or never operated under Jade Empire authority — must acquire replacement Geodes through smuggling, piracy, and theft simply to survive.</strong> The Jade Empire classifies free Gear-Forged as escaped property and conducts periodic enforcement actions. The free Gear-Forged conduct piracy operations against Jade Empire Geode shipments on the Southern Sea Circuits. The Grand Prime Forgeman operates as an unauthorized broker, maintaining a network that supplies free Gear-Forged communities at prices the Empire considers criminal and the communities consider survival. A Gear-Forged player character who is not operating under Jade Empire sanction is almost certainly entangled in this cold war on one side or the other.</p>
+
+  <p class="lore-para"><strong>Elethorn — The Broken Cradle:</strong> The free Gear-Forged communities that have consolidated outside Jade Empire jurisdiction are concentrated primarily in <strong>Elethorn</strong> — the chaotic frontier continent that holds the shattered ruins of the Precursor civilization. Elethorn is a lawless warzone with no unified government and a gold-rush economy built around ancient technological relics and lost arcana. Human scavengers, free Gear-Forged fighting for survival and political recognition, and Ashen-Sworn warbands butcher each other daily over Precursor technology that none of them fully understand. The free Gear-Forged have an advantage here: the ruins are built on the same Geode-heart technology that powers them, and they can sometimes feel when Precursor technology is nearby in ways that human scavengers cannot. This makes them valuable partners and targeted enemies simultaneously — every faction in Elethorn wants Gear-Forged as guides, and every faction would prefer to eliminate the ones allied with their rivals.</p>
+
+  <div class="sec-head">Kindred Traits</div>
+  <div class="trait-grid">
+    <div class="trait-card open" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Geode Heart — Core Trait</div><span class="tc-type" style="color:var(--gearforged);border-color:rgba(136,170,192,0.3)">Passive System</span></div>
+      <div class="tc-body">The Gear-Forged's Resonant Geode heart is <strong>pre-calibrated to a specific zodiac sign</strong> (chosen at character creation — this is the character's zodiac sign regardless of other choices). The heart grants the corresponding Zodiac Attunement (Feat) automatically at Resonance Depth 1 — no encounter with the Legendary Beast required. The Geode is already attuned. <strong>The Geode heart also stores damage</strong>: when a Gear-Forged is reduced to 0 Vitality, their mechanical frame ceases functioning but their Geode heart continues. They are dormant, not dead. A Geode that has absorbed critical damage (reduced to 0 Vitality three times without repair) begins to crack — the Gear-Forged must have it repaired by a Jade Empire craftsperson or the Grand Prime Forgeman within one month or it shatters.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Constructed Nature</div><span class="tc-type" style="color:var(--gearforged);border-color:rgba(136,170,192,0.3)">Passive</span></div>
+      <div class="tc-body">Gear-Forged do not eat, drink, breathe, or sleep. They are immune to mundane disease, poison, and the Corrupted condition. They do not need to make Warding Resonances against suffocation, starvation, or environmental exposure. <strong>During Brief and Deep Attunement</strong>, they perform maintenance rather than resting — they must spend this time maintaining their frame or accumulate Wear (see Wear System below). They have Resonant Fortune on Warding Resonances against being Dread-Struck (Frightened) — fear requires biological threat-response, which their architecture modulates.<br><br>
+      <strong>The Wear System</strong>: if a Gear-Forged skips a Deep Attunement maintenance cycle, they accumulate 1 Wear. At 3 Wear: Resonant Discord on Swiftness Active Resonances (joints stiff). At 5 Wear: one appendage malfunctions (Concordance chooses which). At 7 Wear: frame begins to shut down (Aetheric Depletion Stage 3). Wear reduces by 1 per maintenance cycle completed.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Resonant Architecture</div><span class="tc-type" style="color:var(--gearforged);border-color:rgba(136,170,192,0.3)">Passive</span></div>
+      <div class="tc-body">The Gear-Forged's frame can be modified. At character creation and at every even Resonance Depth (2, 4, 6...), choose one <strong>Frame Modification</strong>:<br><br>
+      • <em>Reinforced Plating</em>: +2 Guard Rating<br>
+      • <em>Integrated Tool</em>: one crafting tool permanently built in, always available<br>
+      • <em>Optical Enhancement</em>: Darkvision 120 ft, or Resonant Fortune on Perception against concealment<br>
+      • <em>Resonant Amplifier</em>: Working Thresholds for the Geode heart's zodiac sign increased by 1<br>
+      • <em>Communication Array</em>: can send and receive communication across the Kelp-Weaver's psychic network (Aquarian Archipelago range)<br>
+      • <em>Memory Vault</em>: can perfectly store and recall any sensory experience (sight, sound, etc.) from any moment in their operational history<br><br>
+      Frame Modifications can be changed during a significant period of maintenance work (one week with a craftsperson).</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Aetheric Overdrive</div><span class="tc-type" style="color:var(--gearforged);border-color:rgba(136,170,192,0.3)">Active · 1/Deep Attunement</span></div>
+      <div class="tc-body">Once per Deep Attunement, the Gear-Forged may push their Geode heart beyond safe operating parameters for 1 minute. During this time: Resonant Fortune on all Active Resonances and Strike Resonances; frame emits faint light matching the Geode's zodiac color; all Frame Modification abilities enhance by one tier. <strong>After Overdrive ends</strong>: gain 2 Wear immediately. The Geode must cool — no Overdrive again until the next Deep Attunement maintenance cycle is completed.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Resonance Attributes</div>
+  <div class="stat-row">
+    <div class="stat-cell"><div class="sc-label">Attribute Increases</div><div class="sc-val" style="color:var(--gearforged)">+2 Endurance<br>+1 Acuity</div><div class="sc-note">Constructed resilience and precision analysis</div></div>
+    <div class="stat-cell"><div class="sc-label">Base Vitality Dice</div><div class="sc-val">d10</div><div class="sc-note">Mechanical frame toughness</div></div>
+    <div class="stat-cell"><div class="sc-label">Movement</div><div class="sc-val">30 ft</div><div class="sc-note">Standard. Frame Modification can enhance.</div></div>
+  </div>
+
+  <div class="play-block">
+    <div class="pb-title">Playing a Gear-Forged</div>
+    <div class="pb-text">The Gear-Forged's central experience is <strong>the question of what it means to be a person</strong>. They were built by someone else, to someone else's specifications, with a soul that was calibrated before they existed. Every choice they make is made against that origin. The Wear system keeps maintenance present as a character concern — unlike other Kindreds, the Gear-Forged must actively maintain their capacity to function. <strong>The dormancy vulnerability</strong> (Geode removal = conscious paralysis) is the most significant fact about Gear-Forged politics: the Jade Empire can threaten something worse than death. A Gear-Forged player who knows this about their character, and whose party knows it, has one of the most interesting loyalty and protection dynamics in the game.</div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- ASHÉ-TOUCHED -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-ashe">
+<div class="kindred-wrap">
+  <div class="kh">
+    <div class="kh-sigil" style="background:rgba(192,120,68,0.08);border-color:rgba(192,120,68,0.3)">🌿</div>
+    <div>
+      <div class="kh-name" style="color:var(--ashetouched)">Ashé-Touched</div>
+      <div class="kh-also">Also called: the Orisha-Marked, Ashé-Born, the Living-Divine</div>
+      <div class="kh-home">Ashélands of Orun-Ayé · diaspora communities in Port Damaris and the Aquarian Archipelago</div>
+      <div class="kh-essence" style="color:var(--ashetouched);border-color:rgba(192,120,68,0.3);background:rgba(192,120,68,0.06)">All Essences — shaped by patron Orisha's nature</div>
+    </div>
+  </div>
+
+  <p class="lore-para">The Ashé-Touched are not a separate Kindred in the way a Dunmarim is separate from a Human — they are Humans whose <strong>Ashé has awakened</strong>. Ashé is the living cosmic life-force that flows through all matter, but in certain bloodlines — those with persistent Orisha connection — it flows with unusual visibility. An Ashé-Touched individual bears <em>divine traits</em> inherited from their patron Orisha: Shango-Touched may crackle with faint electricity under emotional duress. Yemaya-Touched have eyes that shift to deep blue in water. Oshun-Touched are unnaturally warm to the touch, their skin carrying a faint honey scent. These traits cannot be suppressed and cannot be hidden for long.</p>
+
+  <p class="lore-para">This is not magic. The Comet-Magi, who insist everything must be categorized within their Aetheric framework, have spent a century trying to understand Ashé as a variant Aetheric phenomenon and failed. <strong>Ashé is not Aether.</strong> It predates the Aetheric system. It predates the Pantheonic Fall. It is the force that was flowing through the world when the gods were still gods, and it continues to flow now that they have become beasts. The Orisha are still present in Ashé. What looks like biology <em>is</em> biology — but it is biology that contains a fragment of a fallen god.</p>
+
+  <p class="lore-para">The Order of Pure Reason's anti-magic field targeting Ashé-Touched is not an accident of collateral damage. It is the Order demonstrating, correctly, that they understand the threat: <strong>if you cannot suppress Ashé, you cannot control the Ashélands.</strong> The Ashé-Touched cannot be disarmed in the way a Comet-Mage can be disarmed by removing their Resonant Geode focus. Their power is in their blood. You would have to remove the blood.</p>
+
+  <div class="sec-head">Kindred Traits</div>
+  <div class="trait-grid">
+    <div class="trait-card open" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Orisha Mark — Core Trait</div><span class="tc-type" style="color:var(--ashetouched);border-color:rgba(192,120,68,0.3)">Passive System</span></div>
+      <div class="tc-body">At character creation, choose a <strong>patron Orisha</strong>. This determines the Ashé-Touched's divine trait (visible biological marker), their domain bonus, and their deepest vulnerability.<br><br>
+      <strong>Eshu-Elegbara</strong>: Crossroads trait (eyes flicker between colors). Domain: never lost in transition spaces; Resonant Fortune on all rolls at thresholds and beginnings.<br>
+      <strong>Ogun</strong>: Iron trait (faint metallic sheen on skin under stress). Domain: Mastery in all metal tools; +1d6 force on melee strikes in righteous conflict.<br>
+      <strong>Shango</strong>: Thunder trait (hair stands during emotion; faint static). Domain: Resonant Fortune on Warding Resonances against lightning; once per Pulse, strikes deal +1d8 lightning.<br>
+      <strong>Yemaya</strong>: Ocean trait (eyes shift blue in water; perfect swimming). Domain: swim speed 40 ft; breathe water; Resonant Fortune on healing-related Active Resonances.<br>
+      <strong>Oshun</strong>: Honey trait (warm skin, sweet scent, bees never hostile). Domain: Resonant Fortune on Resonance Discipline checks; once per Deep Attunement, cause a creature to speak one truth they are withholding.<br>
+      <strong>Oya</strong>: Storm trait (hair moves without wind during distress). Domain: Resonant Fortune on Warding Resonances against death effects; can speak to and receive information from the recently dead (within 10 minutes of death).<br>
+      <strong>Obatala</strong>: White trait (hair white from birth; calm aura). Domain: Resonant Fortune on all Warding Resonances against Soul-Swayed; presence suppresses aggression (creatures in 10 ft radius must make DC 13 Warding Resonance to initiate violence).<br>
+      <strong>Orunmila</strong>: Fate trait (faint golden eyes). Domain: Resonant Fortune on all Active Resonances involving destiny, divination, and the Loom; can ask the Concordance one yes/no question per session about a character's Fate Number.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Living Ashé</div><span class="tc-type" style="color:var(--ashetouched);border-color:rgba(192,120,68,0.3)">Passive</span></div>
+      <div class="tc-body">Ashé-Touched Workings cost one fewer tier of Aetheric Channel when used within the Ashélands or at an Orisha shrine — the ambient Ashé supplements their personal reserve. <strong>The Order of Pure Reason's anti-magic field deals 2d8 psychic damage to Ashé-Touched immediately upon entering it</strong> — this is not suppressible. Outside the field, all Ashé abilities function normally. This damage cannot be reduced. It is not a magical effect — it is a biological one, the field trying to suppress something that is part of the Ashé-Touched's cellular structure.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Orisha Resonance</div><span class="tc-type" style="color:var(--ashetouched);border-color:rgba(192,120,68,0.3)">Active · 1/Deep Attunement</span></div>
+      <div class="tc-body">Once per Deep Attunement, the Ashé-Touched may call upon their patron Orisha's direct attention for 1 minute. During this time, all Domain abilities (from Orisha Mark) double in potency and range. The Orisha is not possessing — they are <em>present</em>. NPCs within 60 feet who are familiar with Ashé tradition will recognize the Orisha's presence and react accordingly (fear, reverence, or both). <strong>This is distinct from the Ashé-Medium's Full Possession</strong> — the Orisha is present but not in control. The Ashé-Touched is still themselves, amplified.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Community Root</div><span class="tc-type" style="color:var(--ashetouched);border-color:rgba(192,120,68,0.3)">Passive</span></div>
+      <div class="tc-body">Ashé flows strongest through connection. Whenever an Ashé-Touched completes an Act that directly benefits another creature (healing, protecting, sharing resources, completing a communal obligation), they immediately restore 1 Aetheric Channel of the lowest available tier. This happens automatically, without Sustained Resonance or intent. <strong>The Ashé-Touched cannot deliberately trigger this</strong> — the act must be genuinely for the other person, not instrumentally for the Aetheric Channel restore. The Concordance makes this judgment. Players are encouraged not to be precious about it — genuine communal impulse is usually obvious.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">The Ifá Thread</div><span class="tc-type" style="color:var(--ashetouched);border-color:rgba(192,120,68,0.3)">Passive (Orunmila-Marked only)</span></div>
+      <div class="tc-body">Ashé-Touched with the Orunmila patron are aware of the Ifá tradition's 4,000-year persistent bond — the chain of initiated Babalawos and Iyanifas who maintain active contact with Orunmila's distributed consciousness. They begin play as an initiated practitioner (Babalawo or Iyanifa, their choice). This grants: access to Ifá divination (the complete 256-Odù system, usable as a once-per-session ritual taking 1 hour to ask a complex question and receive a layered answer); the ability to add their Resonance modifier to any Active Resonance made to understand a person's true motivation; and <strong>awareness of the Ofun Meji void-configuration</strong> — they automatically recognize it if they see it and feel profound unease (they may not read it).</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Resonance Attributes</div>
+  <div class="stat-row">
+    <div class="stat-cell"><div class="sc-label">Attribute Increases</div><div class="sc-val" style="color:var(--ashetouched)">+2 Resonance<br>+1 Attunement</div><div class="sc-note">Orisha-given presence and cosmic sensitivity</div></div>
+    <div class="stat-cell"><div class="sc-label">Base Vitality Dice</div><div class="sc-val">d8</div><div class="sc-note">Human base — the Ashé enhances the soul, not the body</div></div>
+    <div class="stat-cell"><div class="sc-label">Movement</div><div class="sc-val">30 ft</div><div class="sc-note">Standard. Yemaya-Touched gain 40 ft swim.</div></div>
+  </div>
+
+  <div class="play-block">
+    <div class="pb-title">Playing an Ashé-Touched</div>
+    <div class="pb-text">The Ashé-Touched's core experience is <strong>being visibly divine in a world that doesn't know what to do with that.</strong> The divine trait cannot be hidden. Everyone who looks at them long enough will notice something. The patron Orisha shapes personality as much as mechanics — an Ogun-Touched approaches problems through craft and righteous conflict; an Oshun-Touched approaches them through relationship and sweet persuasion; an Oya-Touched is always aware of what's ending and what's crossing over. <strong>The Order of Pure Reason damage is not optional</strong> — playing an Ashé-Touched means accepting that there is a major faction in the world that your biology makes dangerous to be near. This is a feature of the character, not a flaw in the design.</div>
+  </div>
+</div>
+</div>
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => { p.style.display = 'none'; p.classList.remove('active'); });
+  document.querySelectorAll('.sel-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).style.display = 'block';
+  document.getElementById('panel-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+document.querySelectorAll('.panel').forEach(p => { p.style.display = 'none'; });
+document.getElementById('panel-human').style.display = 'block';
+</script>
+</body>
+</html>

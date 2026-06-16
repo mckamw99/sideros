@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — Origins</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;500;600&display=swap');
+:root{
+  --void:#08090a;--void-mid:#101318;--parchment:#f0e6cc;--parchment-dim:rgba(240,230,204,0.55);
+  --gold:#c9a84c;--gold-dim:#7a6028;--gold-bright:#e8c870;
+  --s:#7088b8;--m:#c09858;--sh:#a86858;--w:#78a878;--mk:#9070b8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--parchment);line-height:1.75;min-height:100vh}
+.hero{text-align:center;padding:3.5rem 1.5rem 3rem;border-bottom:1px solid rgba(201,168,76,0.15)}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:.8rem}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(20px,3.5vw,28px);font-weight:500;color:var(--gold-bright);letter-spacing:.05em;margin-bottom:.4rem}
+.hero-sub{font-size:14px;font-style:italic;color:var(--parchment-dim);max-width:560px;margin:0 auto}
+.nav-strip{display:flex;gap:4px;flex-wrap:wrap;padding:.65rem .9rem;border-bottom:1px solid rgba(201,168,76,0.1);background:var(--void-mid);position:sticky;top:0;z-index:20}
+.nav-btn{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border:1px solid rgba(201,168,76,0.18);border-radius:3px;background:transparent;color:var(--parchment-dim);cursor:pointer;transition:all .15s;white-space:nowrap}
+.nav-btn.active{background:rgba(201,168,76,0.08);color:var(--gold-bright);border-color:rgba(201,168,76,0.4)}
+.panel{display:none}.panel.active{display:block}
+.wrap{max-width:920px;margin:0 auto;padding:2rem 1.25rem 4rem}
+.cat-intro{font-size:14px;color:rgba(240,230,204,0.72);line-height:1.85;margin-bottom:1.25rem;font-style:italic;border-left:2px solid rgba(201,168,76,0.2);padding-left:.9rem}
+.sec{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:1.5rem 0 .65rem;display:flex;align-items:center;gap:.6rem}
+.sec::after{content:'';flex:1;height:1px;background:rgba(201,168,76,0.1)}
+.origin{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.13);border-radius:10px;overflow:hidden;margin-bottom:.9rem;cursor:pointer;transition:border-color .15s}
+.origin:hover,.origin.open{border-color:rgba(201,168,76,0.38)}
+.oh{display:flex;justify-content:space-between;align-items:flex-start;padding:13px 15px;gap:10px}
+.on{font-family:'Cinzel',serif;font-size:13px;letter-spacing:.04em;color:var(--gold-bright)}
+.otag{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:3px;border:1px solid rgba(201,168,76,0.25);color:var(--gold-dim);white-space:nowrap;flex-shrink:0}
+.ob{display:none;padding:0 15px 14px;border-top:1px solid rgba(201,168,76,0.1)}
+.origin.open .ob{display:block;padding-top:11px}
+.ob-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.75rem}
+.ob-block{background:rgba(255,255,255,0.015);border:1px solid rgba(201,168,76,0.08);border-radius:7px;padding:9px 11px}
+.ob-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:.3rem;display:block}
+.ob-text{font-size:13px;color:rgba(240,230,204,0.78);line-height:1.62}
+.ob-text strong{color:var(--parchment);font-weight:500}
+.ob-text em{color:var(--gold-dim);font-style:italic}
+.ob-desc{font-size:13px;color:rgba(240,230,204,0.8);line-height:1.72;margin-bottom:.75rem}
+.ob-desc strong{color:var(--parchment);font-weight:500}
+.feature-block{background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.18);border-radius:7px;padding:10px 13px;margin-bottom:.75rem}
+.feature-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.07em;color:var(--gold-bright);margin-bottom:.4rem;display:block}
+.feature-text{font-size:13px;color:rgba(240,230,204,0.78);line-height:1.68}
+.feature-text strong{color:var(--parchment);font-weight:500}
+.flavor-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:.65rem}
+.flavor-item{background:rgba(255,255,255,0.01);border:1px solid rgba(201,168,76,0.07);border-radius:6px;padding:8px 10px}
+.flavor-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:.3rem;display:block}
+.flavor-text{font-size:12px;color:rgba(240,230,204,0.65);line-height:1.55}
+.hook-list{margin:.3rem 0 0 .8rem}
+.hook-list li{font-size:13px;color:rgba(240,230,204,0.65);line-height:1.6;margin-bottom:.2rem;list-style:disc}
+.equip-text{font-size:13px;color:rgba(240,230,204,0.7);line-height:1.6;font-style:italic}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-eyebrow">Sideros / Astrolan — Character Creation Step VI</div>
+  <h1 class="hero-title">Origins</h1>
+  <p class="hero-sub">Where you came from before the Path found you. Your Origin gives you Disciplines, equipment, and a specific relationship with the world that no amount of training can replicate.</p>
+</div>
+<div class="nav-strip">
+  <button class="nav-btn active" onclick="show('scholarly',this)">Scholarly · 5</button>
+  <button class="nav-btn" onclick="show('merchant',this)">Merchant · 4</button>
+  <button class="nav-btn" onclick="show('shadow',this)">Shadow · 4</button>
+  <button class="nav-btn" onclick="show('wanderer',this)">Wanderer · 5</button>
+  <button class="nav-btn" onclick="show('marked',this)">Marked · 5</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════ SCHOLARLY ═══ -->
+<div class="panel active" id="panel-scholarly"><div class="wrap">
+<p class="cat-intro">Scholarly Origins produced characters who entered the world through institutions of knowledge — anywhere that preserved, studied, or transmitted understanding across generations. These characters know how to find information, how to evaluate it, and how to use it. They tend to underestimate how much they don't know.</p>
+
+<!-- 1. COMET-MAGI INITIATE -->
+<div class="origin open" onclick="this.classList.toggle('open')">
+<div class="oh"><div class="on">Comet-Magi Initiate</div><span class="otag" style="color:var(--s);border-color:rgba(112,136,184,0.3)">Scholarly · Argent Spire</span></div>
+<div class="ob">
+  <p class="ob-desc">You trained at Argent Spire — not long enough to reach a significant Circle, but long enough to absorb the Conclaves' framework and leave with something they didn't intend you to keep.</p>
+  <div class="ob-row">
+    <div class="ob-block"><span class="ob-label">Discipline Masteries</span><div class="ob-text">Aetheric Lore, History</div></div>
+    <div class="ob-block"><span class="ob-label">Tool / Language</span><div class="ob-text">Calligrapher's supplies · One of: Old Kallosian, Eldren script, or Conclave notation</div></div>
+  </div>
+  <div class="feature-block">
+    <span class="feature-title">Origin Feature — Formulation Fragment</span>
+    <div class="feature-text">You retain a suppressed Comet-Magi Formulation — a Working the Conclaves consider too dangerous to teach formally. Once per Deep Attunement, attempt to express it: Working Threshold check DC 15. On success: produce a 2nd-tier Working effect (agreed at character creation). On failure: the fragment destabilizes, dealing 1d6 psychic damage.</div>
+  </div>
+  <div class="ob-block" style="margin-bottom:.75rem"><span class="ob-label">Equipment</span><div class="equip-text">Scholar's pack, Comet-Magi initiate's robe, personal Formulation Ledger with notes, 15 Gold Marks</div></div>
+  <div class="flavor-grid">
+    <div class="flavor-item"><span class="flavor-label">Personality Traits</span><div class="flavor-text">I quote from texts most people have never heard of — and I know this is irritating. I collect small facts the way other people collect wounds.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Ideals</span><div class="flavor-text">Knowledge is the only thing that outlasts catastrophe. The truth is worth knowing even when it costs you peace.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Bond</span><div class="flavor-text">A mentor at Argent Spire taught me something I'm still working out.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Flaw</span><div class="flavor-text">I underestimate things I can't quantify.</div></div>
+  </div>
+  <span class="ob-label">Hooks</span><ul class="hook-list"><li>Why did you leave before completing your training?</li><li>Which Conclave did you align with — and do you still agree with their position?</li><li>What is in the suppressed Formulation fragment you retained?</li></ul>
+</div></div>
+
+<!-- 2. SIDDHA ACOLYTE -->
+<div class="origin" onclick="this.classList.toggle('open')">
+<div class="oh"><div class="on">Siddha Acolyte</div><span class="otag" style="color:var(--s);border-color:rgba(112,136,184,0.3)">Scholarly · Temple Tradition</span></div>
+<div class="ob">
+  <p class="ob-desc">You were raised in or drawn to one of the Twelve Scattered Temples — not as a full Siddha, but as a student who absorbed the tradition's rhythms, mantras, and cosmological framework.</p>
+  <div class="ob-row">
+    <div class="ob-block"><span class="ob-label">Discipline Masteries</span><div class="ob-text">Religion (Siddha tradition), Medicine</div></div>
+    <div class="ob-block"><span class="ob-label">Tool / Language</span><div class="ob-text">Herbalist's supplies · Classical language of your temple's sign-culture</div></div>
+  </div>
+  <div class="feature-block">
+    <span class="feature-title">Origin Feature — Temple Blessing</span>
+    <div class="feature-text">Your sign's Temple has acknowledged your training. Once per Deep Attunement, spend 10 minutes in meditation to invoke your sign's temple blessing — a minor Working effect tied to your sign's domain requiring no Aetheric Channel. Concordance determines the specific effect (Mesha = weapon enhancement; Kanya = remove Corrupted; Vrishchika = read emotional history of touched object; etc.).</div>
+  </div>
+  <div class="ob-block" style="margin-bottom:.75rem"><span class="ob-label">Equipment</span><div class="equip-text">Prayer beads, healer's kit (10 uses), traveler's clothes, your sign's temple's foundational mantra text, 10 Gold Marks</div></div>
+  <div class="flavor-grid">
+    <div class="flavor-item"><span class="flavor-label">Personality Traits</span><div class="flavor-text">I find stillness in crisis — which unnerves people who are not still. I treat silence as a complete answer to difficult questions.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Ideals</span><div class="flavor-text">Discipline is the only freedom that cannot be taken. The mantra is more honest than the practitioner.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Bond</span><div class="flavor-text">My teacher's final lesson was unfinished when they died.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Flaw</span><div class="flavor-text">I dismiss practical problems that could be solved with less dignity.</div></div>
+  </div>
+  <span class="ob-label">Hooks</span><ul class="hook-list"><li>Which temple did you train at — and why did you leave?</li><li>Do you still practice the mantras? What do they mean to you now?</li><li>What does the temple want from you that you haven't delivered?</li></ul>
+</div></div>
+
+<!-- 3. LOOM ANALYST -->
+<div class="origin" onclick="this.classList.toggle('open')">
+<div class="oh"><div class="on">Loom Analyst</div><span class="otag" style="color:var(--s);border-color:rgba(112,136,184,0.3)">Scholarly · Loom of Fate Intelligence</span></div>
+<div class="ob">
+  <p class="ob-desc">You worked for the Loom of Fate as an analyst — not field operations, but Fate Numbers, bond patterns, probability clusters. You processed intelligence that would disturb most people. You eventually found something that disturbed you.</p>
+  <div class="ob-row">
+    <div class="ob-block"><span class="ob-label">Discipline Masteries</span><div class="ob-text">Investigation, Insight</div></div>
+    <div class="ob-block"><span class="ob-label">Tool / Language</span><div class="ob-text">Forgery kit · One language of your choice</div></div>
+  </div>
+  <div class="feature-block">
+    <span class="feature-title">Origin Feature — Pattern Recognition</span>
+    <div class="feature-text">When you succeed on an Insight Active Resonance, you may ask the Concordance one yes/no question about whether the situation contains a concealed element — a hidden agenda, a false identity, a missing piece of information. The Concordance must answer honestly. Cannot use this twice in the same scene.</div>
+  </div>
+  <div class="ob-block" style="margin-bottom:.75rem"><span class="ob-label">Equipment</span><div class="equip-text">Forgery kit, coded journal (DC 18 to decipher), Loom of Fate contact cipher (reaches a specific handler — if still active), 20 Gold Marks</div></div>
+  <div class="flavor-grid">
+    <div class="flavor-item"><span class="flavor-label">Personality Traits</span><div class="flavor-text">I know more than I should about most people I've just met. I maintain cover habits even when I don't need them.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Ideals</span><div class="flavor-text">Information is neutral. What you do with it isn't. The Loom sees all threads — I only needed to see the relevant ones.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Bond</span><div class="flavor-text">I was assigned to protect someone. I failed. Or I didn't — I'm still not sure.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Flaw</span><div class="flavor-text">I compartmentalize too effectively. People feel this.</div></div>
+  </div>
+  <span class="ob-label">Hooks</span><ul class="hook-list"><li>What did you find in the Loom's records that you weren't supposed to see?</li><li>Are you still employed — or did you burn that bridge?</li><li>Who is attached to your contact cipher, and do you trust them?</li></ul>
+</div></div>
+
+<!-- 4. ORDER OF PURE REASON RESEARCHER -->
+<div class="origin" onclick="this.classList.toggle('open')">
+<div class="oh"><div class="on">Order of Pure Reason Researcher</div><span class="otag" style="color:var(--s);border-color:rgba(112,136,184,0.3)">Scholarly · Dunmarim · Anti-Working</span></div>
+<div class="ob">
+  <p class="ob-desc">You were part of the Order of Pure Reason's research division — studying the world scientifically, attempting to explain Aetheric effects through natural philosophy. You have since left, been expelled, or simply stopped believing the Order's conclusions are sufficient.</p>
+  <div class="ob-row">
+    <div class="ob-block"><span class="ob-label">Discipline Masteries</span><div class="ob-text">Nature, Investigation</div></div>
+    <div class="ob-block"><span class="ob-label">Tool / Language</span><div class="ob-text">Alchemist's supplies · Dunmarim technical notation</div></div>
+  </div>
+  <div class="feature-block">
+    <span class="feature-title">Origin Feature — Scientific Method</span>
+    <div class="feature-text">Resonant Fortune on all Warding Resonances against being surprised, Soul-Swayed, or Dread-Struck by Aetheric phenomena — you recognize the mechanism. Additionally: identify any Aetheric Artifact's school and approximate tier by examining it for 1 minute (no Working required).</div>
+  </div>
+  <div class="ob-block" style="margin-bottom:.75rem"><span class="ob-label">Equipment</span><div class="equip-text">Alchemist's supplies, research journal (valuable to multiple factions), Order of Pure Reason credentials (opens or closes doors), 15 Gold Marks</div></div>
+  <div class="flavor-grid">
+    <div class="flavor-item"><span class="flavor-label">Personality Traits</span><div class="flavor-text">I ask questions before I act, which sometimes costs me the moment. I am more comfortable with systems than with people.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Ideals</span><div class="flavor-text">The truth exists independent of who finds it. A flawed model is better than no model — but only if you know it's flawed.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Bond</span><div class="flavor-text">A colleague remained inside the Order when I left. I owe them an accounting of what I found.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Flaw</span><div class="flavor-text">I require evidence past the point where most people have already decided.</div></div>
+  </div>
+  <span class="ob-label">Hooks</span><ul class="hook-list"><li>What did you observe that the Order's framework couldn't explain?</li><li>The Order considers former members a security concern — are they right to?</li><li>Your research journal would interest multiple factions. Who knows you have it?</li></ul>
+</div></div>
+
+<!-- 5. STELLAR OBSERVER -->
+<div class="origin" onclick="this.classList.toggle('open')">
+<div class="oh"><div class="on">Stellar Observer</div><span class="otag" style="color:var(--s);border-color:rgba(112,136,184,0.3)">Scholarly · Celestial Study</span></div>
+<div class="ob">
+  <p class="ob-desc">You spent years watching the sky from a tower, a hillside, or the back of a cart moving between observation points. You think in patterns that span centuries. Most conversations feel short.</p>
+  <div class="ob-row">
+    <div class="ob-block"><span class="ob-label">Discipline Masteries</span><div class="ob-text">Aetheric Lore, Perception</div></div>
+    <div class="ob-block"><span class="ob-label">Tool / Language</span><div class="ob-text">Navigator's tools (star charts, astrolabe) · One additional language</div></div>
+  </div>
+  <div class="feature-block">
+    <span class="feature-title">Origin Feature — Celestial Memory</span>
+    <div class="feature-text">You have memorized the current position of every major celestial body. Under open sky: always know the exact time, date, season, and geographic position — no tools required. Underground or indoors: know precisely how long you've been away from the sky. The Centaur-Kin recognize this as a lesser form of their Stellar Cartography — they are not wrong. Additionally: Resonant Fortune on Aetheric Lore Active Resonances related to astronomical or zodiac timing.</div>
+  </div>
+  <div class="ob-block" style="margin-bottom:.75rem"><span class="ob-label">Equipment</span><div class="equip-text">Navigator's tools, a personal star log spanning several years of observations, traveler's clothes, 12 Gold Marks</div></div>
+  <div class="flavor-grid">
+    <div class="flavor-item"><span class="flavor-label">Personality Traits</span><div class="flavor-text">I think in longer patterns than most conversations allow. I note celestial events even when no one asked me to.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Ideals</span><div class="flavor-text">The stars don't lie. People do. Pattern is the most honest form of truth.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Bond</span><div class="flavor-text">Someone funded my observations for years. I don't know why.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Flaw</span><div class="flavor-text">I notice the wrong things at the wrong moments — cosmically significant, immediately useless.</div></div>
+  </div>
+  <span class="ob-label">Hooks</span><ul class="hook-list"><li>What did you observe in the sky that prompted you to stop watching and start moving?</li><li>The Great Orrery in Aetheria is the most sophisticated astronomical instrument ever built. Have you seen it?</li><li>Your star log contains an anomaly from six months ago that you haven't been able to explain.</li></ul>
+</div></div>
+
+</div></div>
+
+<!-- ═══════════════════════════════════════════════ MERCHANT ═══ -->
+<div class="panel" id="panel-merchant"><div class="wrap">
+<p class="cat-intro">Merchant Origins produced characters who moved through the world's economic layer — not necessarily as wealthy traders, but as people who understood how value flows, where it concentrates, and who controls its movement. These characters know people in useful places and understand that most conflicts are ultimately about resources.</p>
+
+<!-- 6. SILK ROAD GUILD OPERATIVE -->
+<div class="origin open" onclick="this.classList.toggle('open')">
+<div class="oh"><div class="on">Silk Road Guild Operative</div><span class="otag" style="color:var(--m);border-color:rgba(192,152,88,0.3)">Merchant · Trans-Continental Trade</span></div>
+<div class="ob">
+  <p class="ob-desc">The Silk Road Guild officially connects every major trading hub in the world. Unofficially, it also moves information, people who need to disappear, and goods that don't appear on manifests. You know which version of the Guild you worked for.</p>
+  <div class="ob-row">
+    <div class="ob-block"><span class="ob-label">Discipline Masteries</span><div class="ob-text">Persuasion, Deception</div></div>
+    <div class="ob-block"><span class="ob-label">Tool / Language</span><div class="ob-text">Navigator's tools · Trader's Common (trade pidgin, understood at all major ports)</div></div>
+  </div>
+  <div class="feature-block">
+    <span class="feature-title">Origin Feature — Guild Contacts</span>
+    <div class="feature-text">In any city or major trading post, find a Guild contact within 1d4 hours. The contact can provide: current commodity prices; local political summary; one night's safe house; hiring intelligence. The contact operates on mutual benefit — not loyalty. Asking for something that risks them costs a favor. The Concordance tracks what favors you owe.</div>
+  </div>
+  <div class="ob-block" style="margin-bottom:.75rem"><span class="ob-label">Equipment</span><div class="equip-text">Guild signet ring, merchant's scale, letter of credit worth 50 Gold Marks (redeemable at any Guild office), fine clothes, 25 Gold Marks</div></div>
+  <div class="flavor-grid">
+    <div class="flavor-item"><span class="flavor-label">Personality Traits</span><div class="flavor-text">I price everything, including things that aren't for sale. I form alliances before I form friendships — both can become the other.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Ideals</span><div class="flavor-text">A fair deal is one both parties walk away from having gained something. Movement is safety — anything stationary can be surrounded.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Bond</span><div class="flavor-text">Someone on the route still owes me a debt I intend to collect.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Flaw</span><div class="flavor-text">I trust negotiation over direct action past the point of usefulness.</div></div>
+  </div>
+  <span class="ob-label">Hooks</span><ul class="hook-list"><li>Are you still a Guild operative — or did you leave? If you left, did they let you?</li><li>Drava Nullsong used Silk Road Guild infrastructure to build the Fang of the Whisper. Do you know something about that?</li><li>What was the last shipment you moved that you've been trying to forget?</li></ul>
+</div></div>
+
+<!-- 7. DUNMARIM MASTER-SMITH -->
+<div class="origin" onclick="this.classList.toggle('open')">
+<div class="oh"><div class="on">Dunmarim Master-Smith</div><span class="otag" style="color:var(--m);border-color:rgba(192,152,88,0.3)">Merchant · Stone Kingdom Craft</span></div>
+<div class="ob">
+  <p class="ob-desc">You trained under a Dunmarim master-smith — the most rigorous craft tradition in the world. You may not be Dunmarim yourself, but you spent enough years in the Stone Kingdom to absorb their approach to material and work. Your hands know things your mind hasn't caught up with yet.</p>
+  <div class="ob-row">
+    <div class="ob-block"><span class="ob-label">Discipline Masteries</span><div class="ob-text">Athletics, History (material culture)</div></div>
+    <div class="ob-block"><span class="ob-label">Tool / Language</span><div class="ob-text">Smith's tools, Mason's tools · Dunmarim (spoken and written)</div></div>
+  </div>
+  <div class="feature-block">
+    <span class="feature-title">Origin Feature — Master's Hand</span>
+    <div class="feature-text">When you craft using your Mastered tools, the result is always one quality tier higher than the materials would normally allow. Additionally: identify the origin, approximate age, and quality of any worked metal or stone object in 1 minute. This includes Aetheric Artifacts made of metal or stone — you know they've been worked even if you don't know how.</div>
+  </div>
+  <div class="ob-block" style="margin-bottom:.75rem"><span class="ob-label">Equipment</span><div class="equip-text">Smith's tools, a masterwork personal weapon or tool (worth twice standard price), Dunmarim letter of reference, 15 Gold Marks</div></div>
+  <div class="flavor-grid">
+    <div class="flavor-item"><span class="flavor-label">Personality Traits</span><div class="flavor-text">I respect work and have strong opinions about work done badly. I see the construction of everything I encounter.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Ideals</span><div class="flavor-text">Good work is its own argument. Bad work is too. The craft outlasts the craftsperson — make it worth outlasting you.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Bond</span><div class="flavor-text">I made something for someone important. They died before receiving it.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Flaw</span><div class="flavor-text">I take longer than the situation allows when quality matters to me.</div></div>
+  </div>
+  <span class="ob-label">Hooks</span><ul class="hook-list"><li>Who was your master-smith, and why did you leave their workshop?</li><li>The Dunmarim are suspicious of anyone who takes their craft knowledge out of the Stone Kingdom. Are they right to be?</li><li>Your masterwork piece — what is it, and what does it mean to you?</li></ul>
+</div></div>
+
+<!-- 8. PORT DAMARIS SHADOW-COUNCIL AGENT -->
+<div class="origin" onclick="this.classList.toggle('open')">
+<div class="oh"><div class="on">Port Damaris Shadow-Council Agent</div><span class="otag" style="color:var(--m);border-color:rgba(192,152,88,0.3)">Merchant · Underground Economy</span></div>
+<div class="ob">
+  <p class="ob-desc">Port Damaris runs on a dual economy — the legitimate merchant layer the Duchy Compact recognizes, and the Shadow-Council layer that actually controls the city. You worked for the latter. You know how the city really works, which is not the same as how it appears to work.</p>
+  <div class="ob-row">
+    <div class="ob-block"><span class="ob-label">Discipline Masteries</span><div class="ob-text">Deception, Intimidation</div></div>
+    <div class="ob-block"><span class="ob-label">Tool / Language</span><div class="ob-text">Thieves' tools · Port Damaris cant (coded trading language, recognized in any underground economy)</div></div>
+  </div>
+  <div class="feature-block">
+    <span class="feature-title">Origin Feature — City Infrastructure</span>
+    <div class="feature-text">In any city you've spent at least a week in, you know its hidden infrastructure. Upon arriving in a new city, after 24 hours of observation, identify: one safe house, one official susceptible to bribery (and their price), one black market contact. The Concordance provides these as specific NPCs — not abstractions.</div>
+  </div>
+  <div class="ob-block" style="margin-bottom:.75rem"><span class="ob-label">Equipment</span><div class="equip-text">Thieves' tools, dark common clothes, Port Damaris Shadow-Council token, 30 Gold Marks (mixed denominations, nothing traceable)</div></div>
+  <div class="flavor-grid">
+    <div class="flavor-item"><span class="flavor-label">Personality Traits</span><div class="flavor-text">I notice exits before I notice decor. I don't confirm or deny things unless I have to.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Ideals</span><div class="flavor-text">The law protects people who can afford it. Understanding someone is not the same as trusting them.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Bond</span><div class="flavor-text">Someone got me out of a situation I couldn't have escaped alone. I owe them.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Flaw</span><div class="flavor-text">I assume the worst about institutions before they've had a chance to disappoint me.</div></div>
+  </div>
+  <span class="ob-label">Hooks</span><ul class="hook-list"><li>Why did you leave Port Damaris — or are you still technically employed?</li><li>The Shadow-Council doesn't like former agents who know too much. What do you know that makes you a liability?</li><li>The Lunar Queen may be operating in Port Damaris's economy. Do you know something?</li></ul>
+</div></div>
+
+<!-- 9. FAR-TRADE FACTOR -->
+<div class="origin" onclick="this.classList.toggle('open')">
+<div class="oh"><div class="on">Far-Trade Factor</div><span class="otag" style="color:var(--m);border-color:rgba(192,152,88,0.3)">Merchant · Cross-Cultural Intermediary</span></div>
+<div class="ob">
+  <p class="ob-desc">You managed trade relationships across cultural lines — you know how different peoples value different things and why. You've sat at tables where every assumption about what matters was wrong, learned to read the room, and survived on the difference between what people say they want and what they actually need.</p>
+  <div class="ob-row">
+    <div class="ob-block"><span class="ob-label">Discipline Masteries</span><div class="ob-text">Deception, Insight</div></div>
+    <div class="ob-block"><span class="ob-label">Tool / Language</span><div class="ob-text">Navigator's tools · Two additional languages (cross-cultural trade requires range)</div></div>
+  </div>
+  <div class="feature-block">
+    <span class="feature-title">Origin Feature — Cultural Fluency</span>
+    <div class="feature-text">You have spent enough time with at least three Kindred cultures that you understand their social assumptions intuitively. You are never accidentally offensive when you know you're in unfamiliar cultural territory — you ask the right questions first. NPCs from Kindreds you've traded with start at Friendly disposition rather than Neutral. Additionally: Resonant Fortune on Insight Active Resonances when trying to understand a cultural or social motive rather than a personal one.</div>
+  </div>
+  <div class="ob-block" style="margin-bottom:.75rem"><span class="ob-label">Equipment</span><div class="equip-text">Fine clothes (culturally appropriate for two different regions), a trading ledger with coded notes on contacts across three territories, 20 Gold Marks</div></div>
+  <div class="flavor-grid">
+    <div class="flavor-item"><span class="flavor-label">Personality Traits</span><div class="flavor-text">I adjust my manner to whoever I'm speaking with — this is respect, not deception. I notice what people want before they say it.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Ideals</span><div class="flavor-text">Mutual benefit is not naivety — it's the only sustainable arrangement. Understanding someone is not the same as agreeing with them.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Bond</span><div class="flavor-text">A trading partner became something else. I haven't resolved what.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Flaw</span><div class="flavor-text">I read manipulation into generosity more often than is warranted.</div></div>
+  </div>
+  <span class="ob-label">Hooks</span><ul class="hook-list"><li>Which cultural crossing taught you the most — and cost you the most?</li><li>You've moved goods across lines that politics says are closed. Who knows about those routes?</li><li>One of your long-term contacts has recently gone silent. What does that mean?</li></ul>
+</div></div>
+
+</div></div>
+
+<!-- ═══════════════════════════════════════════════ SHADOW ═══ -->
+<div class="panel" id="panel-shadow"><div class="wrap">
+<p class="cat-intro">Shadow Origins produced characters who operated in the world's hidden layer — not necessarily criminals, but people who acted outside institutional frameworks, or inside institutions that operated outside the law. These characters have practical expertise that formal training doesn't produce, and are people with things to hide, which means they recognize others' hidden things more easily.</p>
+
+<!-- 10. COIL-ADJACENT OPERATIVE -->
+<div class="origin open" onclick="this.classList.toggle('open')">
+<div class="oh"><div class="on">Coil-Adjacent Operative</div><span class="otag" style="color:var(--sh);border-color:rgba(168,104,88,0.3)">Shadow · Ashen Coil (Former)</span></div>
+<div class="ob">
+  <p class="ob-desc">You worked for an organization that was — you now realize — either directly part of the Ashen Coil or one of its front operations. You didn't know at the time. Or you knew and chose not to look too closely. Either version of this story has consequences.</p>
+  <div class="ob-row">
+    <div class="ob-block"><span class="ob-label">Discipline Masteries</span><div class="ob-text">Stealth, Deception</div></div>
+    <div class="ob-block"><span class="ob-label">Tool / Language</span><div class="ob-text">Thieves' tools or Poisoner's kit (your choice) · Coil operational cipher</div></div>
+  </div>
+  <div class="feature-block">
+    <span class="feature-title">Origin Feature — Coil Pattern Recognition</span>
+    <div class="feature-text">Resonant Fortune on Insight and Investigation Active Resonances when investigating Coil activity, agents, or operations. Additionally: once per session, ask the Concordance whether a specific person, organization, or location has any Coil connection — answered based on what your operational knowledge would realistically reveal. Your knowledge has gaps and dates — this is not omniscience.</div>
+  </div>
+  <div class="ob-block" style="margin-bottom:.75rem"><span class="ob-label">Equipment</span><div class="equip-text">Dark travel clothes, forged identity document (one alias), a Coil dead-letter drop location (Concordance decides if it's still monitored), 20 Gold Marks</div></div>
+  <div class="flavor-grid">
+    <div class="flavor-item"><span class="flavor-label">Personality Traits</span><div class="flavor-text">I understand the appeal of the Coil better than most people who fight it — this is useful and uncomfortable. I am careful about what I say I believe in, having believed in something that turned out to be wrong.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Ideals</span><div class="flavor-text">I am not what I did. I am what I do next. The Coil's logic was coherent. Its conclusion was wrong. That distinction matters.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Bond</span><div class="flavor-text">Someone I recruited is still inside. I owe them an attempt at extraction.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Flaw</span><div class="flavor-text">I am waiting for the people I travel with to discover what I was and leave. Some part of me thinks they should.</div></div>
+  </div>
+  <span class="ob-label">Hooks</span><ul class="hook-list"><li>What was the operation that made you realize what you were actually working for?</li><li>The Coil doesn't retire operatives. What is the current status of your relationship with them?</li><li>Does anyone in your current party know this about you?</li></ul>
+</div></div>
+
+<!-- 11. TRENCH KEEPER DESERTER -->
+<div class="origin" onclick="this.classList.toggle('open')">
+<div class="oh"><div class="on">Trench Keeper Deserter</div><span class="otag" style="color:var(--sh);border-color:rgba(168,104,88,0.3)">Shadow · Military · The Maw</span></div>
+<div class="ob">
+  <p class="ob-desc">You served in the Trench Keepers — the garrison holding the line between the world and whatever the Maw contains. You left before your tour ended. What you saw down there is the reason. Whether desertion was the right call is something you're still working out.</p>
+  <div class="ob-row">
+    <div class="ob-block"><span class="ob-label">Discipline Masteries</span><div class="ob-text">Athletics, Survival</div></div>
+    <div class="ob-block"><span class="ob-label">Tool / Language</span><div class="ob-text">One artisan's tool (your garrison role) · Trench Keeper operational shorthand</div></div>
+  </div>
+  <div class="feature-block">
+    <span class="feature-title">Origin Feature — Void-Hardened</span>
+    <div class="feature-text">Resonant Fortune on Warding Resonances against Void-Touched Exposure and against Dread-Struck effects from undead and Void-energy manifestations. Additionally: you automatically succeed on Attunement Warding Resonances to detect Void-energy presence within 30 ft. You've spent enough time near it to recognize the specific quality of its absence.</div>
+  </div>
+  <div class="ob-block" style="margin-bottom:.75rem"><span class="ob-label">Equipment</span><div class="equip-text">Medium armor (garrison issue — functional, technically still military property), personal weapon, Trench Keeper's compass (always points toward the Maw's center), 10 Gold Marks</div></div>
+  <div class="flavor-grid">
+    <div class="flavor-item"><span class="flavor-label">Personality Traits</span><div class="flavor-text">I don't flinch from necessary things — I have done necessary things. I watch exits and assume I'm being watched.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Ideals</span><div class="flavor-text">The thing that marks you doesn't own you. It just lives with you. I survived. That has to mean something.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Bond</span><div class="flavor-text">A fellow Keeper covered for my desertion. I don't know if they survived what came next.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Flaw</span><div class="flavor-text">I sometimes freeze when I should move. The body remembers.</div></div>
+  </div>
+  <span class="ob-label">Hooks</span><ul class="hook-list"><li>What did you see in the Maw that made you leave?</li><li>The Trench Keepers will arrest a deserter on sight. How do you manage this?</li><li>Regent Ophiomorph may be someone you served under. What is your relationship?</li></ul>
+</div></div>
+
+<!-- 12. OUTLANDER -->
+<div class="origin" onclick="this.classList.toggle('open')">
+<div class="oh"><div class="on">Outlander</div><span class="otag" style="color:var(--sh);border-color:rgba(168,104,88,0.3)">Shadow · Beyond Institutional Reach</span></div>
+<div class="ob">
+  <p class="ob-desc">You grew up outside every institution — in the Kurgan Bog's margins, in the deep Boreal wilderness, in a nomadic community that avoided settlements, or simply alone in a landscape the Duchy Compact's maps mark as empty. You know things about the world that people who grew up in cities don't know. They know things you don't. The exchange is ongoing.</p>
+  <div class="ob-row">
+    <div class="ob-block"><span class="ob-label">Discipline Masteries</span><div class="ob-text">Survival, Nature</div></div>
+    <div class="ob-block"><span class="ob-label">Tool / Language</span><div class="ob-text">Herbalist's supplies · One regional language (Steppe-tongue, Boreal dialects, Bog-cant, etc.)</div></div>
+  </div>
+  <div class="feature-block">
+    <span class="feature-title">Origin Feature — Wanderer's Memory</span>
+    <div class="feature-text">You can always find food and fresh water in natural environments — not abundantly, but sufficiently. You can navigate by stars, landmarks, and environmental reading without tools and cannot be lost in natural terrain. In urban environments, you find the natural infrastructure instinctively — Resonant Fortune on Investigation Active Resonances to find exits, weak points, or natural resources in built environments.</div>
+  </div>
+  <div class="ob-block" style="margin-bottom:.75rem"><span class="ob-label">Equipment</span><div class="equip-text">A staff, a hunting trap, a bedroll, traveler's clothes, a trophy from your home environment (tooth, feather, stone — with personal significance), 10 Gold Marks</div></div>
+  <div class="flavor-grid">
+    <div class="flavor-item"><span class="flavor-label">Personality Traits</span><div class="flavor-text">I say less than I think in most situations. I am patient in a way that people who grew up in cities find unsettling.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Ideals</span><div class="flavor-text">The land will provide if you know how to ask. Clean kills are mercy — everything else is cruelty.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Bond</span><div class="flavor-text">I saw something in the margins that I've never told anyone. I'm not sure it wanted to be seen.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Flaw</span><div class="flavor-text">I undervalue shelter, warmth, and company in ways that concern people who care about me.</div></div>
+  </div>
+  <span class="ob-label">Hooks</span><ul class="hook-list"><li>What brought you out of the wilderness and into contact with the world's institutions?</li><li>Is there something in the wilderness you're trying to return to — or something you're running from?</li><li>What do you not understand about how cities work that creates friction with your companions?</li></ul>
+</div></div>
+
+<!-- 13. NOBLE HOUSE EXILE -->
+<div class="origin" onclick="this.classList.toggle('open')">
+<div class="oh"><div class="on">Noble House Exile</div><span class="otag" style="color:var(--sh);border-color:rgba(168,104,88,0.3)">Shadow · Political Fall</span></div>
+<div class="ob">
+  <p class="ob-desc">You had position, wealth, or both — until you didn't. The reasons vary. The fall was real. What you did with it afterward is what actually defines you, though the people from your former world haven't figured that out yet.</p>
+  <div class="ob-row">
+    <div class="ob-block"><span class="ob-label">Discipline Masteries</span><div class="ob-text">Persuasion, History</div></div>
+    <div class="ob-block"><span class="ob-label">Tool / Language</span><div class="ob-text">One gaming set (politics is played at game tables) · One additional language</div></div>
+  </div>
+  <div class="feature-block">
+    <span class="feature-title">Origin Feature — Position of Privilege</span>
+    <div class="feature-text">Your bearing and manner communicate authority even after your title is gone. NPCs give you the benefit of the doubt in formal situations — you are assumed to belong until specifically challenged. Additionally: once per session, invoke a former contact from your house days — someone who remembers owing you something, or who prefers you think well of them. The Concordance determines their current disposition and what they can offer.</div>
+  </div>
+  <div class="ob-block" style="margin-bottom:.75rem"><span class="ob-label">Equipment</span><div class="equip-text">Fine clothes (slightly worn — quality visible despite age), a signet ring from your former house (controversial to display), a letter of introduction to one surviving ally, 15 Gold Marks</div></div>
+  <div class="flavor-grid">
+    <div class="flavor-item"><span class="flavor-label">Personality Traits</span><div class="flavor-text">I speak to servants with the same directness I use with lords — both find this disorienting. I understand the rules well enough to know when they're being bent.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Ideals</span><div class="flavor-text">Position is earned, not inherited. I know this now. The house failed its people. I didn't — or I'm trying not to.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Bond</span><div class="flavor-text">Someone in my former house was innocent of what I was accused of. I owe them a clearing of their name.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Flaw</span><div class="flavor-text">I still think in terms of houses and factions when individuals are what actually matter.</div></div>
+  </div>
+  <span class="ob-label">Hooks</span><ul class="hook-list"><li>What caused the fall — and who benefited from it?</li><li>Is there anyone from your former house who would help you — and anyone who would actively work against you?</li><li>What would restoration of your position actually require, and do you still want it?</li></ul>
+</div></div>
+
+</div></div>
+
+<!-- ═══════════════════════════════════════════════ WANDERER ═══ -->
+<div class="panel" id="panel-wanderer"><div class="wrap">
+<p class="cat-intro">Wanderer Origins produced characters defined by purposeful movement through the world. These characters have seen more than most people their age and developed the specific practical intelligence that comes from adapting to new environments constantly. They are rarely the most knowledgeable person in any given room — but they are often the most capable one.</p>
+
+<!-- 14. MOANA-KIN NAVIGATOR-INITIATE -->
+<div class="origin open" onclick="this.classList.toggle('open')">
+<div class="oh"><div class="on">Moana-kin Navigator-Initiate</div><span class="otag" style="color:var(--w);border-color:rgba(120,168,120,0.3)">Wanderer · Ara Moana Tradition</span></div>
+<div class="ob">
+  <p class="ob-desc">You trained in the Ara Moana navigation tradition — not as a full Waka-tōhora practitioner, but someone who absorbed the foundational framework. The ocean is a different kind of landscape when you understand how to read it. So is any landscape that moves.</p>
+  <div class="ob-row">
+    <div class="ob-block"><span class="ob-label">Discipline Masteries</span><div class="ob-text">Survival (navigation), Perception</div></div>
+    <div class="ob-block"><span class="ob-label">Tool / Language</span><div class="ob-text">Navigator's tools, Water vehicles · Moana-kin (spoken); Pre-Fall Star Charts notation</div></div>
+  </div>
+  <div class="feature-block">
+    <span class="feature-title">Origin Feature — Ara Moana Attunement</span>
+    <div class="feature-text">You have learned the foundational Shelter Sense ability from the Ara Moana system — you always know the direction and approximate distance to genuine safety (cannot be fooled by illusions). Additionally: you cannot be lost in any environment with an open sky; you always know cardinal directions and approximate time without tools.</div>
+  </div>
+  <div class="ob-block" style="margin-bottom:.75rem"><span class="ob-label">Equipment</span><div class="equip-text">Navigator's tools, a Pre-Fall Star Chart (partial — illegible in places, genuine navigational data throughout), sailor's clothes, 15 Gold Marks</div></div>
+  <div class="flavor-grid">
+    <div class="flavor-item"><span class="flavor-label">Personality Traits</span><div class="flavor-text">I am more comfortable moving than staying. I navigate by feel as much as calculation, which makes me hard to teach and hard to argue with.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Ideals</span><div class="flavor-text">The route is the answer — everything else is just deciding whether to take it. Home is whoever you're navigating toward.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Bond</span><div class="flavor-text">I lost someone in the Mirror Sea. I'm not certain they're dead.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Flaw</span><div class="flavor-text">I undervalue staying. Some things require you to stop moving.</div></div>
+  </div>
+  <span class="ob-label">Hooks</span><ul class="hook-list"><li>What route did you navigate that you haven't been able to stop thinking about?</li><li>The Mirror Sea is expanding. Does your navigational sense register it differently than ordinary water?</li><li>Your Star Chart has markings you don't understand. Who made them?</li></ul>
+</div></div>
+
+<!-- 15. STEPPE RIDER -->
+<div class="origin" onclick="this.classList.toggle('open')">
+<div class="oh"><div class="on">Steppe Rider</div><span class="otag" style="color:var(--w);border-color:rgba(120,168,120,0.3)">Wanderer · Sagittarian Steppes</span></div>
+<div class="ob">
+  <p class="ob-desc">You grew up on the Sagittarian Steppes — a landscape of impossible distances and constant movement. You learned to ride before you learned to read. The Steppes produced you and have opinions about where you're going, none of which have stopped you.</p>
+  <div class="ob-row">
+    <div class="ob-block"><span class="ob-label">Discipline Masteries</span><div class="ob-text">Animal Handling, Athletics</div></div>
+    <div class="ob-block"><span class="ob-label">Tool / Language</span><div class="ob-text">Land vehicles; Land mounts · Steppe-tongue (understood by Centaur-Kin communities)</div></div>
+  </div>
+  <div class="feature-block">
+    <span class="feature-title">Origin Feature — Born to the Saddle</span>
+    <div class="feature-text">Resonant Fortune on Animal Handling Active Resonances involving mounts, including unusual mounts (Centaur-Kin, oversized creatures). When mounted: movement speed +10 ft; cannot be dismounted without consent unless you fail Swiftness Warding Resonance DC 15. Additionally: make Strike Resonances with ranged weapons while mounted without Resonant Discord from mount movement.</div>
+  </div>
+  <div class="ob-block" style="margin-bottom:.75rem"><span class="ob-label">Equipment</span><div class="equip-text">A riding horse (Steppe-bred, worth 100 Gold Marks), shortbow with 40 arrows, Steppe riding clothes, a clan-mark brand or tattoo (identifies you to Steppe communities), 10 Gold Marks</div></div>
+  <div class="flavor-grid">
+    <div class="flavor-item"><span class="flavor-label">Personality Traits</span><div class="flavor-text">I give directions in terms of landmark and horizon rather than left and right. I find enclosed spaces oppressive in a way I can't fully explain.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Ideals</span><div class="flavor-text">Distance is not an obstacle — it's the point. Loyalty to the clan is real, but the clan has to earn it again each season.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Bond</span><div class="flavor-text">My horse was a gift from someone who knew they were sending me away. I haven't figured out how to repay that.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Flaw</span><div class="flavor-text">I make decisions based on where I can go, not just whether I should go there.</div></div>
+  </div>
+  <span class="ob-label">Hooks</span><ul class="hook-list"><li>What drove you off the Steppes?</li><li>The Steppe clans and the Centaur-Kin have complicated politics. Where do you stand?</li><li>Lord Sagittarius controls the region. Do you have a relationship with his administration?</li></ul>
+</div></div>
+
+<!-- 16. KALLOS-SWORN FIELD AGENT -->
+<div class="origin" onclick="this.classList.toggle('open')">
+<div class="oh"><div class="on">Kallos-Sworn Field Agent</div><span class="otag" style="color:var(--w);border-color:rgba(120,168,120,0.3)">Wanderer · Kallos-Sworn</span></div>
+<div class="ob">
+  <p class="ob-desc">You trained with the Kallos-Sworn and served as a field agent — not at a high Circle, but long enough to carry their methods and their responsibilities. You know what the Kallos-Sworn are for, which means you know why they sometimes fail.</p>
+  <div class="ob-row">
+    <div class="ob-block"><span class="ob-label">Discipline Masteries</span><div class="ob-text">Aetheric Lore, Persuasion or Stealth (your field role)</div></div>
+    <div class="ob-block"><span class="ob-label">Tool / Language</span><div class="ob-text">Calligrapher's supplies · Old Kallosian (Kallos-Sworn internal notation)</div></div>
+  </div>
+  <div class="feature-block">
+    <span class="feature-title">Origin Feature — Kallos-Sworn Access</span>
+    <div class="feature-text">You retain credentials at your departure Circle (Circles 1–4 for this Origin — higher Circles are Path-level). In any city with a Kallos-Sworn House: access to the House's common room, non-restricted library, and communication relay; recognized by Kallos-Sworn members at your Circle and below; Resonant Fortune on Aetheric Lore Active Resonances when consulting Kallos-Sworn records.</div>
+  </div>
+  <div class="ob-block" style="margin-bottom:.75rem"><span class="ob-label">Equipment</span><div class="equip-text">Kallos-Sworn credential seal (your Circle insignia), Kallos-Sworn working clothes, a copy of the founding vow ("Never Again"), 15 Gold Marks</div></div>
+  <div class="flavor-grid">
+    <div class="flavor-item"><span class="flavor-label">Personality Traits</span><div class="flavor-text">I know the Kallos-Sworn's methods well enough to see when they're being applied to me. I find unmonitored situations more uncomfortable than dangerous ones.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Ideals</span><div class="flavor-text">Never Again means something — the question is whether the institution still does. Institutions fail. The vow doesn't.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Bond</span><div class="flavor-text">My Starbound Bond partner from field service is still active. We haven't spoken since I left. It's complicated.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Flaw</span><div class="flavor-text">I still think in terms of operational security when I should just be honest.</div></div>
+  </div>
+  <span class="ob-label">Hooks</span><ul class="hook-list"><li>What House were you assigned to — and what was their specific mission?</li><li>Did you leave the Kallos-Sworn, or are you still technically active?</li><li>What do you know about the Starbound Bond system that bothers you?</li></ul>
+</div></div>
+
+<!-- 17. CEQUE-WALKER -->
+<div class="origin" onclick="this.classList.toggle('open')">
+<div class="oh"><div class="on">Ceque-Walker</div><span class="otag" style="color:var(--w);border-color:rgba(120,168,120,0.3)">Wanderer · Elethorn Grid</span></div>
+<div class="ob">
+  <p class="ob-desc">You've walked the sacred lines of Elethorn — as pilgrimage, duty, or simply because the grid felt like the only honest geography in a dishonest world. Distinct from being Ceque Line Born (which is about biology), the Ceque-Walker origin is about practice: years of deliberate walking, attunement, and the specific wisdom that comes from following a path older than any living civilization.</p>
+  <div class="ob-row">
+    <div class="ob-block"><span class="ob-label">Discipline Masteries</span><div class="ob-text">Aetheric Lore, Survival</div></div>
+    <div class="ob-block"><span class="ob-label">Tool / Language</span><div class="ob-text">Cartographer's tools · Ceque notation (partial — functional for recording walks)</div></div>
+  </div>
+  <div class="feature-block">
+    <span class="feature-title">Origin Feature — Grid Sense (Practiced)</span>
+    <div class="feature-text">You can feel the presence of Ceque Line nodes within 300 ft — a faint warmth that intensifies near active nodes. You know whether a node is dormant, active, or reactivating with the wrong energy. You have walked at least one partial Ceque Line and carry its temporary attunement — choose one zodiac sign's domain at character creation. Resonant Fortune on Active Resonances in that domain until you complete the full line or the attunement fades (3 months from last walking). You can renew it by walking again.</div>
+  </div>
+  <div class="ob-block" style="margin-bottom:.75rem"><span class="ob-label">Equipment</span><div class="equip-text">Cartographer's tools, a personal walking map of Ceque Lines walked so far (added to during play), sturdy traveling boots, 10 Gold Marks</div></div>
+  <div class="flavor-grid">
+    <div class="flavor-item"><span class="flavor-label">Personality Traits</span><div class="flavor-text">I trust geography more than people — it doesn't change its mind. I measure distances in walking time and have difficulty converting to any other unit.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Ideals</span><div class="flavor-text">The grid was built to hold the world together — walking it is the least I can do. Movement is the most honest form of commitment.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Bond</span><div class="flavor-text">A Ceque-Keeper showed me a node that was wrong in a way I can't explain. I need to understand what I saw.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Flaw</span><div class="flavor-text">I interpret every significant event as cosmically meaningful — which is sometimes correct and often paralyzing.</div></div>
+  </div>
+  <span class="ob-label">Hooks</span><ul class="hook-list"><li>Which line have you walked most completely — and what did you find at the end?</li><li>Grid-Point Seven is reactivating. You felt something change in the lines weeks ago. What was it like?</li><li>A Ceque-Keeper has been following your walking route. They haven't made contact yet.</li></ul>
+</div></div>
+
+<!-- 18. WAKA NAVIGATOR (distinct from Moana-kin) -->
+<div class="origin" onclick="this.classList.toggle('open')">
+<div class="oh"><div class="on">Waka Navigator</div><span class="otag" style="color:var(--w);border-color:rgba(120,168,120,0.3)">Wanderer · Deep Ocean</span></div>
+<div class="ob">
+  <p class="ob-desc">You learned to read the ocean before you learned to read text. The stars were your first language and the current was your first home. Unlike the Navigator-Initiate (who trained in a formal tradition), the Waka Navigator grew up on the water — the tradition is in your body, not your training.</p>
+  <div class="ob-row">
+    <div class="ob-block"><span class="ob-label">Discipline Masteries</span><div class="ob-text">Perception, Survival</div></div>
+    <div class="ob-block"><span class="ob-label">Tool / Language</span><div class="ob-text">Navigator's tools · One additional maritime language</div></div>
+  </div>
+  <div class="feature-block">
+    <span class="feature-title">Origin Feature — Ocean Reading</span>
+    <div class="feature-text">Predict weather accurately up to 48 hours in advance through wave pattern, cloud behaviour, and wind quality — no Working required, no roll. Always know geographic position under open sky. On any vessel you crew, travel time is reduced by 20% — your navigation is simply more efficient. The Mirror Sea blocks this ability entirely. The first time you enter the Mirror Sea: Attunement Warding Resonance DC 14 or gain one level of Aetheric Depletion from the disorientation.</div>
+  </div>
+  <div class="ob-block" style="margin-bottom:.75rem"><span class="ob-label">Equipment</span><div class="equip-text">Navigator's tools, a lashing kit, sailor's clothes, a small carved wayfinding compass (personal significance, non-Aetheric), 12 Gold Marks</div></div>
+  <div class="flavor-grid">
+    <div class="flavor-item"><span class="flavor-label">Personality Traits</span><div class="flavor-text">I find deep water calming in a way that confuses people who fear it. I give directions in terms of current and star-line rather than left and right.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Ideals</span><div class="flavor-text">The ocean doesn't care about your plans — it cares about your preparation. Every voyage is a promise you make to the water.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Bond</span><div class="flavor-text">My crew didn't make it back from the last voyage. I was the only one who could navigate us home. That's not something I've made peace with.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Flaw</span><div class="flavor-text">I undervalue staying. Some things require you to stop moving — and I haven't learned to tell which things those are.</div></div>
+  </div>
+  <span class="ob-label">Hooks</span><ul class="hook-list"><li>What voyage fundamentally changed how you understand the world?</li><li>The Moana-kin Navigator tradition and your ocean-born instinct — are they the same thing or different things pointing at the same truth?</li><li>Something came up from below on your last voyage. You haven't told anyone what you saw.</li></ul>
+</div></div>
+
+</div></div>
+
+<!-- ═══════════════════════════════════════════════ MARKED ═══ -->
+<div class="panel" id="panel-marked"><div class="wrap">
+<p class="cat-intro">Marked Origins produced characters touched by something larger than ordinary experience before their Path found them. Not chosen — the Loom doesn't choose — but marked by a significant Aetheric or cosmic event that changed what they are. These characters carry something unusual that other people can sometimes sense without being able to name.</p>
+
+<!-- 19. LEGENDARY BEAST WITNESS -->
+<div class="origin open" onclick="this.classList.toggle('open')">
+<div class="oh"><div class="on">Legendary Beast Witness</div><span class="otag" style="color:var(--mk);border-color:rgba(144,112,184,0.3)">Marked · Zodiac · Rare</span></div>
+<div class="ob">
+  <p class="ob-desc">You were present at a Legendary Beast encounter — not as a practitioner seeking it, but as a bystander, a child, a traveler in the wrong landscape at the right moment. The Beast looked at you. You survived. You have been different since.</p>
+  <div class="ob-row">
+    <div class="ob-block"><span class="ob-label">Discipline Masteries</span><div class="ob-text">Nature, Survival</div></div>
+    <div class="ob-block"><span class="ob-label">Tool / Language</span><div class="ob-text">Herbalist's supplies · Nature Tongue (recognized intent with your Beast's zodiac sign creatures)</div></div>
+  </div>
+  <div class="feature-block">
+    <span class="feature-title">Origin Feature — Beast Mark</span>
+    <div class="feature-text">You already qualify for the Zodiac Attunement Feat prerequisite — the witness counts. Additionally: the Beast of your sign does not aggress toward you by default. It will look again before deciding to act — one Pulse of non-aggressive status before any encounter with your sign's Beast begins. Accord-Walkers who take this Origin begin with one Beast Resonance pool at 5 points immediately.</div>
+  </div>
+  <div class="ob-block" style="margin-bottom:.75rem"><span class="ob-label">Equipment</span><div class="equip-text">A physical token of the encounter (Concordance determines based on which Beast), traveler's clothes, a journal entry describing the encounter written at character creation, 10 Gold Marks</div></div>
+  <div class="flavor-grid">
+    <div class="flavor-item"><span class="flavor-label">Personality Traits</span><div class="flavor-text">I know what's worth fearing and what isn't — the lists don't always match other people's. I notice large animals before I notice people in the same space.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Ideals</span><div class="flavor-text">The Beasts are not monsters. They are the gods we couldn't keep. I survived. That has to mean something.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Bond</span><div class="flavor-text">Someone else witnessed what I witnessed. We haven't spoken about it. We both know we should.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Flaw</span><div class="flavor-text">I hold the cosmic in higher regard than the immediate — which can make the immediate very costly.</div></div>
+  </div>
+  <span class="ob-label">Hooks</span><ul class="hook-list"><li>Which Beast did you witness, and what were the circumstances?</li><li>How did the encounter change you — and does anyone know it happened?</li><li>The Accord-Walker tradition will be very interested in you. Are you ready for that attention?</li></ul>
+</div></div>
+
+<!-- 20. QUINT BOND ADJACENT -->
+<div class="origin" onclick="this.classList.toggle('open')">
+<div class="oh"><div class="on">Quint Bond Adjacent</div><span class="otag" style="color:var(--mk);border-color:rgba(144,112,184,0.3)">Marked · Fate Number · Concordance Assigned</span></div>
+<div class="ob">
+  <p class="ob-desc">Your Fate Number falls in the 55–58 range. This Origin is assigned by the Concordance, not selected by the player — it reflects a cosmic fact that has always been true. At character creation, player and Concordance agree that this character may be one of the Five Who Remember.</p>
+  <div class="ob-row">
+    <div class="ob-block"><span class="ob-label">Discipline Masteries</span><div class="ob-text">Insight, one other of the player's choice</div></div>
+    <div class="ob-block"><span class="ob-label">Tool / Language</span><div class="ob-text">Any one tool of the player's choice · Any one language of the player's choice</div></div>
+  </div>
+  <div class="feature-block">
+    <span class="feature-title">Origin Feature — Loom's Weight</span>
+    <div class="feature-text">Your Fate Number reads differently to Stellar Cartographers — an additional resonance, as if the thread carries more weight. Stellar Cartographers who read your Number are compelled to read it twice. Resonant Fortune on all Warding Resonances against having your Fate Number masked or suppressed. Once per session: a moment of prophetic clarity — a brief, accurate vision of what is about to happen. The Concordance delivers this at a dramatically appropriate moment.</div>
+  </div>
+  <div class="ob-block" style="margin-bottom:.75rem"><span class="ob-label">Equipment</span><div class="equip-text">Normal starting equipment for the character's Path. This Origin adds no physical equipment — what it adds has been present since birth.</div></div>
+  <div class="flavor-grid">
+    <div class="flavor-item"><span class="flavor-label">Personality Traits</span><div class="flavor-text">I have always felt that the people around me needed something from me specifically — before I understood why. I trust patterns more than explanations.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Ideals</span><div class="flavor-text">If the Loom has a design for me, I'd rather know what it is and choose whether to follow it than follow it blind. The Five Who Remember have to choose to remember.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Bond</span><div class="flavor-text">I have met one of the others — I just don't know it yet. The Concordance knows who.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Flaw</span><div class="flavor-text">I carry a sense of cosmic significance that I have done nothing to earn — and I'm never entirely sure whether that's humility or evasion.</div></div>
+  </div>
+  <span class="ob-label">Hooks</span><ul class="hook-list"><li>Do you know your Fate Number? Most people don't — have you had it read?</li><li>Serath of the Closed Circle has identified three of the five. Are you one he knows?</li><li>The Ifá prophecy is known to scholars and priests. Have you heard it?</li></ul>
+</div></div>
+
+<!-- 21. ORISHA-TOUCHED LINEAGE -->
+<div class="origin" onclick="this.classList.toggle('open')">
+<div class="oh"><div class="on">Orisha-Touched Lineage</div><span class="otag" style="color:var(--mk);border-color:rgba(144,112,184,0.3)">Marked · Ashélands · Spiritual</span></div>
+<div class="ob">
+  <p class="ob-desc">Your lineage carries a specific Orisha's favour — not the full Ashé-Touched biological expression, but enough that the Orisha occasionally communicates with you in dreams and crisis moments. You may not be from the Ashélands. The Orisha's favour isn't geographically limited.</p>
+  <div class="ob-row">
+    <div class="ob-block"><span class="ob-label">Discipline Masteries</span><div class="ob-text">Religion (Orisha tradition), Insight</div></div>
+    <div class="ob-block"><span class="ob-label">Tool / Language</span><div class="ob-text">Musical instrument · Yoruba-derived Ashé liturgical language</div></div>
+  </div>
+  <div class="feature-block">
+    <span class="feature-title">Origin Feature — Orisha's Eye</span>
+    <div class="feature-text">Once per Deep Attunement, your patron Orisha may communicate during a dream or crisis moment — the Concordance delivers one piece of accurate, relevant information from the Orisha's divine perspective. The communication is non-verbal (symbolic, sensory, emotional) and requires interpretation. Additionally: Resonant Fortune on Insight Active Resonances when attempting to understand someone's emotional truth.</div>
+  </div>
+  <div class="ob-block" style="margin-bottom:.75rem"><span class="ob-label">Equipment</span><div class="equip-text">A portable shrine to your patron Orisha, an Orisha-themed personal item (specific color garment, bead string, carved item — varies by Orisha), 15 Gold Marks</div></div>
+  <div class="flavor-grid">
+    <div class="flavor-item"><span class="flavor-label">Personality Traits</span><div class="flavor-text">I can sense when an Orisha's presence is near — a particular quality of attention in the room. I hold the sacred and the practical at the same level, which unnerves people who keep them separate.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Ideals</span><div class="flavor-text">The Orishas are real. Behave accordingly. Devotion that costs nothing is not devotion.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Bond</span><div class="flavor-text">What has my patron Orisha asked of me that I haven't delivered — and why haven't I?</div></div>
+    <div class="flavor-item"><span class="flavor-label">Flaw</span><div class="flavor-text">I sometimes wait for divine guidance when I should simply act.</div></div>
+  </div>
+  <span class="ob-label">Hooks</span><ul class="hook-list"><li>Which Orisha is your patron, and how did you learn of the connection?</li><li>The Ashé-Touched community may have complicated feelings about a non-Ashélands practitioner. How do you navigate this?</li><li>What has your patron Orisha asked of you that you haven't delivered?</li></ul>
+</div></div>
+
+<!-- 22. CEQUE LINE BORN -->
+<div class="origin" onclick="this.classList.toggle('open')">
+<div class="oh"><div class="on">Ceque Line Born</div><span class="otag" style="color:var(--mk);border-color:rgba(144,112,184,0.3)">Marked · Precursor Grid</span></div>
+<div class="ob">
+  <p class="ob-desc">You were born within a Ceque Line node's active range during a period of unusual activity. The Precursor grid's Aetheric frequency expressed itself in your biology at a formative moment. Distinct from the Ceque-Walker (who chose to walk the lines), you carry the grid's calibration in your body — it was never a choice.</p>
+  <div class="ob-row">
+    <div class="ob-block"><span class="ob-label">Discipline Masteries</span><div class="ob-text">History (Precursor civilization), Aetheric Lore</div></div>
+    <div class="ob-block"><span class="ob-label">Tool / Language</span><div class="ob-text">Cartographer's tools · Ceque notation (partially deciphered by modern scholars)</div></div>
+  </div>
+  <div class="feature-block">
+    <span class="feature-title">Origin Feature — Grid Resonance (Innate)</span>
+    <div class="feature-text">You always know when within 1 mile of an active or reactivating Ceque Line node — a physical pressure in the chest that intensifies closer to the node. You cannot be fooled by false nodes or illusions. Additionally: when walking a Ceque Line (see Mechanics Codex), all effects accumulate twice as fast — 1 Node gives the 3-Node effect; 3 Nodes give the Half-Line effect. The grid recognizes you as a calibrated instrument.</div>
+  </div>
+  <div class="ob-block" style="margin-bottom:.75rem"><span class="ob-label">Equipment</span><div class="equip-text">Cartographer's tools, a partially completed Ceque Line map started at character creation and added to during play, 10 Gold Marks</div></div>
+  <div class="flavor-grid">
+    <div class="flavor-item"><span class="flavor-label">Personality Traits</span><div class="flavor-text">I occasionally know where I am on an emotional map I can't explain the source of. I am comfortable with ruins in a way that feels like recognition.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Ideals</span><div class="flavor-text">The Precursors built something worth understanding. The fact that it destroyed them doesn't change that. What we inherit shapes us — but we decide what to do with the inheritance.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Bond</span><div class="flavor-text">I can feel Grid-Point Seven differently from how I feel other nodes. Something changed about it recently. I don't know what that means for me.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Flaw</span><div class="flavor-text">I privilege the ancient over the immediate in ways that cost me the immediate.</div></div>
+  </div>
+  <span class="ob-label">Hooks</span><ul class="hook-list"><li>Grid-Point Seven's reactivation — when did you first feel something wrong?</li><li>The Stellar Cartographers of Aetheria have a theory about Ceque Line Born individuals. Are you aware of it?</li><li>Your Ceque notation knowledge is partial — who taught you what you know?</li></ul>
+</div></div>
+
+<!-- 23. VOID-TOUCHED SURVIVOR -->
+<div class="origin" onclick="this.classList.toggle('open')">
+<div class="oh"><div class="on">Void-Touched Survivor</div><span class="otag" style="color:var(--mk);border-color:rgba(144,112,184,0.3)">Marked · Exposure · Recovery</span></div>
+<div class="ob">
+  <p class="ob-desc">You were exposed to something that left a mark on your Fate Number — not enough to make you Void-Touched, but enough that you've felt the Hollow Serpent's attention. You are not corrupted. You are changed. The difference is the most important thing you know.</p>
+  <div class="ob-row">
+    <div class="ob-block"><span class="ob-label">Discipline Masteries</span><div class="ob-text">Insight, Perception</div></div>
+    <div class="ob-block"><span class="ob-label">Tool / Language</span><div class="ob-text">Healer's kit (you've needed it) · One language of your choice</div></div>
+  </div>
+  <div class="feature-block">
+    <span class="feature-title">Origin Feature — Hollow Resonance</span>
+    <div class="feature-text">Your exposure left a faint Void-frequency in your Aetheric field. You can sense Lead-Scale Corruption at Tempered stage or higher within 30 ft without a roll — it feels like static at the edge of your awareness. Void-Husks do not automatically attack you — they process your frequency as adjacent to the Coil's before deciding you're not, giving approximately one Pulse of non-hostile time. Additionally: Resonant Fortune on Warding Resonances against Void-Touched Exposure accumulation — you've been there before.</div>
+  </div>
+  <div class="ob-block" style="margin-bottom:.75rem"><span class="ob-label">Equipment</span><div class="equip-text">Healer's kit, dark travelling clothes, a Weep-Stone (1 charge, kept close — old habit), 10 Gold Marks</div></div>
+  <div class="flavor-grid">
+    <div class="flavor-item"><span class="flavor-label">Personality Traits</span><div class="flavor-text">I am quieter than I was before — I don't fully know what I left in that place. I trust people who have also been marked more readily than those who haven't.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Ideals</span><div class="flavor-text">The thing that marks you doesn't own you. It just lives with you. I survived — that has to mean something, even when I can't say what.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Bond</span><div class="flavor-text">Someone pulled me out of that place. I would not be here without them.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Flaw</span><div class="flavor-text">I sometimes freeze when I should move. The body remembers.</div></div>
+  </div>
+  <span class="ob-label">Hooks</span><ul class="hook-list"><li>What was the exposure — and do you know its source?</li><li>The Kanya Siddha can purify Void-Touched Exposure residue. Have you sought that treatment?</li><li>Your Hollow Resonance makes you slightly recognizable to Coil operatives. Has anyone acted on that recognition?</li></ul>
+</div></div>
+
+<!-- 24. KALLOS DREAMER -->
+<div class="origin" onclick="this.classList.toggle('open')">
+<div class="oh"><div class="on">Kallos Dreamer</div><span class="otag" style="color:var(--mk);border-color:rgba(144,112,184,0.3)">Marked · Precursor Memory</span></div>
+<div class="ob">
+  <p class="ob-desc">You dream the Precursor civilization — not histories, not facts, but the texture of a world that died four thousand years ago. You don't know why. The Eldren find it deeply unsettling when they learn of it, which tells you something about what you're accessing.</p>
+  <div class="ob-row">
+    <div class="ob-block"><span class="ob-label">Discipline Masteries</span><div class="ob-text">Aetheric Lore, Insight</div></div>
+    <div class="ob-block"><span class="ob-label">Tool / Language</span><div class="ob-text">Calligrapher's supplies · Partial literacy in Precursor script (simple inscriptions, not complex documents)</div></div>
+  </div>
+  <div class="feature-block">
+    <span class="feature-title">Origin Feature — Dream Archive</span>
+    <div class="feature-text">Once per week during sleep, you receive a dream from the Precursor era — not a chosen memory, but what the collective unconscious of a dead civilization considers important for you to know right now. The Concordance delivers one accurate historical fact about the Kallos era, the global grid, or the Four Architects. The fact is always relevant to your current situation, though the relevance may not be immediately obvious. This cannot be triggered deliberately — it comes when it comes.</div>
+  </div>
+  <div class="ob-block" style="margin-bottom:.75rem"><span class="ob-label">Equipment</span><div class="equip-text">A dream journal (extensive, partially in your own notation and partially in partial Precursor script you don't fully understand), calligrapher's supplies, 10 Gold Marks</div></div>
+  <div class="flavor-grid">
+    <div class="flavor-item"><span class="flavor-label">Personality Traits</span><div class="flavor-text">I sometimes know things I shouldn't — things from before anyone living was alive. I hold the dead with the same regard I hold the living. Both are real to me.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Ideals</span><div class="flavor-text">The dead built this world — we owe them at least the courtesy of understanding what we inherited. Memory is the only form of immortality that matters.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Bond</span><div class="flavor-text">One of the Four Architects appears in my dreams. I know their name. I don't know what they want from me.</div></div>
+    <div class="flavor-item"><span class="flavor-label">Flaw</span><div class="flavor-text">I privilege the past over the present in ways that cost me the present.</div></div>
+  </div>
+  <span class="ob-label">Hooks</span><ul class="hook-list"><li>The Eldren treat Kallos Dreamers with a combination of reverence and suspicion. Have you encountered this?</li><li>Your dream journal contains a record of the Night of Kallos from a perspective that should be impossible to access. Who knows about this?</li><li>One of the Four Architects has started giving you specific instructions rather than memories. When did that change?</li></ul>
+</div></div>
+
+</div></div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).style.display='block';
+  document.getElementById('panel-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
+}
+document.querySelectorAll('.panel').forEach(p=>{p.style.display='none'});
+document.getElementById('panel-scholarly').style.display='block';
+document.getElementById('panel-scholarly').classList.add('active');
+document.querySelectorAll('.nav-btn')[0].classList.add('active');
+</script>
+</body>
+</html>

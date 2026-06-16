@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — The Zodiac Across Cultures</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f0f0f;color:#e8e4dc;padding:2rem 1rem;max-width:860px;margin:0 auto;line-height:1.6}
+h1{font-size:20px;font-weight:500;margin-bottom:4px;color:#f0ead8}
+.intro{font-size:13px;color:#888;margin-bottom:1.5rem;line-height:1.7}
+.nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem}
+.nav-btn{padding:6px 12px;font-size:12px;border:1px solid #333;border-radius:6px;background:transparent;color:#888;cursor:pointer;transition:all .15s}
+.nav-btn:hover,.nav-btn.active{background:#1e1e1e;color:#e8e4dc;border-color:#555;font-weight:500}
+.panel{display:none}.panel.active{display:block}
+
+/* Sign master cards */
+.sign-master{border-radius:12px;border:1px solid;margin-bottom:14px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.sign-master:hover{filter:brightness(1.03)}
+.sign-master.expanded .sign-body{display:block}
+.sign-head{display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;padding:14px 16px}
+.sign-glyph{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;border:1px solid;flex-shrink:0}
+.sign-name{font-size:16px;font-weight:500;color:#f0ead8}
+.sign-domain{font-size:12px;color:#888;margin-top:2px}
+.sign-beast{font-size:11px;padding:3px 9px;border-radius:6px;border:1px solid;white-space:nowrap;flex-shrink:0}
+.sign-body{display:none;padding:0 16px 16px;border-top:1px solid #1e1e1e}
+
+/* Culture rows */
+.culture-grid{display:grid;gap:7px;margin-top:12px}
+.culture-row{background:#111;border-radius:10px;border:1px solid #1e1e1e;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.culture-row:hover,.culture-row.expanded{border-color:#2a2a2a}
+.cr-head{display:grid;grid-template-columns:36px 130px 1fr auto;gap:10px;align-items:center;padding:9px 12px}
+.cr-flag{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.cr-culture{font-size:12px;font-weight:500;color:#e8e4dc}
+.cr-name{font-size:12px;color:#aaa}
+.cr-lens{font-size:10px;padding:1px 6px;border-radius:4px;border:1px solid;white-space:nowrap;flex-shrink:0}
+.cr-body{display:none;padding:0 12px 11px;border-top:1px solid #1a1a1a}
+.cr-body.open{display:block;padding-top:9px}
+.cr-text{font-size:12px;color:#aaa;line-height:1.7}
+.cr-text strong{color:#e8e4dc;font-weight:500}
+
+/* Conflict/contact blocks */
+.contact-block{background:#1a140a;border:1px solid #3a2a0a;border-radius:8px;padding:11px 13px;margin-top:10px}
+.cb-title{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#c9a84c;margin-bottom:5px}
+.cb-text{font-size:12px;color:#aaa;line-height:1.65}
+.cb-text strong{color:#e8e4dc;font-weight:500}
+
+.lore-block{background:#0a1a14;border:1px solid #0a3a2a;border-radius:8px;padding:11px 13px;margin-top:8px}
+.lb-title{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#3b9e6e;margin-bottom:5px}
+.lb-text{font-size:12px;color:#aaa;line-height:1.65}
+.lb-text strong{color:#e8e4dc;font-weight:500}
+
+.warning-block{background:#1e0a0a;border:1px solid #3a0a0a;border-radius:8px;padding:11px 13px;margin-top:8px}
+.wb-title{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#cc4444;margin-bottom:5px}
+.wb-text{font-size:12px;color:#aaa;line-height:1.65}
+.wb-text strong{color:#e8e4dc;font-weight:500}
+
+/* The why -->
+.why-card{background:#141414;border:1px solid #222;border-radius:10px;padding:14px;margin-bottom:10px}
+.why-title{font-size:14px;font-weight:500;color:#f0ead8;margin-bottom:6px}
+.why-text{font-size:13px;color:#aaa;line-height:1.75}
+.why-text strong{color:#e8e4dc;font-weight:500}
+
+.section-head{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#555;margin:16px 0 8px}
+
+/* Cultural key bar -->
+.key-bar{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:1.25rem}
+.key-chip{font-size:11px;padding:3px 9px;border-radius:5px;border:1px solid;cursor:pointer;transition:all .15s}
+.key-chip:hover{filter:brightness(1.2)}
+
+.detail-text{font-size:13px;color:#aaa;line-height:1.75;margin-bottom:10px}
+.detail-text strong{color:#e8e4dc;font-weight:500}
+</style>
+</head>
+<body>
+<h1>The Zodiac Across Cultures</h1>
+<p class="intro">There are not thirteen gods and twelve cultures. There are thirteen forces that twelve cultures have each named, interpreted, and built institutions around independently. The Legendary Beasts are what the forces look like when stripped of cultural interpretation. Everything else — every zodiac system in every region — is a different people's answer to the same question: what are these powers, and how do we relate to them?</p>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="show('why',this)">The Theory</button>
+  <button class="nav-btn" onclick="show('signs',this)">Sign by Sign</button>
+  <button class="nav-btn" onclick="show('contact',this)">Cultural Contact</button>
+  <button class="nav-btn" onclick="show('ophiuchus',this)">The Thirteenth</button>
+</div>
+
+<!-- THE THEORY -->
+<div class="panel active" id="panel-why">
+
+<div class="why-card">
+  <div class="why-title">Why the Same Force Looks Different Everywhere</div>
+  <div class="why-text">During the Ethereal Sovereignty — Era I — the thirteen zodiac forces governed the cosmos through pure divine aether. All cultures perceived them identically because the divine signal was direct, undiluted, and universal. The Spica Monoliths outside Argentum, the Final Barrow burial island, the Tomb of the First King — all of these predate cultural divergence. They were built when the gods were still gods and everyone knew it.<br><br>The <strong>Pantheonic Fall</strong> changed this. When the twelve counter-struck against Ophiuchus and lost their divinity, the divine signal fractured from one universal broadcast into twelve locally resonant echoes. Each culture, in the absence of direct divine clarity, reached for the framework that made the most sense to their specific geography, cosmology, and way of life.<br><br>A culture living by the ocean interpreted the Adamant Crab as a protector of the sheltering deeps — the shell that keeps the sea from swallowing you. A culture living in a defensive mountain kingdom interpreted the same force as the God of Protection, full stop — no ocean metaphor needed. A culture of hive-minded insect-farmers looked at the Queen Bee and saw Community, Labor, Purity as one undivided concept. A culture of wandering nomads saw Virgo as the principle of sacred service and collective purpose expressed through individual excellence.<br><br><strong>All of them are right. None of them is complete.</strong> The Legendary Beast is the undivided truth. The cultural expressions are facets of it — each one capturing what is most relevant to that people's survival and spiritual vocabulary.</div>
+</div>
+
+<div class="why-card">
+  <div class="why-title">How Culture Shapes Magical Access</div>
+  <div class="why-text">This isn't purely philosophical. The cultural lens through which a practitioner approaches their zodiac sign determines which aspects of that sign's power they can access — and which aspects remain closed to them.<br><br>A Virgo-aspected Comet-Mage trained in Argent Spire will emphasize <em>precision, analysis, and purification</em> as the Virgo domain. They access spells of diagnosis, refinement, and the removal of corruption. A Virgo-aspected practitioner of the Orisha tradition (approaching the same force as the Queen Bee Orisha, a concept not separate from Virgo but not identical to it) emphasizes <em>community resonance and collective labor</em>. They access communal enchantments and hive-mind resistances that the Comet-Mage cannot reach through their framework alone.<br><br>The Kanya Siddha — the Scattered Temple approach — emphasizes <em>flawless service and physical purification</em>. Their healing spells work on magical ailments that neither the Comet-Mage nor the Orisha practitioner can touch, because the Siddha approach taps a different facet of the same power.<br><br><strong>Heroes who learn to move between cultural frameworks become disproportionately powerful</strong> — not because they have more power than anyone else, but because they can access facets of a sign's domain that any single-tradition practitioner cannot. This is why the Order of Pure Reason's mono-cultural approach to magic is not just philosophically limiting — it is operationally limiting. They are trying to build a complete map from one country's perspective.</div>
+</div>
+
+<div class="why-card">
+  <div class="why-title">The Comet-Magi Heresy</div>
+  <div class="why-text">The Comet-Magi of Argent Spire know about the multi-cultural zodiac interpretations. They have documented all of them. Their official position — maintained across all three Conclaves — is that the Western Zodiac system (Greek letter names, classical attributes) is the <em>original</em> divine language and all other cultural systems are <em>derived approximations</em> of declining precision.<br><br>Arch-Oracle Lyra of the Closed Eye privately considers this the most dangerous piece of institutional arrogance in Argent Spire's history. She has seen, in her probability futures, at least three critical moments where the Resonant Binding she designed to counter Aethar requires <em>cross-cultural zodiac synthesis</em> — a practitioner calling on the Orisha vocabulary to access a Virgo facet that the Western system cannot reach. The Comet-Magi's position on cultural hierarchy is not just wrong. It is a vulnerability Aethar is actively exploiting.</div>
+</div>
+
+<div class="section-head">The Thirteen Cultural Systems at a Glance</div>
+<div class="key-bar">
+  <div class="key-chip" style="color:#e8854c;border-color:#e8854c44;background:#2a1a08">♈♉♊♋♌♍♎♏♐♑♒♓ Western — Terra Firma</div>
+  <div class="key-chip" style="color:#5aabe8;border-color:#5aabe844;background:#0a1020">Norse — Boreal Expanse</div>
+  <div class="key-chip" style="color:#3b9e6e;border-color:#3b9e6e44;background:#0a1a12">Celtic Tree — Tuathan Archipelago</div>
+  <div class="key-chip" style="color:#c9a84c;border-color:#c9a84c44;background:#1a1408">Chinese — Shen-lì</div>
+  <div class="key-chip" style="color:#a87ee8;border-color:#a87ee844;background:#1a0a2a">Egyptian — Khem-Ma'at</div>
+  <div class="key-chip" style="color:#cc4466;border-color:#cc446644;background:#1a0a10">Babylonian — Abyssal Sea</div>
+  <div class="key-chip" style="color:#e87e3a;border-color:#e87e3a44;background:#2a1208">Mayan — K'uh-la'an</div>
+  <div class="key-chip" style="color:#8aaa44;border-color:#8aaa4444;background:#141a08">Yoruba — Ashélands</div>
+  <div class="key-chip" style="color:#6a8ae8;border-color:#6a8ae844;background:#0a1228">Japanese — Mori-Ōkami</div>
+  <div class="key-chip" style="color:#cc8844;border-color:#cc884444;background:#1a1008">Mongolian — Kurgan Bog</div>
+  <div class="key-chip" style="color:#e8c87e;border-color:#e8c87e44;background:#1a1808">Persian/Avian — Chinvat</div>
+  <div class="key-chip" style="color:#a8a8e8;border-color:#a8a8e844;background:#12121a">Hindu — Scattered Temples</div>
+  <div class="key-chip" style="color:#e8e8aa;border-color:#e8e8aa44;background:#1a1a08">Comet-Magi — Antarctos</div>
+</div>
+
+<div class="why-card">
+  <div class="why-title">What None of Them Have — The Thirteenth Problem</div>
+  <div class="why-text">Every cultural zodiac system in Sideros handles the twelve divine forces with varying degrees of precision, emphasis, and vocabulary. None of them have a stable cultural interpretation of Ophiuchus — the Thirteenth.<br><br>The Western system has a thirteenth sign that practitioners treat as an omen rather than an identity. The Norse system doesn't include it at all — Jörmungandr circles Midgard as a contained force, not a governing one. The Chinese system has twelve animals; the thirteenth is structurally absent. The Mayan calendar has twenty Day-Lords and no Ophiuchus analog. The Yoruba Orishas number twelve guardians and one unnameable void.<br><br>This is not coincidence. After the Pantheonic Fall, every culture that attempted to build an Ophiuchus tradition — to name, ritualize, and relate to the force of unmaking — found that the tradition itself became corrupted within two generations. The Hollow Serpent does not permit itself to be domesticated by cultural framework. It consumes frameworks. The absence of Ophiuchus from every zodiac system is the world's cultures collectively encoding, over millennia, the lesson that this force cannot be safely named and worshipped.<br><br><strong>The Ashen Coil is the only institution that has tried again.</strong></div>
+</div>
+
+</div>
+
+<!-- SIGN BY SIGN -->
+<div class="panel" id="panel-signs">
+<p class="detail-text">Each of the twelve signs is interpreted through every major cultural system. Click any sign to expand, then click a culture to see how they perceive that force. The cultural name appears first, then the facet they emphasize — aspects of the sign's power that only their tradition can fully access.</p>
+
+<!-- ARIES -->
+<div class="sign-master" style="border-color:#e8854c44" onclick="toggleSign(this)">
+  <div class="sign-head">
+    <div class="sign-glyph" style="background:#2a1208;border-color:#e8854c44">♈</div>
+    <div><div class="sign-name">Aries</div><div class="sign-domain">Initiative · Primal Fire · The First Strike · Courage Before Reason</div></div>
+    <div class="sign-beast" style="color:#e8854c;border-color:#e8854c44;background:#2a1208">The Ashen Ram</div>
+  </div>
+  <div class="sign-body">
+    <div class="culture-grid">
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#2a1208">🔥</div><div class="cr-culture">Western / Terra Firma</div><div class="cr-name">Lord Aries — The First Spear</div><div class="cr-lens" style="color:#e8854c;border-color:#e8854c44;background:#2a1208">Military</div></div>
+        <div class="cr-body"><p class="cr-text">Aries is the god of <strong>initiative as martial virtue</strong> — the willingness to move before certainty arrives. In Terra Firma's Duchy of Fire, this manifests as a culture of aggressive frontier expansion. The Aries March exists because someone had to hold the volcanic border, and Aries-aspected people feel this pull physically — the sense of wrongness when standing still while a threat approaches. Lord Aries's campaign addiction is not pathology; it is an Aries expression taken to its purest Alpha form. <strong>Unique access:</strong> The First Strike — Aries practitioners who initiate combat gain a burst of primal fire energy that non-initiating fighters cannot access. The Forge of the First Spark Temple weaponizes this.</p></div>
+      </div>
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#1a1408">⚡</div><div class="cr-culture">Norse / Boreal</div><div class="cr-name">Thurisaz — The Giant's Force</div><div class="cr-lens" style="color:#5aabe8;border-color:#5aabe844;background:#0a1020">Elemental</div></div>
+        <div class="cr-body"><p class="cr-text">The Norse tradition doesn't assign Aries to a constellation figure — it assigns it to the rune <strong>Thurisaz</strong>, the force of the Thursar (giants) — raw, barely directed elemental power. In the Boreal Expanse, Aries energy is the power of the volcanic forge-city Thrúdheim's Anvil, where Thor's weapons are made. It is not personal courage — it is <strong>force as cosmic principle</strong>, the kind that reshapes matter. <strong>Unique access:</strong> Thurisaz practitioners can channel Aries energy into objects rather than actions — weapons forged under Thurisaz resonate with a primal fire that standard Aries martial magic cannot achieve.</p></div>
+      </div>
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#141a08">🌿</div><div class="cr-culture">Celtic / Tuathan</div><div class="cr-name">The Birch — New Beginnings</div><div class="cr-lens" style="color:#3b9e6e;border-color:#3b9e6e44;background:#0a1a12">Seasonal</div></div>
+        <div class="cr-body"><p class="cr-text">The Tuathan Archipelago maps Aries energy to the Birch — the first tree to green after winter, the symbol of new beginnings rather than violent initiation. The same force that Terra Firma reads as "strike first" the Tuatha read as <strong>"begin before you are ready."</strong> This produces a different kind of courage — not martial, but creative. Tuathan Birch-born are the first to attempt the new thing, the first to cross the untested water. <strong>Unique access:</strong> Birch practitioners can initiate magical workings that reset or begin something — ending curses, starting new ley line connections, or breaking a social impasse — with a force that Western Aries magic cannot match.</p></div>
+      </div>
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#1a1008">🐏</div><div class="cr-culture">Babylonian / Abyssal Sea</div><div class="cr-name">Agru — The Sea-Ram</div><div class="cr-lens" style="color:#cc4466;border-color:#cc446644;background:#1a0a10">Maritime</div></div>
+        <div class="cr-body"><p class="cr-text">The Babylonian sea-tradition reads Aries as the <strong>ramming prow</strong> — the part of the ship that breaks through resistance. Regent Alluttu (♈ aspected, Abyssal Sea) is volatile and aggressive because the Agru tradition emphasizes Aries as the force that punches through obstacles regardless of what's on the other side. Maritime Aries magic is about <strong>momentum through resistance</strong> — it works best when something is blocking the path. <strong>Unique access:</strong> Agru practitioners can break through magical barriers, suppression fields, and sealed structures with a physical force-magic combination that no land-based Aries tradition has developed.</p></div>
+      </div>
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#1a1208">🔱</div><div class="cr-culture">Hindu / Scattered Temples</div><div class="cr-name">Mesha — The Divine Ram</div><div class="cr-lens" style="color:#a8a8e8;border-color:#a8a8e844;background:#12121a">Spiritual</div></div>
+        <div class="cr-body"><p class="cr-text">The Mesha Siddha tradition reads Aries as <strong>divine will made action</strong> — not personal courage, but the moment when cosmic purpose becomes motion. The Forge of the First Spark Temple crafts Astra (divine weapons) because Mesha energy is understood as the initial push of creation itself. A Mesha Siddha doesn't fight — they become the instrument of something larger initiating through them. <strong>Unique access:</strong> Mesha practitioners can channel Aries energy as a creative force — not destruction, but the divine initiative that starts processes. Crafting under Mesha produces items with autonomous initiating properties: a Mesha-forged sword strikes first, regardless of initiative order, once per encounter.</p></div>
+      </div>
+    </div>
+    <div class="contact-block"><div class="cb-title">Cross-Cultural Encounter</div><div class="cb-text">When Lord Aries (Western military interpretation) commissioned weapons from the Mesha Siddha (spiritual instrument interpretation), both parties were accessing Aries energy but through fundamentally incompatible frameworks. Lord Aries wanted Astra as weapons of conquest. The Siddha experienced this as asking them to use divine initiative as personal aggression — a category error so deep it felt like blasphemy. <strong>The conflict is not about whether weapons should be made. It's about whether Aries is a tool or a calling.</strong> Neither framework is wrong. They are simply incommensurable without a translator who understands both.</div></div>
+  </div>
+</div>
+
+<!-- TAURUS -->
+<div class="sign-master" style="border-color:#8aaa4444" onclick="toggleSign(this)">
+  <div class="sign-head">
+    <div class="sign-glyph" style="background:#121a08;border-color:#8aaa4444">♉</div>
+    <div><div class="sign-name">Taurus</div><div class="sign-domain">Endurance · Earthly Wealth · Unyielding Strength · The World as It Is</div></div>
+    <div class="sign-beast" style="color:#8aaa44;border-color:#8aaa4444;background:#121a08">The Khalkotauros</div>
+  </div>
+  <div class="sign-body">
+    <div class="culture-grid">
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#121a08">🌾</div><div class="cr-culture">Western / Terra Firma</div><div class="cr-name">Lady Taurus — The Verdant Fields</div><div class="cr-lens" style="color:#8aaa44;border-color:#8aaa4444;background:#121a08">Agricultural</div></div>
+        <div class="cr-body"><p class="cr-text">Taurus in the Western tradition is the <strong>generative earth</strong> — wealth as fertility, endurance as rootedness. The Taurian Plains are literally the breadbasket of the continent because the land resonates with Taurian energy. Lady Taurus's Beta nature is the perfect expression: she doesn't command the earth, she maintains it. <strong>Unique access:</strong> Vrishabha Siddha geomancy — the ability to read the earth's deep currents and redirect them, producing long-term agricultural and geological effects that no other Taurus tradition understands.</p></div>
+      </div>
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#1a1008">🐂</div><div class="cr-culture">Babylonian / Abyssal Sea</div><div class="cr-name">Gud.anna — The Bull of Heaven</div><div class="cr-lens" style="color:#cc4466;border-color:#cc446644;background:#1a0a10">Wealth</div></div>
+        <div class="cr-body"><p class="cr-text">The Babylonian Bull of Heaven emphasizes Taurus as <strong>accumulated wealth and financial dominance</strong>. The Bronze Oligarchs of the Abyssal Sea — specifically Regent Vrishabha-Deeps who controls the underwater mineral veins — express this tradition purely: Taurus energy is the force that identifies, extracts, and protects material value. Earthly wealth is not a metaphor in this framework; it is the literal domain. <strong>Unique access:</strong> Gut.anna practitioners can sense mineral deposits, assess the material value of magical items, and locate hidden economic resources with a precision that makes them invaluable to anyone running a treasury or a mine.</p></div>
+      </div>
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#141a08">🍃</div><div class="cr-culture">Celtic / Tuathan</div><div class="cr-name">The Rowan — Mystic's Aegis</div><div class="cr-lens" style="color:#3b9e6e;border-color:#3b9e6e44;background:#0a1a12">Protective</div></div>
+        <div class="cr-body"><p class="cr-text">The Tuatha map Taurus energy to the Rowan — a tree famous for its protective properties against hostile magic. The Celtic tradition emphasizes Taurus as <strong>the force that holds against what wants to undo it</strong>. Endurance here is not passive strength but active spiritual resistance. Rowan-born are the ones who keep the faith when the evidence suggests abandoning it. <strong>Unique access:</strong> Rowan practitioners create wards and protective workings of unusual durability — enchantments that resist dispelling, curses that must be overcome rather than removed, shields that hold against magical assault specifically rather than physical.</p></div>
+      </div>
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#1a1208">⚙</div><div class="cr-culture">Chinese / Shen-lì</div><div class="cr-name">The Ox — Stone-Plow</div><div class="cr-lens" style="color:#c9a84c;border-color:#c9a84c44;background:#1a1408">Labor</div></div>
+        <div class="cr-body"><p class="cr-text">The Chinese Ox reads Taurus as <strong>disciplined collective labor</strong> — the force that produces abundance through sustained effort rather than natural fertility. The Vermilion Bird Palace's Stone-Plow City works its population to the bone because the Ox tradition understands Taurus energy as demanding total investment. The earth doesn't give its gifts; it grants them in proportion to work applied. <strong>Unique access:</strong> Ox tradition practitioners can extend the duration of any sustained magical working — rituals that would take one hour take ten minutes; enchantments that last one day last one week. Taurus energy in this framework is a force multiplier for dedication.</p></div>
+      </div>
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#1a1008">🐃</div><div class="cr-culture">Greco-Roman / Arcadia</div><div class="cr-name">The Minotaur-Warden — Knossos-Minos</div><div class="cr-lens" style="color:#a87ee8;border-color:#a87ee844;background:#1a0a2a">Chthonic</div></div>
+        <div class="cr-body"><p class="cr-text">Arcadia's Taurus tradition is uniquely chthonic — the Minotaur-Warden interpretation understands Taurus as the <strong>guardian of the labyrinth</strong>, the force at the center of things that cannot be removed without collapsing the structure. The Khalkotauros's bronze hide becomes, in this reading, the protective outer structure of reality itself. Taurus is not what endures — it is what makes endurance possible. <strong>Unique access:</strong> Knossos-Minos practitioners can find and reinforce the structural weak points in any built environment — or any social structure. The Arcadian tradition is responsible for the architectural principle behind Argent Spire's crystalline spire geometry, shared by a Minotaur-tradition architect centuries ago.</p></div>
+      </div>
+    </div>
+    <div class="contact-block"><div class="cb-title">Cross-Cultural Encounter</div><div class="cb-text">The Dunmarim (who experience Taurus through Lady Capricorn's Capricorn-Earth tradition rather than Taurus directly) and the Babylonian Bronze Oligarchs (Gut.anna mineral wealth tradition) are in structural conflict over underwater mineral extraction rights. Both are accessing earth-wealth energy but through completely different frameworks — the Dunmarim believe the ore should be managed for strategic protection, the Oligarchs believe it should be extracted for maximum material value. A practitioner who understood both traditions could show them that they are arguing about <em>the same resource through incompatible values</em> — which is at least a starting point for negotiation.</div></div>
+  </div>
+</div>
+
+<!-- GEMINI -->
+<div class="sign-master" style="border-color:#a87ee844" onclick="toggleSign(this)">
+  <div class="sign-head">
+    <div class="sign-glyph" style="background:#180a28;border-color:#a87ee844">♊</div>
+    <div><div class="sign-name">Gemini</div><div class="sign-domain">Duality · Forbidden Knowledge · The Two Truths · What Cannot Be Reconciled</div></div>
+    <div class="sign-beast" style="color:#a87ee8;border-color:#a87ee844;background:#180a28">The Twin-Serpents</div>
+  </div>
+  <div class="sign-body">
+    <div class="culture-grid">
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#180a28">🐍</div><div class="cr-culture">Western / Aetheria</div><div class="cr-name">Lord Gemini — The Dual Monarchs</div><div class="cr-lens" style="color:#a87ee8;border-color:#a87ee844;background:#180a28">Paradox</div></div>
+        <div class="cr-body"><p class="cr-text">Western Gemini is the force of <strong>irresolvable duality</strong> — the two things that are both true simultaneously and cannot be merged without losing both. The Twin-Serpents (Parchment and Ink, Order and Chaos, Form and Formless) embody this. Lord Gemini's split Alpha/Omega internal dynamic is a Gemini ruler expressing their sign perfectly — two voices, one crown, neither able to silence the other. <strong>Unique access:</strong> Western Gemini practitioners can hold two contradictory truths simultaneously in magical workings — enchantments that have two opposite effects depending on who perceives them, wards that are both passable and impassable, illusions that reveal while they conceal.</p></div>
+      </div>
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#1a1208">🦊</div><div class="cr-culture">Greco-Roman / Arcadia</div><div class="cr-name">The Twin Fox-Couriers</div><div class="cr-lens" style="color:#e8c87e;border-color:#e8c87e44;background:#1a1808">Communication</div></div>
+        <div class="cr-body"><p class="cr-text">Arcadia's Gemini tradition reads the duality as <strong>the space between sender and receiver</strong> — Gemini as the force of transmission, translation, and the gap where meaning changes in transit. The Twin Fox-Couriers carry messages between realms, and what arrives is always slightly different from what was sent. <strong>Unique access:</strong> Fox-Courier practitioners are masters of magical communication — sending messages that arrive differently to different recipients, translating between magical languages, and intercepting transmissions without breaking them. The Loom of Fate employs Fox-Courier tradition practitioners almost exclusively for their interception network.</p></div>
+      </div>
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#141a08">🌿</div><div class="cr-culture">Celtic / Tuathan</div><div class="cr-name">The Ash — The World-Tree</div><div class="cr-lens" style="color:#3b9e6e;border-color:#3b9e6e44;background:#0a1a12">Connection</div></div>
+        <div class="cr-body"><p class="cr-text">The Tuatha interpret Gemini energy through the Ash tree — the World-Tree whose roots reach into every realm simultaneously. The Celtic tradition reads Gemini's duality as <strong>the connection between realms</strong> rather than the irresolvable tension between opposites. An Ash-born practitioner doesn't experience contradiction; they experience everything as connected to everything else. <strong>Unique access:</strong> Ash practitioners can traverse the spaces between things — between realms, between social groups, between magical traditions. They are the natural inter-cultural diplomats and the natural Otherworld travelers. The Otherworldly Gate Faerie Mound is most easily opened by an Ash-tradition practitioner.</p></div>
+      </div>
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#1a1408">🌀</div><div class="cr-culture">Babylonian / Abyssal Sea</div><div class="cr-name">Maš.tab.ba.gal.gal — The Great Twins</div><div class="cr-lens" style="color:#cc4466;border-color:#cc446644;background:#1a0a10">Navigation</div></div>
+        <div class="cr-body"><p class="cr-text">The Babylonian Twin tradition reads Gemini as <strong>the two stars used for celestial navigation</strong> — Castor and Pollux, the fixed points that allow sailors to find their position between them. Gemini energy in the maritime tradition is about finding your location by reference to two fixed points simultaneously. <strong>Unique access:</strong> Great Twin practitioners are extraordinary navigators who can determine position in completely unfamiliar territory by identifying two reference points and triangulating between them. This works in magical landscapes, spirit realms, and time-distorted spaces where normal navigation fails.</p></div>
+      </div>
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#1a1208">🐒</div><div class="cr-culture">Chinese / Shen-lì</div><div class="cr-name">The Monkey — Ingenious Workshop</div><div class="cr-lens" style="color:#c9a84c;border-color:#c9a84c44;background:#1a1408">Innovation</div></div>
+        <div class="cr-body"><p class="cr-text">Chinese Gemini (the Monkey) reads the sign's duality as <strong>the gap between what exists and what could exist</strong> — the creative tension between current reality and potential improvement. Monkey-born are inventors, adaptors, and improvisers. Cogswheel City's constant innovation is a Monkey-tradition culture expressing Gemini energy as technological creativity. <strong>Unique access:</strong> Monkey practitioners can modify magical items to serve new functions — not crafting new items, but repurposing existing magical structures by finding the space between their current function and a new one. A Monkey-tradition mage can make a healing staff deal lightning damage for one encounter, or make a fire spell produce cold energy. The modification is temporary, but its versatility is unmatched.</p></div>
+      </div>
+    </div>
+    <div class="lore-block"><div class="lb-title">The Twin-Serpents and Cross-Cultural Understanding</div><div class="lb-text">The Twin-Serpents (the Parchment Serpent and the Ink Serpent) are not simply a Gemini Legendary Beast — they are a <strong>physical manifestation of what happens when two cultural interpretations of the same sign come into direct conflict without synthesis.</strong> The Scribe's Folly collapsed because it tried to hold every text ever written simultaneously — every cultural interpretation of every truth — without any framework for reconciliation. The Twin-Serpents were born from that collapse. They embody irresolvable duality because the library tried to resolve what cannot be resolved by containing it. <strong>The lesson: the duality of Gemini is not a problem to solve. It is a dynamic to inhabit.</strong></div></div>
+  </div>
+</div>
+
+<!-- VIRGO -->
+<div class="sign-master" style="border-color:#8aaa4444" onclick="toggleSign(this)">
+  <div class="sign-head">
+    <div class="sign-glyph" style="background:#0a1a0a;border-color:#8aaa4444">♍</div>
+    <div><div class="sign-name">Virgo</div><div class="sign-domain">Community · Labor · Purity · The Perfect System · Service as Sacred Act</div></div>
+    <div class="sign-beast" style="color:#8aaa44;border-color:#8aaa4444;background:#0a1a0a">The Queen Bee of the Golden Hive</div>
+  </div>
+  <div class="sign-body">
+    <div class="culture-grid">
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#0a1a0a">🐝</div><div class="cr-culture">Greco-Roman / Arcadia</div><div class="cr-name">The Bee-Priestess — The Golden Hive</div><div class="cr-lens" style="color:#8aaa44;border-color:#8aaa4444;background:#0a1a0a">Collective</div></div>
+        <div class="cr-body"><p class="cr-text">The Arcadian tradition reads Virgo through the hive — <strong>community as the perfected individual</strong>. The Bee-Priestess's distributed awareness, her inability to think individually, her total identification with the collective — this is Virgo energy expressed as its most elemental truth. The Golden Hive is a functional model of what Virgo wants all communities to be. <strong>Unique access:</strong> Hive-tradition practitioners can link individuals into temporary collective consciousness — not mind control, but shared perception and coordinated action that exceeds what any individual could achieve. The Bee-Priestess can coordinate her swarm with this ability; trained practitioners can do the same with willing participants.</p></div>
+      </div>
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#1a1a08">🔬</div><div class="cr-culture">Western / Argentum</div><div class="cr-name">Lady Virgo — The Order of Pure Reason</div><div class="cr-lens" style="color:#e8854c;border-color:#e8854c44;background:#2a1a08">Analytical</div></div>
+        <div class="cr-body"><p class="cr-text">Western Virgo reads the sign as <strong>precision, analysis, and the removal of impurity from systems</strong>. Lady Virgo's Order of Pure Reason is Virgo energy expressed through its analytical facet — the drive to make everything efficient, measurable, and replicable. Purity here means the absence of uncontrolled variables. Community means optimized resource allocation. Labor means maximum output per unit of input. <strong>Unique access:</strong> Western Virgo practitioners excel at detection and diagnosis magic — identifying exactly what is wrong with a system, a person, or a magical working, with a precision that healing traditions cannot match. They cannot always fix it, but they can always name it.</p></div>
+      </div>
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#1a1208">🌸</div><div class="cr-culture">Hindu / Kanya Siddha</div><div class="cr-name">Kanya — The Sanctum of Flawless Service</div><div class="cr-lens" style="color:#a8a8e8;border-color:#a8a8e844;background:#12121a">Sacred</div></div>
+        <div class="cr-body"><p class="cr-text">The Kanya tradition reads Virgo as <strong>service as the highest spiritual act</strong> — not service because it is efficient, not service because the hive demands it, but service because the act of placing another's need before your own is the closest a mortal can come to divine selflessness. The Sanctum of Flawless Service functions as a hospital because Kanya energy naturally draws practitioners toward the healing of specific, individual suffering. <strong>Unique access:</strong> Kanya practitioners can cure magical ailments that no other healing tradition can touch — diseases produced by Void-energy, blight-rot from the Ashen Coil, and psychic wounds left by Mycelian Resonance exposure. The Order of Pure Reason's inability to replicate the Mantra of Purification is because they are trying to systematize what is fundamentally a relational act.</p></div>
+      </div>
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#0a1a12">🌊</div><div class="cr-culture">Babylonian / Abyssal Sea</div><div class="cr-name">Absin — The Furrow, The Regency of Order</div><div class="cr-lens" style="color:#cc4466;border-color:#cc446644;background:#1a0a10">Logistical</div></div>
+        <div class="cr-body"><p class="cr-text">The Babylonian Virgo (Absin, "The Furrow") reads the sign as <strong>the principle of record-keeping and logistical precision</strong> — the furrow in the field as the ordered structure that makes abundance possible. The Quartermaster's Log city is a pure Absin expression: cartography, records, supply chain management, all elevated to sacred practice. <strong>Unique access:</strong> Absin practitioners can track and predict systemic patterns — supply flows, migration routes, magical current movements — with an accuracy that feels supernatural but is actually pure pattern analysis applied at Virgo's depth. Regent Kanya-Maris secretly feeds purification ritual data to the Great One's Regency through Absin-tradition analysis of the ocean currents.</p></div>
+      </div>
+    </div>
+    <div class="warning-block"><div class="wb-title">The Irony of Lady Virgo</div><div class="wb-text">Lady Virgo's Western analytical approach to Virgo energy — anti-magic systematization through the Order of Pure Reason — is specifically targeting the Kanya Siddha's sacred service approach and the Bee-Priestess's hive collective approach. She is using one facet of Virgo's power to attack the other facets of the same power. The Order of Pure Reason's anti-magic field, if deployed globally, would destroy the Ashé-Touched (who express Virgo's communal facet through Orisha tradition) and would render the Kanya Siddha's healing ability inoperative. <strong>Lady Virgo is attempting to use Virgo against Virgo — and does not know this is what she is doing.</strong></div></div>
+  </div>
+</div>
+
+<!-- LIBRA -->
+<div class="sign-master" style="border-color:#5aabe844" onclick="toggleSign(this)">
+  <div class="sign-head">
+    <div class="sign-glyph" style="background:#0a1228;border-color:#5aabe844">♎</div>
+    <div><div class="sign-name">Libra</div><div class="sign-domain">Divine Law · Cosmic Balance · Justice · The Standard Against Which All Is Measured</div></div>
+    <div class="sign-beast" style="color:#5aabe8;border-color:#5aabe844;background:#0a1228">The Great Roc</div>
+  </div>
+  <div class="sign-body">
+    <div class="culture-grid">
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#0a1228">⚖</div><div class="cr-culture">Western / Aetheria</div><div class="cr-name">Lord Libra — High Arbiter of Equilibrium</div><div class="cr-lens" style="color:#5aabe8;border-color:#5aabe844;background:#0a1020">Judicial</div></div>
+        <div class="cr-body"><p class="cr-text">Western Libra is <strong>justice as structure</strong> — the scales as the mechanism by which all things are weighed against a fixed standard. Lord Libra's non-interference law is a Western Libra expression taken to its logical extreme: the scales only function if the weigher doesn't put their thumb on one side. The problem is that inaction is itself a choice that weights the scales. <strong>Unique access:</strong> Western Libra practitioners can detect the precise degree to which any situation is unbalanced — magical, political, ecological, or spiritual — and can apply a corrective force of exactly the required magnitude. The issue is that "the required magnitude" in wartime is often larger than the tradition's framework permits.</p></div>
+      </div>
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#0a1a12">🌿</div><div class="cr-culture">Yoruba / Ashélands</div><div class="cr-name">Orunmila — The Table of Ifá</div><div class="cr-lens" style="color:#8aaa44;border-color:#8aaa4444;background:#121a08">Destiny</div></div>
+        <div class="cr-body"><p class="cr-text">The Yoruba tradition reads Libra energy through Orunmila — not as a scale of justice but as <strong>the recording of destiny itself</strong>. Orunmila knows what every soul was designed to be, and Libra energy is the force that keeps souls aligned with their intended path. Balance here is not between opposing forces — it is between what a soul is doing and what it was meant to do. <strong>Unique access:</strong> Ifá practitioners can read a person's intended destiny through divination and identify the precise point where they diverged from it — not to judge them, but to help them return. This is why Ifá divination is so accurate: it's not predicting the future, it's reading the gap between intended and actual.</p></div>
+      </div>
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#1a1808">🦅</div><div class="cr-culture">Persian / Chinvat</div><div class="cr-name">The Eagle Clan — Ahura's Perch</div><div class="cr-lens" style="color:#e8c87e;border-color:#e8c87e44;background:#1a1808">Cosmic Law</div></div>
+        <div class="cr-body"><p class="cr-text">The Avian tradition reads Libra through the Eagle Clan at Ahura's Perch — the highest settlement in the world. Here Libra is <strong>Asha, the cosmic principle of truth and order</strong> (as opposed to Druj, the lie). The Wind of the Unblinking Gaze makes falsehood impossible to speak at Justice-Rock Village because this tradition understands Libra as the force that makes truth physically mandatory rather than merely preferred. <strong>Unique access:</strong> Eagle Clan practitioners can create zones of enforced honesty — not compulsion to speak, but impossibility to lie. Any false statement physically cannot be spoken within the zone. Lord Libra's entire court at Equilibrium runs on a permanent low-level version of this working that no Western tradition could have designed.</p></div>
+      </div>
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#1a0a10">⚖</div><div class="cr-culture">Babylonian / Abyssal Sea</div><div class="cr-name">Zibanitu — The Scales</div><div class="cr-lens" style="color:#cc4466;border-color:#cc446644;background:#1a0a10">Trade</div></div>
+        <div class="cr-body"><p class="cr-text">The Babylonian tradition reads Libra as <strong>the principle of fair exchange</strong> — the scales of commerce rather than the scales of justice. Calm Harbor is a Zibanitu expression: all trade passing through it is subject to a cosmic fairness principle that prevents cheating in ways that go beyond the merely legal. A Zibanitu-tradition practitioner can feel when an exchange is unfair at a fundamental level, regardless of whether any law has been broken. <strong>Unique access:</strong> Zibanitu practitioners can evaluate the true worth of anything — not market value, but intrinsic cosmic worth. This makes them extraordinary in negotiations, impossible to deceive with false valuations, and deeply uncomfortable to many merchants.</p></div>
+      </div>
+    </div>
+    <div class="lore-block"><div class="lb-title">The Three Fragments of Orunmila — A Libra Convergence</div><div class="lb-text">The Great Roc (physical body), the Aurorans (atmospheric divine energy), and the Elder Anchor of Libra in Argent Spire (informational attunement) are all fragments of Orunmila — and Orunmila is simultaneously the Western Libra force and the Yoruba Orisha of destiny. The Ifá tradition's ongoing bond with Orunmila through initiated practitioners is therefore a <strong>living connection to a fragment of a Legendary Beast that no Western practitioner has achieved</strong>. The Comet-Magi's claim that their system is the original divine language is falsified by the simple fact that the Ifá tradition has maintained active contact with a Libra fragment for four thousand years while the Comet-Magi have been trying to study it from a distance.</div></div>
+  </div>
+</div>
+
+<!-- SCORPIO -->
+<div class="sign-master" style="border-color:#a87ee844" onclick="toggleSign(this)">
+  <div class="sign-head">
+    <div class="sign-glyph" style="background:#180a28;border-color:#a87ee844">♏</div>
+    <div><div class="sign-name">Scorpio</div><div class="sign-domain">Secrets · Death · Transformation · What Must Be Hidden · The Truth That Destroys</div></div>
+    <div class="sign-beast" style="color:#a87ee8;border-color:#a87ee844;background:#180a28">The Stygian Scorpion</div>
+  </div>
+  <div class="sign-body">
+    <div class="culture-grid">
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#180a28">🦂</div><div class="cr-culture">Western / Mare Occultum</div><div class="cr-name">Lady Scorpio — The Veiled Dagger</div><div class="cr-lens" style="color:#a87ee8;border-color:#a87ee844;background:#180a28">Shadow</div></div>
+        <div class="cr-body"><p class="cr-text">Western Scorpio is <strong>power through concealment</strong> — the thing that is most powerful when hidden. Lady Scorpio's assassins, the Loom of Fate's Academy of Whispers, the Final Gate to the realm of the dead that no one must find — all of these are Western Scorpio expressions. The Stygian Scorpion hides in the bog because Scorpio power comes from the gap between what is known and what is real. <strong>Unique access:</strong> Western Scorpio practitioners are masters of concealment magic — not just illusion, but the actual removal of information from awareness. They can make a fact unknowable, a person unremembered, an event unseen even by magical retrospection.</p></div>
+      </div>
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#1a0a10">🌊</div><div class="cr-culture">Babylonian / Abyssal Sea</div><div class="cr-name">Girtab — The Scorpion</div><div class="cr-lens" style="color:#cc4466;border-color:#cc446644;background:#1a0a10">Toxic</div></div>
+        <div class="cr-body"><p class="cr-text">The Babylonian tradition reads Scorpio as <strong>the transformative power of poison</strong> — the substance that changes what it touches irrevocably. Stinging-Brine City's salt evaporation pools are a Girtab expression: the brine transforms organic matter, preserves some things and destroys others, and the Girtab-tradition society has built an economy around controlled transformation. <strong>Unique access:</strong> Girtab practitioners understand the precise threshold between transformative and destructive — they can administer any poison, toxin, or corrosive substance at exactly the dose that transforms without killing, that reveals without destroying, that strips away what was false without harming what was true. The Heart-Sting Toxin's truth-revealing properties are a Girtab-tradition discovery.</p></div>
+      </div>
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#0a1a12">💀</div><div class="cr-culture">Yoruba / Ashélands</div><div class="cr-name">Oya — Wind, Storm, Death Transition</div><div class="cr-lens" style="color:#8aaa44;border-color:#8aaa4444;background:#121a08">Transition</div></div>
+        <div class="cr-body"><p class="cr-text">The Yoruba tradition maps Scorpio energy to Oya — the Orisha of storms, wind, and the moment of death's crossing. Scorpio here is not about secrets or poison but about <strong>the border between states of being</strong>. The Cemetery Gates dungeon in the Ashélands is a Scorpio location expressed through Oya's lens: the transition itself is the power, not what lies on either side. <strong>Unique access:</strong> Oya practitioners can operate at thresholds — the moment of death, the edge of a storm, the instant of transformation — with a facility that Western Scorpio shadow-magic cannot match. They can guide transitions, ease passages between states, and prevent transformation from becoming destruction.</p></div>
+      </div>
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#1a0a10">🎋</div><div class="cr-culture">Mayan / K'uh-la'an</div><div class="cr-name">Kimi — The Transformer, Lord of Death</div><div class="cr-lens" style="color:#e87e3a;border-color:#e87e3a44;background:#2a1208">Ancestral</div></div>
+        <div class="cr-body"><p class="cr-text">The Mayan tradition reads Scorpio through Kimi — the Day-Lord of Death — but in a completely non-Western sense. Death here is <strong>the ancestor relationship</strong>: the dead do not leave, they transform into advisors. Xibalba's Gate in K'uh-la'an is not a place of fear but a city where the wise dead await consultation. <strong>Unique access:</strong> Kimi practitioners have the deepest ancestor communion magic in the world — they can consult not just recently dead individuals but lineages going back generations, receiving accumulated wisdom that no living individual possesses. The scriptoriums of Deep Anthos City are Kimi-tradition work: recording the dead so they remain consultable.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PISCES -->
+<div class="sign-master" style="border-color:#5aabe844" onclick="toggleSign(this)">
+  <div class="sign-head">
+    <div class="sign-glyph" style="background:#0a1228;border-color:#5aabe844">♓</div>
+    <div><div class="sign-name">Pisces</div><div class="sign-domain">Prophecy · Dreams · The Unseen World · What Exists Before It Manifests</div></div>
+    <div class="sign-beast" style="color:#5aabe8;border-color:#5aabe844;background:#0a1228">The Twin Dream-Fish</div>
+  </div>
+  <div class="sign-body">
+    <div class="culture-grid">
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#0a1228">🐟</div><div class="cr-culture">Western / Mare Occultum</div><div class="cr-name">Lady Pisces — The Mystic Veil</div><div class="cr-lens" style="color:#5aabe8;border-color:#5aabe844;background:#0a1020">Dream</div></div>
+        <div class="cr-body"><p class="cr-text">Western Pisces is <strong>the world behind the world</strong> — the dream-space where what will happen already exists before it arrives in reality. Markab's Reflection, the misty lagoon city, is hidden precisely because Pisces energy produces places that exist in the overlap between waking and dreaming. The Twin Dream-Fish swim in a perfect circle because prophecy is not linear — it is recursive, each future containing the seeds of the past that produced it. <strong>Unique access:</strong> Western Pisces practitioners access prophecy through immersion — entering the dream-space directly and reading what they find there. The most accurate, and the most dangerous. Becoming lost in Laya (cosmic dissolution) is specifically a Western Pisces risk.</p></div>
+      </div>
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#0a1a12">🌊</div><div class="cr-culture">Yoruba / Ashélands</div><div class="cr-name">Oshun — The Sweet Rivers, Prophecy of Love</div><div class="cr-lens" style="color:#8aaa44;border-color:#8aaa4444;background:#121a08">Relational</div></div>
+        <div class="cr-body"><p class="cr-text">The Yoruba tradition maps Pisces energy to Oshun — who is not a dream-goddess but a goddess of love, rivers, and sweet water. The Ashélands read Pisces not as the unseen world but as <strong>the emotional undercurrent that shapes events</strong>. Oshun's prophecy comes not from entering dreams but from reading the feeling-quality of a situation — she knows what will happen because she knows what people want, and wanting shapes reality. <strong>Unique access:</strong> Oshun practitioners read prophecy through emotional resonance — they feel the future in the quality of the present moment's desire. Less precise than Western dream-immersion, far more accurate about human behavior specifically. The Spirit Route between the Ashélands and K'uh-la'an carries Oshun-tradition prophecy that the Twin Dream-Fish's cenote in K'uh-la'an amplifies.</p></div>
+      </div>
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#1a1408">🐉</div><div class="cr-culture">Chinese / Shen-lì</div><div class="cr-name">The Pig — Bountiful Feast, Generous Dissolution</div><div class="cr-lens" style="color:#c9a84c;border-color:#c9a84c44;background:#1a1408">Abundance</div></div>
+        <div class="cr-body"><p class="cr-text">The Chinese zodiac maps Pisces to the Pig — which sounds comic but is cosmologically coherent. The Pig tradition reads Pisces energy as <strong>the dissolution of boundaries in generosity</strong>: the quality of giving without calculation, of abundance that overflows because it does not distinguish between self and other. The Grotto of the Giving Land being corrupted (causing the governor's generosity to curdle into gluttony) is a Pisces-energy corruption — the dissolution of boundaries, when it turns inward, becomes consumption rather than sharing. <strong>Unique access:</strong> Pig-tradition practitioners can access Pisces energy through acts of genuine generosity — magical workings powered by giving rather than by will, by opening rather than by directing.</p></div>
+      </div>
+      <div class="culture-row" onclick="toggleCulture(event,this)">
+        <div class="cr-head"><div class="cr-flag" style="background:#1a0a10">🌊</div><div class="cr-culture">Babylonian / Abyssal Sea</div><div class="cr-name">Zibbati — The Tails, The Final Harbor</div><div class="cr-lens" style="color:#cc4466;border-color:#cc446644;background:#1a0a10">Dissolution</div></div>
+        <div class="cr-body"><p class="cr-text">The Babylonian tradition reads Pisces as <strong>the end of all journeys</strong> — The Final Harbor where ships come to rest, the Sea of Surrender where all currents die and the water is like glass. This is Pisces as completion rather than prophecy: the moment when all motion ceases not because it was stopped but because it was fulfilled. <strong>Unique access:</strong> Zibbati practitioners can bring things to their natural conclusion — ending long-running curses, completing unfinished magical workings, and releasing the energy of things that should have ended but haven't. They are the rarest and most sought-after magical specialists for dealing with ancient unresolved enchantments.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- CULTURAL CONTACT -->
+<div class="panel" id="panel-contact">
+<p class="detail-text">When cultures that interpret the same zodiac force differently encounter each other, the result is rarely simple. Sometimes it is synthesis — two frameworks combining to access facets of a sign neither could reach alone. More often it is conflict — not because either culture is wrong, but because each believes it is complete.</p>
+
+<div class="why-card">
+  <div class="why-title">The Order of Pure Reason's Fatal Error</div>
+  <div class="why-text">Lady Virgo's Order has identified that multiple cultural systems interpret Virgo energy differently. Their response has been to classify the Western analytical tradition as primary and the others as corruption or degradation. This is epistemologically coherent within their framework — and cosmically catastrophic. The Kanya Siddha's ability to cure Void-energy illness (which the Order cannot replicate) exists precisely because it accesses the <em>sacred service</em> facet of Virgo that the analytical tradition has no vocabulary for. When the Order deploys the anti-magic field, they will be suppressing their own sign's healing capacity at precisely the moment the world needs it most. The Ashen Coil's blight-rot is an Ashen Coil weapon specifically designed to be uncurable by the Order's analytical Virgo magic — and curable only by the Kanya Siddha tradition the Order is trying to destroy.</div>
+</div>
+
+<div class="why-card">
+  <div class="why-title">The Cross-Cultural Practitioner — The World's Most Dangerous Person</div>
+  <div class="why-text">A practitioner who has been trained in two or more cultural interpretations of the same zodiac sign can access facets of that sign's power that no single-tradition practitioner can touch. In mechanical terms: they can choose which tradition's "Unique access" ability to use in any given situation. In narrative terms: they see a sign's power as multidimensional rather than defined by one framework.<br><br>Such practitioners are extraordinarily rare — learning a magical tradition deeply enough to access its unique facets requires years of immersion in the culture that produced it, and most traditions are deeply resistant to teaching outsiders. The Siddha Orders are the most accessible, having a formal student tradition. The Orisha path requires community membership that cannot be faked. The Norse runic tradition has no teachers — it must be absorbed through the land itself.<br><br>Arch-Oracle Lyra's Resonant Binding requires a cross-cultural practitioner to execute. This is why she needs the heroes — not because they are the most powerful people in the world, but because their travels have potentially given them access to multiple cultural frameworks that no single institution's mage possesses.</div>
+</div>
+
+<div class="why-card">
+  <div class="why-title">Moments of Synthesis in History</div>
+  <div class="why-text"><strong>The Duchy Compact of Terra Firma</strong> was negotiated with an Ash-tradition Tuathan diplomat (who could operate between frameworks), a Western Libra arbiter (who could enforce fairness), and a Zibanitu-tradition Babylonian observer (who could feel when the exchange was genuinely equitable). Three Libra interpretations in the room, none identical, together achieving what no single tradition could.<br><br><strong>The Kanya Siddha's founding Triad</strong> combined Western Virgo analytical precision with Hindu Kanya sacred service — the diagnostic capacity of one tradition with the relational healing capacity of the other. This is why their sanctum can treat ailments no other healer can identify.<br><br><strong>The Ifá tradition's persistence</strong> is a four-thousand-year synthesis between the Yoruba Orisha approach to Libra (Orunmila as destiny-recorder) and whatever the original pre-Fall divine language was. The Comet-Magi cannot access this synthesis because they have declared it inferior. They are, consequently, unable to maintain active contact with any Legendary Beast fragment — something the Ifá practitioners do as a matter of routine.</div>
+</div>
+
+<div class="why-card">
+  <div class="why-title">Aethar's Cross-Cultural Knowledge — The Real Threat</div>
+  <div class="why-text">Aethar was present before the Pantheonic Fall. He was present when the cultural divergence began. He has had four thousand years to observe every cultural interpretation of every zodiac sign develop from its origins. He understands every tradition's unique access capability — and consequently knows every tradition's unique vulnerability.<br><br>The Ashen Coil's 13 Scions are each assigned to a zodiac sign — and each Scion's corruption strategy is designed specifically for that sign's cultural expressions. The Scion of the Perfect Blight targets Virgo's healing capacity. The Scion of the Broken Ram targets Aries' initiation energy. They are not generalist entropic forces — they are tailored counter-cultural weapons, designed by a being who understands every facet of every tradition.<br><br><strong>The only counter to this is the same thing it always was: synthesis.</strong> A being who understands all the facets. Which is what the Quint Bond's Fate Sight would produce — five bonded souls collectively perceiving the Loom, which means collectively perceiving all the cultural frameworks simultaneously. Aethar cannot design a tailored counter to what he cannot categorize into a single tradition.</div>
+</div>
+</div>
+
+<!-- OPHIUCHUS -->
+<div class="panel" id="panel-ophiuchus">
+<p class="detail-text">Every cultural zodiac system in Sideros has a gap where the thirteenth should be. This is not the same as having no awareness of the thirteenth force — every culture has stories about what lives in that gap. They simply do not build traditions around it.</p>
+
+<div class="section-head">How Each Culture Handles the Thirteenth</div>
+
+<div class="culture-grid" style="margin-bottom:1.5rem">
+  <div class="culture-row expanded" onclick="this.classList.toggle('expanded')">
+    <div class="cr-head"><div class="cr-flag" style="background:#1a0a0a">⛎</div><div class="cr-culture">Western / Terra Firma</div><div class="cr-name">Ophiuchus — The Omen Sign</div><div class="cr-lens" style="color:#cc4444;border-color:#cc444444;background:#1e0a0a">Excluded</div></div>
+    <div class="cr-body open"><p class="cr-text">Western astrology acknowledges Ophiuchus as a thirteenth zodiac constellation but treats it as an <strong>omen rather than a governing sign</strong>. Being born under it (Fate Number 13, 66, or 99) is noted as significant but not assigned a practitioner tradition. The Void-Touched designation exists in Western practice but has no temple, no siddha, no formal path. Western culture has effectively decided that the thirteenth cannot be safely institutionalized and left the gap deliberately. This is the wisest thing the Western tradition has ever done.</p></div>
+  </div>
+  <div class="culture-row" onclick="this.classList.toggle('expanded')">
+    <div class="cr-head"><div class="cr-flag" style="background:#0a1020">🐍</div><div class="cr-culture">Norse / Boreal</div><div class="cr-name">Jörmungandr — The World Serpent</div><div class="cr-lens" style="color:#5aabe8;border-color:#5aabe844;background:#0a1020">Contained</div></div>
+    <div class="cr-body"><p class="cr-text">The Norse tradition gives the thirteenth a name — Jörmungandr, the Midgard Serpent — and immediately puts it in a box. The World Serpent circles Midgard because <strong>the Norse answer to the thirteenth force is containment through narrative</strong>. You don't worship Jörmungandr. You know it exists, you know what happens when it releases its tail, and you build your entire civilization with that release (Ragnarok) as the fixed endpoint. The Reign of Jörmungandr in the Boreal Expanse is a culture that lives in constant awareness of the end — not in despair but in a strange clarity. They know what's coming. They build anyway.</p></div>
+  </div>
+  <div class="culture-row" onclick="this.classList.toggle('expanded')">
+    <div class="cr-head"><div class="cr-flag" style="background:#0a1a12">🌿</div><div class="cr-culture">Celtic / Tuathan</div><div class="cr-name">The Hollow Trunk — The Void Between</div><div class="cr-lens" style="color:#3b9e6e;border-color:#3b9e6e44;background:#0a1a12">Portal</div></div>
+    <div class="cr-body"><p class="cr-text">The Tuatha handle the thirteenth by making it <strong>a portal rather than a force</strong>. The Hollow Trunk of the first Elder tree is not a deity, not a sign, not a governing principle — it is a door to a void between life and death. The Celtic tradition's wisdom is that Ophiuchus energy cannot be personified or institutionalized; it can only be entered and exited. The Hollow Trunk is the most honest cultural treatment of the thirteenth: it leads somewhere that nothing can be said about, and the tradition simply points at it and says "this is there, don't build a house in it."</p></div>
+  </div>
+  <div class="culture-row" onclick="this.classList.toggle('expanded')">
+    <div class="cr-head"><div class="cr-flag" style="background:#1a1408">🐉</div><div class="cr-culture">Chinese / Shen-lì</div><div class="cr-name">No Thirteenth — The Deliberate Absence</div><div class="cr-lens" style="color:#c9a84c;border-color:#c9a84c44;background:#1a1408">Excluded</div></div>
+    <div class="cr-body"><p class="cr-text">The Chinese zodiac simply does not have a thirteenth animal. Twelve and done. The Azure Dragon Palace's bureaucracy has no category for Ophiuchus-aspected individuals and has no official response to the question of what the thirteenth force is. Unofficially, the Jade Bureaucracy's oldest texts — the ones the Grand Prime Forgeman of Argent Spire has read and no one else living has — contain a thirteenth animal designation that was deliberately excised from the official canon approximately 2,000 years ago. <strong>The excision was ordered by an Emperor whose records were also excised.</strong> The Gear-Forged of Elethorn's ruins may carry memory of what was removed.</p></div>
+  </div>
+  <div class="culture-row" onclick="this.classList.toggle('expanded')">
+    <div class="cr-head"><div class="cr-flag" style="background:#1a1008">⚡</div><div class="cr-culture">Yoruba / Ashélands</div><div class="cr-name">The Unnameable — What Ifá Does Not Read</div><div class="cr-lens" style="color:#8aaa44;border-color:#8aaa4444;background:#121a08">Silence</div></div>
+    <div class="cr-body"><p class="cr-text">The Ifá tradition has 256 Odù (sacred verses) covering essentially all of existence. There is one configuration of the divining chain that the tradition explicitly refuses to read — a pattern of palm nuts that Babalawos are trained to recognize and immediately set aside without interpreting. It is called <strong>Ofun Meji in its corrupted form</strong> — the void configuration. Every Babalawo knows what it looks like. None know what it means because the tradition has never permitted the reading to be completed. The Yoruba answer to the thirteenth is silence — not ignorance, but deliberate non-engagement as the most sophisticated possible response.</p></div>
+  </div>
+  <div class="culture-row" onclick="this.classList.toggle('expanded')">
+    <div class="cr-head"><div class="cr-flag" style="background:#1a0a10">🌊</div><div class="cr-culture">Babylonian / Abyssal Sea</div><div class="cr-name">Tiamat — The Abyssal Sea Itself</div><div class="cr-lens" style="color:#cc4466;border-color:#cc446644;background:#1a0a10">Cosmological</div></div>
+    <div class="cr-body"><p class="cr-text">The Babylonian tradition names the entire Abyssal Sea after Tiamat — the primordial mother of chaos, the dragon-serpent from whose body the world was made. The thirteenth force in Babylonian cosmology is not a person or a sign but <strong>the primordial substrate</strong> — the chaos that existed before order and that continues to exist beneath the order the twelve signs maintain. The Maw of the Hollow Serpent being located in the deepest part of the Abyssal Sea of Tiamat is not a coincidence. The Babylonian tradition has been living on top of the thirteenth force's prison for their entire civilizational history and their mythology is a cultural encoding of that fact.</p></div>
+  </div>
+</div>
+
+<div class="why-card">
+  <div class="why-title">Why the Ashen Coil Cannot Succeed — The Cultural Consensus</div>
+  <div class="why-text">Every culture on Sideros, independently, arrived at the same conclusion about the thirteenth force: do not build a tradition around it. Western astrologers left a gap. Norse myth enclosed it in narrative containment. Celtic tradition made it a portal you visit but don't inhabit. Chinese bureaucracy excised it from canon. Yoruba practice encoded silence as the response. Babylonian cosmology named the sea after it as a warning about what lies beneath.<br><br>This is not coincidence. This is <strong>four thousand years of accumulated cultural wisdom</strong> encoding the lesson that the Ashen Coil is currently ignoring: the thirteenth force does not empower practitioners — it consumes them. Every tradition that has tried to build a worshipper relationship with Ophiuchus energy has ended within two generations, the practitioners either dead, corrupted, or absorbed into the force they were trying to channel.<br><br>Aethar is a brilliant man who read the Kallos records and thought he found a counter-argument to this pattern. He did not find a counter-argument. He found evidence that a Quad Bond's catastrophic severance can do what the Hollow Serpent wants — and mistook the pattern's exception for an exception to the pattern. The thirteenth force showed him the one example that fit his thesis and withheld the four thousand years of evidence that refute it.<br><br><strong>This is how the Hollow Serpent works. It does not argue. It curates.</strong></div>
+</div>
+</div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).style.display='block';
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+function toggleSign(el){
+  el.classList.toggle('expanded');
+}
+function toggleCulture(e,el){
+  e.stopPropagation();
+  const body=el.querySelector('.cr-body');
+  if(body)body.classList.toggle('open');
+}
+document.querySelectorAll('.panel').forEach(p=>{p.style.display='none'});
+document.getElementById('panel-why').style.display='block';
+</script>
+</body>
+</html>

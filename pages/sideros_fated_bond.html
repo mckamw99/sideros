@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — The Fated Bond</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Cinzel:wght@400;500;600&family=Cinzel+Decorative:wght@400&display=swap');
+:root{
+  --void:#06080a;--void-mid:#0c1014;--parchment:#f2e8d0;--parchment-dim:rgba(242,232,208,0.52);
+  --gold:#c8a84a;--gold-dim:#7a6020;--gold-bright:#eacb6a;
+  --bond-1:#b86030;--bond-2:#7a6090;--bond-3:#4a8a90;--bond-4:#c0a040;--bond-5:#9060b8;
+  --alpha:#d4724a;--beta:#4a8ec4;--omega:#9066c8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Cormorant Garamond',Georgia,serif;background:var(--void);color:var(--parchment);line-height:1.78;min-height:100vh;background-image:radial-gradient(ellipse at 20% 0%,rgba(184,96,48,0.06) 0%,transparent 45%),radial-gradient(ellipse at 80% 0%,rgba(144,96,184,0.05) 0%,transparent 45%);}
+.hero{text-align:center;padding:4.5rem 1.5rem 3.5rem;border-bottom:1px solid rgba(200,168,74,0.12);}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:1rem}
+.hero-title{font-family:'Cinzel Decorative',serif;font-size:clamp(20px,4vw,34px);color:var(--gold-bright);letter-spacing:.05em;margin-bottom:.5rem;line-height:1.2}
+.hero-sub{font-size:16px;font-style:italic;color:var(--parchment-dim);max-width:520px;margin:.4rem auto 0}
+.nav-strip{display:flex;gap:4px;flex-wrap:wrap;padding:.7rem 1rem;border-bottom:1px solid rgba(200,168,74,0.1);background:var(--void-mid);position:sticky;top:0;z-index:30}
+.nav-btn{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.09em;text-transform:uppercase;padding:4px 10px;border:1px solid rgba(200,168,74,0.18);border-radius:3px;background:transparent;color:var(--parchment-dim);cursor:pointer;transition:all .15s;white-space:nowrap}
+.nav-btn.active{color:var(--gold-bright);border-color:rgba(200,168,74,0.45);background:rgba(200,168,74,0.08)}
+.panel{display:none}.panel.active{display:block}
+.wrap{max-width:900px;margin:0 auto;padding:2.5rem 1.25rem 5rem}
+.lore{font-size:15px;color:rgba(242,232,208,0.82);line-height:1.9;margin-bottom:1rem}
+.lore strong{color:var(--parchment);font-weight:500}
+.sec{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin:1.75rem 0 .75rem;display:flex;align-items:center;gap:.6rem}
+.sec::after{content:'';flex:1;height:1px;background:rgba(200,168,74,0.1)}
+.essence-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:1.25rem}
+.essence-table th{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);padding:7px 10px;text-align:left;border-bottom:1px solid rgba(200,168,74,0.18)}
+.essence-table td{padding:8px 10px;border-bottom:1px solid rgba(200,168,74,0.07);color:rgba(242,232,208,0.75);vertical-align:top;line-height:1.55;font-size:13px}
+.essence-table td:first-child{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.04em;white-space:nowrap;color:var(--gold-bright)}
+.essence-table td:nth-child(2){color:var(--parchment-dim);font-style:italic;white-space:nowrap}
+.essence-table tr:last-child td{border-bottom:none}
+.tier{border-radius:10px;padding:1.5rem 1.5rem 1.25rem;margin-bottom:1.5rem;border:1px solid}
+.tier-eyebrow{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.5rem;display:block;opacity:.7}
+.tier-name{font-family:'Cinzel Decorative',serif;font-size:clamp(17px,2.5vw,22px);font-weight:400;letter-spacing:.04em;margin-bottom:.3rem}
+.tier-stat{font-size:12px;font-style:italic;color:var(--parchment-dim);margin-bottom:1rem;display:block}
+.ability-grid{display:grid;gap:7px;margin-bottom:.75rem}
+.ability{background:rgba(255,255,255,0.02);border:1px solid rgba(200,168,74,0.1);border-radius:7px;padding:10px 13px;cursor:pointer;overflow:hidden;transition:border-color .15s}
+.ability:hover,.ability.open{border-color:rgba(200,168,74,0.28)}
+.ah{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.an{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.05em;color:var(--gold-bright)}
+.ab{display:none;margin-top:8px;padding-top:8px;border-top:1px solid rgba(200,168,74,0.08);font-size:13px;color:rgba(242,232,208,0.75);line-height:1.72}
+.ability.open .ab{display:block}
+.ab strong{color:var(--parchment);font-weight:500}
+.culture-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:1rem}
+.culture-table th{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);padding:7px 10px;text-align:left;border-bottom:1px solid rgba(200,168,74,0.18)}
+.culture-table td{padding:7px 10px;border-bottom:1px solid rgba(200,168,74,0.06);color:rgba(242,232,208,0.75);vertical-align:top;font-size:13px;line-height:1.5}
+.culture-table td:first-child{color:var(--parchment);font-weight:500;white-space:nowrap}
+.culture-table tr:last-child td{border-bottom:none}
+.hist{background:rgba(255,255,255,0.018);border:1px solid rgba(200,168,74,0.1);border-radius:9px;padding:14px 16px;margin-bottom:.9rem;cursor:pointer;overflow:hidden;transition:border-color .15s}
+.hist:hover,.hist.open{border-color:rgba(200,168,74,0.28)}
+.hh{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.hn{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.04em;color:var(--gold-bright)}
+.htag{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:2px;border:1px solid rgba(200,168,74,0.22);color:var(--gold-dim);white-space:nowrap;flex-shrink:0}
+.hb{display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(200,168,74,0.08);font-size:13px;color:rgba(242,232,208,0.75);line-height:1.72}
+.hist.open .hb{display:block}
+.hb strong{color:var(--parchment);font-weight:500}
+.note{border-radius:8px;padding:12px 15px;margin:.9rem 0;font-size:13px;color:rgba(242,232,208,0.75);line-height:1.68}
+.note-title{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.13em;text-transform:uppercase;margin-bottom:6px}
+.note strong{color:var(--parchment);font-weight:500}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-eyebrow">Sideros / Astrolan — Cosmic Architecture</div>
+  <h1 class="hero-title">The Fated Bond</h1>
+  <p class="hero-sub">The Loom of Fate does not weave haphazardly. When two — or more — souls share a Fate Number within the sacred margin, the Aether recognizes them.</p>
+</div>
+<div class="nav-strip">
+  <button class="nav-btn active" onclick="show('foundation',this)">Foundation</button>
+  <button class="nav-btn" onclick="show('tiers',this)">Bond Tiers</button>
+  <button class="nav-btn" onclick="show('omega',this)">Male Omega Births</button>
+  <button class="nav-btn" onclick="show('shared',this)">Shared Abilities</button>
+  <button class="nav-btn" onclick="show('history',this)">Historical Bonds</button>
+  <button class="nav-btn" onclick="show('complications',this)">Complications</button>
+</div>
+
+<!-- FOUNDATION -->
+<div class="panel active" id="panel-foundation"><div class="wrap">
+  <p class="lore">At character creation, every soul in Sideros rolls a Fate Number — a value from 1 to 100 representing the precise frequency at which their soul vibrates within the Loom of Fate. This number is cosmically fixed at birth. It cannot be forged or stolen — though it can be suppressed (Aether-Dampening Ore fields) or masked (Fate-Breaker Number Masking). A Fated Bond forms between souls whose numbers fall within specific margins of each other. The bond is not always romantic — it can manifest as profound friendship, sworn kinship, mentor and student, or rivals more essential to each other than any ally. But it is always <em>recognition</em>. The sensation of meeting a Fate's Mate is described universally as: <strong>"the feeling of remembering someone you have never met."</strong></p>
+  <div class="sec">The Essence Dynamic Within Bonds</div>
+  <table class="essence-table">
+    <tr><th>Pairing</th><th>Character</th><th>Historical Tendency</th></tr>
+    <tr><td>α + Ω</td><td>The classic heroic bond</td><td>Alpha acts; Omega sees. The Alpha would charge into darkness; the Omega already knows what is there. Neither is complete without the other. The Alpha receives the recognition; historians later discover the Omega was the architect.</td></tr>
+    <tr><td>α + β</td><td>The conquering pair</td><td>Alpha leads; Beta sustains. Empires are built on this pairing. Stable, productive, capable of operating across decades. The Alpha names the kingdom; the Beta builds it.</td></tr>
+    <tr><td>β + Ω</td><td>The civilizing bond</td><td>Beta implements what Omega designs. Produces institutions that outlast their founders by centuries. Founders of Paths, universities, and religious orders. Their names are in footnotes; their work shapes everything.</td></tr>
+    <tr><td>Ω + Ω</td><td>The visionary bond</td><td>Two pattern-seers amplifying each other to terrifying depth. When it works: world-changing philosophy or magic. When it breaks: disasters of the first order.</td></tr>
+    <tr><td>α + α</td><td>The rival bond</td><td>Two Alphas who recognize each other as the only worthy opponent. Great wars and great alliances in equal measure — often simultaneously.</td></tr>
+  </table>
+  <div class="sec">How Recognition Works</div>
+  <p class="lore">The first meeting between Fate's Mates produces a physical sensation consistently involving: sudden clarity of perception, warmth spreading from the chest, and the sense that the world has become slightly more real than it was a moment before. Alphas describe it as feeling "seen" for the first time. Betas describe it as "finally understanding what I was maintaining." Omegas describe it as "the pattern completing."</p>
+  <p class="lore">The bond does not compel action. It creates recognition and resonance — what the bonded pair does with that recognition is entirely their own choice. <strong>The Loom weaves the thread. Mortals decide whether to follow it.</strong></p>
+  <div class="sec">What the Loom of Fate Knows</div>
+  <p class="lore">The Loom of Fate — the spy network named for the cosmic framework — possesses the most complete records of Fate Numbers in existence, gathered through infiltration of birth records, temple registrations, and Comet-Magi initiation ceremonies. They use this knowledge to prevent inconvenient bonds from forming, to arrange politically useful ones, and to identify individuals whose Number combinations might produce catastrophic or miraculous results. The Stellar Cartographer Path can read a creature's Fate Number as an Instinct. The Loom employs dozens.</p>
+</div></div>
+
+<!-- TIERS -->
+<div class="panel" id="panel-tiers"><div class="wrap">
+  <p class="lore">Fated Bonds exist in five tiers of resonance. Each tier is exponentially rarer than the last and produces exponentially greater bond abilities — and exponentially greater consequences when the bond is threatened or broken.</p>
+
+  <div class="tier" style="background:rgba(184,96,48,0.06);border-color:rgba(184,96,48,0.25)">
+    <span class="tier-eyebrow" style="color:var(--bond-1)">Tier I</span>
+    <div class="tier-name" style="color:var(--bond-1)">Shared Pulse — The Paired Bond</div>
+    <span class="tier-stat">Two souls · Numbers within 10 points · Roughly 1 in 50 people finds a Shared Pulse</span>
+    <p class="lore" style="font-size:14px">The foundation of the Fated Bond system. Two souls whose numbers fall within 10 points experience immediate recognition and a persistent low-level resonance. Most people go their entire lives without meeting their Shared Pulse — not because the bond is rare, but because the world is vast.</p>
+    <div class="ability-grid">
+      <div class="ability open" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Resonant Awareness</div></div><div class="ab">Always know the general emotional state of the bonded partner — calm, distressed, focused, afraid. Not thoughts, not specifics. The feeling. Range: unlimited on the same plane.</div></div>
+      <div class="ability" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Shared Pulse</div></div><div class="ab">Resonant Fortune on one Warding Resonance per Brief Attunement when within 30 ft of the bonded partner. Extends to 60 ft after one month of continuous bonding.</div></div>
+      <div class="ability" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Shared Threshold</div></div><div class="ab">When the bonded partner drops to 0 Vitality within range, the other automatically succeeds their next Loom Test if they are also at 0 Vitality in the same encounter. The Loom does not easily let bonded souls leave together.</div></div>
+    </div>
+  </div>
+
+  <div class="tier" style="background:rgba(122,96,144,0.06);border-color:rgba(122,96,144,0.25)">
+    <span class="tier-eyebrow" style="color:var(--bond-2)">Tier II</span>
+    <div class="tier-name" style="color:var(--bond-2)">Threefold Resonance — The Triad Bond</div>
+    <span class="tier-stat">Three souls · Numbers within 7 points · Perhaps 1 in 500 · Uncommon — Noteworthy</span>
+    <p class="lore" style="font-size:14px">Three souls in resonance produce a qualitatively different bond — not merely stronger, but structurally more stable. A natural division of function emerges: one soul who initiates, one who sustains, one who transforms. Recognition of the third is often felt before they arrive — the bonded pair experiences persistent incompleteness resolved suddenly upon the third's arrival.</p>
+    <div class="ability-grid">
+      <div class="ability open" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">All Paired Bond Benefits</div></div><div class="ab">Extended to 60 ft at formation. All three members gain +1 to all Warding Resonances when within range of at least one other Triad member.</div></div>
+      <div class="ability" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Triad Sense</div></div><div class="ab">Passive awareness of all three members' emotional states and rough directional location at all times, regardless of distance. Always know if a bonded member is in danger, even across continents.</div></div>
+      <div class="ability" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Resonant Boost</div></div><div class="ab">Once per Deep Attunement, one member may transfer up to half their remaining Vitality to another Triad member as an Instinct, regardless of distance. The Aether carries it.</div></div>
+      <div class="ability" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Whisper Bond</div></div><div class="ab">Short-range telepathic communication (30 ft) between all Triad members simultaneously — impressions, intentions, and images rather than words. Effective in total silence.</div></div>
+    </div>
+  </div>
+
+  <div class="tier" style="background:rgba(74,138,144,0.06);border-color:rgba(74,138,144,0.25)">
+    <span class="tier-eyebrow" style="color:var(--bond-3)">Tier III</span>
+    <div class="tier-name" style="color:var(--bond-3)">Fourfold Convergence — The Quad Bond</div>
+    <span class="tier-stat">Four souls · Numbers within 5 points · Perhaps 1 in 5,000 · Rare — Historically Significant</span>
+    <p class="lore" style="font-size:14px">A Fourfold Convergence is an event. When four souls in tight numerical alignment find each other, the Aether responds — increased Aetheric activity, animals behaving unusually, those sensitive to the Loom feeling the convergence from miles away. Recognition is typically sequential.</p>
+    <div class="ability-grid">
+      <div class="ability open" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">All Prior Bond Benefits</div></div><div class="ab">All four members gain +2 to all Warding Resonances when at least two others are within range. Workings woven by bonded members deal +1 damage die or heal +1 die when another Quad member witnesses it.</div></div>
+      <div class="ability" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Full Telepathic Bond</div></div><div class="ab">Complete long-distance telepathic communication — actual words, not just impressions. Range: unlimited. The only natural phenomenon in Sideros that functions as a global telepathy network.</div></div>
+      <div class="ability" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Resonant Cascade</div></div><div class="ab">Once per Deep Attunement, all four members may simultaneously channel Aetheric energy into one member, allowing them to Weave any Working they know at maximum effect — no Working Threshold roll, maximum damage or healing automatically. Weaving members cannot Weave again for the remainder of the encounter.</div></div>
+      <div class="ability" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Aetheric Anchor</div></div><div class="ab">Within 300 ft of a gathered Quad Bond: Fade-Bleed cannot destabilise, the Stillness is weakened, Mycelian Resonance cannot hijack minds in the zone.</div></div>
+      <div class="ability" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Loom's Reluctance</div></div><div class="ab">A Quad Bond member cannot be reduced to 0 Vitality while at least two other members are conscious and within 300 ft — they drop to 1 Vitality instead. The Loom is not ready to cut a thread of this weight. <strong>Note:</strong> Distinct from Legendary Depth III Kindred Evolution, which makes the Quint Bond version permanent and unconditional. The Quad Bond's version requires two conscious members in proximity.</div></div>
+    </div>
+  </div>
+
+  <div class="tier" style="background:rgba(144,96,184,0.06);border-color:rgba(144,96,184,0.25)">
+    <span class="tier-eyebrow" style="color:var(--bond-5)">Tier IV</span>
+    <div class="tier-name" style="color:var(--bond-5)">Fivefold Convergence — The Quint Bond</div>
+    <span class="tier-stat">Five souls · Numbers within 3 points · Perhaps 1 in 100,000 · Legendary — Not in Written History</span>
+    <p class="lore" style="font-size:14px">No Fivefold Convergence has ever been recorded in written history. The Comet-Magi describe it as "a mortal approximation of a fallen god's power cluster." The Ashélands' Ifá scripture calls them <em>"the Five Who Remember What the Gods Were."</em></p>
+    <div class="ability-grid">
+      <div class="ability open" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">All Prior Bond Benefits at Maximum Extent</div></div><div class="ab">Every ability from Paired through Quad Bond, functioning at all times regardless of distance.</div></div>
+      <div class="ability" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Aetheric Sovereignty</div></div><div class="ab">The gathered Quint Bond generates a persistent Aetheric field equivalent to a Legendary Beast's presence — all lesser Aetheric effects within 1 mile are either amplified or suppressed at the group's collective will.</div></div>
+      <div class="ability" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Fate Sight</div></div><div class="ab">The five bonded souls collectively perceive the Loom of Fate directly — probability threads, imminent Fate Number convergences, and the shape of events before they occur. Not omniscience. Something approaching it.</div></div>
+      <div class="ability" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Resonant Survival</div></div><div class="ab">No member of a Quint Bond can be reduced to 0 Vitality while any other member is conscious — they drop to 1 Vitality and immediately restore 1d6 Vitality at the start of their next Moment. <strong>When Legendary Depth III (Kindred Evolution) is also active</strong>, this becomes unconditional — no longer requiring conscious allies in proximity. The two systems are cumulative: LD III deepens what the Quint Bond established into the body's architecture itself.</div></div>
+      <div class="ability" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Resonant Manifestation</div></div><div class="ab">The five bonded souls collectively manifest zodiac-level phenomena — weather responds to their emotional states, animals defer to them, and the Legendary Beasts recognize them as peers rather than mortals. This is not Working. It is what Working was before it needed to be cast.</div></div>
+    </div>
+    <div class="note" style="background:rgba(144,96,184,0.06);border:1px solid rgba(144,96,184,0.2);margin-top:.9rem">
+      <div class="note-title" style="color:var(--bond-5)">The Ifá Prophecy</div>
+      <em>"When the Serpent rises complete, the Five Who Remember will answer — not as gods, for gods have fallen, but as mortals who carry what the gods left behind."</em> If stages 1 through 3 of Aethar's plan are already in motion — and they are — the world is already in the conditions this prophecy describes. The Quint Bond may not be theoretical. It may be the world's immune response to the Hollow Serpent's return.
+    </div>
+  </div>
+</div></div>
+
+<!-- OMEGA BIRTHS -->
+<div class="panel" id="panel-omega"><div class="wrap">
+  <p class="lore">In Sideros, Primal Essence is not merely a social or Aetheric frequency — it is a biological reality woven into the Aether at the soul's formation. Male Omegas carry a unique distinction written into the world's metaphysics: when bonded with an Alpha partner in a recognized Fated Bond, a male Omega can carry and bear children. This is not Working or medical intervention. <strong>It is the Loom's design.</strong></p>
+  <p class="lore">The Aether recognizes the Alpha-Omega bond as cosmically complete. When that completeness is recognized by both souls, the Omega's body responds. This capacity is exclusive to recognized Fated Bond pairings — a denied or suppressed bond will not produce this possibility even if the numerical alignment is perfect. <strong>The bond must be fully acknowledged by both parties.</strong></p>
+  <div class="sec">Cultural Context Across Sideros</div>
+  <table class="culture-table">
+    <tr><th>Region</th><th>Cultural Relationship to Male Omega Births</th></tr>
+    <tr><td>Leonine Empire</td><td>Celebrated as a mark of cosmic favour — a family with a male Omega birth is considered touched by the Simha Siddha's blessings. Solar Chivalry records show a disproportionate number of champion families with this history.</td></tr>
+    <tr><td>Ashélands of Orun-Ayé</td><td>Understood through the lens of Ashé. Oshun, Orisha of fertility and sweet waters, is credited as the agent. Births are attended by Oshun temple priestesses.</td></tr>
+    <tr><td>Tuathan Archipelago</td><td>Viewed as an expression of the Otherworld's blessing — associated with Willow clan (healing and the moon). The child is believed to carry fae resonance regardless of parentage.</td></tr>
+    <tr><td>Boreal Expanse</td><td>Among Wolf-Shifter Uji clans, male Omega births are the highest expression of complete Omote-Ura balance. The Omega has achieved enough harmony between their human and wolf self that the body can fully express either nature. Deeply revered.</td></tr>
+    <tr><td>Jade Empire</td><td>Recorded as a Category Three Celestial Event. The child is considered to carry doubled Fate Number resonance and is tested at age seven for Gear-Forged aptitude.</td></tr>
+    <tr><td>Stone Kingdom of Dunmar</td><td>The Dunmarim are pragmatic — a bonded pair capable of producing children is a productive pair. Standard family registration. Lady Capricorn's government records them efficiently.</td></tr>
+    <tr><td>Argent Spire</td><td>The Comet-Magi believe male Omega births within Quad or Quint Bonds produce children with Fate Numbers pre-aligned to one of the parents — arriving already bonded. This has never been confirmed. They have been waiting for a Quad Bond to form for 300 years to test the hypothesis.</td></tr>
+    <tr><td>K'uh-la'an</td><td>The Petal-Weaver Castes document that male Omega births produce children with unusual Ashé sensitivity — often the most gifted Weep-Stone handlers in the next generation. These lineages are cultivated carefully.</td></tr>
+  </table>
+  <div class="sec">The Children of Fated Bonds</div>
+  <p class="lore">Children born of a Fated Bond are not guaranteed to be part of one themselves. However, they show a disproportionate tendency toward higher Fate Number alignment with at least one other soul in their generation. Children of Alpha-Omega bonded pairs, born of a male Omega, almost universally manifest their Primal Essence before age five. <strong>A Beta child runs entire school economies by age eight. An Omega child begins asking questions adults cannot answer by age six. An Alpha child simply begins leading — instinctively, without instruction — almost from the moment they can walk.</strong></p>
+  <div class="sec">Aethar's Interest in Bonded Lineages</div>
+  <p class="lore">The Fang of the Whisper maintains a secondary mission not widely known even within the Coil: systematic identification and monitoring of bonded pair lineages across Sideros. <strong>Aethar does not want to destroy these lineages. He wants to corrupt them.</strong> A child of an Alpha-Omega Fated Bond who serves the Coil carries bonded resonance in ways unbonded practitioners cannot match. Several of the Thirteen Scions are from bonded lineages. Aethar considers this his most patient investment.</p>
+</div></div>
+
+<!-- SHARED ABILITIES -->
+<div class="panel" id="panel-shared"><div class="wrap">
+  <p class="lore">Beyond the tier-specific abilities, Fated Bonds of any strength develop unique shared capacities over time — narrative permissions that the bond allows and that would otherwise be impossible.</p>
+  <div class="sec">Abilities That Develop Over Time</div>
+  <div class="ability-grid">
+    <div class="ability open" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Resonant Knowledge Transfer · After 6 months of close bonding</div></div><div class="ab">During a Deep Attunement, a bonded member may temporarily share one Discipline Mastery with their partner for 24 hours. The transfer is felt — like muscle memory arriving from outside the body.</div></div>
+    <div class="ability" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Synchronized Combat · After 3 major encounters together</div></div><div class="ab">When within 30 ft of each other, one member may use their Reflex to give the other Resonant Fortune on a single Strike Resonance or Active Resonance. The timing requires no signal — they simply know.</div></div>
+    <div class="ability" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Aetheric Channel Sharing · Triad and higher</div></div><div class="ab">A Weave-capable bonded member may channel Aetheric energy through the bond — a non-Weave-capable partner may expend one of that member's Channels to activate a Channel-requiring feature or Working effect through an Aetheric Artifact. Aetheric resources flow between bonded members regardless of Path.</div></div>
+    <div class="ability" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Stabilising Presence · Always active once bond forms</div></div><div class="ab">A bonded character who spends a Brief Attunement within 10 ft of their bond-mate restores one additional Vitality Die's worth of Vitality. The Comet-Magi classify this as "resonant biological optimisation."</div></div>
+    <div class="ability" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Silence Reading · After 1 year of bonding</div></div><div class="ab">Bond members communicate complex intentions through body language alone — no words, signals, or codes required. They function with effectively shared Deception and Insight Active Resonances in social situations. In combat, they never need to spend an Act coordinating.</div></div>
+    <div class="ability" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Pain Sharing · Advanced and voluntary</div></div><div class="ab">A bonded member may choose to absorb up to half the damage dealt to their partner as a Reflex — taking it themselves instead. This is not Aetheric damage reduction. The harm actually transfers. Most bonded pairs discover this accidentally in moments of desperation.</div></div>
+  </div>
+  <div class="sec">Weaving-Specific Bond Abilities</div>
+  <div class="ability-grid">
+    <div class="ability open" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Working Anchoring</div></div><div class="ab">When a bonded Weaver maintains a Sustained Resonance Working, a non-concentrating bonded partner may sustain it as a free action — allowing the Weaver to maintain a second Sustained Resonance simultaneously. The partner must remain within 60 ft.</div></div>
+    <div class="ability" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Essence Amplification</div></div><div class="ab">Workings woven by a bonded Alpha gain additional impact effects (fire, force, intimidation-aspected). Workings by a bonded Beta gain extended duration (doubles). Workings by a bonded Omega reveal hidden information or pierce illusions as a secondary effect. Active only when the bonded partner is conscious and within range.</div></div>
+    <div class="ability" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Dream Communication · Triad and higher</div></div><div class="ab">Bonded members at Triad tier or higher meet in shared dream space during Deep Attunement — a private space where all bonded members can communicate, plan, and process regardless of physical distance. The Twin Dream-Fish's cenote in K'uh-la'an is said to be accessible to Quad and Quint Bonds during these meetings.</div></div>
+  </div>
+  <div class="sec">The Void-Touched Bond Exception</div>
+  <p class="lore">Characters with Fate Numbers of 13, 66, or 99 carry Ophiuchus resonance. When a Void-Touched character forms a Fated Bond, bond abilities are doubled in power but unpredictable in activation. The Hollow Serpent's resonance is present in the bond like a third frequency — sometimes amplifying, sometimes disrupting. <strong>A Void-Touched member of a Triad Bond gives that bond the raw power of a Quad Bond, with moments of entropic interference that must be managed.</strong> Aethar is believed to have deliberately seeded Void-Touched Numbers into the world's population. The pattern is too consistent to be coincidence.</p>
+</div></div>
+
+<!-- HISTORICAL BONDS -->
+<div class="panel" id="panel-history"><div class="wrap">
+  <p class="lore">Across every culture, every era, and every tradition in Sideros, the figures who changed the world were not alone. They were bonded. <strong>The Loom does not explain itself — but history suggests it deliberately produces the souls needed for each age's crisis and weaves them toward each other.</strong></p>
+
+  <div class="hist open" onclick="this.classList.toggle('open')">
+    <div class="hh"><div class="hn">The Four Architects of Kallos</div><span class="htag">Era Zero · Quad Bond ★★★★</span></div>
+    <div class="hb"><strong>Two Alphas · One Beta · One Omega · Numbers within 4 points</strong><br><br>The founding council of the Precursor civilization's global Aetheric grid. Their Quad Bond was the actual mechanism enabling the grid's construction. The Beta managed implementation across the world's Ceque Lines. The Omega designed the theoretical framework. The two Alphas drove construction against physically impossible timelines.<br><br><strong>The Catastrophic Severance:</strong> When one of the four was killed — by a political rival whose name was deliberately erased — the sudden severance of a Quad Bond released catastrophic resonance energy across the global grid simultaneously. This was the Night of Kallos. The grid collapsed in a single night. The civilization ended. The world we know is built on the wreckage of what a severed Quad Bond can do.</div>
+  </div>
+
+  <div class="hist" onclick="this.classList.toggle('open')">
+    <div class="hh"><div class="hn">The Founding Compact of Terra Firma</div><span class="htag">Era III · Triad Bond ★★★</span></div>
+    <div class="hb"><strong>Alpha · Beta · Omega · Numbers within 6 points</strong><br><br>The Duchy Compact was negotiated by three bonded castellans representing the Fire, Earth, and Air factions. A Triad Bond cannot be divided. Any lie told to one was felt by all three. The Compact was signed in three days — an impossibility by any prior diplomatic standard.<br><br><strong>What the records omit:</strong> The Omega of the three was a male Omega who carried the Alpha's child during the negotiations. The child was born on the day the Compact was signed. That child grew up to found the Solar Chivalry's first formal code of conduct.</div>
+  </div>
+
+  <div class="hist" onclick="this.classList.toggle('open')">
+    <div class="hh"><div class="hn">The Three Founding Siddha of Kanya</div><span class="htag">Era III · Triad Bond ★★★</span></div>
+    <div class="hb"><strong>Omega · Omega · Beta · Numbers within 5 points</strong><br><br>An unusual Triad — two Omegas and a Beta. The two Omegas could jointly perceive Aetheric patterns at a depth neither reached alone, producing the foundational theory of Siddha purification Working. The Beta implemented their discoveries into a functional temple structure that has sustained their work for four hundred years without their presence. The Sanctum of Flawless Service still runs on the systems this Beta designed.</div>
+  </div>
+
+  <div class="hist" onclick="this.classList.toggle('open')">
+    <div class="hh"><div class="hn">The First Solar King and the Lunar Consort</div><span class="htag">Era III · Paired Bond ★ — near-Triad intensity</span></div>
+    <div class="hb"><strong>Alpha — First Solar King · Omega — The Lunar Consort · Numbers within 3 points</strong><br><br>The foundational bond of the Leonine Empire. The Lunar Consort — referred to only by title in all Imperial records — was the Omega who redesigned the logistics of every campaign before it collapsed, ensuring the Alpha's brilliant charges landed somewhere worth charging to.<br><br><strong>The Lunar Queen:</strong> The Lunar Consort was a male Omega. Their child is the contested ancestor at the centre of the current Leonine succession crisis. Someone, somewhere, carries the Omega line — and the Tomb of the First King's crown is said to recognise both lineages as legitimate. The Order of Pure Reason is using the Great Orrery to identify this person before anyone else does.<br><br><strong>What the Order hasn't published:</strong> The crown is not a human artifact. It is an <strong>Eldren Empire relic</strong> — a piece of the civilization that preceded the Leonine Empire by several centuries, imbued with Precursor-era Aetheric calibration that reads Fate Number resonance rather than blood. The Eldren who crafted it designed it to recognise genuine cosmic authority, not dynastic lineage. This means it could theoretically recognise someone completely outside the Solar or Lunar lines if their Fate Number resonance is cosmically significant — the Quint Bond cluster in the 55–58 range, for instance, would register to the crown as extraordinarily significant. Multiple rival factions are currently descending on the Tomb to claim the crown before this fact becomes widely known.</div>
+  </div>
+
+  <div class="hist" onclick="this.classList.toggle('open')">
+    <div class="hh"><div class="hn">Orunmila and the First Babalawos</div><span class="htag">Era I–II · Divine-Mortal Triad ★★★</span></div>
+    <div class="hb"><strong>Orunmila — God of Cosmic Law (Omega) · First Babalawo (Beta) · First Iyanifa (Omega)</strong><br><br>The Ifá tradition holds that Orunmila formed a Triad Bond with the first two human practitioners of Ifá divination. If real — and the Comet-Magi believe it is — then the Orunmila fragment (distributed between the Great Roc, the Aurorans, and the Elder Anchor of Libra) is still bonded to every practising Babalawo and Iyanifa through an unbroken chain of initiated successors. The Ifá tradition may be the longest continuously maintained Fated Bond in history. It may also be why Aethar has targeted the Spirit Route between the Ashélands and K'uh-la'an — disrupting the Ifá network weakens Orunmila's distributed bond.</div>
+  </div>
+</div></div>
+
+<!-- COMPLICATIONS -->
+<div class="panel" id="panel-complications"><div class="wrap">
+  <p class="lore">The same bond that makes heroes capable of legendary action creates vulnerabilities that Aethar understands and exploits. A bond is not armour. It is a sword that cuts both ways.</p>
+  <div class="sec">What Can Go Wrong</div>
+  <div class="ability-grid">
+    <div class="ability open" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Bond Severance — Death of a Bonded Partner</div></div><div class="ab">The survivor loses all bond abilities and makes all Active Resonances with Resonant Discord for 1d6 months as the Aether recalibrates. Survivors describe it as "feeling the world become slightly less real." The higher the bond tier, the more severe the severance. A severed Quad Bond is a documented cause of mass Aetheric events — the Night of Kallos is the definitive example.</div></div>
+    <div class="ability" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Void-Husk Corruption of a Bonded Member</div></div><div class="ab">If a bonded member becomes a Void-Husk, the bond does not break cleanly. It <em>inverts</em>. The corrupted member's resonance becomes a channel through which the Coil can sense the remaining bonded partners, track their location, and transmit psychic interference. <strong>Aethar specifically targets bonded pairs for this reason</strong> — a corrupted bond member is a spy embedded in the enemy's soul. Regent Ophiomorph's situation at the Maw is the clearest current example.</div></div>
+    <div class="ability" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Political Interference — The Loom's Agents</div></div><div class="ab">If a bonded pair's combined resonance threatens a political arrangement, the Loom of Fate's agents will intervene. They do not kill bonded partners — the resonance backlash is too unpredictable. They separate them, reassign them, manufacture crises that keep them apart indefinitely. The current Leonine succession crisis involves at least one separated bonded pair whose reunion would clarify the legitimate heir question — which is exactly why the Order of Pure Reason is keeping them apart.</div></div>
+    <div class="ability" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">Resonance Overload</div></div><div class="ab">In moments of extreme shared emotional intensity, bonded pairs experience involuntary Resonance Overload. At Paired Bond level: minor (candles extinguish, animals flee). At Triad level: significant (Aetheric Artifacts activate, Fade-Bleed intensifies locally). At Quad Bond level: dangerous (structural damage, mass Aetheric effects in a 300-ft radius). Not under conscious control.</div></div>
+    <div class="ability" onclick="this.classList.toggle('open')"><div class="ah"><div class="an">The Denied Bond</div></div><div class="ab">A Fated Bond recognised but deliberately refused produces a unique condition: the resonance remains but cannot flow. Both parties feel the connection constantly. Over time, a denied bond produces increasing emotional instability. Alphas become erratic and reckless. Betas become controlling and resentful. Omegas become withdrawn and obsessive. One refusing party can trap both in the condition indefinitely — releasing it requires both parties' willing participation.</div></div>
+  </div>
+  <div class="sec">Aethar's Strategy Against Bonds</div>
+  <p class="lore">Aethar's four-stage plan has a hidden fifth dimension not written in any document: <strong>systematically prevent the formation of the Quint Bond.</strong> The Ifá prophecy is known to him. He was present when Orunmila fell. He understands what five bonded souls in perfect resonance could do to his plan. The Fang of the Whisper's secondary mission — tracking bonded lineages and Void-Touched Numbers — is specifically designed to identify any emerging Quint Bond before all five members find each other. They do not need to kill the candidates. They only need to ensure the five never occupy the same location simultaneously. <strong>The Loom can weave the thread — but the thread requires the souls to be in the same room at least once for the bond to fully establish.</strong></p>
+  <div class="note" style="background:rgba(200,168,74,0.04);border:1px solid rgba(200,168,74,0.15)">
+    <div class="note-title" style="color:var(--gold)">The Central Heroic Question — Concordance Note</div>
+    If the players' party contains members with Fate Numbers in tight alignment — particularly if one is Void-Touched — the Concordance should consider whether this party is the answer to the Ifá prophecy. A Quint Bond has never formed in recorded history. Aethar has been preventing it for generations. The fact that this particular group of people found each other, in this particular moment, when stages 1 through 3 of Aethar's plan are already active — is not a coincidence. <strong>The Loom does not weave haphazardly.</strong>
+  </div>
+</div></div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).style.display='block';
+  document.getElementById('panel-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
+}
+document.querySelectorAll('.panel').forEach(p=>{p.style.display='none'});
+document.getElementById('panel-foundation').style.display='block';
+document.getElementById('panel-foundation').classList.add('active');
+document.querySelectorAll('.nav-btn')[0].classList.add('active');
+</script>
+</body>
+</html>

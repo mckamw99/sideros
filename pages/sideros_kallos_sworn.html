@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — The Kallos-Sworn</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;500;600&display=swap');
+
+:root {
+  --void:#0b0910; --void-mid:#130f1e; --void-up:#1c1630;
+  --gold:#c9a84c; --gold-dim:#7a6028; --gold-bright:#e8c870;
+  --parchment:#f0e6cc; --parchment-dim:rgba(240,230,204,0.55);
+  --silver:#a8b8c8; --silver-dim:#687888;
+  --alpha:#d4724a; --beta:#4a8ec4; --omega:#9066c8;
+  --red:#c04040; --green:#4a8a56;
+
+  /* Twelve house colours — one per zodiac sign */
+  --aries:#c85040;    --taurus:#80a040;   --gemini:#80a0c0;
+  --cancer:#6080c0;   --leo:#c89040;      --virgo:#60a870;
+  --libra:#a080c0;    --scorpio:#804060;  --sagittarius:#c07040;
+  --capricorn:#607080;--aquarius:#4880a0; --pisces:#6070a8;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--parchment);line-height:1.7;min-height:100vh}
+
+/* ── HERO ── */
+.hero{
+  text-align:center;padding:4rem 1.5rem 3rem;
+  background:radial-gradient(ellipse at 50% 0%,rgba(168,184,200,0.08) 0%,transparent 60%);
+  border-bottom:1px solid rgba(168,184,200,0.15);
+  position:relative;
+}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--silver-dim);margin-bottom:.9rem}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(22px,4vw,36px);font-weight:500;color:var(--silver);letter-spacing:.08em;margin-bottom:.4rem}
+.hero-subtitle{font-family:'Cinzel',serif;font-size:14px;color:var(--gold-dim);letter-spacing:.12em;margin-bottom:.8rem}
+.hero-sub{font-size:15px;font-style:italic;color:var(--parchment-dim);max-width:520px;margin:0 auto}
+.hero-rule{width:200px;height:1px;background:linear-gradient(to right,transparent,var(--silver-dim),transparent);margin:1.5rem auto 0}
+
+/* ── NAV ── */
+.nav-strip{display:flex;gap:4px;flex-wrap:wrap;padding:.75rem 1rem;border-bottom:1px solid rgba(168,184,200,0.12);background:var(--void-mid);position:sticky;top:0;z-index:20}
+.nav-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border:1px solid rgba(168,184,200,0.2);border-radius:4px;background:transparent;color:var(--parchment-dim);cursor:pointer;transition:all .15s;white-space:nowrap}
+.nav-btn:hover{background:rgba(168,184,200,0.06);color:var(--silver-dim)}
+.nav-btn.active{background:rgba(168,184,200,0.1);color:var(--silver);border-color:rgba(168,184,200,0.4)}
+
+.panel{display:none}.panel.active{display:block}
+.wrap{max-width:880px;margin:0 auto;padding:2.5rem 1.25rem 4rem}
+
+/* ── TEXT ── */
+.lore-para{font-size:15px;color:rgba(240,230,204,0.8);line-height:1.88;margin-bottom:.9rem}
+.lore-para strong{color:var(--parchment);font-weight:500}
+.lore-para em{color:var(--silver-dim);font-style:italic}
+
+.sec-head{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--silver-dim);margin:1.75rem 0 .75rem;display:flex;align-items:center;gap:.7rem}
+.sec-head::after{content:'';flex:1;height:1px;background:rgba(168,184,200,0.15)}
+
+/* ── OVERVIEW BLOCKS ── */
+.overview-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
+.ob{background:rgba(255,255,255,0.02);border:1px solid rgba(168,184,200,0.15);border-radius:8px;padding:12px 14px}
+.ob-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--silver-dim);margin-bottom:5px}
+.ob-text{font-size:13px;color:rgba(240,230,204,0.78);line-height:1.65}
+.ob-text strong{color:var(--parchment);font-weight:500}
+
+/* ── CIRCLE RANK TABLE ── */
+.rank-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:1rem}
+.rank-table th{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--silver-dim);padding:7px 10px;text-align:left;border-bottom:1px solid rgba(168,184,200,0.2)}
+.rank-table td{padding:7px 10px;border-bottom:1px solid rgba(168,184,200,0.07);color:rgba(240,230,204,0.75);vertical-align:top;line-height:1.5}
+.rank-table td:first-child{color:var(--silver);font-family:'Cinzel',serif;font-size:11px;white-space:nowrap}
+.rank-table td:nth-child(2){color:var(--parchment);font-weight:500;white-space:nowrap}
+.rank-table tr:last-child td{border-bottom:none}
+.rank-table tr:hover td{background:rgba(255,255,255,0.015)}
+.rank-table tr.milestone td{background:rgba(168,184,200,0.04)}
+
+/* ── HOUSE CARDS ── */
+.house-grid{display:grid;gap:8px;margin-bottom:1rem}
+.house{border-radius:9px;overflow:hidden;cursor:pointer;border:1px solid;transition:opacity .15s}
+.house:hover{opacity:.85}
+.house.open .house-body{display:block}
+.house-head{display:grid;grid-template-columns:56px 1fr auto;gap:10px;align-items:center;padding:11px 14px}
+.house-sign{font-size:22px;text-align:center;width:40px}
+.house-info{}
+.house-name{font-family:'Cinzel',serif;font-size:13px;letter-spacing:.04em;margin-bottom:1px}
+.house-domain{font-size:12px;font-style:italic;opacity:.7}
+.house-risk{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:3px;border:1px solid;white-space:nowrap;opacity:.8}
+.house-body{display:none;border-top:1px solid rgba(255,255,255,0.08);padding:12px 14px}
+.house-body p{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.72;margin-bottom:7px}
+.house-body p:last-child{margin-bottom:0}
+.house-body p strong{color:var(--parchment);font-weight:500}
+.house-body p em{opacity:.7;font-style:italic}
+
+/* ── SIGN RISK TABLE ── */
+.risk-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:1rem}
+.risk-table th{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--silver-dim);padding:7px 10px;text-align:left;border-bottom:1px solid rgba(168,184,200,0.2)}
+.risk-table td{padding:7px 10px;border-bottom:1px solid rgba(168,184,200,0.07);color:rgba(240,230,204,0.75);vertical-align:top;line-height:1.5;font-size:12px}
+.risk-table td:first-child{font-size:16px;text-align:center;width:40px}
+.risk-table td:nth-child(2){color:var(--parchment);font-weight:500;white-space:nowrap}
+.risk-table td:nth-child(3){color:var(--silver);white-space:nowrap}
+.risk-table tr:last-child td{border-bottom:none}
+.risk-table tr:hover td{background:rgba(255,255,255,0.012)}
+
+/* ── STARBOUND SECTION ── */
+.starbound-header{
+  display:grid;grid-template-columns:1fr 80px 1fr;gap:0;
+  align-items:center;text-align:center;
+  border:1px solid rgba(168,184,200,0.2);border-radius:10px;
+  overflow:hidden;margin-bottom:1rem;
+}
+.sb-side{padding:16px 14px;background:rgba(255,255,255,0.02)}
+.sb-side-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--silver-dim);margin-bottom:5px}
+.sb-side-name{font-size:16px;font-weight:500;margin-bottom:4px}
+.sb-side-desc{font-size:12px;color:var(--parchment-dim);line-height:1.5}
+.sb-center{background:rgba(168,184,200,0.06);border-left:1px solid rgba(168,184,200,0.15);border-right:1px solid rgba(168,184,200,0.15);padding:16px 8px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.sb-center-icon{font-size:24px}
+.sb-center-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--silver-dim);text-align:center;line-height:1.4}
+
+.bond-card{background:rgba(255,255,255,0.022);border:1px solid rgba(168,184,200,0.15);border-radius:9px;padding:13px 15px;margin-bottom:8px;cursor:pointer;overflow:hidden;transition:border-color .15s}
+.bond-card:hover,.bond-card.open{border-color:rgba(168,184,200,0.35)}
+.bc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.bc-name{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.04em;color:var(--silver)}
+.bc-tag{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:3px;border:1px solid rgba(168,184,200,0.3);color:var(--silver-dim);white-space:nowrap;flex-shrink:0}
+.bc-body{display:none;margin-top:9px;padding-top:9px;border-top:1px solid rgba(168,184,200,0.12);font-size:13px;color:rgba(240,230,204,0.75);line-height:1.72}
+.bond-card.open .bc-body{display:block}
+.bc-body strong{color:var(--parchment);font-weight:500}
+.bc-body em{color:var(--silver-dim)}
+
+/* ── NOTES ── */
+.note-block{background:rgba(144,102,200,0.05);border:1px solid rgba(144,102,200,0.2);border-radius:8px;padding:11px 13px;margin:.75rem 0}
+.nb-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:#a87ee8;margin-bottom:5px}
+.nb-text{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.65}
+.nb-text strong{color:var(--parchment);font-weight:500}
+
+.silver-block{background:rgba(168,184,200,0.05);border:1px solid rgba(168,184,200,0.22);border-radius:8px;padding:11px 13px;margin:.75rem 0}
+.silver-block .nb-title{color:var(--silver)}
+.silver-block .nb-text{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.65}
+.silver-block .nb-text strong{color:var(--parchment);font-weight:500}
+
+.warning-block{background:rgba(192,64,64,0.05);border:1px solid rgba(192,64,64,0.2);border-radius:8px;padding:11px 13px;margin:.75rem 0}
+.wb-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--red);margin-bottom:5px}
+.wb-text{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.65}
+.wb-text strong{color:var(--parchment);font-weight:500}
+
+.divider{height:1px;background:linear-gradient(to right,transparent,rgba(168,184,200,0.2),transparent);margin:1.5rem 0}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Sideros / Astrolan — Factions & Orders</div>
+  <h1 class="hero-title">The Kallos-Sworn</h1>
+  <div class="hero-subtitle">Never Again · The Founding Vow</div>
+  <p class="hero-sub">The world's institutional memory of catastrophe — organized into twelve zodiac houses, ranked by Circle, and bound to each other under the stars they study.</p>
+  <div class="hero-rule"></div>
+</div>
+
+<div class="nav-strip">
+  <button class="nav-btn active" onclick="show('history',this)">History & Purpose</button>
+  <button class="nav-btn" onclick="show('structure',this)">Structure & Circles</button>
+  <button class="nav-btn" onclick="show('houses',this)">The Twelve Houses</button>
+  <button class="nav-btn" onclick="show('channeling',this)">Weaving & Risk</button>
+  <button class="nav-btn" onclick="show('starbound',this)">The Starbound Bond</button>
+  <button class="nav-btn" onclick="show('initiation',this)">Initiation & Oaths</button>
+  <button class="nav-btn" onclick="show('coilwar',this)">The Coil War</button>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- HISTORY & PURPOSE -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel active" id="panel-history">
+<div class="wrap">
+
+  <p class="lore-para">The Kallos-Sworn were not founded. They <strong>coalesced</strong> — in the years immediately following the Night of Kallos, when the survivors of the Precursor civilization were still trying to understand what had happened. The Four Architects of Kallos had held the only confirmed Quint Bond in recorded history. When one was assassinated, the resonance severance cascaded through the remaining three — a catastrophic discharge that ended an empire in a single night. The Aetheric shockwave was felt across the world. Its echoes are still measurable in the geological record of Elethorn's grid nodes.</p>
+
+  <p class="lore-para">The first Kallos-Sworn were simply survivors who had witnessed the severance and refused to let the knowledge of what caused it die with the civilization it destroyed. They were archivists before they were warriors, scholars before they were an order. The Argent Spire was built on the ruins of the Kallos capital's observatory — not as a monument to what was lost, but as a working instrument of ongoing vigilance. <strong>The founding vow was two words: never again.</strong> Everything else — the twelve houses, the Circle system, the Starbound bond, the suppressed archives — is infrastructure built around those two words.</p>
+
+  <p class="lore-para">The Kallos-Sworn's relationship with the Ashen Coil is not a rivalry. It is not even, technically, a war — though it has produced battles. It is an <em>ontological opposition</em>. The Coil believes the cosmos is running down and seeks to control that dissolution. The Kallos-Sworn believes the cosmos can be held together, and has dedicated four thousand years to proving it. <strong>Both organizations have access to the same suppressed Kallos records.</strong> They reached opposite conclusions from the same evidence. Aethar, who read those records before either organization had fully classified them, is the living proof that the evidence itself is dangerous regardless of which conclusion one reaches.</p>
+
+  <div class="overview-grid">
+    <div class="ob">
+      <div class="ob-label">Founded</div>
+      <div class="ob-text">Approximately 40 years after the Night of Kallos, Era I. The exact founding date is disputed — the Kallos-Sworn do not celebrate anniversaries of catastrophe.</div>
+    </div>
+    <div class="ob">
+      <div class="ob-label">Headquarters</div>
+      <div class="ob-text"><strong>Argent Spire</strong> — built on the ruins of the Kallos capital's observatory. The Crystalline Core is sealed beneath it. The Arch-Oracle's chambers are directly above the seal.</div>
+    </div>
+    <div class="ob">
+      <div class="ob-label">Current Arch-Oracle</div>
+      <div class="ob-text"><strong>Lyra</strong> — 12th Circle, Aquarius house. Has held the position for 60 years. Has calculated the seal will fail within years without the Resonant Binding ritual.</div>
+    </div>
+    <div class="ob">
+      <div class="ob-label">Active membership</div>
+      <div class="ob-text">Approximately 400 Kallos-Sworn worldwide, across all twelve houses. An additional 200 Starbound partners. The order is small because the initiation requirement — swearing before a Legendary Beast — is genuinely dangerous.</div>
+    </div>
+    <div class="ob">
+      <div class="ob-label">Relationship with Ashen Coil</div>
+      <div class="ob-text">Active opposition. The Fang of the Whisper specifically targets Kallos-Sworn intelligence networks. Three Arch-Oracles have been assassinated by Coil operatives in the last 500 years.</div>
+    </div>
+    <div class="ob">
+      <div class="ob-label">Aethar's status</div>
+      <div class="ob-text">Former 12th Circle, Shifting Horizons Conclave (now House Sagittarius). His name has been formally excised from all Kallos-Sworn records. Arch-Oracle Lyra refuses to excise it from her personal correspondence.</div>
+    </div>
+  </div>
+
+  <div class="silver-block">
+    <div class="nb-title">The Suppressed Archives</div>
+    <div class="nb-text">Beneath Argent Spire, in a vault accessible only to 9th Circle and above, are the complete Kallos records — everything recovered from the Precursor civilization's final years, including the research the Four Architects were conducting when the assassination occurred. The Kallos-Sworn have classified most of it at the highest levels. <strong>Three documents are classified beyond Circle rank entirely</strong> — accessible only with the Arch-Oracle's direct authorization and the simultaneous presence of two 11th Circle witnesses. Aethar accessed all three before anyone realized he had. The order still does not know how he bypassed the access controls. Serath of the Closed Circle does — he helped him. This is the one secret Serath has never shared with Aethar.</div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- STRUCTURE & CIRCLES -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-structure">
+<div class="wrap">
+
+  <p class="lore-para">The Kallos-Sworn's Circle system runs from 1st to 12th — one Circle per zodiac sign, representing not merely seniority but depth of attunement to both the Aetheric system and the order's founding purpose. The number twelve is not coincidental. <strong>The founders believed that if twelve practitioners could achieve full attunement across all twelve zodiac domains simultaneously, they could reconstruct something approximating the Quad Bond's stability</strong> — distributed across an organization rather than concentrated in four individuals. Four thousand years later, this has never been achieved. The theoretical work is still ongoing.</p>
+
+  <div class="sec-head">The Circle System</div>
+  <table class="rank-table">
+    <tr><th>Circle</th><th>Title</th><th>Requirements</th><th>Privileges & Responsibilities</th></tr>
+    <tr><td>1st Circle</td><td>Novitiate</td><td>Beast-swearing completed; accepted by a house</td><td>Access to the public archives; assigned a 4th+ Circle mentor; may not leave Argent Spire without escort</td></tr>
+    <tr><td>2nd Circle</td><td>Sworn</td><td>1 year as Novitiate; demonstrated Working proficiency</td><td>May travel independently; access to the restricted stacks (pre-Fall era, non-classified); may take a Starbound partner</td></tr>
+    <tr><td>3rd Circle</td><td>Keeper</td><td>3 years active service; first house specialization mastered</td><td>House voting rights; field assignment authority; access to classified documents up to Tier 2</td></tr>
+    <tr><td>4th Circle</td><td>Senior Keeper</td><td>Demonstrated leadership; second house specialization</td><td>May mentor Novitiates; access to Tier 3 classified documents; permanent Argent Spire quarters</td></tr>
+    <tr><td>5th Circle</td><td>Warden</td><td>10+ years service; significant field contribution</td><td>Seat on house council; access to Tier 4 classified; authority to classify new discoveries</td></tr>
+    <tr class="milestone"><td>6th Circle</td><td>High Warden</td><td>Election by house; formal recognition by Arch-Oracle</td><td><em>Threshold rank</em> — full house authority; access to Tier 5 classified including the Aethar files; may authorize Starbound rituals</td></tr>
+    <tr><td>7th Circle</td><td>Archivist</td><td>Cross-house recognition; theoretical contribution to the founding records</td><td>Cross-house authority; access to all classified documents except the three ultra-classified; may nominate 12th Circle candidates</td></tr>
+    <tr><td>8th Circle</td><td>Elder</td><td>20+ years at 7th; demonstrated mastery of Working innovation</td><td>Advisory council seat; access to ultra-classified with co-authorization; emergency command authority if Arch-Oracle is incapacitated</td></tr>
+    <tr><td>9th Circle</td><td>High Elder</td><td>Unanimous house council endorsement</td><td>Access to the suppressed vault with authorization; authority to convene emergency order council; may dissolve a house (never used)</td></tr>
+    <tr><td>10th Circle</td><td>Luminary</td><td>Cross-order recognition; contribution to Resonant Binding theory</td><td>Direct counsel to the Arch-Oracle; access to the three ultra-classified documents with Arch-Oracle presence; authority over the Starbound program</td></tr>
+    <tr><td>11th Circle</td><td>Grand Luminary</td><td>Appointed by Arch-Oracle; no more than three living at any time</td><td>Co-authorization authority for all classified access; emergency Arch-Oracle succession; witness authority for ultra-classified access</td></tr>
+    <tr class="milestone"><td>12th Circle</td><td>Arch-Oracle (one) · Zodiac Master (others)</td><td>Election by all 10th Circle and above; ratified by Legendary Beast contact</td><td><em>Full order authority.</em> The Arch-Oracle holds ultimate command. Zodiac Masters hold authority within their house domain. Aethar held this rank. There are currently three living Zodiac Masters besides Lyra — all in hiding.</td></tr>
+  </table>
+
+  <div class="silver-block">
+    <div class="nb-title">The Three Living Zodiac Masters</div>
+    <div class="nb-text">Besides Arch-Oracle Lyra, three 12th Circle Zodiac Masters are alive. <strong>Master Caellum</strong> (House Scorpio, 9th Circle equivalent in power — was elevated young) is believed to be operating somewhere in the Viridian Principalities. <strong>Master Thessaly</strong> (House Pisces) has not been seen in twelve years; the order officially lists her as missing, not dead. <strong>Master Vael-Kallos</strong> (House Aquarius, the Earthly Core Conclave's leader) is at Argent Spire but increasingly reclusive — Lyra suspects he has read the third ultra-classified document without authorization and has been unable to function normally since.</div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- THE TWELVE HOUSES -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-houses">
+<div class="wrap">
+
+  <p class="lore-para">Each of the twelve houses represents one zodiac sign's domain applied to the Kallos-Sworn's founding purpose. The houses are not departments — they are <strong>philosophical traditions within the same institution</strong>, each offering a different answer to the question of how one prevents another Kallos. Houses collaborate constantly and argue almost as often. The Arch-Oracle's primary management challenge is preventing House Scorpio and House Libra from conducting their centuries-old methodological dispute somewhere the newer members can see it.</p>
+
+  <div class="sec-head">The Twelve Houses — click to expand</div>
+  <div class="house-grid">
+
+    <!-- ARIES -->
+    <div class="house" style="border-color:rgba(200,80,64,0.35);background:rgba(200,80,64,0.04)" onclick="this.classList.toggle('open')">
+      <div class="house-head">
+        <div class="house-sign">♈</div>
+        <div class="house-info">
+          <div class="house-name" style="color:var(--aries)">House Aries — The Vanguard</div>
+          <div class="house-domain">First response · Field action · Threat neutralization</div>
+        </div>
+        <div class="house-risk" style="color:var(--aries);border-color:rgba(200,80,64,0.3)">Risk: Impulsive Surge</div>
+      </div>
+      <div class="house-body">
+        <p>House Aries are the Kallos-Sworn's first responders — the ones who go when the order learns of a Coil incursion, a Void-Husk emergence, or a grid node reactivating with Ophiuchus energy. They are not subtle and they do not aspire to subtlety. <strong>Their founding argument</strong>: the Night of Kallos happened because no one acted fast enough when the first warning signs appeared. House Aries acts first and files the report afterward.</p>
+        <p><em>Conclave within Argent Spire:</em> The Shifting Horizons Conclave houses many Aries members — they use celestial observation to identify threats early so they can respond to them fast.</p>
+        <p><strong>Weaving risk (Impulsive Surge):</strong> Aries practitioners who channel under extreme urgency or anger risk opening Channels they didn't intend — spontaneous Working discharge that targets the nearest entity regardless of alignment. DC 13 Attunement Warding Resonance when weaving in combat while below half Vitality or fail and trigger an uncontrolled Working.</p>
+      </div>
+    </div>
+
+    <!-- TAURUS -->
+    <div class="house" style="border-color:rgba(128,160,64,0.35);background:rgba(128,160,64,0.04)" onclick="this.classList.toggle('open')">
+      <div class="house-head">
+        <div class="house-sign">♉</div>
+        <div class="house-info">
+          <div class="house-name" style="color:var(--taurus)">House Taurus — The Keepers</div>
+          <div class="house-domain">Physical preservation · Material records · Dunmarim liaison</div>
+        </div>
+        <div class="house-risk" style="color:var(--taurus);border-color:rgba(128,160,64,0.3)">Risk: Resonant Calcification</div>
+      </div>
+      <div class="house-body">
+        <p>House Taurus manages what is worth keeping. They maintain Argent Spire's physical archives, coordinate with the Dunmarim on ore access agreements, and oversee the material preservation of recovered Kallos artifacts. <strong>Their founding argument</strong>: the Night of Kallos destroyed four thousand years of accumulated knowledge in one night. House Taurus ensures that can never happen again to the knowledge the order has rebuilt since.</p>
+        <p><strong>Weaving risk (Resonant Calcification):</strong> Taurus practitioners who channel the same Working repeatedly over years risk the Working becoming rigid in their Aetheric field — it no longer requires concentration but also can no longer be modified. The Working fires automatically under specific trigger conditions. DC 15 Attunement check once per year for each Working used more than 50 times.</p>
+      </div>
+    </div>
+
+    <!-- GEMINI -->
+    <div class="house" style="border-color:rgba(128,160,192,0.35);background:rgba(128,160,192,0.04)" onclick="this.classList.toggle('open')">
+      <div class="house-head">
+        <div class="house-sign">♊</div>
+        <div class="house-info">
+          <div class="house-name" style="color:var(--gemini)">House Gemini — The Correspondents</div>
+          <div class="house-domain">Intelligence · Communication · Cross-faction liaison</div>
+        </div>
+        <div class="house-risk" style="color:var(--gemini);border-color:rgba(128,160,192,0.3)">Risk: Signal Bleed</div>
+      </div>
+      <div class="house-body">
+        <p>House Gemini runs the Kallos-Sworn's intelligence network — the most sophisticated information-gathering operation in the world not operated by the Loom of Fate itself (and some within the order believe they have surpassed even that). They manage communication between houses, maintain cover identities across multiple factions, and provide the order's only reliable intelligence on Ashen Coil operations. <strong>Their founding argument</strong>: the Architects were assassinated because someone knew where they were. House Gemini ensures the order always knows more than its enemies.</p>
+        <p><strong>Weaving risk (Signal Bleed):</strong> Gemini practitioners who maintain Sustained Resonances.</p>
+      </div>
+    </div>
+
+    <!-- CANCER -->
+    <div class="house" style="border-color:rgba(96,128,192,0.35);background:rgba(96,128,192,0.04)" onclick="this.classList.toggle('open')">
+      <div class="house-head">
+        <div class="house-sign">♋</div>
+        <div class="house-info">
+          <div class="house-name" style="color:var(--cancer)">House Cancer — The Wardens</div>
+          <div class="house-domain">Seal maintenance · Argent Spire defense · Maw monitoring</div>
+        </div>
+        <div class="house-risk" style="color:var(--cancer);border-color:rgba(96,128,192,0.3)">Risk: Over-Shielding</div>
+      </div>
+      <div class="house-body">
+        <p>House Cancer maintains the seals. Not merely the seal on the Crystalline Core beneath Argent Spire, but every containment Working the order has established worldwide — Void-Husk isolation zones, corrupted grid nodes, the secondary seal on the Abyssal Leviathan's secondary access point in the Boreal Expanse. <strong>Their founding argument</strong>: the Maw cannot be destroyed. The Crystalline Core cannot be destroyed. They can be contained. House Cancer is the containment.</p>
+        <p><strong>Weaving risk (Over-Shielding):</strong> Cancer practitioners who maintain defensive Workings for extended periods risk their Aetheric field hardening against all external contact — including beneficial Workings. At 30+ days of continuous defensive Working maintenance, all Workings targeting the practitioner (including healing) require DC 16 Working Threshold check to penetrate the accumulated defensive resonance.</p>
+      </div>
+    </div>
+
+    <!-- LEO -->
+    <div class="house" style="border-color:rgba(200,144,64,0.35);background:rgba(200,144,64,0.04)" onclick="this.classList.toggle('open')">
+      <div class="house-head">
+        <div class="house-sign">♌</div>
+        <div class="house-info">
+          <div class="house-name" style="color:var(--leo)">House Leo — The Luminaries</div>
+          <div class="house-domain">Public face · Recruitment · Solar Chivalry liaison</div>
+        </div>
+        <div class="house-risk" style="color:var(--leo);border-color:rgba(200,144,64,0.3)">Risk: Radiant Overflow</div>
+      </div>
+      <div class="house-body">
+        <p>House Leo is the Kallos-Sworn's public presence — the face the order shows to the world when it chooses to show a face at all. They manage relationships with the Solar Chivalry, recruit promising channelers before other factions can claim them, and represent the order in formal diplomatic contexts. <strong>Their founding argument</strong>: the Kallos-Sworn cannot defend a world that doesn't know it exists. House Leo ensures the order has allies, not just enemies.</p>
+        <p><strong>Weaving risk (Radiant Overflow):</strong> Leo practitioners who weave radiant or solar Workings near their emotional peak risk uncontrolled light-burst — all creatures within 20 ft make Endurance Warding Resonance DC 13 or be Sight-Severed for 1 Pulse. Triggers when weaving while experiencing strong pride, anger, or elation.</p>
+      </div>
+    </div>
+
+    <!-- VIRGO -->
+    <div class="house" style="border-color:rgba(96,168,112,0.35);background:rgba(96,168,112,0.04)" onclick="this.classList.toggle('open')">
+      <div class="house-head">
+        <div class="house-sign">♍</div>
+        <div class="house-info">
+          <div class="house-name" style="color:var(--virgo)">House Virgo — The Analysts</div>
+          <div class="house-domain">Research · Blight detection · Kanya tradition liaison</div>
+        </div>
+        <div class="house-risk" style="color:var(--virgo);border-color:rgba(96,168,112,0.3)">Risk: Analytical Paralysis</div>
+      </div>
+      <div class="house-body">
+        <p>House Virgo produces the order's research — studying Coil corruption patterns, Void-Husk behavioral analysis, grid node degradation rates, and the mathematical modeling of the seal's remaining stability. They work closely with the Kanya Siddha tradition because both are focused on purification and systematic analysis. <strong>Their founding argument</strong>: the Night of Kallos was preventable with sufficient data. House Virgo collects the data. Lady Virgo of the Order of Pure Reason was once a House Virgo member and left because she believed the Kallos-Sworn's analysis was not thorough enough. This remains a source of deep institutional embarrassment.</p>
+        <p><strong>Weaving risk (Analytical Paralysis):</strong> Virgo practitioners who over-analyze their Working choices under pressure risk decision-lock — they cannot open an Aetheric Channel for 1 Pulse if they have spent more than one round weighing options without acting. The analysis becomes its own obstacle.</p>
+      </div>
+    </div>
+
+    <!-- LIBRA -->
+    <div class="house" style="border-color:rgba(160,128,192,0.35);background:rgba(160,128,192,0.04)" onclick="this.classList.toggle('open')">
+      <div class="house-head">
+        <div class="house-sign">♎</div>
+        <div class="house-info">
+          <div class="house-name" style="color:var(--libra)">House Libra — The Adjudicators</div>
+          <div class="house-domain">Internal discipline · Ethics · Cross-order law</div>
+        </div>
+        <div class="house-risk" style="color:var(--libra);border-color:rgba(160,128,192,0.3)">Risk: Resonant Deadlock</div>
+      </div>
+      <div class="house-body">
+        <p>House Libra manages the order's internal discipline — investigating ethical violations, adjudicating disputes between houses, and maintaining the standards that separate the Kallos-Sworn from the organizations they oppose. They are not popular. They are respected, which is different. <strong>Their founding argument</strong>: the order that saves the world by becoming the thing it's fighting has accomplished nothing. House Libra is the conscience of the institution. House Scorpio thinks they are the brake on the institution. Both are correct.</p>
+        <p><strong>Weaving risk (Resonant Deadlock):</strong> Libra practitioners who face genuine moral ambiguity while weaving risk their Aetheric field entering equipoise — all Workings they attempt require an additional DC 14 Attunement Active Resonance or fizzle as the practitioner's conflicted intent disrupts the Channel. Resolves when the moral question is resolved (or consciously set aside).</p>
+      </div>
+    </div>
+
+    <!-- SCORPIO -->
+    <div class="house" style="border-color:rgba(128,64,96,0.35);background:rgba(128,64,96,0.04)" onclick="this.classList.toggle('open')">
+      <div class="house-head">
+        <div class="house-sign">♏</div>
+        <div class="house-info">
+          <div class="house-name" style="color:var(--scorpio)">House Scorpio — The Unseen</div>
+          <div class="house-domain">Covert operations · Infiltration · Coil counter-intelligence</div>
+        </div>
+        <div class="house-risk" style="color:var(--scorpio);border-color:rgba(128,64,96,0.3)">Risk: Obsessive Threading</div>
+      </div>
+      <div class="house-body">
+        <p>House Scorpio operates in the dark. They are the order's covert arm — running long-term infiltrations of the Ashen Coil, maintaining deep cover identities that last decades, and eliminating Coil operatives when the order determines elimination is necessary. House Libra believes House Scorpio has exceeded its mandate on multiple occasions. House Scorpio believes House Libra has never had to watch someone they spent seven years befriending dissolve into a Void-Husk. <strong>Their founding argument</strong>: you cannot fight an enemy you cannot see. House Scorpio sees them.</p>
+        <p><em>Notable connection:</em> The Loom of Fate's Oya-aspected spy network has significant overlap with House Scorpio's operational methods. Neither organization officially acknowledges this.</p>
+        <p><strong>Weaving risk (Obsessive Threading):</strong> Scorpio practitioners who track a single target obsessively for 30+ days risk their divination Workings becoming locked to that target — they cannot use scrying or detection Workings on any other subject until they achieve their objective or formally release the focus. DC 17 Attunement Warding Resonance to resist lock-in at the 30-day mark.</p>
+      </div>
+    </div>
+
+    <!-- SAGITTARIUS -->
+    <div class="house" style="border-color:rgba(192,112,64,0.35);background:rgba(192,112,64,0.04)" onclick="this.classList.toggle('open')">
+      <div class="house-head">
+        <div class="house-sign">♐</div>
+        <div class="house-info">
+          <div class="house-name" style="color:var(--sagittarius)">House Sagittarius — The Horizons</div>
+          <div class="house-domain">Celestial observation · Prophetic analysis · Zodiac Priest liaison</div>
+        </div>
+        <div class="house-risk" style="color:var(--sagittarius);border-color:rgba(192,112,64,0.3)">Risk: Prophetic Drift</div>
+      </div>
+      <div class="house-body">
+        <p>House Sagittarius is the Shifting Horizons Conclave in all but name — the order's celestial observers, whose telescopes have been tracking the zodiac forces' physical expressions since before the Fall. They produced the only accurate prediction of the Pantheonic Fall (which no one acted on) and the most complete mathematical model of the Maw's seal degradation (which Arch-Oracle Lyra used to determine the Resonant Binding's urgency). <strong>Aethar was House Sagittarius.</strong> The house has not recovered from what that means for their institutional credibility, and they know it.</p>
+        <p><strong>Weaving risk (Prophetic Drift):</strong> Sagittarius practitioners who receive genuine prophetic information through Working or zodiac attunement risk becoming temporally disoriented — confusing potential futures with present reality. DC 15 Attunement Warding Resonance after each prophetic Working or suffer Resonant Discord on all Active Resonances for 1 hour as the practitioner processes competing timelines.</p>
+      </div>
+    </div>
+
+    <!-- CAPRICORN -->
+    <div class="house" style="border-color:rgba(96,112,128,0.35);background:rgba(96,112,128,0.04)" onclick="this.classList.toggle('open')">
+      <div class="house-head">
+        <div class="house-sign">♑</div>
+        <div class="house-info">
+          <div class="house-name" style="color:var(--capricorn)">House Capricorn — The Builders</div>
+          <div class="house-domain">Institutional development · Succession planning · Long-term strategy</div>
+        </div>
+        <div class="house-risk" style="color:var(--capricorn);border-color:rgba(96,112,128,0.3)">Risk: Temporal Anchoring</div>
+      </div>
+      <div class="house-body">
+        <p>House Capricorn thinks in centuries. They manage the order's long-term institutional health — succession planning, resource allocation, the cultivation of relationships that will matter in fifty years, and the documentation of strategic lessons that future leadership will need. They are the least glamorous house and the most essential. <strong>Their founding argument</strong>: the Kallos-Sworn will not be needed for a year or a decade. They will be needed forever. Institutions that don't plan for forever don't last.</p>
+        <p><strong>Weaving risk (Temporal Anchoring):</strong> Capricorn practitioners who spend extended time in long-term planning and projection risk Aetheric temporal anchoring — their Working latency increases by 1 round (Workings prepared this round execute next round) as their mind operates on a longer timescale than the present moment. Resolves with 1 week of non-strategic activity.</p>
+      </div>
+    </div>
+
+    <!-- AQUARIUS -->
+    <div class="house" style="border-color:rgba(72,128,160,0.35);background:rgba(72,128,160,0.04)" onclick="this.classList.toggle('open')">
+      <div class="house-head">
+        <div class="house-sign">♒</div>
+        <div class="house-info">
+          <div class="house-name" style="color:var(--aquarius)">House Aquarius — The Compact</div>
+          <div class="house-domain">Inter-order relations · Resonant Binding research · Quint Bond study</div>
+        </div>
+        <div class="house-risk" style="color:var(--aquarius);border-color:rgba(72,128,160,0.3)">Risk: Collective Dissolution</div>
+      </div>
+      <div class="house-body">
+        <p>House Aquarius coordinates between organizations — the Kallos-Sworn's diplomatic arm toward other factions (distinct from House Leo's public relations work, which is external-facing; House Aquarius manages relationships with the Loom of Fate, the Ceque-Keepers, the Moana-kin Navigator-Priests, and the Te Kapo). They also lead the order's theoretical research into the Quint Bond — the Ifá prophecy of "the Five Who Remember" sits in House Aquarius's archives, annotated by four different Arch-Oracles across three centuries. <strong>Arch-Oracle Lyra is House Aquarius</strong>. This is not a coincidence.</p>
+        <p><strong>Weaving risk (Collective Dissolution):</strong> Aquarius practitioners who maintain Bond-connecting or communal Workings risk temporarily losing individual Aetheric boundaries — they cannot distinguish their own thoughts from those of people they are bonded or magically connected to. DC 15 Resonance Warding Resonance per hour of communal Working maintenance or suffer 1 hour of Resonant Discord on all Insight Active Resonances.</p>
+      </div>
+    </div>
+
+    <!-- PISCES -->
+    <div class="house" style="border-color:rgba(96,112,168,0.35);background:rgba(96,112,168,0.04)" onclick="this.classList.toggle('open')">
+      <div class="house-head">
+        <div class="house-sign">♓</div>
+        <div class="house-info">
+          <div class="house-name" style="color:var(--pisces)">House Pisces — The Dreamers</div>
+          <div class="house-domain">Prophetic archives · Legendary Beast communication · Loom interpretation</div>
+        </div>
+        <div class="house-risk" style="color:var(--pisces);border-color:rgba(96,112,168,0.3)">Risk: Reality Erosion</div>
+      </div>
+      <div class="house-body">
+        <p>House Pisces works the boundary between received knowledge and interpreted meaning — maintaining the order's prophetic archives (every verified prophecy the order has collected since founding), managing communication attempts with the Legendary Beasts, and interpreting the Loom of Fate's visible threading for strategic guidance. Master Thessaly, the missing 12th Circle Zodiac Master, is House Pisces. The house believes she is still alive because her prophetic archive annotation — a running commentary she maintained for forty years — continues to update itself. They cannot explain how. <strong>They have not told anyone outside the house.</strong></p>
+        <p><strong>Weaving risk (Reality Erosion):</strong> Pisces practitioners who engage in prophetic Working or dream-contact for extended periods risk the boundary between vision and reality becoming permeable — they experience prophetic imagery overlaid on the present moment, treating potential futures as current events. Long-term practitioners develop coping rituals. Practitioners without coping rituals develop reputations for unreliability.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- CHANNELING & RISK -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-channeling">
+<div class="wrap">
+
+  <p class="lore-para">In Jordan's original conception, male channelers went mad from a taint placed on the male half of the One Power. Sideros has no gender-based restriction — weaving ability is distributed across all genders, tied instead to zodiac sign and Primal Essence. But the <strong>risk</strong> is real and sign-specific. Each zodiac sign's domain carries a specific vulnerability in the weaving process — a way the cosmic force, if improperly handled, turns on the practitioner who invited it.</p>
+
+  <p class="lore-para">The Kallos-Sworn discovered this systematically over centuries of observation. They keep detailed records. The weaving risks are not punishments — they are <strong>natural properties of the forces involved</strong>, the same way fire burns the person holding it if they grip it wrong. The order teaches mitigation techniques for each sign's risk. A practitioner who knows their risk and works with it rarely triggers it. A practitioner who ignores it eventually does.</p>
+
+  <div class="sec-head">Weaving Risk by Sign</div>
+  <table class="risk-table">
+    <tr><th></th><th>Sign</th><th>Risk Name</th><th>Trigger Condition</th><th>Mechanical Effect</th><th>Mitigation</th></tr>
+    <tr>
+      <td>♈</td><td>Aries</td><td>Impulsive Surge</td>
+      <td>Weaving under urgency or anger below half Vitality</td>
+      <td>DC 13 Attunement Warding Resonance or discharge an uncontrolled Working targeting nearest entity</td>
+      <td>Breathing exercises before combat weaving; House Aries teaches a 3-breath ritual</td>
+    </tr>
+    <tr>
+      <td>♉</td><td>Taurus</td><td>Resonant Calcification</td>
+      <td>Same Working used 50+ times over years</td>
+      <td>Working fires automatically under specific triggers; cannot be modified; DC 15 Attunement check annually</td>
+      <td>Rotating Working repertoire; never rely on a single formulation</td>
+    </tr>
+    <tr>
+      <td>♊</td><td>Gemini</td><td>Signal Bleed</td>
+      <td>Maintaining 3+ Sustained Resonances simultaneously</td>
+      <td>DC 14 Attunement Warding Resonance or broadcast thoughts/sensory impressions to all within 30 ft for 1d6 rounds</td>
+      <td>Sequential rather than simultaneous Sustained Resonances; mental compartmentalization training</td>
+    </tr>
+    <tr>
+      <td>♋</td><td>Cancer</td><td>Over-Shielding</td>
+      <td>30+ days of continuous defensive Working maintenance</td>
+      <td>All Workings targeting practitioner require DC 16 Working Threshold check to penetrate accumulated defense</td>
+      <td>Scheduled defensive field cycling; weekly deliberate vulnerability windows</td>
+    </tr>
+    <tr>
+      <td>♌</td><td>Leo</td><td>Radiant Overflow</td>
+      <td>Weaving radiant/solar Workings during emotional peak</td>
+      <td>All within 20 ft make DC 13 Endurance Warding Resonance or Sight-Severed for 1 Pulse</td>
+      <td>Emotional baseline maintenance; House Leo teaches stoicism as a weaving skill</td>
+    </tr>
+    <tr>
+      <td>♍</td><td>Virgo</td><td>Analytical Paralysis</td>
+      <td>Spending more than 1 round weighing weaving options</td>
+      <td>Cannot open an Aetheric Channel for 1 Pulse</td>
+      <td>Pre-combat Working selection; House Virgo teaches decision protocols for high-pressure contexts</td>
+    </tr>
+    <tr>
+      <td>♎</td><td>Libra</td><td>Resonant Deadlock</td>
+      <td>Genuine moral ambiguity while weaving</td>
+      <td>All Workings require additional DC 14 Attunement Active Resonance or fizzle</td>
+      <td>Ethical pre-commitment — decide in advance what you would do in ambiguous situations</td>
+    </tr>
+    <tr>
+      <td>♏</td><td>Scorpio</td><td>Obsessive Threading</td>
+      <td>Tracking a single target obsessively for 30+ days</td>
+      <td>DC 17 Attunement Warding Resonance or divination Workings lock to that target exclusively</td>
+      <td>Mandatory case rotation; House Scorpio assigns partners specifically to break obsessive focus</td>
+    </tr>
+    <tr>
+      <td>♐</td><td>Sagittarius</td><td>Prophetic Drift</td>
+      <td>Receiving prophetic information through Working or attunement</td>
+      <td>DC 15 Attunement Warding Resonance or Resonant Discord on all Active Resonances for 1 hour</td>
+      <td>Grounding rituals immediately following prophetic contact; physical anchoring objects</td>
+    </tr>
+    <tr>
+      <td>♑</td><td>Capricorn</td><td>Temporal Anchoring</td>
+      <td>Extended time in long-term strategic projection</td>
+      <td>Working latency increases by 1 round as mind operates on longer timescale</td>
+      <td>Scheduled present-moment activities; House Capricorn assigns juniors to interrupt long planning sessions</td>
+    </tr>
+    <tr>
+      <td>♒</td><td>Aquarius</td><td>Collective Dissolution</td>
+      <td>Maintaining communal Workings for extended periods</td>
+      <td>DC 15 Resonance Warding Resonance per hour or Resonant Discord on all Insight Active Resonances for 1 hour</td>
+      <td>Regular solitary practice periods; House Aquarius requires members to spend 1 day per week in complete isolation</td>
+    </tr>
+    <tr>
+      <td>♓</td><td>Pisces</td><td>Reality Erosion</td>
+      <td>Extended prophetic Working or dream-contact</td>
+      <td>Prophetic imagery overlaid on present moment; treats potential futures as current events</td>
+      <td>Mandatory grounding partner; House Pisces pairs every practitioner with a non-Pisces anchor</td>
+    </tr>
+  </table>
+
+  <div class="silver-block">
+    <div class="nb-title">Omega Practitioners and Weaving Risk</div>
+    <div class="nb-text">Omega-aspected channelers access the Aetheric field most naturally — their soul-frequency is closest to the Aether's baseline resonance. This gives them higher ceiling potential but also <strong>greater vulnerability to their sign's risk</strong>: their signs's weaving risk triggers on a DC 2 lower than the table values above, because the deeper access cuts both ways. Alpha-aspected practitioners have slightly lower ceiling potential but their risks trigger on a DC 2 higher — the forceful nature of Alpha energy provides some insulation against the field's feedback. Beta practitioners experience the risks exactly as written — their adaptive nature is precisely calibrated to the middle ground.</div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- THE STARBOUND BOND -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-starbound">
+<div class="wrap">
+
+  <p class="lore-para">Seven hundred years ago, House Aquarius began researching what they called the <em>Manufactured Resonance Project</em> — a systematic attempt to replicate the Fated Bond's Whisper Bond (the telepathic connection that emerges at Triad tier) through deliberate ritual rather than cosmically determined Fate Number proximity. The project ran for sixty years across three generations of researchers. It was the most rigorous study of the Fated Bond system ever conducted, and it produced something no one anticipated: <strong>not the Fated Bond, and not a mere enchantment, but a third thing entirely.</strong></p>
+
+  <p class="lore-para">The Stellar Cartographers who have examined Starbound pairs report that the bond does not appear in the Fate Number system the way a natural Fated Bond does. Where a Fated Bond registers as two Numbers drawn toward each other, the Starbound bond registers as one Number with a <em>shadow</em> — a second resonance frequency that moves with the first but is not itself a Fate Number. The Loom of Fate does not appear to have anticipated this configuration. Whether that means the Loom cannot see the Starbound bond, or simply that the Loom has chosen not to acknowledge it, is a question House Pisces has been investigating for five centuries without resolution.</p>
+
+  <div class="starbound-header">
+    <div class="sb-side">
+      <div class="sb-side-label">The Kallos-Sworn</div>
+      <div class="sb-side-name" style="color:var(--silver)">The Mage</div>
+      <div class="sb-side-desc">Shares their Aetheric field with their Starbound — the mage's Working state, emotional condition, and physical wellbeing are continuously perceptible to their partner. The mage experiences the bond as a second presence at the edge of their awareness.</div>
+    </div>
+    <div class="sb-center">
+      <div class="sb-center-icon">✦</div>
+      <div class="sb-center-label">The Starbound Bond — Third Category</div>
+    </div>
+    <div class="sb-side">
+      <div class="sb-side-label">The Starbound Partner</div>
+      <div class="sb-side-name" style="color:var(--gold)">The Warrior</div>
+      <div class="sb-side-desc">Carries the mage's Aetheric signature woven into their own field. Perceives the mage's condition at all times. The warrior's experience of the bond is more intense — they feel what the mage feels, often more acutely than the mage feels it themselves.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Bond Properties — What It Actually Does</div>
+  <div class="house-grid">
+    <div class="bond-card" onclick="this.classList.toggle('open')">
+      <div class="bc-head"><div class="bc-name">Resonant Awareness — Always Active</div><span class="bc-tag">Both Directions</span></div>
+      <div class="bc-body">Both bonded parties always know the other's current Vitality level (exact number), emotional state (a general quality — calm, distressed, afraid, determined — not specific thoughts), and whether they are currently Weaving. Range: unlimited on the same plane of existence. This persists through Aether-Dampening Ore zones — the bond is not Aetheric in origin and cannot be suppressed. <strong>In the Stillness of Dunmar</strong>, both parties experience the bond as more vivid, not less — the total magical silence makes the bond's non-Aetheric frequency more perceptible by contrast.</div>
+    </div>
+    <div class="bond-card" onclick="this.classList.toggle('open')">
+      <div class="bc-head"><div class="bc-name">Whisper Thread — Limited Telepathy</div><span class="bc-tag">Both Directions · 1 mile</span></div>
+      <div class="bc-body">Within 1 mile, both parties may transmit <strong>one-way impressions</strong> — not full sentences, but emotional weight, urgency, and simple directional intent. "Danger from the north." "Come now." "I am well." The impressions are felt rather than heard, which means they cannot be intercepted, recorded, or read by Stellar Cartographers. <strong>This is less than a true Whisper Bond</strong> (which transmits full language) but it is also undetectable in ways a true bond is not. Several House Scorpio members have made operational use of this property.</div>
+    </div>
+    <div class="bond-card" onclick="this.classList.toggle('open')">
+      <div class="bc-head"><div class="bc-name">Asymmetric Intensity — The Warrior's Burden</div><span class="bc-tag">Warrior-Side Only</span></div>
+      <div class="bc-body">The Starbound warrior experiences the bond more intensely than the mage. When the mage is in pain, the warrior feels it as pressure. When the mage channels at high intensity, the warrior experiences a sympathetic Aetheric resonance — not Weaving themselves, but feeling the field move through them secondhand. When the mage dies, the warrior experiences the severance as a physical event — not fatal, but incapacitating for 1d6 days as the Aetheric field that was woven into theirs dissolves. <strong>This asymmetry was not intended by the original researchers</strong>. They discovered it when the first test pair's mage was killed in a Coil incursion and the warrior was found unconscious three miles away.</div>
+    </div>
+    <div class="bond-card" onclick="this.classList.toggle('open')">
+      <div class="bc-head"><div class="bc-name">Combat Synchronization</div><span class="bc-tag">Both Directions · 30 ft</span></div>
+      <div class="bc-body">Within 30 ft of each other, bonded pairs operate with preternatural coordination. The warrior always knows where the mage intends to move before they move — no communication required. The mage always knows when the warrior is about to strike and can time Working effects to maximize the strike's impact. Mechanically: the warrior may use their Reflex to move into optimal protection position when the mage is targeted, without requiring line-of-sight or prior knowledge of the attack. <strong>The mage may delay the release of any Sustained Resonance Working by up to 1 Pulse</strong> to synchronize with the warrior's position — this does not count as dropping concentration.</div>
+    </div>
+    <div class="bond-card" onclick="this.classList.toggle('open')">
+      <div class="bc-head"><div class="bc-name">The Accidental True Bond — Rare Event</div><span class="bc-tag">Campaign Event</span></div>
+      <div class="bc-body">Approximately 1 in 40 Starbound pairings, the manufactured bond spontaneously deepens into a genuine Fated Bond — the ritual's attempt to manufacture resonance accidentally achieves what the Loom would have arranged anyway. The Kallos-Sworn have no way of predicting when this will happen. The signs: the Whisper Thread expands from impressions to full language without warning; Resonant Awareness extends beyond Vitality and emotion to include specific thoughts the other party is currently holding; the bond begins to register in the Fate Number system as a legitimate Paired Bond. <strong>When this happens, both parties are notified simultaneously</strong> — they wake from sleep, both at the same moment, aware that something has changed. The order keeps records of every accidental true bond. There are 23 documented cases. Three of them later became Triad Bonds when a third compatible Fate Number entered their lives. The order considers this the most significant finding of the Manufactured Resonance Project, and has never formally published it.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">The Starbound Ritual</div>
+  <p class="lore-para">The Starbound ritual requires: both parties present and willing; a 6th Circle or above Kallos-Sworn officiating; a clear night sky (the zodiac must be visible — the bond is sealed under the stars that witnessed the founding vow); and three hours. The ritual cannot be performed under a roof. It has been performed in the rain seven times. It has been performed during battle once, in the Coil incursion of 847 Post-Fall, when a Keeper and her Starbound partner were separated and she performed an abbreviated version that the order later declared invalid and then quietly added to the valid ritual variants when the abbreviated version produced a functional bond anyway.</p>
+
+  <div class="warning-block">
+    <div class="wb-title">Breaking a Starbound Bond</div>
+    <div class="wb-text">The Starbound bond cannot be formally dissolved — the ritual that creates it has no reversal procedure. The bond ends only through death (either party's), through Void-Husk conversion (which dissolves the Fate Number and severs the bond's anchor), or through complete Aetheric field collapse (Stage 6 Aetheric Depletion resulting in the field's permanent dissolution — functionally, worse than death). <strong>The order has investigated reversal methods for four hundred years</strong>. The most recent finding: the bond cannot be reversed because it is not, technically, a Working. It is a state of being. You cannot undo being something the way you can undo doing something. Several former Starbound warriors who outlived their mage-partners have written extensively on this distinction. Their accounts are in House Pisces's archive, cross-referenced under both "bond theory" and "grief."</div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- INITIATION -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-initiation">
+<div class="wrap">
+
+  <p class="lore-para">Becoming Kallos-Sworn requires two things: being found, and surviving the initiation. Finding happens through House Leo's recruitment network, through the Zodiac Priest tradition, through referral by existing members, or through the rare practitioner who demonstrates sufficient power and alignment that the order approaches them. The Kallos-Sworn do not advertise. They do not post notices. They watch, and when they see someone worth approaching, they approach.</p>
+
+  <p class="lore-para">The initiation is not a ceremony. It is an encounter. <strong>The candidate must travel to their sign's Legendary Beast and swear the founding vow in the Beast's presence.</strong> The Beast does not officiate. The Beast does not respond. The candidate stands in the presence of a fallen god — a creature of CR 18 to 30, capable of killing them without effort — and speaks two words: <em>never again</em>. If they survive the encounter (which requires either extraordinary caution, extraordinary luck, or the Beast choosing not to engage), they are Kallos-Sworn.</p>
+
+  <div class="overview-grid">
+    <div class="ob">
+      <div class="ob-label">What the Beast does</div>
+      <div class="ob-text">Varies by sign. The Nemean Lion typically ignores initiates unless they demonstrate weakness. The Twin Dream-Fish encounter produces a vision regardless of the candidate's intent. The Adamant Crab has never attacked an initiate — it simply observes them until they leave.</div>
+    </div>
+    <div class="ob">
+      <div class="ob-label">What the vow actually is</div>
+      <div class="ob-text">"Never again." That is the complete founding vow. Everything else — house membership, Circle rank, specific duties — is organizational infrastructure layered on top of two words. The vow is to the world, not to the order. This distinction matters in cases of institutional corruption.</div>
+    </div>
+    <div class="ob">
+      <div class="ob-label">The vow's constraint</div>
+      <div class="ob-text">The vow is not magically enforced. There is no oath-rod, no binding Working, no external compulsion. The zodiac bond is the constraint — not because it prevents action, but because a Kallos-Sworn who acts against the founding vow is acting against the cosmic force they have attuned their Weaving to. The Aetheric field notices. Workings become less reliable. Channels take longer to open. The resistance is not punishment — it is friction between the practitioner's intent and the frequency they've invited into their body.</div>
+    </div>
+    <div class="ob">
+      <div class="ob-label">Initiation failures</div>
+      <div class="ob-text">Approximately 1 in 12 candidates do not complete the initiation — killed by the Beast, driven away by the encounter's proximity, or deciding upon approach that this is not the life they want. The order considers all three outcomes valid. Particularly the third.</div>
+    </div>
+  </div>
+
+  <div class="silver-block">
+    <div class="nb-title">Aethar's Initiation</div>
+    <div class="nb-text">Aethar swore before the Star-Metal Stag — the Sagittarius Legendary Beast — at age nineteen. By all accounts it was an unremarkable initiation. The Stag was present in the Grove of Fallen Stars. Aethar spoke the vow. The Stag looked at him for a long moment and then returned to grazing. <strong>House Sagittarius now debates whether the Stag saw something in that look that none of the human witnesses did.</strong> Three members believe the Stag was reading a future the others couldn't perceive. One member believes the Stag recognized what Aethar would become and simply decided it was not the Stag's problem. House Pisces has requested access to the initiation witnesses' accounts. House Sagittarius has not yet responded.</div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- THE COIL WAR -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-coilwar">
+<div class="wrap">
+
+  <p class="lore-para">The conflict between the Kallos-Sworn and the Ashen Coil is not a war in any conventional sense. There are no fronts, no territorial objectives, no formal declarations. It is a <strong>centuries-long intelligence contest</strong> punctuated by violent incidents that neither side publicly acknowledges. The Kallos-Sworn's institutional existence is known to most governments. Their specific membership, operational methods, and intelligence holdings are not. The Coil's existence is known to most governments. Their specific leadership, operational cells, and strategic objectives are the most carefully guarded secrets in the world.</p>
+
+  <p class="lore-para">Both organizations have spent four centuries trying to understand what the other knows. The Coil's Triad — Aethar, Serath, and Drava — represent three different approaches to this problem. Aethar understands the Kallos-Sworn's theoretical foundations better than most of its current members do. Serath has read three of the twelve houses' classified operational files. Drava built the intelligence network that recovered them.</p>
+
+  <div class="sec-head">The Current State</div>
+  <div class="overview-grid">
+    <div class="ob">
+      <div class="ob-label">What the Coil knows about the Kallos-Sworn</div>
+      <div class="ob-text">The membership of all twelve house councils (5th Circle and above). The Resonant Binding's five required components and their locations. That Arch-Oracle Lyra has calculated a timeline for the seal's failure. That Inti-kora's grid node work is related to the sixth component they don't have. <strong>They do not know</strong> that Serath has identified three Quint Bond cluster members and not reported it.</div>
+    </div>
+    <div class="ob">
+      <div class="ob-label">What the Kallos-Sworn knows about the Coil</div>
+      <div class="ob-text">The Triad's existence and approximate identities (Aethar confirmed, Serath suspected, Drava unknown). That the Fang of the Whisper is Drava's former intelligence network. The Coil's four-stage plan (stages 1–3 identified). <strong>They do not know</strong> Stage Five — preventing the Quint Bond. They do not know Grid-Point Seven is reactivating as a dissolution engine.</div>
+    </div>
+    <div class="ob">
+      <div class="ob-label">The Coil's structural vulnerability</div>
+      <div class="ob-text">Drava Nullsong. The Fang of the Whisper's loyalty is to Drava personally, not to Aethar's vision. If Drava were offered a genuine alternative — real belonging, real purpose — the Coil's operational capacity would collapse within weeks. The Kallos-Sworn has never identified this vulnerability because House Scorpio's files on Drava are incomplete. They know the network. They don't know the person holding it.</div>
+    </div>
+    <div class="ob">
+      <div class="ob-label">The Kallos-Sworn's structural vulnerability</div>
+      <div class="ob-text">The Resonant Binding ritual requires six components and six weeks without Coil interruption. The Fang of the Whisper knows four of the five confirmed component locations. If the ritual is interrupted after the third component is placed, the partial activation destabilizes the seal further rather than reinforcing it. Aethar has modeled this. The timing of his Stage Four grid reactivation is not coincidental.</div>
+    </div>
+  </div>
+
+  <div class="note-block">
+    <div class="nb-title">Serath's Decision</div>
+    <div class="nb-text">Serath of the Closed Circle has identified three of the five Quint Bond cluster members. He has not reported this to Aethar. He has also identified that the Kallos-Sworn's House Aquarius — Lyra's house — has been researching the Quint Bond for three centuries and is closer to understanding it than the Coil realizes. <strong>Serath is the only person in the world who holds both pieces of information simultaneously.</strong> What he does with that knowledge is the most consequential decision currently pending in Sideros. He is aware of this. He has been sitting with it for three months. His Tapas journal (he maintained a Siddha practice before the Coil — he has not told Drava or Aethar) shows he began attempting to contact the Kanya tradition six weeks ago and stopped before completing the contact. The journal is in his chambers in the Maw facility. No one else knows it exists.</div>
+  </div>
+
+</div>
+</div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).style.display='block';
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+document.querySelectorAll('.panel').forEach(p=>{p.style.display='none'});
+document.getElementById('panel-history').style.display='block';
+</script>
+</body>
+</html>

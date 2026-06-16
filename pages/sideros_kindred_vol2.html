@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — Kindred Compendium Vol. II</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;500;600&display=swap');
+
+:root {
+  --void:#0b0910; --void-mid:#130f1e; --void-up:#1c1630;
+  --gold:#c9a84c; --gold-dim:#7a6028; --gold-bright:#e8c870;
+  --parchment:#f0e6cc; --parchment-dim:rgba(240,230,204,0.55);
+
+  /* Vol II Kindred colours */
+  --serpent:#7ab870;
+  --avian:#c8a04a;
+  --fae:#a87ec8;
+  --moana:#4a9ec0;
+  --tekapo:#6a6a8a;
+  --lizard:#7a9a6a;
+  --kuri:#8a7a6a;
+  --centaur:#c07840;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--parchment);line-height:1.7;min-height:100vh}
+
+.hero{text-align:center;padding:3.5rem 1.5rem 2.5rem;background:radial-gradient(ellipse at 50% 0%,rgba(201,168,76,0.08) 0%,transparent 60%);border-bottom:1px solid rgba(201,168,76,0.15)}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:.9rem}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(20px,4vw,32px);font-weight:500;color:var(--gold);letter-spacing:.06em;margin-bottom:.5rem}
+.hero-sub{font-size:15px;font-style:italic;color:var(--parchment-dim);max-width:540px;margin:0 auto}
+
+/* Selector — 4+4 layout */
+.selector{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-bottom:1px solid rgba(201,168,76,0.12);background:var(--void-mid);position:sticky;top:0;z-index:20}
+.selector-row2{border-top:1px solid rgba(201,168,76,0.08)}
+.sel-btn{padding:11px 4px 9px;border:none;border-right:1px solid rgba(201,168,76,0.08);background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:background .2s}
+.sel-btn:last-child{border-right:none}
+.sel-btn:hover{background:rgba(255,255,255,0.02)}
+.sel-btn.active{background:rgba(201,168,76,0.06)}
+.sel-icon{font-size:17px}
+.sel-name{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--parchment-dim);text-align:center;line-height:1.2}
+.sel-btn.active .sel-name{color:var(--gold)}
+.sel-line{height:2px;width:80%;border-radius:1px;opacity:0;transition:opacity .2s}
+.sel-btn.active .sel-line{opacity:1}
+
+/* Also add a tab for the KZ framework */
+.framework-tab{grid-column:1/-1;border-top:1px solid rgba(201,168,76,0.1)}
+
+.panel{display:none}.panel.active{display:block}
+.kindred-wrap{max-width:880px;margin:0 auto;padding:2.5rem 1.25rem 4rem}
+
+.kh{display:grid;grid-template-columns:72px 1fr;gap:18px;align-items:start;margin-bottom:1.75rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(201,168,76,0.12)}
+.kh-sigil{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:25px;border:1px solid;flex-shrink:0}
+.kh-name{font-family:'Cinzel',serif;font-size:24px;font-weight:500;letter-spacing:.04em;margin-bottom:3px}
+.kh-also{font-size:13px;font-style:italic;color:var(--parchment-dim);margin-bottom:6px}
+.kh-home{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--gold-dim)}
+.kh-essence{display:inline-block;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 9px;border-radius:4px;border:1px solid;margin-top:5px}
+
+.lore-para{font-size:15px;color:rgba(240,230,204,0.8);line-height:1.85;margin-bottom:.9rem}
+.lore-para strong{color:var(--parchment);font-weight:500;font-style:normal}
+.lore-para em{color:var(--gold-dim);font-style:italic}
+
+.sec-head{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin:1.5rem 0 .65rem;display:flex;align-items:center;gap:.6rem}
+.sec-head::after{content:'';flex:1;height:1px;background:rgba(201,168,76,0.12)}
+
+.trait-grid{display:grid;gap:7px;margin-bottom:.9rem}
+.trait-card{background:rgba(255,255,255,0.022);border:1px solid rgba(201,168,76,0.13);border-radius:9px;padding:11px 13px;cursor:pointer;overflow:hidden;transition:border-color .15s}
+.trait-card:hover,.trait-card.open{border-color:rgba(201,168,76,0.32)}
+.tc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.tc-name{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.04em;color:var(--gold-bright)}
+.tc-type{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:3px;border:1px solid;white-space:nowrap;flex-shrink:0;font-size:8px}
+.tc-body{display:none;margin-top:8px;padding-top:8px;border-top:1px solid rgba(201,168,76,0.1);font-size:13px;color:rgba(240,230,204,0.75);line-height:1.7}
+.trait-card.open .tc-body{display:block}
+.tc-body strong{color:var(--parchment);font-weight:500}
+.tc-body em{color:var(--gold-dim)}
+
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:.9rem}
+.stat-cell{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.13);border-radius:7px;padding:8px 10px;text-align:center}
+.sc-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px}
+.sc-val{font-size:15px;font-weight:500}
+.sc-note{font-size:10px;color:var(--parchment-dim);margin-top:2px;line-height:1.35}
+
+.kz-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:.9rem}
+.kz-table th{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);padding:6px 9px;text-align:left;border-bottom:1px solid rgba(201,168,76,0.18)}
+.kz-table td{padding:6px 9px;border-bottom:1px solid rgba(201,168,76,0.06);color:rgba(240,230,204,0.75);vertical-align:top;line-height:1.5}
+.kz-table td:first-child{color:var(--gold-bright);white-space:nowrap;font-size:13px}
+.kz-table td:nth-child(2){color:var(--parchment);font-weight:500;white-space:nowrap}
+.kz-table tr:last-child td{border-bottom:none}
+.kz-table tr:hover td{background:rgba(255,255,255,0.013)}
+
+.play-block{background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.18);border-radius:9px;padding:13px 15px;margin-top:1.25rem}
+.pb-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:7px}
+.pb-text{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.75}
+.pb-text strong{color:var(--parchment);font-weight:500}
+
+/* ── KZ FRAMEWORK PANEL ── */
+.kz-intro{font-size:14px;color:rgba(240,230,204,0.78);line-height:1.82;margin-bottom:1.2rem}
+.kz-intro strong{color:var(--parchment);font-weight:500}
+
+.kz-card{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.13);border-radius:9px;margin-bottom:10px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.kz-card:hover,.kz-card.open{border-color:rgba(201,168,76,0.3)}
+.kzc-head{display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:center;padding:11px 14px}
+.kzc-sign{font-size:22px;text-align:center;flex-shrink:0;width:44px}
+.kzc-title{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.04em;color:var(--gold-bright);margin-bottom:2px}
+.kzc-sub{font-size:11px;color:var(--parchment-dim);font-style:italic}
+.kzc-body{display:none;border-top:1px solid rgba(201,168,76,0.1)}
+.kz-card.open .kzc-body{display:block}
+
+.kzc-row{display:grid;grid-template-columns:120px 1fr 1fr;gap:0;border-bottom:1px solid rgba(201,168,76,0.06);font-size:12px}
+.kzc-row:last-child{border-bottom:none}
+.kzc-kindred{padding:7px 10px;color:var(--gold-dim);font-family:'Cinzel',serif;font-size:10px;letter-spacing:.07em;text-transform:uppercase;border-right:1px solid rgba(201,168,76,0.08);background:rgba(255,255,255,0.01)}
+.kzc-name{padding:7px 10px;color:var(--parchment);font-weight:500;border-right:1px solid rgba(201,168,76,0.08)}
+.kzc-effect{padding:7px 10px;color:rgba(240,230,204,0.7);line-height:1.5}
+
+.note-block{background:rgba(168,126,232,0.05);border:1px solid rgba(168,126,232,0.2);border-radius:8px;padding:11px 13px;margin:1rem 0}
+.nb-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#a87ee8;margin-bottom:5px}
+.nb-text{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.65}
+.nb-text strong{color:var(--parchment);font-weight:500}
+
+.divider{height:1px;background:linear-gradient(to right,transparent,rgba(201,168,76,0.18),transparent);margin:1.5rem 0}
+
+.rarity-block{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.12);border-radius:8px;padding:10px 13px;margin-bottom:8px}
+.rb-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:4px}
+.rb-text{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.65}
+.rb-text strong{color:var(--parchment);font-weight:500}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Sideros / Astrolan — Kindred Compendium · Volume II</div>
+  <h1 class="hero-title">The Outer Kindreds</h1>
+  <p class="hero-sub">Eight Kindreds from beyond Terra Firma — and the Kindred-Zodiac Resonance framework that ties all fourteen together.</p>
+</div>
+
+<div style="background:var(--void-mid);border-bottom:1px solid rgba(201,168,76,0.12);position:sticky;top:0;z-index:20">
+  <div class="selector">
+    <button class="sel-btn active" onclick="show('serpent',this)">
+      <div class="sel-icon">🐍</div><div class="sel-name">Serpent-Kin</div>
+      <div class="sel-line" style="background:var(--serpent)"></div>
+    </button>
+    <button class="sel-btn" onclick="show('avian',this)">
+      <div class="sel-icon">🦅</div><div class="sel-name">Avian</div>
+      <div class="sel-line" style="background:var(--avian)"></div>
+    </button>
+    <button class="sel-btn" onclick="show('fae',this)">
+      <div class="sel-icon">🌙</div><div class="sel-name">Fae-Blooded</div>
+      <div class="sel-line" style="background:var(--fae)"></div>
+    </button>
+    <button class="sel-btn" onclick="show('moana',this)">
+      <div class="sel-icon">🌊</div><div class="sel-name">Moana-kin</div>
+      <div class="sel-line" style="background:var(--moana)"></div>
+    </button>
+  </div>
+  <div class="selector selector-row2">
+    <button class="sel-btn" onclick="show('tekapo',this)">
+      <div class="sel-icon">🕯</div><div class="sel-name">Te Kapo</div>
+      <div class="sel-line" style="background:var(--tekapo)"></div>
+    </button>
+    <button class="sel-btn" onclick="show('lizard',this)">
+      <div class="sel-icon">🦎</div><div class="sel-name">Lizard-Folk</div>
+      <div class="sel-line" style="background:var(--lizard)"></div>
+    </button>
+    <button class="sel-btn" onclick="show('kuri',this)">
+      <div class="sel-icon">⚡</div><div class="sel-name">Kuri</div>
+      <div class="sel-line" style="background:var(--kuri)"></div>
+    </button>
+    <button class="sel-btn" onclick="show('centaur',this)">
+      <div class="sel-icon">🏹</div><div class="sel-name">Centaur-Kin</div>
+      <div class="sel-line" style="background:var(--centaur)"></div>
+    </button>
+  </div>
+  <div style="border-top:1px solid rgba(201,168,76,0.1)">
+    <button class="sel-btn" onclick="show('kzframework',this)" style="width:100%;flex-direction:row;justify-content:center;gap:10px;padding:10px">
+      <div class="sel-icon">✦</div>
+      <div class="sel-name" style="font-size:10px;letter-spacing:.12em">Kindred-Zodiac Resonance Framework</div>
+      <div class="sel-line" style="display:none"></div>
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SERPENT-KIN -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel active" id="panel-serpent">
+<div class="kindred-wrap">
+  <div class="kh">
+    <div class="kh-sigil" style="background:rgba(122,184,112,0.08);border-color:rgba(122,184,112,0.3)">🐍</div>
+    <div>
+      <div class="kh-name" style="color:var(--serpent)">Serpent-Kin</div>
+      <div class="kh-also">Also called: Scale-Born, the Coil-Walkers, K'uh-la'an Kindred</div>
+      <div class="kh-home">K'uh-la'an · Deep Anthos City · Red and White Clan territories</div>
+      <div class="kh-essence" style="color:var(--serpent);border-color:rgba(122,184,112,0.3);background:rgba(122,184,112,0.06)">Omega-dominant · their patience reads as detachment to other Kindreds</div>
+    </div>
+  </div>
+
+  <p class="lore-para">The Serpent-Kin are among the oldest continuous civilizations in Sideros — their pyramid-temples predate the Duchy Compact, their oral histories extend into Era I, and their relationship with the Twin Dream-Fish cenotes means they have been receiving prophetic contact from a Legendary Beast longer than any other Kindred maintains. <strong>They experience time differently.</strong> Not in the Eldren way — Eldren have long memory but still move through time sequentially. Serpent-Kin think in cycles. A problem that will resolve in forty years is not a long-term problem — it is simply a problem in the next cycle. This makes them extraordinary long-game strategists and genuinely difficult negotiating partners for Kindreds who think in decades.</p>
+
+  <p class="lore-para">The Red Clan / White Clan blood-feud that outsiders observe on K'uh-la'an's surface is <strong>deliberately maintained as cultural camouflage.</strong> The surface conflict keeps foreign powers focused upward. Deep Anthos City exists below because the Serpent-Kin decided, six hundred years ago, that the only way to preserve their most sacred knowledge was to make the world believe there was nothing worth preserving. The Petal-Weavers who process Weep-Stone, the scriptoriums that hold Kallos-era records, the Moon-Petal Lotus cultivation that produces the world's only Ashen Coil blight-rot cure — all of it is underground because the surface war makes people look at the wrong thing.</p>
+
+  <div class="sec-head">Kindred Traits</div>
+  <div class="trait-grid">
+    <div class="trait-card open" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Scaled Hide — Core Trait</div><span class="tc-type" style="color:var(--serpent);border-color:rgba(122,184,112,0.3)">Passive</span></div>
+      <div class="tc-body">Natural armor from scaled skin. Guard Rating in light or no armor = 13 + Swiftness modifier (replaces standard unarmored calculation). The scales provide resistance to environmental heat, cold, and minor physical abrasion — Resonant Fortune on Warding Resonances against extreme temperature effects. <strong>Additionally</strong>: once per Pulse, when a Strike Resonance hits the Serpent-Kin, they may use their Reflex to shed the scales at the point of impact, treating the strike as glancing — the attack deals half damage. The shed scales regrow within an hour. Limit: this Reflex can only trigger against physical strikes, not Workings.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Dream-Fish Lineage</div><span class="tc-type" style="color:var(--serpent);border-color:rgba(122,184,112,0.3)">Passive</span></div>
+      <div class="tc-body">Centuries of proximity to the Twin Dream-Fish cenotes has layered prophetic sensitivity into Serpent-Kin biology. Once per Deep Attunement during their sleep or meditation, the Concordance delivers one true but incomplete fragment of information about a current or impending situation — not a chosen question, but what the Dream-Fish currently consider most important for this character to know. <strong>The Serpent-Kin cannot control what they receive.</strong> They also have Resonant Fortune on all Warding Resonances against being Soul-Swayed or deceived through illusion — something in their Aetheric makeup has been inoculated against false visions by generations of genuine ones.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Cenote-Bred</div><span class="tc-type" style="color:var(--serpent);border-color:rgba(122,184,112,0.3)">Passive</span></div>
+      <div class="tc-body">Serpent-Kin are fully amphibious. Swim speed 40 ft, breathe water, no penalties for underwater combat or visibility in clear water. They have Darkvision 60 ft from life in the cenote cavern networks. <strong>Weep-Stone handling</strong>: Serpent-Kin have Resonant Fortune on all Active Resonances when working with Siderium Quartz — generations of Petal-Weaver tradition means their biology partially resonates with the crystal's frequency rather than being destabilized by it. A Serpent-Kin who studies under a Petal-Weaver for at least one month gains the ability to refine raw Weep-Stone without the standard DC 18 Arcana roll — they succeed automatically.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">The Long Game</div><span class="tc-type" style="color:var(--serpent);border-color:rgba(122,184,112,0.3)">Passive</span></div>
+      <div class="tc-body">Serpent-Kin are immune to being rushed. They cannot be magically compelled to act faster than they intend — abilities that force immediate decisions, shorten casting times, or create artificial urgency have no effect on a Serpent-Kin who chooses to resist them (Warding Resonance DC 18, Attunement, with Resonant Fortune). In social encounters, they may always take a Brief Attunement's worth of time to respond to any demand or negotiation without the other party being able to mechanically force a faster answer. <strong>In combat</strong>: once per Pulse, they may delay their Moment to any point in the Pulse Order without losing their Act.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Venom Glands</div><span class="tc-type" style="color:var(--serpent);border-color:rgba(122,184,112,0.3)">Active · Proficiency uses/Deep Attunement</span></div>
+      <div class="tc-body">Serpent-Kin can secrete a mild venom through bite or applied touch (requires contact). Effect: target makes Endurance Warding Resonance (Threshold 12 + Serpent-Kin's Attunement modifier) or becomes Corrupted for 1 hour. The venom is not lethal by itself — it is a slowing agent that Petal-Weavers use in precise doses as a surgical sedative. <strong>A Serpent-Kin trained by a Petal-Weaver</strong> can graduate the venom's potency: a light dose causes mild drowsiness (Resonant Discord on Perception), a full dose causes the Corrupted condition, and an overdose (rare, requires intent) causes Resonance-Locked for 1 Pulse.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Resonance Attributes</div>
+  <div class="stat-row">
+    <div class="stat-cell"><div class="sc-label">Attribute Increases</div><div class="sc-val" style="color:var(--serpent)">+2 Attunement<br>+1 Swiftness</div><div class="sc-note">Prophetic sensitivity and fluid movement</div></div>
+    <div class="stat-cell"><div class="sc-label">Base Vitality Dice</div><div class="sc-val">d8</div><div class="sc-note">Resilient but not heavily built</div></div>
+    <div class="stat-cell"><div class="sc-label">Movement</div><div class="sc-val">30 ft · 40 ft swim</div><div class="sc-note">Equal on land and water</div></div>
+  </div>
+
+  <div class="play-block">
+    <div class="pb-title">Playing a Serpent-Kin</div>
+    <div class="pb-text">The Serpent-Kin's core experience is <strong>knowing more than you're saying and being patient enough to wait for the right moment to say it.</strong> The Dream-Fish Lineage gives the Concordance a direct channel to provide this character with information the rest of the party doesn't have — which creates natural dramatic tension around when and whether to share it. The Long Game immunity to urgency is both a mechanical asset and a roleplay note: <strong>Serpent-Kin characters do not panic.</strong> They may be afraid, but fear in a Serpent-Kin looks like stillness, not urgency. This makes them either the most calming presence in a crisis or the most infuriating, depending on who's watching.</div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- AVIAN -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-avian">
+<div class="kindred-wrap">
+  <div class="kh">
+    <div class="kh-sigil" style="background:rgba(200,160,74,0.08);border-color:rgba(200,160,74,0.3)">🦅</div>
+    <div>
+      <div class="kh-name" style="color:var(--avian)">Avian</div>
+      <div class="kh-also">Also called: Bird-Folk, Sky-Kin, the Feathered Courts, Chinvat-Born</div>
+      <div class="kh-home">Great Chinvat Expanse · Eagle Clan settlements · Ahura's Perch</div>
+      <div class="kh-essence" style="color:var(--avian);border-color:rgba(200,160,74,0.3);background:rgba(200,160,74,0.06)">Alpha-dominant · judicial authority is how Avian Alpha energy expresses</div>
+    </div>
+  </div>
+
+  <p class="lore-para">The Avian are not merely bird-people. They are a Kindred for whom <strong>elevation is a moral condition as much as a physical one.</strong> In the Chinvat cosmological framework, height above the earth correlates with proximity to Asha — the cosmic principle of truth and ordered existence. The highest settlements in the world (Justice-Rock Village, Ahura's Perch itself) are Avian because the Avian built them there deliberately: to be as close to truth as the physical world permits. The Wind of the Unblinking Gaze that makes falsehood impossible to speak at Justice-Rock is not a spell someone cast. It is the accumulated Aetheric pressure of a culture that has treated truth as a physical force for four thousand years.</p>
+
+  <p class="lore-para">The Avian's relationship with the Great Roc (their Legendary Beast, the former God of Divine Law) is the most direct Kindred-Beast relationship in the world. Other Kindreds venerate their Legendary Beasts from respectful distance. The Avian study the Great Roc's flight patterns to adjudicate legal disputes — the angle of its banking turns and the rhythm of its wing-beats correspond to a system of jurisprudential precedent that Avian judges have been developing since before the Pantheonic Fall. <strong>The Great Roc does not know it is a legal reference system.</strong> This may be the most poignant fact about the post-Fall world.</p>
+
+  <p class="lore-para"><strong>The Southern Sea Circuits:</strong> Avian scouts serve as the primary navigators and advance reconnaissance force for the Southern Sea trade corridor between Khem-Ma'at, K'uh-la'an, and the wider world. Their combination of flight, extraordinary vision (Raptor's Eye ignores cover from elevation), and truth-sense makes them uniquely effective at identifying hazards, scouting safe anchorages, and detecting the Ashen Coil's interdiction operations before surface ships encounter them. The escalating activity of the Abyssal Leviathan's spawn in the southern approach routes has made Avian scout reports the most valuable intelligence commodity on the Southern Sea Circuits — merchants who can secure an Avian scout for a voyage pay 10× the standard navigator's rate, and consider it fair.</p>
+
+  <div class="sec-head">Kindred Traits</div>
+  <div class="trait-grid">
+    <div class="trait-card open" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Winged — Core Trait</div><span class="tc-type" style="color:var(--avian);border-color:rgba(200,160,74,0.3)">Passive</span></div>
+      <div class="tc-body">Avian have functional wings granting a fly speed of 30 ft. They cannot fly while wearing heavy armor (wings cannot generate sufficient lift). In medium armor, fly speed reduces to 20 ft. <strong>Updraft</strong>: once per Pulse while flying, the Avian may gain altitude rapidly as a free action — rising up to 20 ft without expending movement, carried by natural air currents their Aetheric attunement reads instinctively. When diving from at least 20 ft height to make a melee Strike Resonance, the strike deals +1d6 additional damage from momentum. <strong>Avian cannot hover</strong> — they must move at least 10 ft per Pulse while airborne or begin to descend.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Asha-Touched Truth Sense</div><span class="tc-type" style="color:var(--avian);border-color:rgba(200,160,74,0.3)">Passive</span></div>
+      <div class="tc-body">Avian always know when they are being told a deliberate lie — not a mistaken belief or a withheld truth, but an active falsehood. This is not a roll. The Concordance tells the Avian player privately when a character has lied to them directly. <strong>They may choose not to act on this knowledge</strong> — knowing someone has lied and proving it are different things, and the Avian legal tradition is specific about evidence requirements. Additionally, Avian have Resonant Fortune on all Warding Resonances against deception-based Workings and Soul-Swayed conditions.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Judicial Authority</div><span class="tc-type" style="color:var(--avian);border-color:rgba(200,160,74,0.3)">Active · 1/Deep Attunement</span></div>
+      <div class="tc-body">Once per Deep Attunement, an Avian may invoke their Asha-given judicial authority in a social setting. All creatures present must make a Resonance Warding Resonance (Threshold 14) or be compelled to answer one direct question truthfully before they can choose how to frame their answer. This is not magical compulsion — it is the Aetheric weight of Asha pressing on the soul. Creatures with Resonant Fortune on deception Warding Resonances make this roll with Resonant Discord instead. <strong>Void-Husks and creatures with dissolved Fate Numbers are immune</strong> — Asha cannot reach what the Loom no longer holds.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Raptor's Eye</div><span class="tc-type" style="color:var(--avian);border-color:rgba(200,160,74,0.3)">Passive</span></div>
+      <div class="tc-body">Avian vision is extraordinary — equivalent to looking through a magnifying glass at long range. They can read text at 300 ft, identify a creature's face at 500 ft, and detect motion at 1 mile in clear conditions. In combat, they can perceive fine details of opponents (weapon types, equipment condition, visible injury) without any Active Resonance. <strong>Ranged Strike Resonances</strong> made from elevation (at least 20 ft above the target) ignore half and three-quarters cover — the Avian's ability to read angles makes obstacles less effective against their aim.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Chinvat Oath-Binding</div><span class="tc-type" style="color:var(--avian);border-color:rgba(200,160,74,0.3)">Active · Ritual</span></div>
+      <div class="tc-body">An Avian who witnesses an oath sworn between two parties may formally invoke the Chinvat binding — a 10-minute ritual requiring the Avian's active participation. The oath becomes Aetherically binding: the Concordance tracks compliance, and any party who breaks the oath's specific terms immediately receives the Dread-Struck condition for 24 hours as Asha's displeasure manifests. <strong>This works on willing parties only</strong> — an oath cannot be forced. But an Avian's mere presence in a negotiation, known to be capable of this, shifts the social dynamics of any agreement they witness.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Resonance Attributes</div>
+  <div class="stat-row">
+    <div class="stat-cell"><div class="sc-label">Attribute Increases</div><div class="sc-val" style="color:var(--avian)">+2 Resonance<br>+1 Swiftness</div><div class="sc-note">Judicial presence and aerial agility</div></div>
+    <div class="stat-cell"><div class="sc-label">Base Vitality Dice</div><div class="sc-val">d8</div><div class="sc-note">Lighter build for flight capability</div></div>
+    <div class="stat-cell"><div class="sc-label">Movement</div><div class="sc-val">25 ft ground · 30 ft fly</div><div class="sc-note">Faster in the air than on land</div></div>
+  </div>
+
+  <div class="play-block">
+    <div class="pb-title">Playing an Avian</div>
+    <div class="pb-text">The Avian's central dynamic is <strong>the weight of knowing the truth in a world built on convenient fictions.</strong> The truth sense is always on. The Avian always knows when people are lying. What they do with that knowledge — the discipline to stay silent, the judgment to choose the right moment, the legal precision that separates knowing from proving — is the entire character. <strong>The wings matter too</strong>: Avian naturally take the high ground, literally and figuratively. A party with an Avian member has aerial reconnaissance, a built-in truth detector, and someone who can bind oaths with Aetheric weight. They also have someone who will absolutely notice when the local lord is lying about why they need the party's help.</div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- FAE-BLOODED -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-fae">
+<div class="kindred-wrap">
+  <div class="kh">
+    <div class="kh-sigil" style="background:rgba(168,126,200,0.08);border-color:rgba(168,126,200,0.3)">🌙</div>
+    <div>
+      <div class="kh-name" style="color:var(--fae)">Fae-Blooded</div>
+      <div class="kh-also">Also called: Otherworld-Touched, the Twilight Kindred, Moon-Kin</div>
+      <div class="kh-home">Tuathan Archipelago · Otherworld border-zones · the spaces between things</div>
+      <div class="kh-essence" style="color:var(--fae);border-color:rgba(168,126,200,0.3);background:rgba(168,126,200,0.06)">Omega-dominant · they exist partially between states of being</div>
+    </div>
+  </div>
+
+  <p class="lore-para">The Fae-Blooded are what happens when Otherworld bargains compound across generations. A single Tuathan ancestor who traded something significant with an Otherworld entity — time, memory, a child's name, the color of the sky at a specific moment — begins a lineage in which the Aetheric boundary between the material world and the Otherworld becomes progressively thinner. By the third or fourth generation, children are born with Noctilith-pale eyes, hair that moves without wind, and an instinctive awareness of things that aren't quite present. By the sixth or seventh generation, <strong>the Fae-Blooded child is not entirely in either world.</strong></p>
+
+  <p class="lore-para">This is not metaphor. The Fae-Blooded exist in a state of perpetual partial translucency — they are fully present in the material world but always partially perceivable from the Otherworld as well. Fae entities can see them regardless of concealment. Otherworld spirits sometimes speak to them unbidden. The Otherworld Gate Faerie Mound that opens at twilight opens more easily for a Fae-Blooded than for anyone else — because from the Otherworld's perspective, <strong>the Fae-Blooded are already halfway through.</strong></p>
+
+  <div class="sec-head">Kindred Traits</div>
+  <div class="trait-grid">
+    <div class="trait-card open" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Twilight Nature — Core Trait</div><span class="tc-type" style="color:var(--fae);border-color:rgba(168,126,200,0.3)">Passive</span></div>
+      <div class="tc-body">Fae-Blooded exist partially in the Otherworld at all times. They can perceive Otherworld entities, spirits, and phenomena that are invisible to other Kindreds — this requires no Active Resonance, it is simply how they see. They can also communicate with these entities. <strong>As an Instinct</strong>, the Fae-Blooded may briefly step further into the Otherworld — becoming partially translucent for 1 Pulse. During this Pulse: they can move through creatures (not objects) as difficult terrain; attacks against them have Resonant Discord; but they cannot make physical attacks themselves. They return to full materiality at the start of their next Moment. <strong>The Otherworld always notices when they step in</strong> — the Concordance rolls privately to determine whether anything there notices and investigates.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Noctilith Resonance</div><span class="tc-type" style="color:var(--fae);border-color:rgba(168,126,200,0.3)">Passive</span></div>
+      <div class="tc-body">Fae-Blooded and Noctilith (Moon-Stone) resonate at the same frequency. They can charge Noctilith by holding it for 1 hour under any light conditions (not just moonlight) — the stone absorbs their partial Otherworld nature rather than the moon's energy. Charged Noctilith handled by a Fae-Blooded has its Working effects enhanced by one tier. <strong>Additionally</strong>: Fae-Blooded can use Noctilith as a focus for any illusion Working, halving the Aetheric Channel cost. They were practically born for this material.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Seasonal Attunement</div><span class="tc-type" style="color:var(--fae);border-color:rgba(168,126,200,0.3)">Passive — varies by birth-tree</span></div>
+      <div class="tc-body">Like all Tuathan tradition practitioners, Fae-Blooded align with a birth-tree from the Celtic Tree Zodiac. During their birth-tree's season, all Active Resonances have Resonant Fortune. Outside their season, they have Resonant Discord on Warding Resonances against Otherworld entities — the season's misalignment makes their partial Otherworld nature harder to protect. <strong>At the solstices and equinoxes</strong>, all Fae-Blooded experience a moment of perfect seasonal alignment regardless of birth-tree — for 24 hours they have Resonant Fortune on all Active Resonances and can open any Otherworld threshold they know of without the standard ritual.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Fae Bargain</div><span class="tc-type" style="color:var(--fae);border-color:rgba(168,126,200,0.3)">Active · Ritual</span></div>
+      <div class="tc-body">Once per session, a Fae-Blooded may attempt a formal bargain with an Otherworld entity through the Faerie Mound or any known Otherworld threshold. The bargain can request abilities, information, passage, or assistance beyond the character's current capacity. <strong>The Concordance determines the cost</strong> — always something personal, time-limited, or memory-affecting. The Fae-Blooded may refuse after hearing the cost. Costs examples: 24 hours without speaking; forgetting one specific memory until the next solstice; becoming visible to all Otherworld entities for one week; the entity holds a favor to be called in at any time. <strong>Unresolved bargains accumulate</strong> — a Fae-Blooded with more than three outstanding unpaid Fae Bargains begins experiencing involuntary Otherworld incursions during sleep.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Iron Weakness</div><span class="tc-type" style="color:var(--fae);border-color:rgba(168,126,200,0.3)">Vulnerability</span></div>
+      <div class="tc-body">The Otherworld half of a Fae-Blooded's nature is vulnerable to iron — specifically, unworked or minimally worked iron (not Black Iron, which has been sufficiently refined). Contact with unworked iron causes discomfort; <strong>weapons of unworked iron deal +1d4 damage</strong> against Fae-Blooded. They cannot willingly hold unworked iron for more than a Pulse without making an Endurance Warding Resonance (Threshold 12) or dropping it. This weakness is not widely known outside the Tuathan Archipelago — Fae-Blooded who travel often learn to conceal it. The Otherworld entities who know about it, however, use it freely.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Resonance Attributes</div>
+  <div class="stat-row">
+    <div class="stat-cell"><div class="sc-label">Attribute Increases</div><div class="sc-val" style="color:var(--fae)">+2 Attunement<br>+1 Resonance</div><div class="sc-note">Otherworld sensitivity and liminal presence</div></div>
+    <div class="stat-cell"><div class="sc-label">Base Vitality Dice</div><div class="sc-val">d6</div><div class="sc-note">Partially elsewhere — less physically grounded</div></div>
+    <div class="stat-cell"><div class="sc-label">Movement</div><div class="sc-val">35 ft</div><div class="sc-note">Gliding step — slightly uncanny</div></div>
+  </div>
+
+  <div class="play-block">
+    <div class="pb-title">Playing a Fae-Blooded</div>
+    <div class="pb-text">The Fae-Blooded is the Kindred of <strong>accumulated consequence.</strong> Their power comes from bargains — generational ones already paid, and new ones they choose to make. The Fae Bargain system is the game's most explicit risk-reward mechanic: you can get almost anything, but you always pay something personal. <strong>The iron weakness and the lowest Vitality Dice in the game</strong> mean a Fae-Blooded player has to be thoughtful about positioning. They are not fragile in the way an untrained Human is fragile — they have the Twilight Step and seasonal Resonant Fortune. But they cannot absorb punishment the way a Wolf-Shifter or Dunmarim can. They survive by being somewhere else when the blow lands.</div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- MOANA-KIN -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-moana">
+<div class="kindred-wrap">
+  <div class="kh">
+    <div class="kh-sigil" style="background:rgba(74,158,192,0.08);border-color:rgba(74,158,192,0.3)">🌊</div>
+    <div>
+      <div class="kh-name" style="color:var(--moana)">Moana-kin</div>
+      <div class="kh-also">Also called: Ocean-Born, the Wayfinders, Waka-kin, Star-Readers</div>
+      <div class="kh-home">Te Moana-nui Archipelago · deep ocean island chains · the open water between continents</div>
+      <div class="kh-essence" style="color:var(--moana);border-color:rgba(74,158,192,0.3);background:rgba(74,158,192,0.06)">Beta-dominant · navigation lineages are the Moana-kin's institutional structure</div>
+    </div>
+  </div>
+
+  <p class="lore-para">The Moana-kin do not have a homeland in the way other Kindreds do. They have <em>routes</em>. The concept of a fixed home — a place you return to because it is where you are from — is a philosophical position that the Moana-kin regard with respectful incomprehension. <strong>Home is the last island where you were genuinely welcomed.</strong> The next island is where you're going. The ocean between is where you actually live. This is not rootlessness — it is a different relationship to roots, one that runs through water currents and star-paths rather than soil.</p>
+
+  <p class="lore-para">The Waka-tōhora Navigator-Priests who lead Moana-kin society are not priests in any religious sense. They are the ones who know the Ara Moana — the twelve star-path system that maps the zodiac onto navigational reality. Their authority comes from the capacity to find land in featureless ocean, to predict weather three days out from wave patterns, and to read the deep swell's memory of distant events. <strong>In a world where most Kindreds look up at the zodiac, the Moana-kin navigate by it.</strong> This gives them a relationship to cosmic forces that no Comet-Magi has ever fully understood — they don't study the stars, they use them.</p>
+
+  <div class="sec-head">Kindred Traits</div>
+  <div class="trait-grid">
+    <div class="trait-card open" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Ara Moana Attunement — Core Trait</div><span class="tc-type" style="color:var(--moana);border-color:rgba(74,158,192,0.3)">Passive System</span></div>
+      <div class="tc-body">Moana-kin begin play with access to the Ara Moana navigation system (see Mechanics Codex, System VI). They gain two Ara Moana abilities at character creation (choose from: The First Step, Deep Reading, Triangulation, Shelter Sense, Season Reading, or Horizon Sight) and one additional ability at Resonance Depths 5, 10, and 15. <strong>These abilities function in any environment</strong> — ocean, underground, spirit realms, time-distorted spaces — anywhere that movement exists to read. In the Mirror Sea void zone, all Ara Moana abilities fail. A Moana-kin who enters the Mirror Sea and exits alive gains permanent Mirror Sea Sense: they can detect the boundary from 100 miles away.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Ocean-Born Body</div><span class="tc-type" style="color:var(--moana);border-color:rgba(74,158,192,0.3)">Passive</span></div>
+      <div class="tc-body">Swim speed 40 ft and can breathe water. Moana-kin do not experience seasickness, cannot be disoriented by wave motion, and have Resonant Fortune on all Warding Resonances against being knocked prone or moved against their will while on water or underwater. <strong>Weather Reading</strong>: Moana-kin can predict local weather up to three days in advance with complete accuracy by spending 10 minutes observing the ocean, sky, and wind — no Active Resonance required. On land, this range drops to 24 hours. This is not a Working. It is observation refined into instinct by generations of necessity.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Pre-Fall Star Charts</div><span class="tc-type" style="color:var(--moana);border-color:rgba(74,158,192,0.3)">Active · 1/Session</span></div>
+      <div class="tc-body">The coral walls of Hōkūle'a Atoll carry star charts that predate the Pantheonic Fall — observations of the zodiac forces before they became Legendary Beasts. A Moana-kin who has studied these charts (requiring access to the Atoll, which requires surviving the ocean journey there) carries their memory. Once per session, they may consult this memory to ask the Concordance one question about what a zodiac force <em>was</em> before the Fall — the original divine nature, not the current beast form. The answer is always accurate and always incomplete: the charts recorded what the navigators observed, which was physical and environmental, not theological.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Waka Community</div><span class="tc-type" style="color:var(--moana);border-color:rgba(74,158,192,0.3)">Passive</span></div>
+      <div class="tc-body">Moana-kin do not travel alone if they can help it. When a Moana-kin takes the Help action/Act to assist another character, both the Moana-kin and the assisted character gain Resonant Fortune on the roll — not just the recipient. The Moana-kin's experience is enhanced by the act of sharing it. <strong>Additionally</strong>: any vessel the Moana-kin navigates moves at 1.5× its normal travel speed and requires one fewer crew member than its standard complement — their navigation efficiency reduces operational burden across the whole ship.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Resonance Attributes</div>
+  <div class="stat-row">
+    <div class="stat-cell"><div class="sc-label">Attribute Increases</div><div class="sc-val" style="color:var(--moana)">+2 Attunement<br>+1 Swiftness</div><div class="sc-note">Cosmic awareness and fluid responsiveness</div></div>
+    <div class="stat-cell"><div class="sc-label">Base Vitality Dice</div><div class="sc-val">d8</div><div class="sc-note">Lean and weathered</div></div>
+    <div class="stat-cell"><div class="sc-label">Movement</div><div class="sc-val">30 ft · 40 ft swim</div><div class="sc-note">Equal on land and water</div></div>
+  </div>
+
+  <div class="play-block">
+    <div class="pb-title">Playing a Moana-kin</div>
+    <div class="pb-text">The Moana-kin's defining characteristic is <strong>always knowing where they are and where everything else is going.</strong> The Ara Moana abilities — Triangulation especially — make them the party's most reliable information-gatherer in environments other characters find disorienting. They are the Kindred who remains calm in the dungeon, the spirit realm, and the time-distorted Otherworld because they are always finding their reference points. <strong>The Mirror Sea is their one blind spot</strong> — and a Moana-kin who has survived it carries that experience as both a scar and a superpower. Consider letting Mirror Sea Sense emerge naturally through play rather than starting with it.</div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- TE KAPO -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-tekapo">
+<div class="kindred-wrap">
+  <div class="kh">
+    <div class="kh-sigil" style="background:rgba(106,106,138,0.08);border-color:rgba(106,106,138,0.3)">🕯</div>
+    <div>
+      <div class="kh-name" style="color:var(--tekapo)">Te Kapo</div>
+      <div class="kh-also">Also called: the Void-Readers, Dark-Seers, the Blind Ones (misnomer), Obsidian-Born</div>
+      <div class="kh-home">The Obsidian Deep · submarine cave networks · Te Ao-kore</div>
+      <div class="kh-essence" style="color:var(--tekapo);border-color:rgba(106,106,138,0.3);background:rgba(106,106,138,0.06)">Omega-dominant · their entire tradition is contemplative perception</div>
+    </div>
+  </div>
+
+  <p class="lore-para">The Te Kapo are called "the Blind Ones" by surface cultures who don't understand them, and the name reveals more about surface culture than about Te Kapo. They are not blind. They have functional eyes — large, pale, adapted for bioluminescent light. What they have chosen, as a civilization, is to <strong>develop perceptual capacities that require darkness to access.</strong> The surface world's constant light pollution — stars, fire, Aetheric fields, the glow of populated settlements — drowns the subtle signals that the Te Kapo have trained themselves to read for generations. When they come to the surface (rarely, reluctantly, usually under urgent circumstances), they find it disorienting in the way a person with exceptional hearing finds a loud room disorienting.</p>
+
+  <p class="lore-para">The Kore-kore perception — the ability to sense the Hollow Serpent's movements through its void-within-void signature — took their civilization generations to develop. It is not a gift or a mutation. It is the result of <strong>deliberate, multigenerational, systematic training in the perception of absence.</strong> They began by learning to perceive the dark zodiac signs (the negative space around each constellation). They progressed to reading the Aether's absences rather than its presences. The Kore-kore emerged from this practice the way any skill emerges from sufficient depth of attention — not as a revelation, but as a natural extension of everything that came before.</p>
+
+  <div class="sec-head">Kindred Traits</div>
+  <div class="trait-grid">
+    <div class="trait-card open" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Dark-Zodiac Perception — Core Trait</div><span class="tc-type" style="color:var(--tekapo);border-color:rgba(106,106,138,0.3)">Passive System</span></div>
+      <div class="tc-body">Te Kapo begin play with access to the Kore-kore perception system (see Mechanics Codex, System VII) and two dark-zodiac Discipline abilities of their choice (from: Kore-ahi/Aries, Kore-kōrero/Gemini, Kore-roto/Scorpio, or Kore-kore/Ophiuchus detection). They gain one additional dark-zodiac ability at Resonance Depths 5 and 10. <strong>In complete darkness</strong>, all Te Kapo dark-zodiac abilities function at double range. In bright light (sunlight or equivalent), dark-zodiac perception is suppressed entirely — the signal is drowned. <strong>Blindsight 30 ft</strong>: Te Kapo navigate by echolocation-adjacent spatial awareness in darkness — they are not impeded by it and cannot be surprised in dark environments.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Absence Reading</div><span class="tc-type" style="color:var(--tekapo);border-color:rgba(106,106,138,0.3)">Passive</span></div>
+      <div class="tc-body">Te Kapo perceive what is not there as clearly as other Kindreds perceive what is. They automatically detect: hidden doors, concealed passages, Aether-Veiled creatures, invisible objects, and the negative space left by something that was recently removed. <strong>No Active Resonance required</strong> for any of these. The Concordance tells a Te Kapo player when any of these are present within 60 ft. They also detect the emotional residue of spaces — not precise psychometry, but a general quality: "this room has held fear recently," "something important was decided here," "this passage has been avoided for years."</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Bioluminescent Marking</div><span class="tc-type" style="color:var(--tekapo);border-color:rgba(106,106,138,0.3)">Active · At will</span></div>
+      <div class="tc-body">Te Kapo skin carries bioluminescent markings that can be controlled consciously — dimmed to nothing or brightened to dim-light levels (covering a 10-ft radius). The markings' patterns convey meaning within Te Kapo culture: specific configurations signal emotion, intent, identity, and warning. Surface-dwellers cannot read the patterns without extensive Te Kapo contact. <strong>Communication</strong>: Te Kapo can communicate complex ideas silently through bioluminescent pattern — any Te Kapo within sight can receive full semantic content. This cannot be intercepted or detected by non-Te Kapo without specialized training.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Light Sensitivity</div><span class="tc-type" style="color:var(--tekapo);border-color:rgba(106,106,138,0.3)">Vulnerability</span></div>
+      <div class="tc-body">Te Kapo in bright light (sunlight, Daylight Working, or equivalent) have Resonant Discord on all Perception-related Active Resonances. Their dark-zodiac perception is fully suppressed in bright light. <strong>Sudden bright light</strong> (a torch lit in darkness, a flash Working) requires an Endurance Warding Resonance (Threshold 12) or the Te Kapo is Sight-Severed for 1 Pulse. They adapt to moderate light (candlelight, overcast day) without penalty over the course of an hour. <strong>Many Te Kapo who work surface missions</strong> carry specialized eyewear crafted from Obsidian Deep minerals that filters light intensity — a practical solution their civilization developed centuries ago.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Resonance Attributes</div>
+  <div class="stat-row">
+    <div class="stat-cell"><div class="sc-label">Attribute Increases</div><div class="sc-val" style="color:var(--tekapo)">+2 Attunement<br>+1 Acuity</div><div class="sc-note">Perceptual depth and systematic analysis</div></div>
+    <div class="stat-cell"><div class="sc-label">Base Vitality Dice</div><div class="sc-val">d8</div><div class="sc-note">Cave-adapted, lean and precise</div></div>
+    <div class="stat-cell"><div class="sc-label">Movement</div><div class="sc-val">30 ft · 30 ft swim</div><div class="sc-note">Equally comfortable in water</div></div>
+  </div>
+
+  <div class="play-block">
+    <div class="pb-title">Playing a Te Kapo</div>
+    <div class="pb-text">The Te Kapo is the party's <strong>intelligence asset in the dark.</strong> Every dungeon, every cave, every underground approach becomes their home environment. The Absence Reading passive makes them the most reliable trap-finder and hidden-door detector in the game — not through rolls, but through perception. <strong>The light sensitivity is real and matters</strong>: a Te Kapo player should think about light management as a character concern, not a nuisance. The eyewear solution is available in-world and should be obtained early. The bioluminescent communication system creates natural party-within-party dynamics — Te Kapo can coordinate silently in a room full of enemies.</div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- LIZARD-FOLK -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-lizard">
+<div class="kindred-wrap">
+  <div class="kh">
+    <div class="kh-sigil" style="background:rgba(122,154,106,0.08);border-color:rgba(122,154,106,0.3)">🦎</div>
+    <div>
+      <div class="kh-name" style="color:var(--lizard)">Lizard-Folk</div>
+      <div class="kh-also">Also called: Kurgan-kin, Bog-Walkers, the Patient Hunters</div>
+      <div class="kh-home">Great Kurgan Bog · Mare Occultum · nomadic clan territories</div>
+      <div class="kh-essence" style="color:var(--lizard);border-color:rgba(122,154,106,0.3);background:rgba(122,154,106,0.06)">Beta-dominant · clan survival is the organizing principle of everything</div>
+    </div>
+  </div>
+
+  <p class="lore-para">The Lizard-Folk of the Great Kurgan Bog are not related to the Serpent-Kin of K'uh-la'an — a common surface-dweller misconception based on superficial appearance. The Serpent-Kin are an ancient civilization with deep Dream-Fish connections and centuries of institutional sophistication. The Lizard-Folk are <strong>nomadic hunters who have survived the Kurgan Bog by being more patient than everything that wants to kill them.</strong> Different cosmological relationship, different culture, different everything except the scales.</p>
+
+  <p class="lore-para">The Bog is one of the most dangerous environments in Sideros — the Stygian Scorpion makes its lair in the Sunken Peat-Cavern beneath it, Mycelian Brood spores drift through the lower cave systems, and the ground itself is unreliable. The Lizard-Folk have adapted to this by developing an exquisitely precise threat-assessment capacity: <strong>they can read environmental conditions the way a Moana-kin reads the ocean.</strong> The Bog speaks in pressure changes, smell gradients, vibration patterns, and the behavior of creatures three strata below them. A Lizard-Folk clan moves through the Bog like a hand through water — leaving no trace, reading everything.</p>
+
+  <div class="sec-head">Kindred Traits</div>
+  <div class="trait-grid">
+    <div class="trait-card open" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Bog Predator — Core Trait</div><span class="tc-type" style="color:var(--lizard);border-color:rgba(122,154,106,0.3)">Passive</span></div>
+      <div class="tc-body">Lizard-Folk have Hold Breath (up to 15 minutes), swim speed 30 ft, and leave no tracks in natural terrain (swamp, forest, caves) unless they choose to. They have Resonant Fortune on Stealth Active Resonances in natural environments and cannot be tracked by mundane means in natural terrain. <strong>Ambush predator</strong>: when a Lizard-Folk attacks a creature that has not yet acted in combat (surprise round), they deal +2d6 damage and the target must make an Endurance Warding Resonance (Threshold 13) or be Resonance-Locked for 1 Pulse — the shock of the strike outpaces the target's ability to respond.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Environmental Reading</div><span class="tc-type" style="color:var(--lizard);border-color:rgba(122,154,106,0.3)">Passive</span></div>
+      <div class="tc-body">Lizard-Folk read the natural world as fluently as others read text. They automatically know: current weather for the next 6 hours, the presence and approximate number of living creatures within 300 ft in natural terrain, whether any creature has passed through this area in the last 24 hours (and roughly how large), and whether any food or fresh water is within 1 mile. <strong>In the Kurgan Bog specifically</strong> (or any swamp terrain): this range doubles, they can detect Mycelian Brood spore density, and they know the location of the nearest Stygian Scorpion secondary tunnel entrance if within 2 miles.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Scorpion-Kin Understanding</div><span class="tc-type" style="color:var(--lizard);border-color:rgba(122,154,106,0.3)">Passive</span></div>
+      <div class="tc-body">Generations of proximity to the Stygian Scorpion's lair has given Lizard-Folk partial resistance to the Heart-Sting Toxin: they make Warding Resonances against it with Resonant Fortune, and even on a failed save, they suffer only half the normal duration. <strong>More significantly</strong>: Lizard-Folk can communicate basic intent with the Stygian Scorpion's lesser spawn (the scorpion-creatures that patrol the Bog's lower strata) — not language, but clear non-aggression signals. Scorpion-spawn will not attack a Lizard-Folk unprovoked, and a Lizard-Folk can redirect spawn pursuit toward other targets by expending a minute of careful behavioral signaling.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Regeneration</div><span class="tc-type" style="color:var(--lizard);border-color:rgba(122,154,106,0.3)">Passive</span></div>
+      <div class="tc-body">Lizard-Folk can regrow lost extremities over time — fingers in 1 week, a hand in 1 month, an arm in 3 months. They regain 1 Vitality at the start of each Pulse while below half their maximum Vitality — the Bog-adapted metabolism continuously attempting repair. <strong>This regeneration stops</strong> if the Lizard-Folk has taken fire damage in the current Pulse (fire disrupts the biological repair process) or if they are Aetheric-Depleted at Stage 3 or higher (the body's resources are too depleted to sustain both function and regeneration simultaneously).</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Resonance Attributes</div>
+  <div class="stat-row">
+    <div class="stat-cell"><div class="sc-label">Attribute Increases</div><div class="sc-val" style="color:var(--lizard)">+2 Forcefulness<br>+1 Endurance</div><div class="sc-note">Predatory power and swamp-hardened resilience</div></div>
+    <div class="stat-cell"><div class="sc-label">Base Vitality Dice</div><div class="sc-val">d10</div><div class="sc-note">Regeneration biology supports high base</div></div>
+    <div class="stat-cell"><div class="sc-label">Movement</div><div class="sc-val">30 ft · 30 ft swim</div><div class="sc-note">Comfortable in water and on land</div></div>
+  </div>
+
+  <div class="play-block">
+    <div class="pb-title">Playing a Lizard-Folk</div>
+    <div class="pb-text">The Lizard-Folk is the party's <strong>survival specialist and ambush predator.</strong> In wilderness and dungeon environments they are nearly undetectable before they choose to act, and the first strike when they do act can be devastating. <strong>Regeneration changes how you play damage</strong> — a Lizard-Folk player can afford to be more aggressive because the body repairs itself between engagements. The fire vulnerability to regeneration is the balancing cost: a Lizard-Folk who absorbs fire damage has to play wounded until they take a Brief Attunement away from fire. Scorpion-Kin Understanding is the most unusual social ability in the game — the ability to negotiate with ambush predators creates infiltration options other Kindreds simply don't have.</div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- KURI -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-kuri">
+<div class="kindred-wrap">
+  <div class="kh">
+    <div class="kh-sigil" style="background:rgba(138,122,106,0.08);border-color:rgba(138,122,106,0.3)">⚡</div>
+    <div>
+      <div class="kh-name" style="color:var(--kuri)">Kuri</div>
+      <div class="kh-also">Also called: Scavengers (pejorative), Sewer-Kin, the Overlooked, Kuri-folk</div>
+      <div class="kh-home">Terra Firma urban sewers · Argentum undercity · Aurelia subterranean districts</div>
+      <div class="kh-essence" style="color:var(--kuri);border-color:rgba(138,122,106,0.3);background:rgba(138,122,106,0.06)">Beta-dominant · community survival through collective resourcefulness</div>
+    </div>
+  </div>
+
+  <p class="lore-para">The Kuri are what happens when a Kindred is pushed to the margins of every major civilization simultaneously and survives anyway. They have been called scavengers, saboteurs, and vermin by every surface culture in Terra Firma for as long as anyone can remember. <strong>They have been all of these things, when survival required it.</strong> They have also been engineers, architects of underground infrastructure, brilliant improvisational chemists, and the only Kindred who fully understands how every major city in Terra Firma actually functions from the inside out — because they live in the parts the city's builders didn't think anyone would inhabit.</p>
+
+  <p class="lore-para">The Kuri saboteurs in Aurelia's sewers are not simply attacking the Leonine Empire out of malice. They are the political expression of a Kindred that has been systematically excluded from every institution the surface world has built, has watched those institutions claim dominion over the spaces the Kuri call home, and has run out of patience for polite approaches. <strong>The Kuri are not villains.</strong> They are a Kindred making rational choices about an irrational situation. A Kuri character who has left the sewer networks to travel the wider world carries this context — the knowledge of what they are to most of the world's institutions, and the choice about what to do with that knowledge.</p>
+
+  <p class="lore-para"><strong>Port Operations:</strong> Beyond the urban sewer networks, Kuri operatives are the primary saboteurs currently disrupting the Western Sea Lanes trade corridor. Their Infrastructure Knowledge — the innate ability to identify every weak point, unmonitored gate, and structural vulnerability in any built environment — makes them extraordinarily effective at infiltrating port facilities, tampering with cargo manifests, and compromising docking infrastructure in ways that are difficult to detect and harder to prevent. Whether these operations are coordinated by a central Kuri authority, carried out by independent cells acting on shared grievance, or sponsored by external factions (the Ashen Coil, the Shadow-Council of Port Damaris, or rivals of the Leonine Empire) is an open intelligence question that the Loom of Fate has been unable to resolve. The Kuri, characteristically, have provided no clarification.</p>
+
+  <div class="sec-head">Kindred Traits</div>
+  <div class="trait-grid">
+    <div class="trait-card open" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Improvisation Mastery — Core Trait</div><span class="tc-type" style="color:var(--kuri);border-color:rgba(138,122,106,0.3)">Passive</span></div>
+      <div class="tc-body">Kuri can craft functional tools and weapons from salvaged materials with a 10-minute work period. The improvised item functions as a standard version of that item type for 24 hours before degrading. <strong>More significantly</strong>: when using improvised, repurposed, or unconventional tools for an Active Resonance, Kuri have Resonant Fortune rather than the usual Resonant Discord that improvised tools impose on other Kindreds. They have spent their entire existence making inadequate materials adequate. <strong>Kuri also begin play with Mastery in one of</strong>: Engineering, Alchemy, Demolition, or Stealth Discipline — their underground survival has forced expertise in at least one technical field.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Infrastructure Knowledge</div><span class="tc-type" style="color:var(--kuri);border-color:rgba(138,122,106,0.3)">Passive</span></div>
+      <div class="tc-body">Kuri have an instinctive understanding of built environments — sewers, aqueducts, foundations, load-bearing structures, hidden passages, and maintenance access points. In any city they have spent at least one week in, they know: the fastest unobserved route between any two points, three ways to cause significant structural disruption, the location of the primary water and waste infrastructure, and where the city's institutions store things they don't want found. <strong>In cities they haven't visited</strong>: Resonant Fortune on Active Resonances to find hidden passages, structural weaknesses, or underground access in built environments.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Overlooked</div><span class="tc-type" style="color:var(--kuri);border-color:rgba(138,122,106,0.3)">Passive</span></div>
+      <div class="tc-body">Kuri have spent generations being ignored, dismissed, and actively not-looked-at by surface civilizations. In urban environments, they can move through crowds, markets, and public spaces without drawing attention — not invisibility, but the social invisibility of the marginalized. <strong>Mechanically</strong>: Kuri are never the first target of hostile attention in a group situation (other party members will always be approached first unless the Kuri has specifically drawn attention to themselves). Stealth Active Resonances in urban environments are made with Resonant Fortune. Institutional guards and officials have Resonant Discord on Perception checks to notice a Kuri behaving normally in urban public space.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Toxin Resistance</div><span class="tc-type" style="color:var(--kuri);border-color:rgba(138,122,106,0.3)">Passive</span></div>
+      <div class="tc-body">Kuri digestive and immune systems have adapted to the contents of urban sewer systems over generations. They have complete immunity to mundane diseases and food-borne toxins. Against magical poisons and Void-energy Corrupted conditions, they have Resonant Fortune on the Warding Resonance. <strong>They can also safely eat and drink things that would kill other Kindreds</strong> — not pleasant, but possible. In survival situations underground, a Kuri will always find something nutritionally adequate to sustain themselves from the environment.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Darkvision and Small Frame</div><span class="tc-type" style="color:var(--kuri);border-color:rgba(138,122,106,0.3)">Passive</span></div>
+      <div class="tc-body">Darkvision 60 ft. Kuri are Small-sized, granting them access to spaces and passages that Medium-sized Kindreds cannot enter. <strong>In combat</strong>: Kuri can move through the space of any Medium or larger creature (treating it as difficult terrain). They have Resonant Fortune on Swiftness Active Resonances to escape grapples. Their smaller frame means they deal slightly less damage with heavy weapons — they cannot use Heavy-tagged weapons effectively (Resonant Discord on Strike Resonances with them) but suffer no penalties with Light and Finesse weapons.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Resonance Attributes</div>
+  <div class="stat-row">
+    <div class="stat-cell"><div class="sc-label">Attribute Increases</div><div class="sc-val" style="color:var(--kuri)">+2 Swiftness<br>+1 Acuity</div><div class="sc-note">Urban agility and improvised problem-solving</div></div>
+    <div class="stat-cell"><div class="sc-label">Base Vitality Dice</div><div class="sc-val">d6</div><div class="sc-note">Small and fast — not built to take hits</div></div>
+    <div class="stat-cell"><div class="sc-label">Movement</div><div class="sc-val">25 ft</div><div class="sc-note">Small frame — but can navigate terrain others can't</div></div>
+  </div>
+
+  <div class="play-block">
+    <div class="pb-title">Playing a Kuri</div>
+    <div class="pb-text">The Kuri is the party's <strong>urban infiltration specialist and the character with the most interesting relationship to institutions.</strong> Every institution in Terra Firma has an opinion about Kuri. Playing into that friction — the guard who won't look at you, the merchant who talks past you, the noble who doesn't notice you leave the room with something important — is where Kuri characterization lives. <strong>Infrastructure Knowledge in familiar cities is genuinely campaign-altering</strong>: a Kuri who has spent a week in Argentum knows three ways to structurally disrupt the Order of Pure Reason's headquarters. Whether they use that knowledge, and how, is the character. The lowest Vitality Dice alongside the Fae-Blooded means positioning and the Overlooked passive matter enormously — a Kuri who is noticed in combat is in trouble; a Kuri who is never quite noticed is nearly untouchable.</div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- CENTAUR-KIN -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-centaur">
+<div class="kindred-wrap">
+  <div class="kh">
+    <div class="kh-sigil" style="background:rgba(192,120,64,0.08);border-color:rgba(192,120,64,0.3)">🏹</div>
+    <div>
+      <div class="kh-name" style="color:var(--centaur)">Centaur-Kin</div>
+      <div class="kh-also">Also called: the Steppe-Born, Sky-Readers, Sagittarian Kindred, the Running Philosophers</div>
+      <div class="kh-home">Sagittarian Steppes · Open Sky territory · nomadic range across the plains</div>
+      <div class="kh-essence" style="color:var(--centaur);border-color:rgba(192,120,68,0.3);background:rgba(192,120,68,0.06)">Alpha-Beta hybrid · Centaur-Kin who lead are Alphas; those who map are Betas — both are necessary</div>
+    </div>
+  </div>
+
+  <p class="lore-para">The Centaur-Kin are the philosopher-nomads of the Sagittarian Steppes, and the word "philosopher" is not decorative. Their oral tradition is one of the most rigorous intellectual cultures in Sideros — sustained inquiry into cosmology, ethics, the nature of the zodiac forces, and the question of what mortality owes to the cosmos it inhabits. The difference between a Centaur-Kin philosophical debate and a Comet-Magi Conclave dispute is that the Centaur-Kin have it while running at thirty miles per hour across open grassland. <strong>Movement is not incidental to Centaur-Kin thought. Movement is the condition under which thought becomes clear.</strong></p>
+
+  <p class="lore-para">Their relationship with Lord Sagittarius is closer than any other Kindred-ruler bond. Lord Sagittarius is himself a nomadic philosopher whose Alpha-Beta hybrid nature produces genuine curiosity rather than performative inquiry. The Centaur-Kin consider him the best human ruler alive — not because he agrees with them, but because he <em>listens</em> and then changes his mind when presented with a better argument. That capacity is, to the Centaur-Kin, the highest virtue a two-legged creature can demonstrate. Their first contact with the Avian Bird-Folk has generated intense interest: <strong>here is another Kindred for whom elevation produces clarity.</strong> The philosophical exchange is ongoing and both sides are finding it unexpectedly generative.</p>
+
+  <div class="sec-head">Kindred Traits</div>
+  <div class="trait-grid">
+    <div class="trait-card open" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Equine Form — Core Trait</div><span class="tc-type" style="color:var(--centaur);border-color:rgba(192,120,64,0.3)">Passive</span></div>
+      <div class="tc-body">Centaur-Kin are Large-sized creatures with a movement speed of 50 ft. They cannot use standard mounts (they are the mount) but may carry one willing Small or Medium rider on their back without Endurance cost. <strong>Charge</strong>: when moving at least 30 ft in a straight line before a melee Strike Resonance, deal +2d6 bludgeoning damage and the target must make a Forcefulness Warding Resonance (Threshold 14) or be knocked prone. <strong>Limitations</strong>: Centaur-Kin cannot fit through doorways or passages designed for Medium creatures (most dungeon architecture). Staircases are difficult terrain. The underground encounters that other Kindreds navigate freely are genuinely constrictive for Centaur-Kin — which is part of why they rarely venture there.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Stellar Cartography</div><span class="tc-type" style="color:var(--centaur);border-color:rgba(192,120,64,0.3)">Passive</span></div>
+      <div class="tc-body">Centaur-Kin never get lost under an open sky and always know the precise time, date, season, and their exact geographic location from stellar observation. They have Mastery in the Aetheric Lore Discipline specifically for zodiac-related knowledge and can identify any star-aspected Aetheric Artifact by observation alone. <strong>More significantly</strong>: Centaur-Kin who study the Sunken Observatory's records (requiring access, which requires a quest) can access pre-Fall stellar observations — the same type of data the Moana-kin's ancient star charts hold, from a continental rather than oceanic perspective. These two Kindreds combining their stellar records would produce the most complete picture of the pre-Fall zodiac available to any mortal culture.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Running Dialogue</div><span class="tc-type" style="color:var(--centaur);border-color:rgba(192,120,64,0.3)">Passive</span></div>
+      <div class="tc-body">Centaur-Kin think more clearly in motion. When they move their full movement speed in a Pulse before using a Discipline or Weaving ability, that ability has Resonant Fortune. They also have Resonant Fortune on all Active Resonances for Persuasion and Insight when the conversation takes place while moving (walking, riding, traveling) rather than seated or stationary. <strong>Stationary overthinking</strong>: when forced to remain stationary for more than an hour (in a cell, staked out, in a meeting that won't end), Centaur-Kin have Resonant Discord on all Acuity and Attunement Active Resonances. They need to move to think clearly.</div>
+    </div>
+    <div class="trait-card" onclick="this.classList.toggle('open')">
+      <div class="tc-head"><div class="tc-name">Natural Archer</div><span class="tc-type" style="color:var(--centaur);border-color:rgba(192,120,64,0.3)">Passive</span></div>
+      <div class="tc-body">Centaur-Kin with ranged weapons (bows particularly) do not suffer the normal movement penalty for firing while moving — they can move their full speed and make a ranged Strike Resonance in the same Moment without Resonant Discord. The stable platform their body provides makes this natural. <strong>Additionally</strong>: once per Pulse, a Centaur-Kin may make one ranged Strike Resonance as an Instinct rather than an Act — not an extra attack, but the ability to respond to movement with an arrow faster than most Kindreds can decide to aim. This reflects the Steppe hunting tradition where prey is rarely stationary.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Resonance Attributes</div>
+  <div class="stat-row">
+    <div class="stat-cell"><div class="sc-label">Attribute Increases</div><div class="sc-val" style="color:var(--centaur)">+2 Forcefulness<br>+1 Attunement</div><div class="sc-note">Steppe power and philosophical sensitivity</div></div>
+    <div class="stat-cell"><div class="sc-label">Base Vitality Dice</div><div class="sc-val">d10</div><div class="sc-note">Large frame, built for endurance</div></div>
+    <div class="stat-cell"><div class="sc-label">Movement</div><div class="sc-val">50 ft</div><div class="sc-note">Fastest ground movement of any Kindred</div></div>
+  </div>
+
+  <div class="play-block">
+    <div class="pb-title">Playing a Centaur-Kin</div>
+    <div class="pb-text">The Centaur-Kin's central experience is <strong>being magnificently suited to open environments and genuinely constrained by closed ones.</strong> The Large size, 50-ft speed, and Charge ability make open terrain combat extraordinary. The inability to use standard dungeon architecture is a real limitation that creates natural party dynamics — the Centaur-Kin waits outside, covering exits, while smaller Kindreds go through the door. <strong>The Running Dialogue mechanic</strong> is a character note as much as a rule: Centaur-Kin are at their best in motion. A stationary Centaur-Kin is mildly impaired. One who has been running for half an hour before a difficult conversation will outperform their stationary self in every way.</div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- KINDRED-ZODIAC RESONANCE FRAMEWORK -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-kzframework">
+<div class="kindred-wrap">
+  <div class="sec-head" style="margin-top:0">The Design Principle</div>
+
+  <p class="kz-intro">Every character in Sideros has both a <strong>Kindred</strong> (cosmic lineage) and a <strong>zodiac sign</strong> (Fate Number designation). These two things interact. The Kindred-Zodiac Resonance is the unique ability that emerges when a specific Kindred's nature aligns with a specific sign's domain — producing something neither the Kindred alone nor the sign alone could generate. <strong>Not every combination produces a dramatic effect</strong> — some alignments are subtle, some are mechanical, some are purely narrative. All of them teach something about both the Kindred and the sign.</p>
+
+  <div class="note-block">
+    <div class="nb-title">How to Use This Table</div>
+    <div class="nb-text">The Kindred-Zodiac Resonance is a <strong>bonus ability</strong> acquired at Resonance Depth 1 alongside the standard Kindred traits. It does not replace the Zodiac Attunement (Feat) — it supplements it. At Resonance Depth 4, the character may take their Zodiac Attunement separately (requiring the Legendary Beast encounter for most Kindreds, except Gear-Forged). The Kindred-Zodiac Resonance is always active and requires no activation unless specified.</div>
+  </div>
+
+  <div class="sec-head">Selected Resonance Combinations</div>
+  <p style="font-size:13px;color:var(--parchment-dim);margin-bottom:1rem;font-style:italic">Click any sign to expand all fourteen Kindred resonances for that sign. The full table covers all 168 combinations (14 Kindreds × 12 signs).</p>
+
+  <!-- ARIES -->
+  <div class="kz-card" onclick="this.classList.toggle('open')">
+    <div class="kzc-head">
+      <div class="kzc-sign">♈</div>
+      <div><div class="kzc-title">Aries — Initiative, Primal Fire, The First Strike</div><div class="kzc-sub">The Ram's charge and what it means when different bloods carry it</div></div>
+    </div>
+    <div class="kzc-body">
+      <div class="kzc-row"><div class="kzc-kindred">Human</div><div class="kzc-name">First-Born Fire</div><div class="kzc-effect">When you initiate combat (first to act), all allies gain +1d4 fire damage on their first Strike Resonance of the encounter.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Eldren</div><div class="kzc-name">Kallos Spark</div><div class="kzc-effect">Your Aries Ambient Working deals damage equal to your Attunement modifier to any creature that interrupts your mantra mid-recitation.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Dunmarim</div><div class="kzc-name">Forge-Fire</div><div class="kzc-effect">Items you craft while carrying fire-aspected Aetheric Artifacts deal +1 fire damage when used. The fire burns without heat sources — it comes from the making.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Wolf-Shifter</div><div class="kzc-name">Pack Charge</div><div class="kzc-effect">When you use the Charge ability in wolf or hybrid form, all Bonded allies within 30 ft of your target may use their Reflex to move 10 ft toward the target.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Gear-Forged</div><div class="kzc-name">Overdrive Trigger</div><div class="kzc-effect">When you initiate combat (first in Pulse Order), your Geode glows at full intensity — you gain Resonant Fortune on Strike Resonances for the first Pulse only.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Ashé-Touched</div><div class="kzc-name">Shango's Opening</div><div class="kzc-effect">The first Strike Resonance of any combat deals +1d6 lightning damage regardless of your Orisha patron — all Ashé-Touched carry Shango's thunder in the first moment of conflict.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Serpent-Kin</div><div class="kzc-name">Coil Strike</div><div class="kzc-effect">Your venom glands activate automatically on the first attack of combat — no Instinct cost required. The first target you hit must make the Endurance Warding Resonance or take the Corrupted condition.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Avian</div><div class="kzc-name">Dive Initiation</div><div class="kzc-effect">When you initiate combat from flight, the additional momentum damage increases to +2d6 and the target must make a Forcefulness Warding Resonance or be knocked prone.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Fae-Blooded</div><div class="kzc-name">Otherworld Ambush</div><div class="kzc-effect">Once per combat, you may step into the Otherworld and re-emerge adjacent to any creature within 30 ft as a free action — counting as initiating from surprise if the target has not acted yet.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Moana-kin</div><div class="kzc-name">First Wave</div><div class="kzc-effect">The First Step ability (your Ara Moana core) also applies to the first Strike Resonance of any combat encounter — it cannot be foiled, regardless of conditions.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Te Kapo</div><div class="kzc-name">Dark Initiation</div><div class="kzc-effect">When you initiate combat in darkness, all enemies in the combat are Sight-Severed for the first Pulse — they cannot see anything for one full round as the void-signature of your Aries nature disorients their senses.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Lizard-Folk</div><div class="kzc-name">Ambush Predator's Fire</div><div class="kzc-effect">Your ambush bonus damage increases to +3d6, and the Resonance-Locked condition duration extends to the end of their next Moment rather than their next Pulse.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Kuri</div><div class="kzc-name">Infrastructure Strike</div><div class="kzc-effect">When you initiate a sabotage or demolition action, the time required is halved and any Warding Resonance to notice your approach has Resonant Discord.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Centaur-Kin</div><div class="kzc-name">The First Charge</div><div class="kzc-effect">Your Charge ability deals +3d6 (increased from +2d6) and affects all creatures in a 10-ft line behind the primary target — the momentum carries through.</div></div>
+    </div>
+  </div>
+
+  <!-- SCORPIO -->
+  <div class="kz-card" onclick="this.classList.toggle('open')">
+    <div class="kzc-head">
+      <div class="kzc-sign">♏</div>
+      <div><div class="kzc-title">Scorpio — Secrets, Death, Transformation, The Hidden Truth</div><div class="kzc-sub">What different Kindreds do with the power of concealment and revelation</div></div>
+    </div>
+    <div class="kzc-body">
+      <div class="kzc-row"><div class="kzc-kindred">Human</div><div class="kzc-name">The Meticulous Secret</div><div class="kzc-effect">You can maintain one active deception indefinitely — it requires no Active Resonance to sustain and cannot be detected by passive Avian truth-sense. The Concordance knows what it is.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Eldren</div><div class="kzc-name">Forgotten Science</div><div class="kzc-effect">When you read Aetheric history from a location (your Attunement Sense), you receive five events rather than three, and can reach back to pre-Fall memories if any Aetheric Working occurred there.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Dunmarim</div><div class="kzc-name">Buried Record</div><div class="kzc-effect">You can hide any object in stone — pressing it physically into solid rock with 1 minute of focused work. Only you can retrieve it. The stone leaves no visible mark.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Wolf-Shifter</div><div class="kzc-name">Pack Secret</div><div class="kzc-effect">Secrets you share with Bonded allies cannot be extracted through Judicial Authority, truth-compelling Workings, or any form of compelled honesty. The bond protects what it carries.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Gear-Forged</div><div class="kzc-name">Memory Vault — Scorpio</div><div class="kzc-effect">Your Memory Vault Frame Modification (if taken) is impossible to access by external means — not even a Stellar Cartographer can read stored memories from you without your explicit permission.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Ashé-Touched</div><div class="kzc-name">Oya's Veil</div><div class="kzc-effect">You can speak to the dead within 24 hours of death (expanded from Oya-patron's 10 minutes) — the Scorpio nature extends Oya's threshold. Non-Oya patrons gain this ability at the 10-minute limit.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Serpent-Kin</div><div class="kzc-name">Deep Concealment</div><div class="kzc-effect">Your Dream-Fish Lineage fragments are always about hidden things — the Concordance specifically gives you information about concealed threats, rather than randomly selecting what is most important.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Avian</div><div class="kzc-name">Raptor's Truth</div><div class="kzc-effect">Your truth sense now extends to detect deliberate omissions — not just lies, but the shape of what someone is choosing not to say. The Concordance tells you when someone has withheld something significant.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Fae-Blooded</div><div class="kzc-name">Between-World Keeping</div><div class="kzc-effect">You can hide objects in the Otherworld — spending 1 minute pushing an object through your partial Otherworld threshold. It exists there until you retrieve it. Objects hidden this way are invisible and untouchable to anyone without Otherworld access.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Moana-kin</div><div class="kzc-name">Deep Current Reading</div><div class="kzc-effect">Your Hull Sense Ara Moana ability (if possessed) now tells you not just that something is hidden but what kind of thing it is — the nature of the hidden current, not just its presence.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Te Kapo</div><div class="kzc-name">Kore-roto Mastery</div><div class="kzc-effect">Your Kore-roto dark-zodiac ability (Scorpio shadow reading) functions at double range and can identify not just the shape but the approximate content of what is concealed — not the specific secret, but its category.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Lizard-Folk</div><div class="kzc-name">Bog Secret</div><div class="kzc-effect">You leave no recoverable trace in natural environments — even magical tracking cannot follow you in terrain you have moved through intentionally. The Bog has taught you to leave nothing.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Kuri</div><div class="kzc-name">Underground Network</div><div class="kzc-effect">In any city, you can find the Kuri underground information network within 1 day. This network knows one secret about any major institution or individual in the city — the Concordance provides it. The information is always accurate and always the kind of thing power would prefer buried.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Centaur-Kin</div><div class="kzc-name">Philosopher's Paradox</div><div class="kzc-effect">Once per session, you may ask the Concordance the true motivation behind any NPC's publicly stated position. The answer is always the deepest layer, not the surface rationalization.</div></div>
+    </div>
+  </div>
+
+  <!-- AQUARIUS -->
+  <div class="kz-card" onclick="this.classList.toggle('open')">
+    <div class="kzc-head">
+      <div class="kzc-sign">♒</div>
+      <div><div class="kzc-title">Aquarius — Creation, Community, The Sea's Mysteries</div><div class="kzc-sub">How different Kindreds express the force that builds and sustains collective life</div></div>
+    </div>
+    <div class="kzc-body">
+      <div class="kzc-row"><div class="kzc-kindred">Human</div><div class="kzc-name">Institution Founder</div><div class="kzc-effect">When you establish a new organization, safe house, or recurring arrangement, it persists and grows without your presence — the Concordance occasionally provides updates about it, and it may become a resource later in the campaign.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Eldren</div><div class="kzc-name">Grid Memory</div><div class="kzc-effect">In proximity to Ceque Line nodes, your passive Attunement Sense extends to 600 ft. You feel the grid's health as a physical sensation — warmth for stability, cold for degradation, wrong-warmth for Ophiuchus reactivation.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Dunmarim</div><div class="kzc-name">Community Architecture</div><div class="kzc-effect">Any structure you design or build has half the standard collapse risk and lasts twice as long without maintenance. Communities living in your buildings have Resonant Fortune on all Active Resonances related to community survival.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Wolf-Shifter</div><div class="kzc-name">Pack Network</div><div class="kzc-effect">Your Pack Resonance extends to non-Bonded Wolf-Shifter Kindred within 1 mile — you feel their emotional state and can communicate a simple intent (one word/concept) to any Wolf-Shifter within range as a free action.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Gear-Forged</div><div class="kzc-name">Kelp-Weaver Resonance</div><div class="kzc-effect">Your Geode heart resonates with the Kelp-Weaver's psychic frequency. You can communicate with the Kelp-Weaver directly — not language, but intent and imagery — if within 300 ft of any of its kelp structures.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Ashé-Touched</div><div class="kzc-name">Living Ashé Community</div><div class="kzc-effect">Your Community Root ability triggers on any act that benefits the Kindred community broadly, not just individuals. Political victories, cultural preservation, and factional protection count as communal acts.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Serpent-Kin</div><div class="kzc-name">Deep Anthos Bond</div><div class="kzc-effect">You have an instinctive awareness of Deep Anthos City's current threat level — the Concordance will tell you (without a roll) when the city faces a new crisis, even from anywhere in the world.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Avian</div><div class="kzc-name">Sky Court</div><div class="kzc-effect">Any formal agreement you witness and bind with Chinvat Oath-Binding is automatically registered with the Sereignate of Libra's record system — Lord Libra's court is aware of it without being notified. It is cosmically logged.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Fae-Blooded</div><div class="kzc-name">Otherworld Commons</div><div class="kzc-effect">You can establish a space in the Otherworld accessible to all Bonded allies — a shared meeting place that exists regardless of physical distance. All Bonded party members can enter it during Deep Attunement and communicate there as though present in the same room.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Moana-kin</div><div class="kzc-name">Waka Federation</div><div class="kzc-effect">Any island or coastal settlement you have visited once will always welcome you and your companions — the Moana-kin's navigational reputation precedes you. Free lodging, food, and local knowledge in all coastal settlements.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Te Kapo</div><div class="kzc-name">Deep Network</div><div class="kzc-effect">You are aware of every other Te Kapo within 10 miles — their number, general health, and emotional state. If any Te Kapo is in danger within this radius, you know immediately and know the direction.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Lizard-Folk</div><div class="kzc-name">Clan Memory</div><div class="kzc-effect">You carry the accumulated survival knowledge of every Lizard-Folk clan that has operated in this region. For any terrain type you've spent a week in, you count as having Environmental Reading active permanently — no limit on creature detection range.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Kuri</div><div class="kzc-name">Underground Commons</div><div class="kzc-effect">Any Kuri you encounter starts at Friendly disposition — the underground community recognizes its own. Kuri NPCs will provide shelter, information, and basic resources to you without needing persuasion.</div></div>
+      <div class="kzc-row"><div class="kzc-kindred">Centaur-Kin</div><div class="kzc-name">Steppe Council</div><div class="kzc-effect">Once per session, you may call a Steppe Council — sending a signal that brings any Centaur-Kin within 20 miles to your location within 24 hours. They come to deliberate, not to fight, but they come.</div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="note-block">
+    <div class="nb-title">Completing the Framework</div>
+    <div class="nb-text">The three sign expansions above (Aries, Scorpio, Aquarius) demonstrate the system's design logic. <strong>All 168 combinations follow the same principle</strong>: the Kindred's core nature intersecting with the sign's domain produces an ability that neither could generate alone. When building remaining sign tables, use these questions:<br><br>
+    • What does this Kindred's defining trait do when filtered through this sign's domain?<br>
+    • What aspect of the sign can only this Kindred access because of who they are?<br>
+    • Does the result teach something new about either the Kindred or the sign?<br><br>
+    <strong>The Concordance (GM) may improvise Kindred-Zodiac Resonances</strong> for combinations not yet in the table, using the three questions above as the design framework. Any improvised resonance that feels right at the table is right — the system is a framework, not a constraint.</div>
+  </div>
+
+  <div class="note-block" style="background:rgba(201,168,76,0.04);border-color:rgba(201,168,76,0.25)">
+    <div class="nb-title" style="color:var(--gold)">The Void-Touched Intersection</div>
+    <div class="nb-text">Characters with Fate Numbers 13, 66, or 99 (Void-Touched) have a special interaction with the Kindred-Zodiac Resonance system. Their resonance ability functions normally <em>and</em> carries a secondary shadow effect — a darker, inverted version of the ability that activates under specific conditions (high stress, Void-Touched Exposure accumulation, proximity to Coil operations). <strong>Example</strong>: a Void-Touched Serpent-Kin Scorpio character's Deep Concealment ability also works in reverse — they can sometimes sense when they themselves are being watched by Coil operatives, as the Hollow Serpent's frequency in their Fate Number makes them briefly visible to Coil detection systems before it corrects. The Concordance manages these secondary effects as narrative events rather than player-controlled mechanics.</div>
+  </div>
+</div>
+</div>
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => { p.style.display = 'none'; p.classList.remove('active'); });
+  document.querySelectorAll('.sel-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).style.display = 'block';
+  document.getElementById('panel-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+document.querySelectorAll('.panel').forEach(p => { p.style.display = 'none'; });
+document.getElementById('panel-serpent').style.display = 'block';
+</script>
+</body>
+</html>

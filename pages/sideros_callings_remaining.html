@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — Remaining Callings</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;500;600&display=swap');
+:root{
+  --void:#080a0a;--void-mid:#101414;
+  --gold:#c9a84c;--gold-dim:#7a6028;--gold-bright:#e8c870;
+  --parchment:#f0e6cc;--parchment-dim:rgba(240,230,204,0.55);
+  --alpha:#d4724a;--beta:#4a8ec4;--omega:#9066c8;
+
+  /* Path accent colours */
+  --breaker:#606080;  --hunter:#507050;   --seeker:#9060b0;
+  --mage:#407090;     --starborn:#8060a0; --scion:#504070;
+  --accord:#4a8a56;   --siddha:#a05050;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--parchment);line-height:1.7;min-height:100vh}
+
+/* PATH SELECTOR */
+.path-selector{display:flex;gap:5px;flex-wrap:wrap;padding:.8rem 1rem;border-bottom:1px solid rgba(201,168,76,0.12);background:var(--void-mid);position:sticky;top:0;z-index:20}
+.path-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;border:1px solid rgba(201,168,76,0.18);border-radius:4px;background:transparent;color:var(--parchment-dim);cursor:pointer;transition:all .15s;white-space:nowrap}
+.path-btn:hover{background:rgba(201,168,76,0.05)}
+.path-btn.active{background:rgba(201,168,76,0.1);color:var(--gold-bright);border-color:rgba(201,168,76,0.4)}
+
+/* PATH PANELS */
+.path-panel{display:none}.path-panel.active{display:block}
+
+/* CALLING NAV within each path */
+.calling-nav{display:flex;gap:4px;flex-wrap:wrap;padding:.55rem .9rem;border-bottom:1px solid rgba(201,168,76,0.08);background:rgba(255,255,255,0.01)}
+.c-btn{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.07em;text-transform:uppercase;padding:3px 8px;border:1px solid rgba(201,168,76,0.14);border-radius:3px;background:transparent;color:var(--parchment-dim);cursor:pointer;transition:all .15s;white-space:nowrap}
+.c-btn:hover{background:rgba(201,168,76,0.04)}
+.c-btn.active{color:var(--gold);border-color:rgba(201,168,76,0.35);background:rgba(201,168,76,0.07)}
+
+/* PANELS */
+.calling-panel{display:none}.calling-panel.active{display:block}
+.wrap{max-width:860px;margin:0 auto;padding:2rem 1.25rem 3.5rem}
+
+/* HEADER */
+.ch{margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid rgba(201,168,76,0.1)}
+.ch-badge{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:.5rem;display:block}
+.ch-name{font-family:'Cinzel',serif;font-size:20px;font-weight:500;letter-spacing:.04em;margin-bottom:.25rem}
+.ch-origin{font-size:12px;font-style:italic;color:var(--parchment-dim)}
+
+/* TEXT */
+.lore{font-size:13px;color:rgba(240,230,204,0.8);line-height:1.85;margin-bottom:.8rem}
+.lore strong{color:var(--parchment);font-weight:500}
+.sec{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:1.25rem 0 .6rem;display:flex;align-items:center;gap:.5rem}
+.sec::after{content:'';flex:1;height:1px;background:rgba(201,168,76,0.1)}
+
+/* FEATURES */
+.feat-grid{display:grid;gap:6px}
+.feat{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.12);border-radius:8px;padding:10px 12px;cursor:pointer;overflow:hidden;transition:border-color .15s}
+.feat:hover,.feat.open{border-color:rgba(201,168,76,0.3)}
+.fh{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.fn{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.04em;color:var(--gold-bright)}
+.fd{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.09em;text-transform:uppercase;padding:2px 6px;border-radius:3px;border:1px solid rgba(201,168,76,0.22);color:var(--gold-dim);white-space:nowrap;flex-shrink:0}
+.fb{display:none;margin-top:8px;padding-top:8px;border-top:1px solid rgba(201,168,76,0.08);font-size:12px;color:rgba(240,230,204,0.75);line-height:1.7}
+.feat.open .fb{display:block}
+.fb strong{color:var(--parchment);font-weight:500}
+.fb em{color:var(--gold-dim)}
+
+.already{background:rgba(90,154,72,0.05);border:1px solid rgba(90,154,72,0.18);border-radius:7px;padding:9px 11px;font-size:12px;color:rgba(240,230,204,0.65);line-height:1.55}
+.already strong{color:rgba(122,186,96,0.85);font-weight:500}
+
+.note{background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.18);border-radius:7px;padding:9px 11px;margin:.65rem 0;font-size:12px;color:rgba(240,230,204,0.72);line-height:1.6}
+.note strong{color:var(--parchment);font-weight:500}
+</style>
+</head>
+<body>
+
+<div class="path-selector">
+  <button class="path-btn active" onclick="showPath('breaker',this)">Fate-Breaker</button>
+  <button class="path-btn" onclick="showPath('hunter',this)">Void-Hunter</button>
+  <button class="path-btn" onclick="showPath('seeker',this)">Resonance Seeker</button>
+  <button class="path-btn" onclick="showPath('mage',this)">Comet-Mage</button>
+  <button class="path-btn" onclick="showPath('starborn',this)">Star-Born</button>
+  <button class="path-btn" onclick="showPath('scion',this)">Scion-Pledged</button>
+  <button class="path-btn" onclick="showPath('accord',this)">Primal Accord</button>
+  <button class="path-btn" onclick="showPath('siddha',this)">Rāśi-Siddha</button>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- FATE-BREAKER -->
+<!-- ═══════════════════════════════════ -->
+<div class="path-panel active" id="path-breaker">
+<div class="calling-nav">
+  <button class="c-btn active" onclick="showC('breaker','pt',this)">Probability Thief</button>
+  <button class="c-btn" onclick="showC('breaker','lo',this)">Loom Operative</button>
+  <button class="c-btn" onclick="showC('breaker','sp',this)">Street Philosopher</button>
+  <button class="c-btn" onclick="showC('breaker','inq',this)">The Inquisitor</button>
+  <button class="c-btn" onclick="showC('breaker','mm',this)">The Mastermind</button>
+  <button class="c-btn" onclick="showC('breaker','ph',this)">The Phantom</button>
+  <button class="c-btn" onclick="showC('breaker','sw',this)">The Swashbuckler</button>
+  <button class="c-btn" onclick="showC('breaker','thief',this)">The Thief</button>
+  <button class="c-btn" onclick="showC('breaker','tb',this)">The Thread-Blade</button>
+</div>
+
+<div class="calling-panel active" id="breaker-pt"><div class="wrap"><div class="already"><strong>Probability Thief</strong> — built. Arcane Trickster equivalent: Working access (illusion/manipulation), Misdirection, Spell Theft.</div></div></div>
+<div class="calling-panel" id="breaker-lo"><div class="wrap"><div class="already"><strong>Loom Operative</strong> — built. Assassin equivalent: Assassination (auto-crit on surprise), Infiltration Expertise, Impostor.</div></div></div>
+<div class="calling-panel" id="breaker-sp"><div class="wrap"><div class="already"><strong>Street Philosopher</strong> — built. Scout equivalent: Skirmisher's Eye, Ambush Coordinator, Superior Mobility.</div></div></div>
+
+<div class="calling-panel" id="breaker-inq"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Fate-Breaker · The Inquisitor</span><div class="ch-name" style="color:var(--breaker)">The Inquisitor</div><div class="ch-origin">Replacing: Inquisitive · Avian judicial tradition, Kallos-Sworn investigative arm, Loom of Fate analysts</div></div>
+  <p class="lore">The Inquisitor has learned to read probability windows in people rather than in combat — detecting the specific Aetheric micro-fluctuations that accompany deception, evasion, and hidden knowledge. <strong>They know when someone is lying before the person finishes the sentence.</strong> This is not the Avian's Asha-touched truth sense — it is a technical skill, developed through careful observation of how Fate Numbers behave when their owners are under social pressure.</p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Eye for Detail</div><span class="fd">Depth 3</span></div><div class="fb">As a Instinct, make a Perception or Investigation Active Resonance. Mastery in both Disciplines. Additionally: when a creature within 60 ft lies to any character, the Inquisitor detects a specific Aetheric micro-fluctuation — a sensation like a missed step. They do not know the content of the lie, only that one occurred. This is not the Avian's divine truth-sense. It is pattern recognition refined into instinct.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Insightful Fighting</div><span class="fd">Depth 9</span></div><div class="fb">As an Instinct, study one creature within 30 ft — making a contested Insight check vs. their Deception. On success: Probability Strike applies to that creature whether or not you have Resonant Fortune or an adjacent ally, for 1 minute. You have found the gap in their probability field. You will now exploit it methodically.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Steady Eye</div><span class="fd">Depth 13</span></div><div class="fb">If you have not moved during your Moment, Resonant Fortune on Perception and Investigation Active Resonances until the start of your next Moment. Additionally: your Number Masking ability now works in reverse — spend 1 minute studying a Number-Masked creature and you can penetrate the masking, reading their true Fate Number. The Unwritten Calling hides threads. The Inquisitor finds them anyway.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="breaker-mm"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Fate-Breaker · The Mastermind</span><div class="ch-name" style="color:var(--breaker)">The Mastermind</div><div class="ch-origin">Replacing: Mastermind · Loom of Fate strategists, noble house political operators, Coil counter-intelligence</div></div>
+  <p class="lore">The Mastermind does not fight. They arrange circumstances such that others fight more effectively, while the Mastermind watches the outcome from a position of informational advantage that none of the combatants can quite identify. <strong>Every move was anticipated. Every counter was already countered.</strong></p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Master of Tactics</div><span class="fd">Depth 3</span></div><div class="fb">Help action usable as an Instinct. Range extends to 30 ft — you don't need to be adjacent to aid someone. You can target a creature with Help even when you couldn't normally reach them, by providing tactical direction rather than physical assistance. Mastery in History and Insight. You can mimic the speech patterns and mannerisms of any creature you have observed for 1 hour — not appearance, only voice and manner.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Misdirection</div><span class="fd">Depth 9</span></div><div class="fb">As an Instinct, redirect a creature's attention — choose one creature within 30 ft that can see both you and another creature within 5 ft of you. Until the start of your next Moment, any Perception Active Resonance that creature makes is directed at the second creature rather than you — they are watching the wrong person. You may move freely without being tracked while Misdirection is active.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Soul of Deceit</div><span class="fd">Depth 13</span></div><div class="fb">Your thoughts cannot be read by any means short of a divine Working — psychic intrusion, Gemini Zodiac Attunement, the Twin Dream-Fish's sensing, the Inquisitor's Eye for Detail. None of it works. Your Fate Number reads as static to Stellar Cartographers even without deliberate Number Masking. Additionally: you can maintain up to three active deceptions simultaneously without requiring any Active Resonances to sustain them — the Mastermind is always performing multiple roles, and the performance requires no effort.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="breaker-ph"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Fate-Breaker · The Phantom</span><div class="ch-name" style="color:var(--breaker)">The Phantom</div><div class="ch-origin">Replacing: Phantom · Oya-Ashé death-walker tradition, Scorpio-domain specialists, Otherworld boundary practitioners</div></div>
+  <p class="lore">The Phantom has learned to exist in the space between the living and the dead — drawing on the Aetheric residue of those who have recently left the world, wearing their last moments like a borrowed coat. <strong>The dead leave their skills behind, briefly. The Phantom knows how to pick them up.</strong></p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Whispers of the Dead</div><span class="fd">Depth 3</span></div><div class="fb">After each Deep Attunement, choose one Discipline Mastery from any creature that died within 1 mile of you in the past 24 hours — you gain that Mastery until your next Deep Attunement, as the dead creature's expertise bleeds into your Aetheric field. If no one died nearby, choose any Mastery from a creature you have personally killed. The dead have no further use for their skills. The Phantom does.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Tokens of the Departed</div><span class="fd">Depth 9</span></div><div class="fb">When you deal Probability Strike damage, you may mark the target with a spectral token — visible only to you and creatures with Aetheric Sight. While marked: you always know the marked creature's direction and distance (unlimited range on the same plane); you have Resonant Fortune on Strike Resonances against the marked creature; and when the marked creature dies, you may immediately take one item from their location without anyone present noticing (the Phantom reaches through the death-moment). Up to Acuity modifier creatures marked simultaneously.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Ghost Walk</div><span class="fd">Depth 13</span></div><div class="fb">Once per Deep Attunement, as an Instinct, become partially incorporeal for 1 minute — you can move through solid objects (not end your movement inside them); Strike Resonances against you have Resonant Discord; you cannot deal physical damage but can deliver Working effects. Additionally: when you reduce a creature to 0 Vitality, you may immediately become invisible as a Reflex — the death creates a distraction sufficient to slip from sight entirely.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="breaker-sw"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Fate-Breaker · The Swashbuckler</span><div class="ch-name" style="color:var(--breaker)">The Swashbuckler</div><div class="ch-origin">Replacing: Swashbuckler · Port Damaris dueling tradition, Jade Empire court duelist, Libra-domain martial aesthetics</div></div>
+  <p class="lore">The Swashbuckler has turned combat into a demonstration of individual superiority — fast, elegant, and performed for an audience whether or not one is present. They fight best alone, against a single worthy opponent, with enough space to be properly appreciated. <strong>The style is not affectation. The confidence is the weapon.</strong></p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Fancy Footwork</div><span class="fd">Depth 3</span></div><div class="fb">When you make a melee Strike Resonance against a creature during your Moment, that creature cannot make Reflex Strikes against you for the rest of that Moment — the footwork prevents it. Additionally: Mastery in Persuasion and Performance. Your movement does not provoke Reflex Strikes from creatures you have attacked this Moment.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Rakish Audacity</div><span class="fd">Depth 3</span></div><div class="fb">Probability Strike applies when you are in melee with only one creature and no allies are adjacent to either of you — the one-on-one duel is your optimal probability window. Additionally: add your Resonance modifier to Pulse Order rolls. Your confidence accelerates your reading of the encounter's shape.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Panache</div><span class="fd">Depth 9</span></div><div class="fb">As an Act, make a contested Persuasion vs. Insight check against one creature within 60 ft. On success: if the creature is hostile, it becomes Dread-Struck until the start of your next Moment; if the creature is not hostile, it becomes Soul-Swayed (friendly) toward you for 1 minute. The Swashbuckler's manner communicates a clear message: engaging further would be inadvisable, and they know it. The creature knows it.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Elegant Maneuver</div><span class="fd">Depth 13</span></div><div class="fb">On your Moment, use an Instinct to give yourself Resonant Fortune on the next Athletics or Acrobatics Active Resonance you make this Moment. Once per Pulse when you miss with a Strike Resonance, you may use your Reflex to make another Strike Resonance against the same target — the miss was part of the technique.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="breaker-thief"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Fate-Breaker · The Thief</span><div class="ch-name" style="color:var(--breaker)">The Thief</div><div class="ch-origin">Replacing: Thief · Kuri urban-survival tradition, Port Damaris fence network, practical specialists who do not romanticize their work</div></div>
+  <p class="lore">The Thief does not philosophize about probability. They take things. The Thief tradition is the oldest Fate-Breaker practice — the one that predates all the theoretical frameworks, all the Number Masking research, all the Loom of Fate employment. <strong>Someone needed to get in without being seen, take something without being caught, and leave without being followed. They got good at it.</strong></p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Fast Hands</div><span class="fd">Depth 3</span></div><div class="fb">Sleight of Hand and thieves' tools as Instinct rather than Act. Additionally: use the Use Object action as an Instinct — activating items, using mundane objects, interacting with the environment — as part of any Moment without consuming your Act. The Thief's hands operate faster than their opponents track.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Second-Story Work</div><span class="fd">Depth 3</span></div><div class="fb">Climb speed equal to walking speed. When you make a running jump, distance increases by Swiftness modifier in feet. No Active Resonance required for climbing surfaces that would normally require one, unless the surface is explicitly Aetherically warded. The city is navigable. Everything in the city is navigable.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Supreme Sneak</div><span class="fd">Depth 9</span></div><div class="fb">Resonant Fortune on Stealth Active Resonances always. Additionally: attempt Stealth even when only lightly obscured by dim light, rain, fog, or crowd cover — conditions that would not normally permit it. The Thief does not need ideal conditions. They have made ideal conditions optional.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Use Magic Item</div><span class="fd">Depth 13</span></div><div class="fb">Ignore all class, Kindred, and Zodiac Attunement requirements when using Aetheric Artifacts. Any item, regardless of its designed user. The Thief does not belong to any tradition that these items were designed for. That has never stopped them. Additionally: identify any Aetheric Artifact by handling it for 1 minute without casting Identify — the Thief's hands know what they're holding.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="breaker-tb"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Fate-Breaker · The Thread-Blade</span><div class="ch-name" style="color:var(--breaker)">The Thread-Blade</div><div class="ch-origin">Replacing: Soulknife · Fate Number energy manifested as psychic cutting edges — a Sideros-original</div></div>
+  <p class="lore">The Thread-Blade discovered something the theoretical community has not yet explained: that a sufficiently precise understanding of one's own Fate Number produces a residual Aetheric field that can be shaped into cutting implements. The blades are not physical — they pass through nonmagical barriers — but they interact with flesh and spirit as readily as steel. <strong>They are literally made of fate. Cutting with them feels like cutting with something that was always going to be there.</strong></p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Psionic Blades</div><span class="fd">Depth 3</span></div><div class="fb">As part of any Attack action, manifest one or two Psionic Blades — weapons of psychic force that appear in your hands and vanish when you release them. Each blade: deals 1d6 psychic damage (your choice of finesse or thrown, range 60 ft); counts as a Weaving focus; leaves no mark visible to non-Aetheric senses. Strike Resonance modifier: d20 + Mastery Bonus + Swiftness or Acuity modifier (your choice). No Aetheric Channel cost. The blades are your Fate Number, made briefly physical. They exist because you do.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Psychic Whispers</div><span class="fd">Depth 9</span></div><div class="fb">Telepathic bond with up to Mastery Bonus creatures within 1 mile — two-way communication, fully private, undetectable. Additionally: when hitting with a Psionic Blade, you may choose to deal no damage and instead force the target to make a Resonance Warding Resonance (DC = 8 + Mastery + Acuity) or be Dread-Struck or Soul-Swayed (your choice) for 1 minute. The blade delivered the fate-number resonance rather than the cut.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Rend Mind</div><span class="fd">Depth 13</span></div><div class="fb">Once per Deep Attunement, when hitting with a Psionic Blade, deal an additional 5d6 psychic damage and force a DC 16 Resonance Warding Resonance. On failure: Resonance-Shattered for 1 minute. The blade cuts the target's relationship to their own Fate Number — briefly severing their access to cosmic force, bond abilities, and Zodiac Attunement features. A Stellar Cartographer witnessing this reports seeing the target's thread go dim without breaking — the most disturbing thing they have ever read.</div></div>
+  </div>
+</div></div>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- VOID-HUNTER -->
+<!-- ═══════════════════════════════════ -->
+<div class="path-panel" id="path-hunter">
+<div class="calling-nav">
+  <button class="c-btn active" onclick="showC('hunter','vs',this)">Void-Slayer</button>
+  <button class="c-btn" onclick="showC('hunter','se',this)">Stalker's Eye</button>
+  <button class="c-btn" onclick="showC('hunter','fr',this)">Fang of Resistance</button>
+  <button class="c-btn" onclick="showC('hunter','fw',this)">Fey-Wanderer</button>
+  <button class="c-btn" onclick="showC('hunter','hw',this)">Horizon-Walker</button>
+  <button class="c-btn" onclick="showC('hunter','ms',this)">Monster-Slayer</button>
+  <button class="c-btn" onclick="showC('hunter','sk',this)">Swarm-Keeper</button>
+</div>
+<div class="calling-panel active" id="hunter-vs"><div class="wrap"><div class="already"><strong>Void-Slayer</strong> — built. Hunter equivalent: Colossus Slayer, Multiattack Defense, Stand Against the Tide.</div></div></div>
+<div class="calling-panel" id="hunter-se"><div class="wrap"><div class="already"><strong>Stalker's Eye</strong> — built. Gloom Stalker equivalent: Skirmisher, Sudden Strike, Ambush Master.</div></div></div>
+<div class="calling-panel" id="hunter-fr"><div class="wrap"><div class="already"><strong>Fang of the Resistance</strong> — built. Intelligence network, Coil Network Reading, Counter-Network, The Long Hunt.</div></div></div>
+
+<div class="calling-panel" id="hunter-fw"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Void-Hunter · Fey-Wanderer</span><div class="ch-name" style="color:var(--hunter)">The Otherworld-Walker</div><div class="ch-origin">Replacing: Fey Wanderer · Tuathan hunting tradition, Fade-Guardian adjacent, Fae-Blooded trackers</div></div>
+  <p class="lore">The Otherworld-Walker hunts in two worlds simultaneously — their quarry can cross the Veil, and so can they. The Tuathan tradition produced these hunters specifically to track Otherworld entities that had crossed into the material world and were not leaving willingly. <strong>The quarry has nowhere to go that the Otherworld-Walker cannot follow.</strong></p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Dreadful Strikes</div><span class="fd">Depth 3</span></div><div class="fb">Your weapon strikes deal +1d4 psychic damage (Otherworld resonance bleeding through the material weapon). Creatures dealt this damage cannot regain Vitality until the start of your next Moment — the Otherworld-touched wound resists healing. Mastery in Deception and Persuasion — the Otherworld-Walker has learned to negotiate with things that don't think linearly.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Beguiling Twist</div><span class="fd">Depth 7</span></div><div class="fb">When a creature within 120 ft fails a Warding Resonance against being Soul-Swayed or Dread-Struck, use your Reflex to redirect that condition — have any other creature within 30 ft of the original target make the same Warding Resonance or suffer the condition instead. The Otherworld-Walker redirects fear and compulsion the way a river redirects water.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Misty Wanderer</div><span class="fd">Depth 11</span></div><div class="fb">Cast the Misty Step Working (30 ft teleport) unlimited times per Deep Attunement — it costs no Channel. When using Misty Step, bring one willing creature within 5 ft along. Additionally: your Void Quarry ability applies to Otherworld entities and Fae-Blooded creatures regardless of their Fate Number proximity — the Otherworld-Walker's quarry designation extends to anything that crosses the Veil uninvited.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="hunter-hw"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Void-Hunter · Horizon-Walker</span><div class="ch-name" style="color:var(--hunter)">The Ceque-Walker</div><div class="ch-origin">Replacing: Horizon Walker · Ceque Line patrol tradition, Elethorn grid-guardians, Kallos-Sworn field rangers</div></div>
+  <p class="lore">The Ceque-Walker patrols the boundaries between planes as defined by the Precursor grid — the Ceque Lines are not just Aetheric conduits, they are the world's skeleton, and the space between their nodes is where unauthorized crossings most often occur. <strong>The Ceque-Walker walks the grid and ensures what uses it has permission to do so.</strong></p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Detect Portal</div><span class="fd">Depth 3</span></div><div class="fb">Always know if an active planar portal exists within 1 mile — direction and approximate distance, not its destination or current state. Additionally: detect the Aetheric residue of a portal used within the last 24 hours. When you first see a creature from another plane or the Otherworld, you know where it came from. +1d8 damage against extraplanar creatures — you know their specific Aetheric frequency and where to apply pressure.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Planar Warrior</div><span class="fd">Depth 7</span></div><div class="fb">As an Instinct, shift your weapon's damage type to force — it bypasses all resistance and immunity from creatures that rely on their planar nature for protection. Once per Pulse when you miss with a Strike Resonance, you may phase partially into the Ceque grid and re-emerge adjacent to a different creature within 5 ft — no damage, but repositioning that defies normal geometry.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Distant Strike</div><span class="fd">Depth 11</span></div><div class="fb">When using the Attack Act, you may teleport up to 10 ft before each Strike Resonance — repositioning between attacks. If you attack at least two different creatures in the same Moment, you gain Resonant Fortune on each Strike Resonance. The Ceque-Walker fights using the grid itself as movement infrastructure.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="hunter-ms"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Void-Hunter · Monster-Slayer</span><div class="ch-name" style="color:var(--hunter)">The Scion-Slayer</div><div class="ch-origin">Replacing: Monster Slayer · Specialized anti-Coil operatives, Kallos-Sworn strike teams, Te Kapo's Kore-kore practitioners</div></div>
+  <p class="lore">Where the Fang of the Resistance builds intelligence networks, the Scion-Slayer eliminates targets. They specialize in creatures that use magic, Aetheric abilities, or cosmic power as their primary defense — and they have learned to strip those defenses away before the fight reaches physical exchange. <strong>The Scion-Slayer does not fight the Scion's power. They disable it before the Scion remembers they had it.</strong></p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Hunter's Sense</div><span class="fd">Depth 3</span></div><div class="fb">As an Instinct, identify one creature's immunities, resistances, and vulnerabilities — along with any active Working effects on it. This is analysis, not magic — you are reading the Aetheric field for what it reveals about the creature's defenses. +1d6 damage against creatures with immunities or resistances — the Scion-Slayer specifically targets the defended.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Slayer's Prey</div><span class="fd">Depth 7</span></div><div class="fb">Once per Pulse when your Void Quarry target uses a Working or Aetheric ability within 60 ft of you, use your Reflex to impose Resonant Discord on their Working Threshold roll — the Scion-Slayer's specialized knowledge creates interference at the precise moment of Aetheric expression. Additionally: your Void Quarry bonus damage against the Quarry increases to +1d10 against creatures that have Weaving-capable Paths.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Magic-User's Nemesis</div><span class="fd">Depth 11</span></div><div class="fb">When a creature within 60 ft casts a Working, use your Reflex to interrupt it — the creature must make an Endurance Warding Resonance (DC = 8 + Mastery + Attunement) or the Working fails and the Channel is expended. Once per Pulse. Additionally: you have Resonant Fortune on all Warding Resonances against Workings cast by your Void Quarry. You have studied their technique. You know where the gaps are.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="hunter-sk"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Void-Hunter · Swarm-Keeper</span><div class="ch-name" style="color:var(--hunter)">The Swarm-Keeper</div><div class="ch-origin">Replacing: Swarmkeeper · Arcadian nature tradition, Accord-Walker adjacent, Bee-Priestess initiates who chose the Void-Hunter Path</div></div>
+  <p class="lore">The Swarm-Keeper maintains a persistent bond with a colony of small creatures — insects, birds, Otherworld-aspected spirits in small form — that move with them, assist in combat, and extend their sensory range to cover the battlefield comprehensively. The colony is not a companion in the Fated Bond sense. It is <strong>a distributed organism that the Swarm-Keeper is part of</strong>, rather than the reverse.</p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Gathered Swarm</div><span class="fd">Depth 3</span></div><div class="fb">A swarm of Tiny creatures accompanies you constantly — choose the form (insects, birds, motes of Aetheric energy, small Otherworld spirits). Once per Pulse, you may direct the swarm to produce one effect as part of any Strike Resonance that hits:<br><br>
+    • Deal +1d8 piercing or necrotic damage (swarm attacks)<br>
+    • Push the target 15 ft horizontally<br>
+    • Move yourself 5 ft without provoking Reflex Strikes (the swarm carries you briefly)</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Writhing Tide</div><span class="fd">Depth 7</span></div><div class="fb">As an Act, direct the swarm to create difficult terrain in a 10-ft radius centered on a point within 60 ft — the swarm blankets the area, reducing visibility and impeding movement. Duration: 1 minute or until the Swarm-Keeper moves the swarm. Additionally: you have Resonant Fortune on Stealth Active Resonances while the swarm actively obscures your position.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Storm of Swarms</div><span class="fd">Depth 11</span></div><div class="fb">Once per Deep Attunement, as an Act, the swarm erupts — all creatures in a 30-ft radius centered on you make an Endurance Warding Resonance (DC = 8 + Mastery + Attunement) or take 4d8 piercing damage and are Blinded until the end of their next Moment. Creatures that succeed take half damage and are not Blinded. You and your companions are immune. The swarm distinguishes between threat and ally. It has been making this distinction for as long as the Swarm-Keeper has.</div></div>
+  </div>
+</div></div>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- RESONANCE SEEKER -->
+<!-- ═══════════════════════════════════ -->
+<div class="path-panel" id="path-seeker">
+<div class="calling-nav">
+  <button class="c-btn active" onclick="showC('seeker','lk',this)">Lore-Keeper</button>
+  <button class="c-btn" onclick="showC('seeker','vs',this)">Valor-Singer</button>
+  <button class="c-btn" onclick="showC('seeker','bh',this)">Bond-Harmonist</button>
+  <button class="c-btn" onclick="showC('seeker','el',this)">Eloquent Voice</button>
+  <button class="c-btn" onclick="showC('seeker','cr',this)">Song of Creation</button>
+  <button class="c-btn" onclick="showC('seeker','bl',this)">Blade-Singer</button>
+  <button class="c-btn" onclick="showC('seeker','wh',this)">The Whisper</button>
+  <button class="c-btn" onclick="showC('seeker','tr',this)">The Tragedy</button>
+</div>
+<div class="calling-panel active" id="seeker-lk"><div class="wrap"><div class="already"><strong>Lore-Keeper</strong> — built. Cutting Frequency, Frequency Archive, Lore Mastery.</div></div></div>
+<div class="calling-panel" id="seeker-vs"><div class="wrap"><div class="already"><strong>Valor-Singer</strong> — built. Battle Chord, Armor of Frequencies, Combat Inspiration.</div></div></div>
+<div class="calling-panel" id="seeker-bh"><div class="wrap"><div class="already"><strong>Bond-Harmonist</strong> — built. Bond Sight, Bond Amplification, Resonant Weaving.</div></div></div>
+
+<div class="calling-panel" id="seeker-el"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Resonance Seeker · Eloquent Voice</span><div class="ch-name" style="color:var(--seeker)">The Eloquent Voice</div><div class="ch-origin">Replacing: College of Eloquence · Avian judicial orators, Libra-domain Zodiac Priest cross-training, Duchy Compact diplomatic corps</div></div>
+  <p class="lore">The Eloquent Voice has pushed the Resonance Seeker's harmonic principles into pure language — discovering that the right words, shaped correctly, carry Aetheric weight that mere persuasion cannot produce. <strong>They don't convince people. They arrange language into a frequency that the listener's soul recognizes as true.</strong></p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Silver Tongue</div><span class="fd">Depth 3</span></div><div class="fb">When making a Persuasion or Deception Active Resonance, treat any roll of 9 or lower as 10. Additionally: when you make a Persuasion Active Resonance, the target creature cannot use its Insight to detect if you are being deceptive unless it actively chooses to use its Reflex for an Insight check — passive detection fails against the Eloquent Voice's harmonics.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Undeniable Logic</div><span class="fd">Depth 9</span></div><div class="fb">As an Act, present an argument to one creature within 60 ft that can hear and understand you. The creature must succeed on a Resonance Warding Resonance (DC = 8 + Mastery + Resonance) or accept the argument's conclusion as reasonable for 1 hour — not compelled, but genuinely persuaded. During this hour, they will not take actions directly contrary to the argument's conclusion unless given compelling new information. This works on Void-Husks only if the Void-Husk retains enough cognition to process language.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Infectious Inspiration</div><span class="fd">Depth 14</span></div><div class="fb">When a creature uses one of your Resonant Chords and rolls the maximum, you immediately regain one Chord use (already established). Now: that creature also inspires one other creature of their choice within 30 ft, granting them a Resonant Chord die of one size smaller — the harmony cascades outward. The Eloquent Voice's inspiration is self-propagating.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="seeker-cr"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Resonance Seeker · Song of Creation</span><div class="ch-name" style="color:var(--seeker)">The Song of Creation</div><div class="ch-origin">Replacing: College of Creation · Accord-Maker adjacent, Dunmarim artisan-singer tradition, Aquarius-domain specialists</div></div>
+  <p class="lore">The Song of Creation discovered that the Aether's harmonic principles, applied to physical matter rather than social situations, can briefly animate the inanimate — objects that carry a song's resonance become, for a moment, something with purpose. <strong>The song does not give them minds. It gives them direction. The direction is enough.</strong></p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Mote of Potential</div><span class="fd">Depth 3</span></div><div class="fb">As an Act, create a small mote of Aetheric energy and place it on any object within 30 ft. The mote lasts for 1 hour and provides one of the following: the object emits bright light (20-ft radius); the object produces harmonic tones that give Resonant Fortune on Persuasion Active Resonances made within 10 ft; the object vibrates at a frequency that reveals nearby hidden doors and compartments (Perception DC 12 to notice within 10 ft). One mote active at a time.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Animating Performance</div><span class="fd">Depth 9</span></div><div class="fb">Once per Deep Attunement, animate one Large or smaller nonmagical object within 30 ft as an Act — it gains mobility and basic purpose for 1 hour. Animated object stats scale with size (Medium: Guard Rating 16, Vitality 30, Strike: 2d6 + Resonance mod force). The object acts on the Seeker's Moment using their Instinct. When destroyed or the hour ends, the object returns to its original inanimate state with no permanent damage.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Creative Crescendo</div><span class="fd">Depth 14</span></div><div class="fb">When you grant a creature a Resonant Chord die and they use it, you may simultaneously conjure one nonmagical item worth up to 20gp — the creative act produces a small physical manifestation of the harmony. The item is permanent. Additionally: your animated objects (from Animating Performance) last for 8 hours instead of 1, and you may have two active simultaneously.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="seeker-bl"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Resonance Seeker · Blade-Singer</span><div class="ch-name" style="color:var(--seeker)">The Blade-Singer</div><div class="ch-origin">Replacing: College of Swords · Port Damaris performance-dueling tradition, Jade Empire court entertainment combat</div></div>
+  <p class="lore">The Blade-Singer has synthesized martial performance with harmonic weaponry — the blade is the instrument, the fight is the song, and the audience is the problem being solved. <strong>The performance is genuine. The lethality is also genuine. These are not in contradiction.</strong></p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Blade Flourish</div><span class="fd">Depth 3</span></div><div class="fb">When you take the Strike Act, your movement speed increases by 10 ft until the end of your Moment. If you hit a creature with a Strike Resonance and have a Resonant Chord die available, you may roll the die and apply one Flourish:<br><br>
+    • <em>Defensive Flourish:</em> Add the die to your Guard Rating until the start of your next Moment<br>
+    • <em>Slashing Flourish:</em> Add the die to the attack's damage and deal that same amount to any other creature within 5 ft<br>
+    • <em>Mobile Flourish:</em> Add the die to damage and push the target up to 5 ft — you may immediately move up to 5 ft toward the target after the push</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Extra Strike</div><span class="fd">Depth 6</span></div><div class="fb">When you take the Strike Act, you may make two Strike Resonances rather than one — the blade-song requires continuous movement to maintain its harmonic structure. This is unique among Resonance Seeker Callings: combat efficiency rather than support efficiency.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Master's Flourish</div><span class="fd">Depth 14</span></div><div class="fb">When you use Blade Flourish, you may use a Resonant Chord die without spending a Chord use — the performance generates its own harmonic fuel. Once per Pulse. Additionally: Blade Flourish effects can be applied to any Strike Resonance this Moment, not just the first — every strike in the blade-song can carry a flourish's secondary effect.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="seeker-wh"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Resonance Seeker · The Whisper</span><div class="ch-name" style="color:var(--seeker)">The Whisper</div><div class="ch-origin">Replacing: College of Whispers · Coil counter-intelligence, House Scorpio Kallos-Sworn operatives, Fate-Breaker adjacent tradition</div></div>
+  <p class="lore">The Whisper learned the dark side of harmonic resonance: that the same frequency that inspires can also hollow out. A Resonance Seeker who uses their understanding of harmonic vulnerability to destabilize rather than uplift has found the tradition's most uncomfortable application. <strong>They are not evil. They are thorough.</strong></p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Psychic Blades</div><span class="fd">Depth 3</span></div><div class="fb">When you deal Probability Strike-adjacent damage (through a Resonant Chord die or standard Bard working), you may expend one Resonant Chord die to deal additional psychic damage equal to the die roll instead of giving it as a bonus die to an ally. The harmonic resonance is directed inward rather than outward — it finds the listener's fear rather than their courage.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Words of Terror</div><span class="fd">Depth 9</span></div><div class="fb">As an Act, speak privately with one creature for 1 minute. At the end of the conversation, the creature makes a Resonance Warding Resonance (DC = 8 + Mastery + Resonance) or is Dread-Struck for 1 hour — the Whisper has identified and resonated with the creature's specific harmonic vulnerability. Creatures that succeed are immune for 24 hours. Creatures that fail do not know what caused the Dread-Struck condition.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Mantle of Whispers</div><span class="fd">Depth 14</span></div><div class="fb">When a humanoid creature dies within 30 ft of you, use your Reflex to capture their shadow — a psychic impression of their identity. As an Act, wear the shadow, perfectly imitating that creature's appearance, voice, and manner for 1 hour. Creatures who knew the original well may make DC 20 Insight Active Resonances to detect the difference. While wearing the shadow: you know everything the creature knew about their immediate social circle and current situation — their surface knowledge, not their secrets.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="seeker-tr"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Resonance Seeker · The Tragedy</span><div class="ch-name" style="color:var(--seeker)">The Tragedy</div><div class="ch-origin">Replacing: College of Tragedy (Critical Role) · Post-Fall Arcadian tradition, Oya-Ashé grief-singer practice</div></div>
+  <p class="lore">The Tragedy has learned that failure and loss carry their own Aetheric resonance — that a missed note holds frequency just as a struck one does, and that the frequency of genuine grief, channeled correctly, produces effects no optimistic harmony can match. <strong>They do not seek sorrow. They have learned to use the sorrow they cannot avoid.</strong></p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Poetry in Misery</div><span class="fd">Depth 3</span></div><div class="fb">When a creature within 60 ft fails a Warding Resonance, you may use your Reflex to grant a Resonant Chord die to one creature other than the one that failed — the failure's resonance becomes someone else's resource. Additionally: when you or a creature you can see within 30 ft drops to 0 Vitality, you regain one expended Resonant Chord use — loss refills the well.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Sorrowful Fate</div><span class="fd">Depth 9</span></div><div class="fb">Once per encounter, as a Reflex when a creature within 60 ft fails a Warding Resonance against a harmful effect, double the effect's duration. The Tragedy amplifies what already went wrong. This is not cruelty — it is the recognition that the frequency of a significant failure carries more weight than its initial expression. The Loom does too. The Tragedy borrows from the Loom's accounting.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Threnody</div><span class="fd">Depth 14</span></div><div class="fb">Once per Deep Attunement, as an Act, perform a brief lament for one creature that has died this encounter. All creatures within 60 ft that can hear you must make a Resonance Warding Resonance (DC = 8 + Mastery + Resonance) or take 4d10 psychic damage and be Dread-Struck for 1 minute. Creatures that succeed take half damage and are not Dread-Struck. Additionally: choose one ally within 60 ft — they are immune to the effect and instead gain temporary Vitality equal to twice the Tragedy's Resonance modifier. The lament is for someone. The someone is honored. Everyone else pays the weight of having been there when it happened.</div></div>
+  </div>
+</div></div>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- COMET-MAGE -->
+<!-- ═══════════════════════════════════ -->
+<div class="path-panel" id="path-mage">
+<div class="calling-nav">
+  <button class="c-btn active" onclick="showC('mage','sh',this)">Shifting Horizons</button>
+  <button class="c-btn" onclick="showC('mage','ec',this)">Earthly Core</button>
+  <button class="c-btn" onclick="showC('mage','vw',this)">Veil-Walkers</button>
+  <button class="c-btn" onclick="showC('mage','ab',this)">The Warding Conclave</button>
+  <button class="c-btn" onclick="showC('mage','ev',this)">The Evocation Conclave</button>
+  <button class="c-btn" onclick="showC('mage','ne',this)">The Threshold Conclave</button>
+  <button class="c-btn" onclick="showC('mage','en',this)">The Weaving Conclave</button>
+  <button class="c-btn" onclick="showC('mage','wm',this)">War-Magi</button>
+  <button class="c-btn" onclick="showC('mage','bs',this)">Blade-Weaver</button>
+</div>
+<div class="calling-panel active" id="mage-sh"><div class="wrap"><div class="already"><strong>Conclave of Shifting Horizons</strong> — built. Zodiac Formulation, Portent, 12th Circle Aspirant.</div></div></div>
+<div class="calling-panel" id="mage-ec"><div class="wrap"><div class="already"><strong>Conclave of the Earthly Core</strong> — built. Material Mastery, Stone's Endurance, Master Transmuter.</div></div></div>
+<div class="calling-panel" id="mage-vw"><div class="wrap"><div class="already"><strong>Conclave of the Veil-Walkers</strong> — built. Veil Research, Third Eye, Veil Mastery.</div></div></div>
+
+<div class="calling-panel" id="mage-ab"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Comet-Mage · Conclave</span><div class="ch-name" style="color:var(--mage)">The Warding Conclave</div><div class="ch-origin">Replacing: School of Abjuration · Kallos-Sworn defensive arm, Cancer-domain Zodiac Priest cross-training</div></div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Aetheric Ward</div><span class="fd">Depth 2</span></div><div class="fb">Whenever you prepare Aetheric Channels at the start of the day, create an Aetheric Ward — a pool of stored defensive energy equal to twice your Resonance Depth + Acuity modifier. When you or a creature within 30 ft takes damage, use your Reflex to expend Ward points to reduce that damage by the amount expended. When fully expended, restore the Ward by expending a 1st-tier Channel (restores 2× Resonance Depth + Acuity). The Ward is the Warding Conclave's answer to every form of incoming harm.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Projected Ward</div><span class="fd">Depth 6</span></div><div class="fb">When another creature within 30 ft takes damage, you may use your Reflex to have your Aetheric Ward absorb the damage for them — expending Ward points as normal. The Ward was always meant to protect more than one person. You simply had to learn to extend it.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Improved Abjuration</div><span class="fd">Depth 10</span></div><div class="fb">When casting an Abjuration Working, add your Acuity modifier to any Warding Resonance rolls the Working requires. Additionally: Dispel Working and Counterspell variants from your Formulation Ledger function as one Channel tier lower than their base cost — the Warding Conclave's efficiency with suppression Workings is unmatched.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="mage-ev"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Comet-Mage · Conclave</span><div class="ch-name" style="color:var(--mage)">The Evocation Conclave</div><div class="ch-origin">Replacing: School of Evocation · Aries-domain specialists, Solar Guard War-Magi overlap, Argent Spire combat-research division</div></div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Sculpt Workings</div><span class="fd">Depth 2</span></div><div class="fb">When you cast an evocation Working that affects an area, choose up to Acuity modifier creatures in that area — they automatically succeed on their Warding Resonances and take no damage from the Working. The Evocation Conclave does not harm allies accidentally. The precision is the point.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Potent Ambient Working</div><span class="fd">Depth 6</span></div><div class="fb">When a creature succeeds on a Warding Resonance against your Ambient Working (Ambient Working), it still takes half the Working's damage — the Aetheric force finds partial purchase even when resisted. Additionally: add your Acuity modifier to damage rolls for all evocation Ambient Workings.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Empowered Evocation</div><span class="fd">Depth 10</span></div><div class="fb">Add Acuity modifier to damage rolls for all evocation Workings — the Evocation Conclave's theoretical mastery translates directly into practical force output. Additionally: once per Deep Attunement, cast one evocation Working without expending a Channel — the Conclave has identified a Working whose Aetheric agreement is so well-understood that they can replicate it from memory alone without the Channel's structural support.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="mage-ne"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Comet-Mage · Conclave</span><div class="ch-name" style="color:var(--mage)">The Threshold Conclave</div><div class="ch-origin">Replacing: School of Necromancy · Scorpio-domain Zodiac Priest overlap, Oya-Ashé tradition academic study, Loom of Fate mortality researchers</div></div>
+  <p class="lore">The Threshold Conclave studies the boundary between living and dead — not out of morbidity, but because the Aetheric transition at death is the most significant Aetheric event a body undergoes, and understanding it illuminates everything about how the Aether relates to biological matter. <strong>The Threshold Conclave are not necromancers in the popular sense. They are the world's foremost experts on what happens at the exact moment of ending.</strong></p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Grim Harvest</div><span class="fd">Depth 2</span></div><div class="fb">When you kill a creature with a Working (not an attack), regain Vitality equal to the Channel tier used × 2, minimum equal to Acuity modifier. The death releases Aetheric energy — the Threshold Conclave has learned to receive it. This works on any creature except constructs and undead, who have unusual Aetheric termination patterns.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Undead Thralls</div><span class="fd">Depth 6</span></div><div class="fb">When you animate undead through a Working, add a bonus to their Vitality and damage rolls equal to your Acuity modifier. Additionally: you can maintain up to twice the normal number of undead simultaneously — the Threshold Conclave's theoretical understanding of post-death Aetheric fields makes the management more efficient. <div class="note"><strong>Sideros moral context:</strong> Animated undead are not souls trapped in bodies — in Sideros cosmology, the soul departs at death and the Aetheric body-impression remains as the animatable substrate. The Threshold Conclave debates whether this makes animation ethical. The debate is ongoing and heated.</div></div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Inured to Death</div><span class="fd">Depth 10</span></div><div class="fb">Resistance to necrotic damage. Maximum Vitality cannot be reduced. Additionally: when you make a Loom Test (Loom Test), treat rolls of 9 or lower as 10 — the Threshold Conclave's understanding of the death process allows them to observe it with more clinical detachment than most. The body continues. The research continues.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="mage-en"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Comet-Mage · Conclave</span><div class="ch-name" style="color:var(--mage)">The Weaving Conclave</div><div class="ch-origin">Replacing: School of Enchantment · Resonance Seeker overlap, Gemini-domain Zodiac Priest specialists, Silk Road diplomatic practitioners</div></div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Hypnotic Gaze</div><span class="fd">Depth 2</span></div><div class="fb">As an Act, meet the eyes of one creature within 5 ft and impose Dazed — the creature has Resonant Discord on all Active Resonances until the start of your next Moment. Maintain this effect as an Instinct each subsequent Moment. The effect ends if you break eye contact. Creatures immune to Soul-Swayed are immune to this effect. Usable on the same creature once per Brief Attunement.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Instinctive Charm</div><span class="fd">Depth 6</span></div><div class="fb">When a creature within 30 ft targets you with a Strike Resonance, use your Reflex to redirect that attack — the creature must make a Resonance Warding Resonance (DC = 8 + Mastery + Acuity) or target a random other creature within range instead. If no other creature is within range, the attack misses automatically. Once per Pulse.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Split Enchantment</div><span class="fd">Depth 10</span></div><div class="fb">When you cast a Working that targets only one creature, target a second creature with the same Working at no additional Channel cost — both creatures experience the full effect (both must save separately). The Weaving Conclave has refined the Working's Aetheric structure enough to distribute it without loss of potency.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="mage-wm"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Comet-Mage · Conclave</span><div class="ch-name" style="color:var(--mage)">The War-Magi</div><div class="ch-origin">Replacing: War Magic · Kallos-Sworn battle-casters, Leonine Empire's field researchers, Aether-Blade adjacent tradition</div></div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Tactical Wit</div><span class="fd">Depth 2</span></div><div class="fb">Add Acuity modifier to Pulse Order rolls — the War-Magi calculates tactical situations at the same speed they calculate Formulations. Additionally: Mastery in Insight. You always know how many Aetheric Channels an opponent has remaining (if they are a Weave-capable Path) — the Aetheric field broadcasts this to those trained to read it.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Power Surge</div><span class="fd">Depth 6</span></div><div class="fb">Once per Pulse when you expend a Channel, gain a Power Surge charge (maximum 1 at a time). Spend a Power Surge charge as part of any Strike Resonance to deal bonus force damage equal to Acuity modifier. The Aetheric residue from Working-use converts to raw kinetic force — efficient, practical, and entirely within the War-Magi's tactical plan.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Durable Working</div><span class="fd">Depth 10</span></div><div class="fb">When you make a Warding Resonance to maintain a Sustained Resonance Working after taking damage, add your Acuity modifier to the roll. When you fail such a roll, you may expend your Reflex to succeed instead — once per encounter. The War-Magi does not allow battlefield chaos to interrupt their Formulations. The calculation was completed before the fight began.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="mage-bs"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Comet-Mage · Conclave</span><div class="ch-name" style="color:var(--mage)">The Blade-Weaver</div><div class="ch-origin">Replacing: Bladesinging · Eldren tradition, pre-Fall synthesis of martial and Aetheric arts, Aether-Blade's theoretical counterpart</div></div>
+  <p class="lore">The Blade-Weaver is exclusively Eldren in its traditional form — the synthesis of martial movement and Aetheric weaving that the Kallos civilization developed before the Fall. <strong>The Blade-Weaver moves through battle the way a mantra moves through a meditation: each step is also a Working, each strike is also a focusing.</strong> The tradition was nearly lost with Kallos. Eldren Blade-Weavers who reach 7th Circle or above have usually recovered fragments of the original technique from ancestral memory.</p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Bladesong</div><span class="fd">Depth 2</span></div><div class="fb">As an Instinct, activate Bladesong for 1 minute. While active: add Acuity modifier to Guard Rating; add Acuity modifier to Endurance Warding Resonances for maintaining Sustained Resonance Workings; walking speed increases by 10 ft; Resonant Fortune on Acrobatics Active Resonances. Usable twice per Brief Attunement. Requires one-handed weapon and free off-hand. <div class="note"><strong>Traditional restriction:</strong> Only Eldren Comet-Mages access this Calling in the traditional sense. Non-Eldren who learn it are considered practitioners of an imperfect reconstruction, which the Eldren community has opinions about. The mechanics are identical. The reception is not.</div></div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Extra Strike</div><span class="fd">Depth 6</span></div><div class="fb">While Bladesong is active, one additional Strike Resonance when taking the Strike Act. The Blade-Weaver's martial refinement produces the same combat efficiency as the Solar Guard's training, achieved through different means — the Working-state focuses the body as well as the mind.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Song of Defense</div><span class="fd">Depth 10</span></div><div class="fb">While Bladesong is active, use your Reflex when you take damage to expend a Channel — reduce the damage by 5 × the Channel tier expended. The Working converts incoming force into Aetheric discharge. The Blade-Weaver is never simply absorbing damage — they are converting it.</div></div>
+  </div>
+</div></div>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- STAR-BORN -->
+<!-- ═══════════════════════════════════ -->
+<div class="path-panel" id="path-starborn">
+<div class="calling-nav">
+  <button class="c-btn active" onclick="showC('starborn','zb',this)">Zodiac Bloodline</button>
+  <button class="c-btn" onclick="showC('starborn','ws',this)">Wild Surge Master</button>
+  <button class="c-btn" onclick="showC('starborn','vt',this)">Veil-Touched</button>
+  <button class="c-btn" onclick="showC('starborn','am',this)">Aberrant Star</button>
+  <button class="c-btn" onclick="showC('starborn','ca',this)">Ceque-Attuned</button>
+  <button class="c-btn" onclick="showC('starborn','ds',this)">Divine Star</button>
+  <button class="c-btn" onclick="showC('starborn','ss',this)">Storm-Born</button>
+  <button class="c-btn" onclick="showC('starborn','ls',this)">Lunar-Born</button>
+</div>
+<div class="calling-panel active" id="starborn-zb"><div class="wrap"><div class="already"><strong>Zodiac Bloodline</strong> — built. Sign Surge, Elemental Affinity, Dragon Wings equivalent.</div></div></div>
+<div class="calling-panel" id="starborn-ws"><div class="wrap"><div class="already"><strong>Wild Surge Master</strong> — built. Surge Control, Bend Luck, Controlled Chaos.</div></div></div>
+<div class="calling-panel" id="starborn-vt"><div class="wrap"><div class="already"><strong>The Veil-Touched</strong> — built. Eyes of the Dark, Strength of the Grave, Umbral Form.</div></div></div>
+
+<div class="calling-panel" id="starborn-am"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Star-Born · Aberrant Star</span><div class="ch-name" style="color:var(--starborn)">The Aberrant Star</div><div class="ch-origin">Replacing: Aberrant Mind · Void-Touched lineage, Te Kapo Kore-kore practitioners, Hollow Serpent adjacent (dangerous)</div></div>
+  <p class="lore">The Aberrant Star's power did not come from a zodiac sign's clean cosmic inheritance. Something else wrote itself into their lineage — something that operates at the edges of the zodiac's framework, in the spaces between the twelve designated frequencies. Their Workings carry a wrongness that other practitioners can feel without identifying. <strong>The power is real. Its source is a question the Aberrant Star has learned not to answer out loud.</strong></p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Psionic Spells</div><span class="fd">Depth 1</span></div><div class="fb">Your Workings can be cast without verbal, somatic, or material components — they manifest silently and invisibly in a way that passes through Aether-Dampening Ore detection (the Ore suppresses the Aetheric component; your Workings' additional psionic layer still functions). Additionally: access to the Detect Thoughts, Sending, Telekinesis, and Telepathy Workings regardless of your standard list — the aberrant connection provides these innately.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Telepathic Speech</div><span class="fd">Depth 6</span></div><div class="fb">As an Instinct, forge a telepathic link with one creature within 30 ft — two-way communication for 1 hour regardless of shared language. Additionally: you can read surface thoughts (what the creature is currently thinking, not deep memories) of any creature within 10 ft as a passive ability — they make no Warding Resonance unless you try to go deeper. You receive the thoughts whether you want to or not.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Revelation in Flesh</div><span class="fd">Depth 14</span></div><div class="fb">As an Instinct, reveal the aberrant nature — for 1 minute your body manifests psychic tendrils, impossible geometries, or spatial distortions. All creatures within 10 ft make a Resonance Warding Resonance (DC = 8 + Mastery + Resonance) or be Dread-Struck. Your melee attacks deal +1d8 psychic. Creatures Dread-Struck by this effect have Resonant Discord on all Warding Resonances against your Workings — the revelation has cracked their defenses. <div class="note"><strong>Void-Touched implications:</strong> An Aberrant Star whose Fate Number is 13, 66, or 99 should have a conversation with the Concordance about their origin. The Hollow Serpent is aware of them. The Loom is watching them with specific concern. These are not punishments. They are consequences of a bloodline that touches something the world's framework did not designate.</div></div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="starborn-ca"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Star-Born · Ceque-Attuned</span><div class="ch-name" style="color:var(--starborn)">The Ceque-Attuned</div><div class="ch-origin">Replacing: Clockwork Soul · Precursor grid mathematical precision, Elethorn's Ceque-Keeper tradition, Accord-Maker grid-integration overlap</div></div>
+  <p class="lore">The Ceque-Attuned's innate power source is not a zodiac sign's cosmic inheritance — it is the Precursor grid itself. The mathematical precision that the Kallos civilization built into the Ceque Line network has, through proximity or lineage, imprinted itself into this practitioner's Aetheric field. <strong>Their Workings do not surge wildly. They execute exactly as designed, to exactly the specified parameter, with no deviation.</strong> This is either reassuring or disturbing depending on who is watching.</p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Restore Balance</div><span class="fd">Depth 1</span></div><div class="fb">When a creature within 60 ft rolls with Resonant Fortune or Resonant Discord, use your Reflex to cancel the effect — the roll is made with a single d20 only. Additionally: when you or a creature within 30 ft rolls two d20s (for any reason), you may replace either result with a 10 — the grid's mathematical preference for average outcomes expressed through your Aetheric field. Once per Pulse.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Trance of Order</div><span class="fd">Depth 6</span></div><div class="fb">At the start of each Deep Attunement, enter a 1-minute trance in which your mind aligns with the grid's frequency. After the trance: add 1d10 to any roll you make in the next hour — once, after seeing the initial result. The grid has calculated a correction. You may apply it. Additionally: while in Trance, cast the Detect Working Working without expending a Channel.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Clockwork Cavalcade</div><span class="fd">Depth 14</span></div><div class="fb">Once per Deep Attunement, as an Act, call on the grid's full precision — for 1 minute: all your Workings automatically succeed (no Warding Resonance by targets — they take or experience the full effect); all Strike Resonances by you deal average damage rather than rolled (no dice, just the average value, which the grid has determined is correct). This is not maximum damage. This is exact damage. <div class="note"><strong>Narrative implication:</strong> The Ceque-Attuned who reaches Depth 20 has become, in some meaningful sense, a living Ceque node — a point of grid-integration that the Kallos-Sworn's research division considers both extraordinary and alarming. Arch-Oracle Lyra has requested a meeting. It is not a request she will easily accept being declined.</div></div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="starborn-ds"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Star-Born · Divine Star</span><div class="ch-name" style="color:var(--starborn)">The Divine Star</div><div class="ch-origin">Replacing: Divine Soul · Zodiac Priest cross-training, Orisha-aspected Star-Born, Legendary Beast direct blessing (rare)</div></div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Divine Magic</div><span class="fd">Depth 1</span></div><div class="fb">Access the full Zodiac Priest Working list in addition to the Star-Born list — the divine heritage provides both cosmic-force Workings and domain Workings simultaneously. Choose one Zodiac sign domain at Depth 1; this gives access to that domain's Working list. Additionally: Aetheric Channels are replenished by both Brief and Deep Attunement — the divine source is more generous than the standard Star-Born's innate power.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Favored by the Zodiac</div><span class="fd">Depth 6</span></div><div class="fb">Choose one Wild Surge result from the standard d6 table — that result never occurs for you (replace with a 10 → reroll). Additionally: once per Pulse when you or a creature within 30 ft makes a Warding Resonance, use your Reflex to add 2d4 to that roll — the divine heritage intercedes. This help is not guaranteed and cannot be forced; it requires the Reflex and is subject to the once-per-Pulse limit.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Otherworldly Wings</div><span class="fd">Depth 14</span></div><div class="fb">At will as an Instinct: manifest wings of your zodiac sign's energy type (fire wings for Aries, radiant wings for Leo, shadow wings for Scorpio) — fly speed 30 ft for up to 1 hour per Deep Attunement. The wings are visible, significant, and recognized by anyone familiar with the zodiac as a direct expression of that sign's divine inheritance. The Legendary Beast of your sign will not initially attack a Divine Star whose wings are manifested — the Beast recognizes its own frequency.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="starborn-ss"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Star-Born · Storm-Born</span><div class="ch-name" style="color:var(--starborn)">The Storm-Born</div><div class="ch-origin">Replacing: Storm Sorcery · Sagittarian Steppe weather-bloodlines, Moana-kin oceanic inheritance, Aquarius/Sagittarius sign natural overlap</div></div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Tempestuous Magic</div><span class="fd">Depth 1</span></div><div class="fb">When you cast a Working of 1st tier or higher, move up to 10 ft without provoking Reflex Strikes — a burst of wind or storm-force propels you. Additionally: when you cast a Working dealing lightning or thunder damage, choose one creature within range — they take the Working's full damage with no Warding Resonance. Once per Working.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Heart of the Storm</div><span class="fd">Depth 6</span></div><div class="fb">Resistance to lightning and thunder damage. When you cast a Working dealing lightning or thunder damage, all creatures within 10 ft of you (not of the Working's effect — of you) take lightning or thunder damage equal to half your Resonance Depth. The storm leaks outward from the source.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Storm's Fury</div><span class="fd">Depth 14</span></div><div class="fb">When you are hit by a melee Strike Resonance, use your Reflex to deal lightning damage equal to your Resonance modifier to the attacker and push them 10 ft. Additionally: fly speed 60 ft (hover) — the Storm-Born at full power does not touch the ground unless they choose to. When flying, you are immune to the Seized and Bound conditions — nothing holds a storm.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="starborn-ls"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Star-Born · Lunar-Born</span><div class="ch-name" style="color:var(--starborn)">The Lunar-Born</div><div class="ch-origin">Replacing: Lunar Sorcery · Noctilith-bloodline practitioners, Fae-Blooded Star-Born overlap, Cancer/Pisces sign natural home</div></div>
+  <p class="lore">The Lunar-Born's power cycles with the moon — not metaphorically, but as a genuine Aetheric reality. Their Surge Point pool and Working potency shift between three phases, producing a practitioner whose power is predictably cyclical rather than consistently stable. Those who plan around the phases consider this an asset. Those who encounter a Lunar-Born at full moon learn why.</p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Lunar Embodiment</div><span class="fd">Depth 1</span></div><div class="fb">Track the current moon phase (Concordance provides this information). Your Working list and Surge Point economy shift with the phase:<br><br>
+    <strong>Full Moon:</strong> +4 Surge Points maximum; access to radiant Working list; Workings dealing radiant damage deal +1d6.<br>
+    <strong>New Moon:</strong> +4 Surge Points maximum; access to necrotic Working list; Workings dealing necrotic deal +1d6.<br>
+    <strong>Crescent (all others):</strong> +2 Surge Points; access to one list of your choice; no damage bonus — the transitional phase builds toward the next peak.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Waxing and Waning</div><span class="fd">Depth 6</span></div><div class="fb">Once per Pulse when you cast a Working, choose to shift its damage type to radiant (Full Moon) or necrotic (New Moon) regardless of the Working's base type. Additionally: when the moon phase changes (in-game), immediately restore Surge Points equal to your Resonance modifier — the cycle refills its own resource as it turns.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Lunar Cycle Mastery</div><span class="fd">Depth 14</span></div><div class="fb">You may choose your effective moon phase once per Deep Attunement — treating the current phase as Full, New, or Crescent regardless of the actual sky. The Lunar-Born no longer waits for the cycle. They have internalized it deeply enough to set their own phase. Additionally: your Wild Surges during Full and New Moon produce enhanced versions of their results — the Concordance doubles the magnitude of any Wild Surge that occurs during these phases.</div></div>
+  </div>
+</div></div>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- SCION-PLEDGED -->
+<!-- ═══════════════════════════════════ -->
+<div class="path-panel" id="path-scion">
+<div class="calling-nav">
+  <button class="c-btn active" onclick="showC('scion','lb',this)">Legendary Beast Pact</button>
+  <button class="c-btn" onclick="showC('scion','sp',this)">Scion Pact</button>
+  <button class="c-btn" onclick="showC('scion','ap',this)">Aethar Pact</button>
+  <button class="c-btn" onclick="showC('scion','fa',this)">The Fathomless</button>
+  <button class="c-btn" onclick="showC('scion','hx',this)">The Hex-Blade</button>
+  <button class="c-btn" onclick="showC('scion','ud',this)">The Undead Pact</button>
+  <button class="c-btn" onclick="showC('scion','uy',this)">The Undying Pact</button>
+  <button class="c-btn" onclick="showC('scion','gn',this)">The Elemental Pact</button>
+</div>
+<div class="calling-panel active" id="scion-lb"><div class="wrap"><div class="already"><strong>Legendary Beast Pact</strong> — built. Beast Mark, Sample Boons, relationship risks.</div></div></div>
+<div class="calling-panel" id="scion-sp"><div class="wrap"><div class="already"><strong>Scion Pact</strong> — built. Void Mark, Dark Boons, Coil monitoring risks.</div></div></div>
+<div class="calling-panel" id="scion-ap"><div class="wrap"><div class="already"><strong>Aethar Pact</strong> — built. Void Core Mark, Aethar observes through Pledged's senses, Far Scrying.</div></div></div>
+
+<div class="calling-panel" id="scion-fa"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Scion-Pledged · The Fathomless</span><div class="ch-name" style="color:var(--scion)">The Kelp-Weaver's Pledge</div><div class="ch-origin">Replacing: The Fathomless · Kelp-Weaver Legendary Beast pact, Moana-kin oceanic tradition, Aquarius-domain deep-water specialists</div></div>
+  <p class="lore">The Kelp-Weaver is the Aquarius Legendary Beast — a distributed psychic organism spanning thousands of miles of ocean floor, older than the Duchy Compact, incomprehensible in its cognition. It does not make pacts the way other powers do. It <strong>extends itself</strong> into a practitioner who is sufficiently attuned to communal consciousness, creating a connection that feels less like a contract and more like absorption into something much larger than oneself.</p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Tentacle of the Deep</div><span class="fd">Depth 1</span></div><div class="fb">Patron's Mark deals cold damage. Once per Pulse when hitting with the Mark, summon a spectral tentacle in an unoccupied space within 60 ft — it lasts until the start of your next Moment and can be used as a Reflex to Seize one creature within 10 ft of it (DC = 8 + Mastery + Resonance to break free). Swim speed equal to walking speed. Breathe water.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Oceanic Soul</div><span class="fd">Depth 6</span></div><div class="fb">Resistance to cold and fire damage. When you are underwater, all creatures within 30 ft have Resonant Discord on Strike Resonances and Active Resonances — they fight in your element. Additionally: once per Pulse as a Reflex, when a creature within 60 ft that can see or hear you is hit by a Strike Resonance, teleport that creature up to 20 ft to any unoccupied space the Kelp-Weaver's network can reach.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Guardian Coil</div><span class="fd">Depth 14</span></div><div class="fb">Once per Deep Attunement, summon a spectral Guardian Coil — a massive manifestation of the Kelp-Weaver's physical form in a 30-ft radius centered on a point within 60 ft. The area becomes difficult terrain. Creatures starting their Moment in the area make a Forcefulness Warding Resonance (DC = 8 + Mastery + Resonance) or take 2d10 cold damage and are Seized. The Guardian Coil persists for 1 minute. The Kelp-Weaver's reach, briefly, extends above the water.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="scion-hx"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Scion-Pledged · The Hex-Blade</span><div class="ch-name" style="color:var(--scion)">The Shadow-Blade Pact</div><div class="ch-origin">Replacing: The Hexblade · Otherworld weapon-spirits, Fade-Guardian adjacent, Star-Metal Stag's shadow-aspect (unusual)</div></div>
+  <p class="lore">The Shadow-Blade Pact is with an entity that exists as the concept of weapons-that-ended-things — an Otherworld force that manifests as a weapon rather than a person and communicates through the instrument of violence it creates. <strong>The weapon chooses who holds it, in the sense that the pact offers itself to someone it calculates can use it effectively.</strong> This is not flattering. It is practical.</p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Hex Warrior</div><span class="fd">Depth 1</span></div><div class="fb">Choose one weapon when completing a Deep Attunement — this is your Pact Weapon. It uses your Resonance modifier for Strike Resonance and damage (rather than Forcefulness or Swiftness) — the Pact channels through presence rather than physical capability. Additionally: once per Deep Attunement, place a Hex on one creature you can see — they have Resonant Discord on Warding Resonances against your attacks for 1 hour, or until they are reduced to 0 Vitality (whereupon you may move the Hex to another creature as a Reflex).</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Accursed Specter</div><span class="fd">Depth 6</span></div><div class="fb">Once per Deep Attunement, when you kill a creature, you may rise a specter from it — a psychic impression of its death-moment given purpose. The specter: has Vitality equal to your Resonance modifier × Resonance Depth; acts on your Moment using your Instinct; makes one Strike Resonance per Moment (1d8 + your Resonance modifier necrotic damage). It persists until the next Deep Attunement.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Armor of Hexes</div><span class="fd">Depth 14</span></div><div class="fb">When a Hexed creature hits you with a Strike Resonance, roll d6. On a 4 or higher, the attack misses instead — the Hex redirects the blow. Additionally: when a creature under your Hex deals damage to you, use your Reflex to curse them with Resonant Discord on all Active Resonances until the start of your next Moment — the weapon-entity retaliates through you automatically.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="scion-ud"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Scion-Pledged · The Undead Pact</span><div class="ch-name" style="color:var(--scion)">The Threshold Pact</div><div class="ch-origin">Replacing: The Undead · Oya-Ashé death-walkers, Scorpio-domain extreme practitioners, post-Fall death-entity pacts</div></div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Form of Dread</div><span class="fd">Depth 1</span></div><div class="fb">As an Instinct, transform for 1 minute: immune to Dread-Struck; when you hit a creature, it must make a Resonance Warding Resonance (DC = 8 + Mastery + Resonance) or be Dread-Struck until the start of its next Moment; your appearance shifts to something the observer finds genuinely frightening (not cosmetically — the Patron's influence manifests as whatever specific form of death most disturbs the target's psychology). Uses per Deep Attunement: Mastery Bonus.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Grave Touched</div><span class="fd">Depth 6</span></div><div class="fb">Don't need to eat, drink, or breathe. Resistance to necrotic damage. Once per Pulse when dealing damage through any means, replace the damage type with necrotic — the Threshold Patron bleeds its frequency into everything the Pledged does. Additionally: when you roll damage dice, reroll any 1s — once per Working or Strike Resonance. The Threshold entity dislikes inefficiency.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Mortal Husk</div><span class="fd">Depth 14</span></div><div class="fb">When you are reduced to 0 Vitality: don't fall unconscious — instead, drop to 1 Vitality and immediately enter Form of Dread (no use expended). This occurs once per Deep Attunement. When it triggers, the Patron has visibly intervened — all creatures within 30 ft who can see you make a Resonance Warding Resonance (DC 15) or are Dread-Struck for 1 minute. Something crossed back from the Threshold. That is always alarming to witness.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="scion-uy"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Scion-Pledged · The Undying Pact</span><div class="ch-name" style="color:var(--scion)">The Deathless Pact</div><div class="ch-origin">Replacing: The Undying · Kallos-era life-extension research, Eldren ancestral continuation practitioners, Scorpio/Capricorn natural home</div></div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Among the Dead</div><span class="fd">Depth 1</span></div><div class="fb">Undead creatures don't attack you unless you attack first or the creature is being directly commanded to do so. You learn one language and one Discipline Mastery at each new Depth — the Deathless Patron extends the practitioner's capacity to accumulate knowledge as a substitute for the mortality that normally limits acquisition. Resonant Fortune on Warding Resonances against disease and being poisoned.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Defy Death</div><span class="fd">Depth 6</span></div><div class="fb">When you succeed on a Loom Test (Loom Test), regain Vitality equal to 1d8 + Endurance modifier. Once per Deep Attunement, stabilize one creature you touch at 0 Vitality without requiring a healing Working. Additionally: you no longer age. The biological process has been negotiated away. You can still be killed. The Deathless Patron has not made you immortal — it has made you very difficult to stop through natural means.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Undying Nature</div><span class="fd">Depth 14</span></div><div class="fb">You have Resonant Fortune on Warding Resonances against any effect that would end your existence — massive damage, instant death effects, soul-severing. When you fail such a Warding Resonance, you may spend your Reflex to make a second attempt. Additionally: when you are reduced to 0 Vitality, you do not make Loom Tests for the first 1 minute — you simply remain at 0, functional, until the minute ends. Then normal Loom Test rules apply. The Patron argues about timing with the Loom constantly. This 1 minute is the margin they negotiated.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="scion-gn"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Scion-Pledged · The Elemental Pact</span><div class="ch-name" style="color:var(--scion)">The Elemental Pact</div><div class="ch-origin">Replacing: The Genie · Zodiac-domain elemental entities, Ashé-Touched tradition crossover, Djinn-equivalents in the Sideros worldspace</div></div>
+  <p class="lore">The Elemental Pact is with one of the zodiac's domain entities as an elemental force rather than as a Legendary Beast or a Scion — a pure expression of a sign's fundamental energy that has achieved sufficient Aetheric coherence to communicate and make agreements. <strong>Not a god. Not a beast. A force that has become specific enough to want something.</strong></p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Genie's Vessel</div><span class="fd">Depth 1</span></div><div class="fb">Choose an element type aligned with your sign (fire for Aries/Leo, cold/water for Cancer/Aquarius/Pisces, lightning for Sagittarius, acid for Scorpio, thunder for Taurus, force for Libra/Gemini). Your Patron's Mark deals that element's damage. Additionally: create a tiny vessel (a lamp, ring, urn, or similar object) — it functions as an extradimensional space holding 4 cubic ft × your Resonance Depth. You and up to your Mastery Bonus allies can enter and rest inside. Time inside passes normally. Up to 10 ft on each side internally.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Elemental Gift</div><span class="fd">Depth 6</span></div><div class="fb">Resistance to your element damage type. Once per Pulse as an Instinct, fly up to 30 ft — elemental force carries you briefly, then sets you down (no hover, must land each Pulse). Additionally: when you hit with Patron's Mark, the target makes a Warding Resonance appropriate to the element (Endurance for fire, Forcefulness for thunder, Swiftness for lightning) or is briefly impeded — Dazed until start of its next Moment.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Sanctuary Vessel</div><span class="fd">Depth 14</span></div><div class="fb">Your vessel becomes a full extradimensional sanctuary. Creatures inside are completely undetectable from outside. Time inside can be slowed — 24 hours outside = 6 hours inside (for rest purposes only; people still age at normal rate while inside). Additionally: once per Deep Attunement, cast the Working that most closely represents your element's destructive expression (Fireball for fire, Cone of Cold for cold, etc.) without expending a Channel — the Elemental Patron provides it directly.</div></div>
+  </div>
+</div></div>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- PRIMAL ACCORD -->
+<!-- ═══════════════════════════════════ -->
+<div class="path-panel" id="path-accord">
+<div class="calling-nav">
+  <button class="c-btn active" onclick="showC('accord','ne',this)">Nemean Calling</button>
+  <button class="c-btn" onclick="showC('accord','ke',this)">Keeper's Calling</button>
+  <button class="c-btn" onclick="showC('accord','be',this)">Bee-Speaker's Calling</button>
+  <button class="c-btn" onclick="showC('accord','ow',this)">Otherworld-Accord</button>
+  <button class="c-btn" onclick="showC('accord','sp',this)">Spore-Accord</button>
+  <button class="c-btn" onclick="showC('accord','st',this)">Star-Accord</button>
+  <button class="c-btn" onclick="showC('accord','wf',this)">Wildfire-Accord</button>
+</div>
+<div class="calling-panel active" id="accord-ne"><div class="wrap"><div class="already"><strong>Nemean Calling</strong> — built. Pride's Fury (Depth 3), Apex Predator (Depth 7), Legendary Resonance (Depth 11).</div></div></div>
+<div class="calling-panel" id="accord-ke"><div class="wrap"><div class="already"><strong>Keeper's Calling</strong> — built. Ecosystem Reading (Depth 3), Restoration Aspect (Depth 7), Grid Warden (Depth 11).</div></div></div>
+<div class="calling-panel" id="accord-be"><div class="wrap"><div class="already"><strong>Bee-Speaker's Calling</strong> — built. Hive Mastery (Depth 3), Communal Memory (Depth 7), Queen's Voice (Depth 11).</div></div></div>
+
+<div class="calling-panel" id="accord-ow"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Primal Accord · Otherworld-Accord</span><div class="ch-name" style="color:var(--accord)">The Otherworld-Accord</div><div class="ch-origin">Replacing: Circle of Dreams · Tuathan tradition, Fae-Blooded Accord-Walkers, border-zone practitioners</div></div>
+  <p class="lore">The Otherworld-Accord practitioner maintains Beast Resonance relationships with Beasts that also have Otherworld significance — the Star-Metal Stag crosses between planes; the Twin Dream-Fish exist at the boundary of consciousness. <strong>Their Accord extends not just into the natural world but into the Otherworld itself, making them guides for both directions of the crossing.</strong></p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Balm of the Otherworld</div><span class="fd">Depth 3</span></div><div class="fb">As an Act, touch one creature and restore 1d6 + Attunement modifier Vitality — drawing on the Otherworld's ambient healing resonance. Additionally, remove either Dread-Struck or the Corrupted condition from the creature simultaneously. Usable up to Attunement modifier times per Deep Attunement. The Otherworld's border-zone carries healing properties that the material world alone cannot produce.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Halo of Spores</div><span class="fd">Depth 6</span></div><div class="fb">When a creature within 10 ft of you takes damage from a Strike Resonance, use your Reflex to wrap it in Otherworld resonance — it takes additional psychic damage equal to 1d4 + Attunement modifier. This is not the Spore-Accord's decay; it is the Otherworld's slight alienness, applied as pressure. Additionally: when you manifest a Beast Aspect, the Aspect carries faint Otherworld visual indicators — your eyes hold stars, or your shadow moves independently, or the air around you shimmers at the border-frequency.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Veil Walk (Accord version)</div><span class="fd">Depth 11</span></div><div class="fb">Once per Deep Attunement, as an Act, step into the Otherworld — disappearing from the material world for up to 1 minute. While in the Otherworld: you can see and interact with the material world but cannot be targeted by it; you move at double speed; you may exit at any point within 500 ft of where you entered. When you exit, all enemies within 10 ft of your exit point must make a Resonance Warding Resonance (DC = 8 + Mastery + Attunement) or be Dread-Struck for 1 Pulse — the Otherworld exit is disorienting to those unprepared for it.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="accord-sp"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Primal Accord · Spore-Accord</span><div class="ch-name" style="color:var(--accord)">The Spore-Accord</div><div class="ch-origin">Replacing: Circle of Spores · Mycelian Brood study (careful distance), Virgo-domain dark applications, Kurgan Bog practitioners</div></div>
+  <p class="lore">The Spore-Accord practitioner has studied the Mycelian Brood — the vast fungal network beneath the Great Kurgan Bog — long enough to understand it as an expression of the natural world's capacity for distributed consciousness, and to harness that capacity without being consumed by it. <strong>They work at the exact edge of what the Mycelian Brood considers acceptable contact.</strong> They stay there deliberately.</p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Halo of Spores (Spore version)</div><span class="fd">Depth 3</span></div><div class="fb">As a Reflex when a creature within 10 ft takes damage, deal additional necrotic damage equal to 1d4 + Attunement modifier — fungal spores released by the impact find purchase in the wound. Additionally: animate dead using the Spore-Accord method — rather than the creature rising as standard undead, it rises as a Mycelian puppet (same statistics, cosmetically different — covered in subtle fungal growth, moves with characteristic Brood efficiency). Up to twice Attunement modifier animated simultaneously.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Fungal Infestation</div><span class="fd">Depth 6</span></div><div class="fb">When a creature within 10 ft drops to 0 Vitality, choose to have it erupt in a cloud of spores — all creatures within 5 ft of it take 1d4 necrotic damage and must make an Endurance Warding Resonance (DC = 8 + Mastery + Attunement) or have Resonant Discord on all Active Resonances until the start of your next Moment (spores in respiratory tract). This is not cruelty. The Brood has a philosophy about efficient resource cycling.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Spreading Spores</div><span class="fd">Depth 11</span></div><div class="fb">As an Act, create a 10-ft radius cloud of Mycelian spores centered on a point within 60 ft — any creature that ends its Moment in the cloud takes 2d8 necrotic damage (Endurance Warding Resonance for half) and must succeed or be infected: the infection deals 1d8 necrotic per Pulse for 1 minute and can be cleared by any healing Working of 2nd tier or higher. The cloud persists for 1 minute. The Spore-Accord practitioner does not enter it. The Mycelian Brood knows its own.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="accord-st"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Primal Accord · Star-Accord</span><div class="ch-name" style="color:var(--accord)">The Star-Accord</div><div class="ch-origin">Replacing: Circle of Stars · Moana-kin Navigator-Priest crossover, Stellar Cartographer adjacent, Star-Metal Stag deep-bond practitioners</div></div>
+  <p class="lore">The Star-Accord practitioner has aligned their Beast Resonance practice with the celestial — reading the zodiac's physical expression in the night sky and drawing their Aspect power from the stars rather than from direct Beast proximity. <strong>They do not need to be near a Beast to access its frequency. They need to see its constellation.</strong></p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Star Map</div><span class="fd">Depth 3</span></div><div class="fb">Draw a map of the current night sky on a surface — takes 1 minute. While within 10 ft of this map, once per Pulse use an Instinct to activate one of three constellation benefits:<br><br>
+    <strong>Archer's Aim:</strong> Resonant Fortune on a ranged Strike Resonance or Working Strike Resonance this Moment.<br>
+    <strong>Chalice of Restoration:</strong> One creature within 30 ft regains Vitality equal to 1d8 + Attunement modifier.<br>
+    <strong>Dragon's Body:</strong> Your Guard Rating increases by 1d4 until the start of your next Moment.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Starry Form</div><span class="fd">Depth 6</span></div><div class="fb">As an Instinct, transform into a starry form for 10 minutes — your body becomes translucent with points of zodiac light. In this form: shed bright light 10 ft, dim light 10 ft beyond; Resonant Fortune on Attunement Active Resonances; once per Pulse, shoot a starry ray at a creature within 60 ft (d20 + Mastery + Attunement; 1d8 + Attunement modifier radiant damage). Beast Aspects can still be manifested in Starry Form — the constellation and the Beast exist simultaneously.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Full of Stars</div><span class="fd">Depth 11</span></div><div class="fb">While in Starry Form, when a creature hits you with a Strike Resonance, that creature must make a Endurance Warding Resonance (DC = 8 + Mastery + Attunement) or be blinded until the end of their next Moment — they looked at the stars too directly. Additionally: Starry Form no longer has a time limit while under an open sky. The stars sustain the form as long as the form can see the stars.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="accord-wf"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Primal Accord · Wildfire-Accord</span><div class="ch-name" style="color:var(--accord)">The Wildfire-Accord</div><div class="ch-origin">Replacing: Circle of Wildfire · Aries-domain Arcadian practitioners, Ashen Ram close-bond specialists, controlled-destruction naturalists</div></div>
+  <p class="lore">The Wildfire-Accord practitioner understands that the Ashen Ram's fire is not destruction — it is transformation. The burned prairie regrows richer. The fire-cleared forest floor flowers. The Wildfire-Accord has a Beast Resonance relationship with the Ashen Ram specifically oriented around this creative aspect of fire: <strong>they do not burn things down. They burn things away to reveal what was underneath.</strong></p>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Enhanced Flame</div><span class="fd">Depth 3</span></div><div class="fb">Summon a Wildfire Spirit — a Small elemental formed of controlled fire, appearing in an unoccupied space within 30 ft. The Spirit: has Vitality equal to 5 + 5 × Resonance Depth; Guard Rating 13; immune to fire damage; acts on your Moment using your Instinct. It can: move up to 30 ft; force a creature within 5 ft to make an Endurance Warding Resonance (DC = 8 + Mastery + Attunement) or take 1d6 fire damage; use your Reflex to teleport a willing creature within 15 ft of it to any space within 15 ft of it. The Spirit persists until it drops to 0 Vitality or you dismiss it.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Cauterizing Flames</div><span class="fd">Depth 6</span></div><div class="fb">When you or the Wildfire Spirit deal fire damage, choose one creature within 30 ft — it restores Vitality equal to 2d10 + Attunement modifier. Fire that transforms rather than destroys simultaneously heals those who are aligned with the Accord-Walker's purpose. Additionally: when you manifest an Aries Beast Aspect, the Wildfire Spirit becomes supercharged for the Aspect's duration — its fire damage doubles and its teleportation range extends to 30 ft.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Blazing Revival</div><span class="fd">Depth 11</span></div><div class="fb">Once per Deep Attunement, when the Wildfire Spirit is destroyed, it erupts in a nova — all creatures within 10 ft make an Endurance Warding Resonance (DC = 8 + Mastery + Attunement) or take 2d10 fire damage. Simultaneously, choose one creature within the nova's radius — if they are at 0 Vitality, they regain 1 Vitality and immediately stand up. The Wildfire-Accord's deepest principle: the most intense burning produces the most vigorous rebirth.</div></div>
+  </div>
+</div></div>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- RĀŚI-SIDDHA -->
+<!-- ═══════════════════════════════════ -->
+<div class="path-panel" id="path-siddha">
+<div class="calling-nav">
+  <button class="c-btn active" onclick="showC('siddha','me',this)">Mesha ♈</button>
+  <button class="c-btn" onclick="showC('siddha','ka',this)">Kanya ♍</button>
+  <button class="c-btn" onclick="showC('siddha','vr',this)">Vrishchika ♏</button>
+  <button class="c-btn" onclick="showC('siddha','tu',this)">Tula ♎</button>
+  <button class="c-btn" onclick="showC('siddha','vri',this)">Vrishabha ♉</button>
+  <button class="c-btn" onclick="showC('siddha','mi',this)">Mithuna ♊</button>
+  <button class="c-btn" onclick="showC('siddha','kr',this)">Karkata ♋</button>
+  <button class="c-btn" onclick="showC('siddha','si',this)">Simha ♌</button>
+  <button class="c-btn" onclick="showC('siddha','dh',this)">Dhanus ♐</button>
+  <button class="c-btn" onclick="showC('siddha','ma',this)">Makara ♑</button>
+  <button class="c-btn" onclick="showC('siddha','ku',this)">Kumbha ♒</button>
+  <button class="c-btn" onclick="showC('siddha','me2',this)">Meena ♓</button>
+</div>
+
+<div class="calling-panel active" id="siddha-me"><div class="wrap"><div class="already"><strong>Mesha Temple (♈ Aries)</strong> — built. First Breath, Blazing Mantra, Surge Form.</div></div></div>
+<div class="calling-panel" id="siddha-ka"><div class="wrap"><div class="already"><strong>Kanya Temple (♍ Virgo)</strong> — built. Blight-Rot Cure, Purifying Strike, Community Shield.</div></div></div>
+<div class="calling-panel" id="siddha-vr"><div class="wrap"><div class="already"><strong>Vrishchika Temple (♏ Scorpio)</strong> — built. Shadow Step, Shroud of Night, Death Touch.</div></div></div>
+<div class="calling-panel" id="siddha-tu"><div class="wrap"><div class="already"><strong>Tula Temple (♎ Libra)</strong> — built. Deflecting Palm, Balanced Form, Redirect.</div></div></div>
+
+<!-- The 8 remaining temples — all follow same Satvic/Rajasic/Tamasic framework -->
+<div class="calling-panel" id="siddha-vri"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Rāśi-Siddha · Vrishabha Temple</span><div class="ch-name" style="color:var(--siddha)">Vrishabha Temple ♉ — Endurance</div><div class="ch-origin">Taurus domain · The body as immovable earth</div></div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Earth Stance</div><span class="fd">Depth 3 · Satvic 1 TP</span></div><div class="fb">Enter Earth Stance as an Instinct. While maintained: cannot be moved against your will; all incoming damage reduced by your Endurance modifier. End stance as a free action. The Vrishabha Siddha does not retreat. They become the terrain.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Stone Strike</div><span class="fd">Depth 6 · Rajasic 2 TP</span></div><div class="fb">Your Mantra Strike deals bludgeoning damage and the target must make a Forcefulness Warding Resonance (DC = 8 + Mastery + Attunement) or be knocked prone and have their speed reduced to 0 until the start of their next Moment — the blow carries the weight of the earth.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Mountain's Heart</div><span class="fd">Depth 11 · Rajasic 3 TP</span></div><div class="fb">For 1 minute: Guard Rating = 20 (regardless of armor or Attunement modifier); immune to all forced movement; at the start of each Pulse restore 2 Vitality. You are not fighting. You are standing. Everything else is incidental.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="siddha-mi"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Rāśi-Siddha · Mithuna Temple</span><div class="ch-name" style="color:var(--siddha)">Mithuna Temple ♊ — Duality</div><div class="ch-origin">Gemini domain · Two mantras, two expressions, one breath</div></div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Twin Mantra</div><span class="fd">Depth 3 · Rajasic 2 TP</span></div><div class="fb">Make two Mantra Strikes as part of one Act — each at a different target, each dealing full damage. The Mithuna tradition emphasizes simultaneous expression: the mantra strikes in two directions at once without losing force in either.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Dual Form</div><span class="fd">Depth 6 · Rajasic 2 TP</span></div><div class="fb">For 1 minute: once per Pulse when you make a Mantra Strike, make a second strike against the same or different target as part of the same action (no additional Tapas cost for the second strike). The Mithuna Siddha fights in pairs — the body expresses the mantra's duality at full efficiency.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Perfect Division</div><span class="fd">Depth 11 · Tamasic 4 TP</span></div><div class="fb">Create a psychic duplicate of yourself in an adjacent space — the duplicate acts on your Moment using your Instinct, can make one Mantra Strike per Moment, and has 1 Vitality (any damage destroys it). For 1 minute or until destroyed. <div class="note"><strong>Tamasic note:</strong> The Mithuna tradition considers this maneuver ethically complex — you are temporarily expressing a version of yourself that exists separately from your consciousness. The Temple teaches that this Tapas expenditure should only occur when both expressions serve a genuine purpose, not tactical efficiency alone. The Tapas Depletion risk reflects this: forcing division for trivial reasons carries consequence.</div></div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="siddha-kr"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Rāśi-Siddha · Karkata Temple</span><div class="ch-name" style="color:var(--siddha)">Karkata Temple ♋ — Protection</div><div class="ch-origin">Cancer domain · The body as shelter for others</div></div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Shell Mantra</div><span class="fd">Depth 3 · Satvic 1 TP</span></div><div class="fb">As a Reflex when an ally within 10 ft is targeted by a Strike Resonance, use your Instinct to interpose — the attack targets you instead. The Karkata Siddha's training orients the body toward absorbing harm that would otherwise reach those they protect.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Ward of Tides</div><span class="fd">Depth 6 · Rajasic 2 TP</span></div><div class="fb">Grant one creature you touch temporary Vitality equal to your Tapas pool's current maximum for 1 hour. While they have this temporary Vitality, they have Resonant Fortune on all Warding Resonances — the Karkata mantra extends the Siddha's Guard Rating outward as a gift.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Adamant Shell</div><span class="fd">Depth 11 · Rajasic 3 TP</span></div><div class="fb">For 1 minute, create a shell of Aetheric force around up to Attunement modifier creatures within 10 ft — all damage dealt to shelled creatures is halved; they have immunity to the Corrupted condition; they cannot be forcibly moved. The Karkata Temple's highest expression: the practitioner becomes the Adamant Crab, distributed among those who needed shelter.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="siddha-si"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Rāśi-Siddha · Simha Temple</span><div class="ch-name" style="color:var(--siddha)">Simha Temple ♌ — Solar Will</div><div class="ch-origin">Leo domain · The mantra as radiant force</div></div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Solar Mantra</div><span class="fd">Depth 3 · Rajasic 2 TP</span></div><div class="fb">Your Mantra Strike deals radiant damage and emits a burst of solar light — all creatures within 5 ft of the target must make an Endurance Warding Resonance (DC = 8 + Mastery + Attunement) or be Sight-Severed until the start of their next Moment. Te Kapo have Resonant Discord on this Warding Resonance.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Pride's Surge</div><span class="fd">Depth 6 · Satvic 1 TP</span></div><div class="fb">As an Instinct, inspire one ally within 30 ft — they gain Resonant Fortune on their next Strike Resonance and deal +1d8 radiant damage on that strike if it hits. The Simha Siddha does not simply fight. They elevate those around them through the radiance of their practice.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Nemean Mantra</div><span class="fd">Depth 11 · Tamasic 4 TP</span></div><div class="fb">For 1 minute: your Mantra Strikes deal maximum radiant damage without rolling; you emit bright light 30 ft; all Void-Husks within the light must make Resonance Warding Resonances each Pulse or be Dread-Struck. This is the closest the Rāśi-Siddha tradition comes to the Accord-Walker's Legendary Aspect — the Nemean mantra running through the body at full expression.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="siddha-dh"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Rāśi-Siddha · Dhanus Temple</span><div class="ch-name" style="color:var(--siddha)">Dhanus Temple ♐ — The Arrow</div><div class="ch-origin">Sagittarius domain · The mantra as trajectory, the body as projectile</div></div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Arrow Mantra</div><span class="fd">Depth 3 · Rajasic 2 TP</span></div><div class="fb">Once per Pulse as an Instinct, dash up to 30 ft in a straight line — any creature in the path makes an Endurance Warding Resonance (DC = 8 + Mastery + Attunement) or takes 1d10 + Attunement modifier force damage and is pushed 5 ft to either side. The Dhanus Siddha treats their body as a directed projectile.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">True Shot</div><span class="fd">Depth 6 · Rajasic 2 TP</span></div><div class="fb">Your Mantra Strike ignores cover and has a range of 60 ft for melee purposes — the internal momentum of the mantra crosses the gap without requiring physical proximity. The strike lands as if you were adjacent to the target. You do not need line of sight if you have heard or otherwise detected the target this Pulse.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Stag's Stride</div><span class="fd">Depth 11 · Satvic 2 TP</span></div><div class="fb">For 1 minute: movement speed doubles; you may move through creatures without impediment (not objects); difficult terrain costs no additional movement. Once during this minute, you may use your Act to teleport up to 300 ft to any location you have visited — the Star-Metal Stag's navigational frequency channels through the Siddha's mantra at maximum expression.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="siddha-ma"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Rāśi-Siddha · Makara Temple</span><div class="ch-name" style="color:var(--siddha)">Makara Temple ♑ — The Summit</div><div class="ch-origin">Capricorn domain · The mantra that does not stop until it reaches the top</div></div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Summit Mantra</div><span class="fd">Depth 3 · Satvic 1 TP</span></div><div class="fb">At the start of each encounter, declare one objective (defeat this creature, reach this location, protect this person). While working toward the declared objective: Resonant Fortune on all Active Resonances directly serving it; cannot be Dread-Struck. The Makara Temple trains the will to be as immovable as the mountain it is named after.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Perseverance</div><span class="fd">Depth 6 · Satvic 1 TP</span></div><div class="fb">When you fail a Warding Resonance, use your Instinct to spend 1 Tapas (Satvic) and immediately reroll — taking the better result. Once per Pulse. The Makara Siddha's practice produces a specific relationship with failure: it is information, not conclusion.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">The Unconquerable</div><span class="fd">Depth 11 · Rajasic 3 TP</span></div><div class="fb">Once per encounter: when reduced to 0 Vitality, instead drop to 1 Vitality and immediately restore Tapas equal to your Attunement modifier. The Makara Temple's highest teaching — that the summit is not a place but a decision, made again at every moment the practitioner might otherwise stop.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="siddha-ku"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Rāśi-Siddha · Kumbha Temple</span><div class="ch-name" style="color:var(--siddha)">Kumbha Temple ♒ — The Vessel</div><div class="ch-origin">Aquarius domain · The body as container for others' burdens</div></div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Community Mantra</div><span class="fd">Depth 3 · Satvic 1 TP</span></div><div class="fb">As an Instinct, share Tapas with one ally within 30 ft — transfer up to Attunement modifier Tapas Points to them. They may spend these points as if they were their own Tapas for 1 minute. The Kumbha Temple teaches that Tapas is not a personal resource. It is water in a communal vessel — drawn where needed.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Network Sense</div><span class="fd">Depth 6 · Satvic 0 TP</span></div><div class="fb">Passive. Always know the Vitality level (exact number) and current emotional state of all allies within 60 ft — no roll, no Tapas cost. The Kumbha Siddha has extended the body's awareness to encompass those in their care. This is the Bee-Speaker's Hive Sense expressed through ascetic practice rather than the Hive's network.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Collective Tapas</div><span class="fd">Depth 11 · Rajasic 3 TP</span></div><div class="fb">Once per Deep Attunement, create a Tapas Field centered on yourself — a 30-ft radius that lasts for 1 minute. While within the field: all allies share a pool of temporary Tapas equal to twice your Attunement modifier; any ally may spend from this pool for any Tapas-powered ability they have (if any) or for the basic Rāśi-Siddha Ambient Workings (the communal practice temporarily grants access); when one ally benefits from the pool, all allies within 5 ft of them restore 1 Vitality.</div></div>
+  </div>
+</div></div>
+
+<div class="calling-panel" id="siddha-me2"><div class="wrap">
+  <div class="ch"><span class="ch-badge">Rāśi-Siddha · Meena Temple</span><div class="ch-name" style="color:var(--siddha)">Meena Temple ♓ — The Dream</div><div class="ch-origin">Pisces domain · The mantra as current, the mind as ocean</div></div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Dream Mantra</div><span class="fd">Depth 3 · Rajasic 2 TP</span></div><div class="fb">Your Mantra Strike does not require line of sight — if you have heard or sensed the target this Pulse, the strike lands as if you were adjacent. Additionally: when you hit, the target must make an Attunement Warding Resonance (DC = 8 + Mastery + Attunement) or be briefly dream-touched — Resonant Discord on their next Active Resonance as their perception briefly crosses into dream-state.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Prophetic Reflex</div><span class="fd">Depth 6 · Satvic 1 TP</span></div><div class="fb">Once per Pulse, when a creature within 30 ft makes a Strike Resonance, use your Reflex to spend 1 Tapas — you have already seen this strike in the dream-state and act accordingly. If the target hits, reduce the damage by 1d10 + Attunement modifier. If the target misses, your next Mantra Strike against them has Resonant Fortune — you know where they're going to be.</div></div>
+    <div class="feat" onclick="this.classList.toggle('open')"><div class="fh"><div class="fn">Twin Fish Mantra</div><span class="fd">Depth 11 · Tamasic 4 TP</span></div><div class="fb">Once per Deep Attunement, spend 4 Tapas to reach briefly into the prophetic space the Twin Dream-Fish inhabit. The Concordance delivers one completely accurate vision of something that will happen within the next 24 hours — not a warning, but a complete scene. The Meena Siddha does not ask what they will see. The Dream-Fish show what they consider important. This is the deepest Tamasic expenditure in the Rāśi-Siddha tradition — it risks the self not through physical corruption but through prophetic dissolution, the potential loss of the boundary between what is and what will be.</div></div>
+  </div>
+</div></div>
+</div>
+
+<script>
+function showPath(id,btn){
+  document.querySelectorAll('.path-panel').forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  document.querySelectorAll('.path-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('path-'+id).style.display='block';
+  document.getElementById('path-'+id).classList.add('active');
+  btn.classList.add('active');
+  // activate first calling-panel in this path
+  const panels=document.querySelectorAll('#path-'+id+' .calling-panel');
+  const btns=document.querySelectorAll('#path-'+id+' .c-btn');
+  panels.forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  btns.forEach(b=>b.classList.remove('active'));
+  if(panels.length){panels[0].style.display='block';panels[0].classList.add('active')}
+  if(btns.length){btns[0].classList.add('active')}
+}
+function showC(path,id,btn){
+  const pathEl=document.getElementById('path-'+path);
+  pathEl.querySelectorAll('.calling-panel').forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  pathEl.querySelectorAll('.c-btn').forEach(b=>b.classList.remove('active'));
+  const target=document.getElementById(path+'-'+id);
+  if(target){target.style.display='block';target.classList.add('active')}
+  btn.classList.add('active');
+}
+// init
+document.querySelectorAll('.path-panel').forEach(p=>{p.style.display='none'});
+document.getElementById('path-breaker').style.display='block';
+document.getElementById('path-breaker').classList.add('active');
+document.querySelectorAll('.calling-panel').forEach(p=>{p.style.display='none'});
+document.querySelectorAll('#path-breaker .calling-panel')[0].style.display='block';
+document.querySelectorAll('#path-breaker .calling-panel')[0].classList.add('active');
+</script>
+</body>
+</html>

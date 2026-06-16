@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — The Five Paths to Magic</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f0f0f;color:#e8e4dc;padding:2rem 1rem;max-width:800px;margin:0 auto;line-height:1.6}
+h1{font-size:20px;font-weight:500;margin-bottom:4px;color:#f0ead8}
+.intro{font-size:13px;color:#888;margin-bottom:1.5rem}
+.nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem}
+.nav-btn{padding:6px 12px;font-size:12px;border:1px solid #333;border-radius:6px;background:transparent;color:#888;cursor:pointer;transition:all .15s}
+.nav-btn:hover,.nav-btn.active{background:#1e1e1e;color:#e8e4dc;border-color:#555;font-weight:500}
+.panel{display:none}.panel.active{display:block}
+.path-card{border-radius:10px;border:1px solid;padding:18px;margin-bottom:12px}
+.path-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+.path-icon{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;border:1px solid}
+.path-title{font-size:17px;font-weight:500;color:#f0ead8;margin-bottom:3px}
+.path-subtitle{font-size:12px;color:#888}
+.detail-text{font-size:13px;color:#aaa;line-height:1.75;margin-bottom:12px}
+.detail-text strong{color:#e8e4dc;font-weight:500}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px}
+.info-block{background:#1a1a1a;border-radius:8px;padding:10px 12px;border:1px solid #2a2a2a}
+.info-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#666;margin-bottom:4px}
+.info-text{font-size:12px;color:#ccc;line-height:1.55}
+.sub-path{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;padding:10px 12px;margin-bottom:6px;cursor:pointer;transition:border-color .15s}
+.sub-path:hover,.sub-path.expanded{border-color:#444}
+.sp-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.sp-name{font-size:13px;font-weight:500;color:#e8e4dc}
+.sp-tag{font-size:11px;padding:2px 7px;border-radius:4px;border:1px solid #333;color:#888;white-space:nowrap;flex-shrink:0}
+.sp-body{display:none;margin-top:8px;padding-top:8px;border-top:1px solid #2a2a2a;font-size:12px;color:#aaa;line-height:1.7}
+.sub-path.expanded .sp-body{display:block}
+.sp-body strong{color:#e8e4dc;font-weight:500}
+.lore-block{background:#1e1a0a;border:1px solid #3a2f0a;border-radius:8px;padding:12px 14px;margin-top:12px}
+.lore-title{font-size:12px;font-weight:500;color:#c9a84c;margin-bottom:5px}
+.lore-text{font-size:12px;color:#aaa;line-height:1.65}
+.lore-text strong{color:#e8e4dc;font-weight:500}
+.warning-block{background:#1e0a0a;border:1px solid #3a0a0a;border-radius:8px;padding:12px 14px;margin-top:10px}
+.warning-title{font-size:12px;font-weight:500;color:#cc4444;margin-bottom:5px}
+.warning-text{font-size:12px;color:#aaa;line-height:1.65}
+.warning-text strong{color:#e8e4dc;font-weight:500}
+.class-map{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:10px}
+.cm-row{display:flex;justify-content:space-between;font-size:11px;padding:5px 9px;background:#1a1a1a;border-radius:6px;gap:8px}
+.cm-class{font-weight:500;color:#e8e4dc;white-space:nowrap}
+.cm-align{color:#888;font-size:10px;text-align:right}
+.tag-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.tag{font-size:11px;padding:2px 7px;border-radius:4px;border:1px solid #333;color:#888}
+</style>
+</head>
+<body>
+<h1>The Five Paths to Magic</h1>
+<p class="intro">Magic in Sideros is a resonance with cosmic forces — not a simple birthright. Every tradition is a different answer to the same question: how does a mortal touch the Aether?</p>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="show('siddha',this)">I. Siddha-Magic</button>
+  <button class="nav-btn" onclick="show('comet',this)">II. Comet-Magi</button>
+  <button class="nav-btn" onclick="show('orisha',this)">III. Orisha Favor</button>
+  <button class="nav-btn" onclick="show('primal',this)">IV. Primal Rites</button>
+  <button class="nav-btn" onclick="show('coil',this)">V. The Ashen Coil</button>
+</div>
+
+<div class="panel active" id="panel-siddha">
+<div class="path-card" style="border-color:#c9a84c44;background:#faeeda08">
+<div class="path-header">
+  <div class="path-icon" style="background:#2a2010;border-color:#c9a84c44">🔱</div>
+  <div><div class="path-title">The Path of the Scattered Temples</div><div class="path-subtitle">Siddha-Magic — The most ancient and pure form of magic in Sideros</div></div>
+</div>
+<p class="detail-text">The Twelve Scattered Temples are the oldest magical institutions in the world — each a degraded remnant of Precursor civilization science, now practiced as spiritual discipline by the Eldren and their students. What the Siddha call mantras, the Precursors of Kallos called equations. <strong>The students do not know this.</strong></p>
+<div class="info-grid">
+  <div class="info-block"><div class="info-label">How it is gained</div><div class="info-text">Rigorous meditation, discipline, and study of Mantras (sound formulas) and Mudras (hand gestures). Years of practice under an Eldren Siddha master.</div></div>
+  <div class="info-block"><div class="info-label">Source of power</div><div class="info-text">Resonance with a specific Rashi (Zodiac sign). The temple's ley line to that sign's cosmic domain. Internal cultivation of Tapas (ascetic heat).</div></div>
+  <div class="info-block"><div class="info-label">Associated class</div><div class="info-text">Rāśi-Siddha (Monk) using Tapas Points. Also Zodiac Priests and Comet-Mages with temple training.</div></div>
+  <div class="info-block"><div class="info-label">Hazard</div><div class="info-text">Magic beyond Tapas capacity causes environmental backlash or Body Point depletion. The Stillness of Dunmar fully nullifies Siddha work.</div></div>
+</div>
+<p style="font-size:12px;font-weight:500;color:#e8e4dc;margin-bottom:6px">The Twelve Temples — Domain by Sign</p>
+<div class="sub-path" onclick="this.classList.toggle('expanded')"><div class="sp-head"><span class="sp-name">♈ Mesha — The Forge of the First Spark</span><span class="sp-tag">Aries March</span></div><div class="sp-body">Volcanic forge-temple within a caldera. Siddha channel their will into crafting divine weapons (Astra). <strong>Domain spells:</strong> fire, initiative, primal charge, weapon enhancement. The Fire Temple — Lord Aries has ongoing friction with its leadership over military doctrine.</div></div>
+<div class="sub-path" onclick="this.classList.toggle('expanded')"><div class="sp-head"><span class="sp-name">♉ Vrishabha — The Mandala of the Earthly Form</span><span class="sp-tag">Taurian Plains</span></div><div class="sp-body">An open-air temple grown from the earth itself. Secretive geomancy school. <strong>Domain spells:</strong> earth-shaping, abundance, plant growth, endurance, wealth divination. Lady Taurus secretly funds this temple's hidden research.</div></div>
+<div class="sub-path" onclick="this.classList.toggle('expanded')"><div class="sp-head"><span class="sp-name">♊ Mithuna — The Resonant Archive</span><span class="sp-tag">Twin Republics, Aetheria</span></div><div class="sp-body">Library-temple on twin spires. <strong>Domain spells:</strong> duality, air, language, suggestion, illusion, knowledge. The Voice of Inspired Speech turns mundane words into powerful suggestions. Lord Gemini's Loom of Fate infiltration threatens its neutrality.</div></div>
+<div class="sub-path" onclick="this.classList.toggle('expanded')"><div class="sp-head"><span class="sp-name">♋ Karkata — The Sunken Heart Mandala</span><span class="sp-tag">Sundered Coast, Mare Occultum</span></div><div class="sp-body">A tidal grotto accessible only at low tide. <strong>Domain spells:</strong> water, protection, ancestor communion, emotional healing, ward.</div></div>
+<div class="sub-path" onclick="this.classList.toggle('expanded')"><div class="sp-head"><span class="sp-name">♌ Simha — The Throne of the Radiant Self</span><span class="sp-tag">Leonine Empire</span></div><div class="sp-body">A golden temple on Aurelia's highest hill. <strong>Domain spells:</strong> radiant light, authority, courage, solar fire, divine right. The Mantra of Divine Right will only sound in the presence of a true and just ruler — it is growing quieter as Lord Leo's legitimacy fades.</div></div>
+<div class="sub-path" onclick="this.classList.toggle('expanded')"><div class="sp-head"><span class="sp-name">♍ Kanya — The Sanctum of Flawless Service</span><span class="sp-tag">Republic of Argentum</span></div><div class="sp-body">A monastic hospital-temple. <strong>Domain spells:</strong> purification, healing, disease removal, anti-blight. The Order of Pure Reason studies it intensely, trying to replicate the Mantra of Purification scientifically.</div></div>
+<div class="sub-path" onclick="this.classList.toggle('expanded')"><div class="sp-head"><span class="sp-name">♎ Tula — The Pavilion of Cosmic Balance</span><span class="sp-tag">Sereignate of Libra, Aetheria</span></div><div class="sp-body">An open-air pavilion of serene gardens. <strong>Domain spells:</strong> binding pacts, truth detection, cosmic equilibrium, law enforcement, flight. The Voice of the Binding Pact makes any oath sworn here magically unbreakable. The ultimate diplomatic neutral ground.</div></div>
+<div class="sub-path" onclick="this.classList.toggle('expanded')"><div class="sp-head"><span class="sp-name">♏ Vrishchika — The Well of Hidden Power</span><span class="sp-tag">Viridian Principalities, Mare Occultum</span></div><div class="sp-body">A cave temple hidden behind a waterfall. <strong>Domain spells:</strong> secrets, death rites, transformation, psychic energy (Siddhi), shadow. The Loom of Fate seeks to control its central pool — a font of raw psychic energy.</div></div>
+<div class="sub-path" onclick="this.classList.toggle('expanded')"><div class="sp-head"><span class="sp-name">♐ Dhanus — The Spire of the Higher Truth</span><span class="sp-tag">Sagittarian Steppes</span></div><div class="sp-body">An impossibly tall spire piercing the sky. <strong>Domain spells:</strong> far-sight, cosmic navigation, star-reading, prophecy, truth. Lord Sagittarius received a dark prophecy here — its content is unresolved.</div></div>
+<div class="sub-path" onclick="this.classList.toggle('expanded')"><div class="sp-head"><span class="sp-name">♑ Makara — The Karmic Mountain Monastery</span><span class="sp-tag">Stone Kingdom of Dunmar</span></div><div class="sp-body">A remote monastery carved into Dunmar's highest peak. <strong>Domain spells:</strong> endurance, ambition, earth mastery, time and patience. Currently placing diplomatic pressure on Lady Capricorn to open Dunmar's borders.</div></div>
+<div class="sub-path" onclick="this.classList.toggle('expanded')"><div class="sp-head"><span class="sp-name">♒ Kumbha — The Resonant Geode of Kumbha</span><span class="sp-tag">Aquarian Archipelago, Aetheria</span></div><div class="sp-body">A temple inside a colossal floating geode. <strong>Domain spells:</strong> collective consciousness, resonance, creation, community weaving, aether-flow. The Seal of Divine Resonance causes the entire geode to hum in harmony with the world's collective consciousness.</div></div>
+<div class="sub-path" onclick="this.classList.toggle('expanded')"><div class="sp-head"><span class="sp-name">♓ Meena — The Temple of the Final Dream</span><span class="sp-tag">Piscean Veil, Mare Occultum</span></div><div class="sp-body">A crumbling temple existing partially in the dream world. <strong>Domain spells:</strong> prophecy, dream-weaving, the unseen world, cosmic dissolution (Laya). Meditating here risks becoming permanently lost. The most dangerous Siddha sanctum.</div></div>
+<div class="lore-block"><div class="lore-title">The Precursor Secret</div><div class="lore-text">The Siddha mantras are <strong>degraded scientific equations</strong> from the Precursor civilization of Kallos. The Eldren are Kallos survivors — their spiritual practice is unconscious science. The Order of Pure Reason is independently reconstructing the same knowledge. Both paths lead to the same destination: the conditions that destroyed Kallos in the Night of Kallos.</div></div>
+</div>
+</div>
+
+<div class="panel" id="panel-comet">
+<div class="path-card" style="border-color:#185fa544;background:#0a121e08">
+<div class="path-header">
+  <div class="path-icon" style="background:#0a1220;border-color:#185fa544">☄️</div>
+  <div><div class="path-title">The Comet-Magi and the Twelve Aspects</div><div class="path-subtitle">Structured academic-spiritual magic — practiced in the hidden city of Argent Spire, Antarctos</div></div>
+</div>
+<p class="detail-text">In Argent Spire, 1,200 Magi treat magic as structured academic science deeply fused with spiritual discipline. Unlike the Siddha's intuitive resonance, Comet-Magi magic is <strong>systematic</strong> — mapped to celestial mechanics, codified into Circles, and governed by Conclave doctrine. Their power source is the Great Comet's passage.</p>
+<div class="info-grid">
+  <div class="info-block"><div class="info-label">How it is gained</div><div class="info-text">Study under one of the Three Great Conclaves. Alignment with one of the Twelve Aspects. Initiation into progressively higher Circles of Weaving as rank increases.</div></div>
+  <div class="info-block"><div class="info-label">Source of power</div><div class="info-text">The celestial movement of the Great Comet. Stellar energy harvested into Resonant Geodes during the midday cycle. The geothermal pressure of sealing the Crystalline Core below.</div></div>
+  <div class="info-block"><div class="info-label">Associated class</div><div class="info-text">Comet-Mage (Wizard) primary. Zodiac Priest (Cleric) can access Epic Tier Aetheric Channels (10th/11th/12th level) — unique to this tradition.</div></div>
+  <div class="info-block"><div class="info-label">Structure</div><div class="info-text">Male mages study celestial science. Female Sisters of the Spire guard the physical seals. Ice Sentinels patrol cliffs; Trench Wardens descend into ice vaults daily.</div></div>
+</div>
+<p style="font-size:12px;font-weight:500;color:#e8e4dc;margin-bottom:6px">The Three Conclaves — Doctrinal Differences</p>
+<div class="sub-path" onclick="this.classList.toggle('expanded')"><div class="sp-head"><span class="sp-name">Ethereal Dawn — Cardinal Signs ♈♋♎♑</span><span class="sp-tag">High Star-Sayer Grandon</span></div><div class="sp-body"><strong>Position:</strong> Proactive intervention — Argent Spire should actively shape world destiny. <strong>Magic style:</strong> Dynamic, initiating, forward-projecting spells. <strong>Tension:</strong> They secretly manipulate world events through agents — a direct violation of other Conclaves' mandates.</div></div>
+<div class="sub-path" onclick="this.classList.toggle('expanded')"><div class="sp-head"><span class="sp-name">Earthly Core — Fixed Signs ♉♌♏♒</span><span class="sp-tag">Vael-Kallos + Grand Prime Forgeman</span></div><div class="sp-body"><strong>Position:</strong> Pure imprisonment — all magical energy directed downward into the seals. Nothing else matters. <strong>Unique:</strong> Grand Prime Forgeman is an ancient rogue Gear-Forged who escaped the Jade Empire centuries ago. The most zealous Conclave.</div></div>
+<div class="sub-path" onclick="this.classList.toggle('expanded')"><div class="sp-head"><span class="sp-name">Shifting Horizons — Mutable Signs ♊♍♐♓</span><span class="sp-tag">Arch-Oracle Lyra of the Closed Eye</span></div><div class="sp-body"><strong>Position:</strong> Imprisonment is temporary — prepare for inevitable confrontation with the void. The seals will eventually fail. Lyra is permanently blindfolded, seeing only probability futures. <strong>Most likely to reach out to outside heroes.</strong></div></div>
+<div class="lore-block"><div class="lore-title">What the Geothermal Vents Conceal</div><div class="lore-text">The warmth that makes Argent Spire habitable is a <strong>byproduct of the sealing pressure</strong> on the Crystalline Core of Ophiuchus below. Every warm vent in the city is evidence of entropy being contained. If the seals weaken, the vents cool — a slow, creeping winter the Conclaves dare not explain.</div></div>
+</div>
+</div>
+
+<div class="panel" id="panel-orisha">
+<div class="path-card" style="border-color:#3b6d1144;background:#0a180a08">
+<div class="path-header">
+  <div class="path-icon" style="background:#0a1a0a;border-color:#3b6d1144">🌿</div>
+  <div><div class="path-title">Divine Favor and the Orishas</div><div class="path-subtitle">Ashé — Living cosmic life force inseparable from the Ashé-Touched people of Orun-Ayé</div></div>
+</div>
+<p class="detail-text">In the Ashélands, magic is not learned or studied. It is <strong>grown</strong>. Ashé is the living cosmic life force flowing through all matter. The Ashé-Touched bear visible divine traits from their patron Orishas because Ashé flows through their biology. One does not Weave a Working; one becomes a more complete vessel for their Orisha's will.</p>
+<div class="info-grid">
+  <div class="info-block"><div class="info-label">How it is gained</div><div class="info-text">Ritual, sacrifice, and community service. One becomes a vessel for Orisha power through deepening relationship — not study. The Ashé-Medium can achieve temporary full Orisha possession.</div></div>
+  <div class="info-block"><div class="info-label">Source of power</div><div class="info-text">Ashé itself — the living cosmic life force. The twelve Orishas are the same divine forces as the twelve Zodiac gods, perceived through a different cultural lens.</div></div>
+  <div class="info-block"><div class="info-label">Associated class</div><div class="info-text">Ashé-Medium (unique Sideros class, Ω, ♋/♒). Also Zodiac Priest and Fade-Guardian. Babalawos and Iyanifas at the Table of Ifá are non-combat ritual specialists.</div></div>
+  <div class="info-block"><div class="info-label">Critical vulnerability</div><div class="info-text">The Order of Pure Reason's anti-magic field would effectively kill the Ashé-Touched. Their magic is not a learned skill — it is inseparable from their biology.</div></div>
+</div>
+<p style="font-size:12px;font-weight:500;color:#e8e4dc;margin-bottom:6px">Sample Orisha Domains → Spells</p>
+<div class="class-map">
+  <div class="cm-row"><span class="cm-class">Eshu-Elegbara</span><span class="cm-align">Crossroads, choices, trickery</span></div>
+  <div class="cm-row"><span class="cm-class">Ogun</span><span class="cm-align">Iron, war, civilization, forging</span></div>
+  <div class="cm-row"><span class="cm-class">Shango</span><span class="cm-align">Lightning, fire, justice, thunder</span></div>
+  <div class="cm-row"><span class="cm-class">Yemaya</span><span class="cm-align">Ocean, motherhood, healing</span></div>
+  <div class="cm-row"><span class="cm-class">Oshun</span><span class="cm-align">Rivers, love, prophecy, sweetness</span></div>
+  <div class="cm-row"><span class="cm-class">Oya</span><span class="cm-align">Wind, storms, death transition</span></div>
+  <div class="cm-row"><span class="cm-class">Obatala</span><span class="cm-align">Creation, purity, wisdom, calm</span></div>
+  <div class="cm-row"><span class="cm-class">Orunmila</span><span class="cm-align">Destiny, divination, cosmic law</span></div>
+</div>
+<div class="lore-block"><div class="lore-title">The Same Gods, Different Names</div><div class="lore-text">The twelve Orishas and the twelve Legendary Beasts are <strong>the same divine forces</strong> perceived through different cultural vocabularies. Oshun (Pisces) and the Twin Dream-Fish share prophetic traditions. Orunmila's divine energy created the Aurorans and is embodied in the Great Roc. A hero who understands both traditions holds the key to reconnecting the fractured pantheon.</div></div>
+</div>
+</div>
+
+<div class="panel" id="panel-primal">
+<div class="path-card" style="border-color:#534ab744;background:#0e0a1808">
+<div class="path-header">
+  <div class="path-icon" style="background:#120e20;border-color:#534ab744">🌳</div>
+  <div><div class="path-title">The Primal Rites</div><div class="path-subtitle">Druidry and Shamanism — connection to the world's spirit through nature and instinct</div></div>
+</div>
+<p class="detail-text">Where the Siddha find power through discipline and the Orisha-path through devotion, the Primal traditions find power through <strong>attunement</strong> — harmonizing with the world's living spirit. Three distinct sub-traditions exist.</p>
+<div class="sub-path" onclick="this.classList.toggle('expanded')"><div class="sp-head"><span class="sp-name">The Tuathan Path — Celtic Tree Zodiac</span><span class="sp-tag">Tuathan Archipelago</span></div><div class="sp-body"><strong>How gained:</strong> Spells tied to the Celtic Tree Zodiac. Gained by harmonizing with the current season and the sacred tree of one's birth.<br><br><strong>Seasonal mechanic:</strong> Most powerful spells available during the birth-tree's season — always chasing alignment with the turning year.<br><br><strong>The Oak/Holly King cycle:</strong> The great political tension mirrors their magic — the Oak King (summer) and Holly King (winter) alternate, and Tuathan magic ebbs with this cycle.<br><br><strong>The Otherworld:</strong> Druids can bargain with fae Otherworld entities for spells beyond their natural domain — but at unknown cost. The Otherworldly Gate Faerie Mound opens at twilight.
+<div class="tag-row"><span class="tag">Fade-Guardian (Druid/Paladin hybrid)</span><span class="tag">Noctilith Moon-Stone — key focus material</span><span class="tag">Keepers of the Cycle oversee the Elder sanctum</span></div></div></div>
+<div class="sub-path" onclick="this.classList.toggle('expanded')"><div class="sp-head"><span class="sp-name">The Uji Path — Omote-Ura Balance</span><span class="sp-tag">Mori-Ōkami (Wolf-Shifters)</span></div><div class="sp-body"><strong>How gained:</strong> Wolf-Shifters gain primal boons by balancing Omote (human discipline) and Ura (wolf instinct), granted by their Shōgun-Kami spirit patrons.<br><br><strong>The Omote-Ura Gauge:</strong> A tension meter unique to Uji characters. High Omote grants social and tactical abilities; high Ura grants primal combat power and beast-sense. Full Ura is feral — the character loses conscious control.<br><br><strong>Pine Shadow vs Deep Earth tension:</strong> The two clans have opposing Omote-Ura philosophies. Pine Shadow prizes disciplined Omote hunting. Deep Earth honors ancestral Ura of pack memory.
+<div class="tag-row"><span class="tag">Primal Jarl (Barbarian), Void-Hunter (Ranger)</span><span class="tag">Omote-Ura gauge mechanics — still to define</span><span class="tag">Star-Metal Stag lair — Pine Shadow sacred ground</span></div></div></div>
+<div class="sub-path" onclick="this.classList.toggle('expanded')"><div class="sp-head"><span class="sp-name">The Norse Path — Runic Magic</span><span class="sp-tag">Boreal Expanse</span></div><div class="sp-body"><strong>How gained:</strong> Each of the twelve Hearths is governed by a specific Elder Futhark rune. Magic is inseparable from geography — entering a Hearth means operating under that rune's laws.<br><br><strong>Not a codified tradition:</strong> Norse magic is absorbed through the land — a traveler gains runic resonance by surviving and mastering the environment of each Hearth. There are no teachers, only trials.<br><br><strong>Key runes:</strong> Thrymheimr (Hagalaz — Skadi's Wrath), The Thing-Stead (Tiwaz — justice oaths), The Rainbow Bridgehead (Algiz — protective shielding), The Cave of the Broken Oath (inverted Tiwaz — oaths become curses).
+<div class="tag-row"><span class="tag">Primal Jarl (Barbarian)</span><span class="tag">Skadi's Wrath — Hagalaz made permanent and sentient</span><span class="tag">Aurorans — cosmic law opposite of runic entropy</span></div></div></div>
+</div>
+</div>
+
+<div class="panel" id="panel-coil">
+<div class="path-card" style="border-color:#a32d2d44;background:#1e0a0a08">
+<div class="path-header">
+  <div class="path-icon" style="background:#1e0a0a;border-color:#a32d2d44">🐍</div>
+  <div><div class="path-title">The Forbidden Path: The Ashen Coil</div><div class="path-subtitle">Corruption and the unmaking of one's own soul — power from the Hollow Serpent</div></div>
+</div>
+<p class="detail-text">Every other path involves alignment with a cosmic force. The Coil path involves <strong>consumption by one</strong>. The Hollow Serpent's entropy does not empower — it replaces. What looks like power is the systematic dissolution of the practitioner's own soul-resonance, replaced by Void-energy the Serpent can reclaim at will.</p>
+<div class="info-grid">
+  <div class="info-block"><div class="info-label">How it is gained</div><div class="info-text">Through corruption and the unmaking of one's own soul. The 13 Scions of the Coil grant dark miracles to those who serve universal dissolution. Each gift costs a portion of the Fate Number.</div></div>
+  <div class="info-block"><div class="info-label">Source of power</div><div class="info-text">Directly from Aethar / the Hollow Serpent's entropic energy. Purple Void-energy from the Abyssal Leviathan. Siderium Quartz (Weep-Stone) can reduce corruption but cannot reverse it.</div></div>
+  <div class="info-block"><div class="info-label">Associated classes</div><div class="info-text">Coil-Stalker (controlled corruption warrior — Lead-Scale Corruption gauge tracks Void-energy). Scion-Pledged (Warlock) with patron = a Scion or the Hollow Serpent directly.</div></div>
+  <div class="info-block"><div class="info-label">End state</div><div class="info-text">Full corruption = Void-Husk. The practitioner's Fate Number is dissolved entirely. They retain physical form but are driven entirely by the Coil's will — the undead equivalent.</div></div>
+</div>
+<p style="font-size:12px;font-weight:500;color:#e8e4dc;margin-bottom:6px">Sub-factions granting Coil magic</p>
+<div class="sub-path" onclick="this.classList.toggle('expanded')"><div class="sp-head"><span class="sp-name">The 13 Scions of the Ashen Coil</span><span class="sp-tag">One per zodiac sign</span></div><div class="sp-body">Each Scion serves as a patron for Scion-Pledged Warlocks — granting spells of entropy, shadow, and psychic rot specific to their sign's domain twisted into its inverse. The Scion of the Perfect Blight specifically targets the Weeping Silver Lotus — the only cure for their signature weapon.</div></div>
+<div class="sub-path" onclick="this.classList.toggle('expanded')"><div class="sp-head"><span class="sp-name">Fang of Forbidden Truth</span><span class="sp-tag">Caldera ritual cell</span></div><div class="sp-body">Operates near the Caldera of Deneb Kaitos. Dark miracles granted through ritual sacrifice in volcanic vents. Spells of destructive revelation — truths that break minds rather than illuminate them.</div></div>
+<div class="sub-path" onclick="this.classList.toggle('expanded')"><div class="sp-head"><span class="sp-name">Fang of the Whisper</span><span class="sp-tag">Intelligence / toxin operations</span></div><div class="sp-body">The Coil's intelligence cell — granted spells of compulsion, mind-reading, psychic rot, and toxin enhancement. Actively seeking the Heart-Sting Toxin from the Stygian Scorpion. Their operatives sometimes impersonate Loom of Fate agents.</div></div>
+<div class="warning-block"><div class="warning-title">The Corruption Economy</div><div class="warning-text">Siderium Quartz (Weep-Stone) reduces Lead-Scale Corruption — creating a direct material economy between the Coil's power and K'uh-la'an's most volatile resource. The Petal-Weavers of Deep Anthos are the world's only safe processors of Weep-Stone. If the Coil controls the Weep-Stone supply, they control the only in-field corruption cleanser. <strong>This is already a strategic priority for the Scion of the Perfect Blight.</strong></div></div>
+</div>
+</div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).style.display='block';
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+document.querySelectorAll('.panel').forEach(p=>{p.style.display='none'});
+document.getElementById('panel-siddha').style.display='block';
+</script>
+</body>
+</html>

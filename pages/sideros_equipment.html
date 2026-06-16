@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — Equipment & Economy</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;500;600&display=swap');
+:root{
+  --void:#090a08;--void-mid:#121510;--parchment:#f0e6cc;--parchment-dim:rgba(240,230,204,0.55);
+  --gold:#c9a84c;--gold-dim:#7a6028;--gold-bright:#e8c870;
+  --copper:#a06030;--silver:#909090;--platinum:#a0c0c0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--parchment);line-height:1.75;min-height:100vh}
+.hero{text-align:center;padding:3.5rem 1.5rem 3rem;border-bottom:1px solid rgba(201,168,76,0.15)}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:.8rem}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(20px,3.5vw,28px);font-weight:500;color:var(--gold-bright);letter-spacing:.05em;margin-bottom:.4rem}
+.hero-sub{font-size:14px;font-style:italic;color:var(--parchment-dim);max-width:500px;margin:0 auto}
+.nav-strip{display:flex;gap:4px;flex-wrap:wrap;padding:.65rem .9rem;border-bottom:1px solid rgba(201,168,76,0.1);background:var(--void-mid);position:sticky;top:0;z-index:20}
+.nav-btn{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border:1px solid rgba(201,168,76,0.18);border-radius:3px;background:transparent;color:var(--parchment-dim);cursor:pointer;transition:all .15s;white-space:nowrap}
+.nav-btn.active{background:rgba(201,168,76,0.08);color:var(--gold-bright);border-color:rgba(201,168,76,0.4)}
+.panel{display:none}.panel.active{display:block}
+.wrap{max-width:880px;margin:0 auto;padding:2rem 1.25rem 4rem}
+.lore{font-size:14px;color:rgba(240,230,204,0.8);line-height:1.85;margin-bottom:.9rem}
+.lore strong{color:var(--parchment);font-weight:500}
+.sec{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:1.5rem 0 .65rem;display:flex;align-items:center;gap:.6rem}
+.sec::after{content:'';flex:1;height:1px;background:rgba(201,168,76,0.1)}
+.data-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:1rem}
+.data-table th{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);padding:6px 10px;text-align:left;border-bottom:1px solid rgba(201,168,76,0.18)}
+.data-table td{padding:6px 10px;border-bottom:1px solid rgba(201,168,76,0.06);color:rgba(240,230,204,0.75);vertical-align:top;line-height:1.5;font-size:12px}
+.data-table td:first-child{color:var(--parchment);font-weight:500}
+.data-table td.price{color:var(--gold-bright);font-family:'Cinzel',serif;font-size:11px;text-align:right;white-space:nowrap}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:rgba(201,168,76,0.02)}
+.note{background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.18);border-radius:7px;padding:10px 12px;margin:.75rem 0;font-size:12px;color:rgba(240,230,204,0.75);line-height:1.65}
+.note strong{color:var(--parchment);font-weight:500}
+.currency-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem}
+.currency-card{border-radius:8px;padding:10px 12px;text-align:center;border:1px solid}
+.cc-name{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem;display:block}
+.cc-value{font-size:18px;font-weight:500;margin-bottom:.2rem}
+.cc-note{font-size:11px;font-style:italic;opacity:.7}
+.region-grid{display:grid;gap:7px;margin-bottom:1rem}
+.region{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.1);border-radius:8px;padding:11px 14px;cursor:pointer;overflow:hidden;transition:border-color .15s}
+.region:hover,.region.open{border-color:rgba(201,168,76,0.32)}
+.rh{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.rn{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.04em;color:var(--gold-bright)}
+.rc{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:3px;border:1px solid rgba(201,168,76,0.22);color:var(--gold-dim);white-space:nowrap;flex-shrink:0}
+.rb{display:none;margin-top:9px;padding-top:9px;border-top:1px solid rgba(201,168,76,0.08);font-size:13px;color:rgba(240,230,204,0.75);line-height:1.68}
+.region.open .rb{display:block}
+.rb strong{color:var(--parchment);font-weight:500}
+.rb em{color:var(--gold-dim)}
+.material-grid{display:grid;gap:8px}
+.material{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.12);border-radius:9px;padding:12px 14px;cursor:pointer;overflow:hidden;transition:border-color .15s}
+.material:hover,.material.open{border-color:rgba(201,168,76,0.35)}
+.mh{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.mn{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.04em;color:var(--gold-bright)}
+.mp{font-family:'Cinzel',serif;font-size:10px;color:var(--gold-dim);white-space:nowrap;flex-shrink:0}
+.mb{display:none;margin-top:9px;padding-top:9px;border-top:1px solid rgba(201,168,76,0.08);font-size:13px;color:rgba(240,230,204,0.75);line-height:1.68}
+.material.open .mb{display:block}
+.mb strong{color:var(--parchment);font-weight:500}
+.mb em{color:var(--gold-dim)}
+.renamed{background:rgba(192,64,64,0.06);border-color:rgba(192,64,64,0.2)}
+.new-mat{background:rgba(74,138,86,0.04);border-color:rgba(74,138,86,0.2)}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-eyebrow">Sideros / Astrolan — Player Reference</div>
+  <h1 class="hero-title">Equipment & Economy</h1>
+  <p class="hero-sub">Weapons, armor, gear, services, and the currency systems of Sideros — from the Duchy Compact's Gold Marks to the Weep-Stone shards of K'uh-la'an.</p>
+</div>
+<div class="nav-strip">
+  <button class="nav-btn active" onclick="show('currency',this)">Currency</button>
+  <button class="nav-btn" onclick="show('weapons',this)">Weapons</button>
+  <button class="nav-btn" onclick="show('armor',this)">Armor & Shields</button>
+  <button class="nav-btn" onclick="show('gear',this)">Adventuring Gear</button>
+  <button class="nav-btn" onclick="show('services',this)">Services</button>
+  <button class="nav-btn" onclick="show('special',this)">Special Materials</button>
+</div>
+
+<!-- ══════════════════════ CURRENCY ══════════════════════ -->
+<div class="panel active" id="panel-currency"><div class="wrap">
+
+  <p class="lore">A unified global currency does not exist in Sideros. Each political bloc and cultural region maintains its own monetary system, reflecting its values as much as its economy. The Gold Mark is the Duchy Compact's inter-regional trade standard — adopted when the three bonded castellans who negotiated the Compact recognized that unified currency was as essential as unified law. But outside the Compact's reach, wealth takes entirely different forms.</p>
+
+  <p class="lore">The global economy is currently at a <strong>critical tipping point.</strong> Traditional metallic currencies are experiencing severe inflation and instability as the authority of ancient empires — most visibly the Leonine Crown — wanes. Wealth is aggressively shifting away from gold and land ownership toward the hoarding of <strong>magical minerals and survival-critical resources</strong>: Aether-Dampening Ore, Weep-Stone, Resonant Geodes, Hearthwood. Those who control the extraction of raw magical catalysts or the distribution of life-extending Moon-Petal Lotus wield far more practical authority over global markets than any king or jarl sitting upon a traditional throne. The three great trade corridors — the Western Sea Lanes, the Southern Sea Circuits, and the Aetherial Skypaths — are each under active disruption (see Trade Routes below).</p>
+
+  <div class="sec">The Duchy Compact Standard</div>
+  <p class="lore" style="margin-bottom:.75rem">Used across Terra Firma and the Aetherian trade zones. Accepted at posted exchange rates in most major port cities worldwide.</p>
+  <div class="currency-row">
+    <div class="currency-card" style="background:rgba(160,96,48,0.06);border-color:rgba(160,96,48,0.3)">
+      <span class="cc-name" style="color:var(--copper)">Copper Coin</span>
+      <div class="cc-value" style="color:var(--copper)">1 cp</div>
+      <div class="cc-note">100 cp = 1 Silver Mark</div>
+    </div>
+    <div class="currency-card" style="background:rgba(144,144,144,0.06);border-color:rgba(144,144,144,0.3)">
+      <span class="cc-name" style="color:var(--silver)">Silver Mark</span>
+      <div class="cc-value" style="color:var(--silver)">10 sm</div>
+      <div class="cc-note">10 sm = 1 Gold Mark</div>
+    </div>
+    <div class="currency-card" style="background:rgba(201,168,76,0.06);border-color:rgba(201,168,76,0.3)">
+      <span class="cc-name" style="color:var(--gold-bright)">Gold Mark</span>
+      <div class="cc-value" style="color:var(--gold-bright)">1 gm</div>
+      <div class="cc-note">Standard inter-regional unit</div>
+    </div>
+    <div class="currency-card" style="background:rgba(160,192,192,0.06);border-color:rgba(160,192,192,0.3)">
+      <span class="cc-name" style="color:var(--platinum)">Platinum Crown</span>
+      <div class="cc-value" style="color:var(--platinum)">10 pc</div>
+      <div class="cc-note">10 gm = 1 pc · Rarely handled</div>
+    </div>
+  </div>
+
+  <div class="sec">Cost of Living</div>
+  <table class="data-table">
+    <tr><th>Lifestyle</th><th>Daily Cost</th><th>What It Provides</th></tr>
+    <tr><td>Wretched</td><td class="price">Free</td><td>Sleeping rough, found food, no shelter. Endurance Warding Resonance DC 10 each week or gain 1 Exhaustion level.</td></tr>
+    <tr><td>Squalid</td><td class="price">1 sm</td><td>Flophouse bunk or stable. Adequate to survive without consequence.</td></tr>
+    <tr><td>Poor</td><td class="price">5 sm</td><td>Shared lodging, simple meals, basic amenities. Most laborers and traveling workers.</td></tr>
+    <tr><td>Modest</td><td class="price">1 gm</td><td>Private room, decent meals, stabling for a horse. Standard for skilled craftspeople and merchants.</td></tr>
+    <tr><td>Comfortable</td><td class="price">2 gm</td><td>Good inn room, quality food, minor luxuries. Standard for successful adventurers and junior officials.</td></tr>
+    <tr><td>Wealthy</td><td class="price">4 gm</td><td>Fine accommodation, excellent food, servants available, access to higher social circles.</td></tr>
+    <tr><td>Aristocratic</td><td class="price">10+ gm</td><td>Private manor or suite, personal staff, access to all social levels. Expected for nobles and their guests.</td></tr>
+  </table>
+
+  <div class="sec">Regional Currencies</div>
+  <p class="lore" style="margin-bottom:.75rem">Each region's currency reflects its culture and values. Gold Marks are accepted almost everywhere — but at a premium outside the Compact, and in some regions not at all.</p>
+
+  <div class="region-grid">
+
+    <div class="region open" onclick="this.classList.toggle('open')">
+      <div class="rh"><div class="rn">Leonine Empire — Solar Crowns</div><span class="rc">Duchy of Fire · Gold</span></div>
+      <div class="rb">Heavy gold pieces stamped with the roaring lion or the radiant sun. The traditional currency of the Leonine Empire's golden age. <strong>Current status:</strong> As the succession crisis deepens and Lord Leo's legitimacy fractures, Solar Crowns are being hoarded by the nobility rather than circulated — a sign of institutional distrust that merchants read as clearly as any political declaration. At major trade hubs like Ram-Wake Port, merchants increasingly rely on Gold Marks or foreign silver rather than wait for Solar Crowns that may not materialize.<br><br><em>Exchange: 1 Solar Crown = 1 Gold Mark at face value; currently trading at 0.9 gm in most markets due to instability.</em></div>
+    </div>
+
+    <div class="region" onclick="this.classList.toggle('open')">
+      <div class="rh"><div class="rn">Republic of Argentum — Spires</div><span class="rc">Duchy of Earth · Silver</span></div>
+      <div class="rb">Highly standardized geometric silver bars and multi-faceted coins regulated by the Order of Pure Reason. The Spire takes its name from the coin's faceted upper edge. <strong>The Order treats debasement of Spires as a crime against cosmic law</strong> — debasing a Spire is not merely fraud but a spiritual violation, prosecuted by the Order's enforcement arm with the same severity as Working crimes within Dunmarim territory.<br><br>Taurian Plains trade is commodity-backed alongside the Spire — <em>Taurian Grain contracts</em> are accepted as currency at all major western trade posts, their value pegged to the current harvest assessment. A standard grain contract trades at 10–15 gm equivalent depending on the season. <strong>What the markets don't know:</strong> Lady Taurus secretly employs Earth Siddha mantras through her hidden Triad's Vrishabha Siddha connection to force crops to grow with unnatural, magically-sustained vitality. This is the true reason the Taurian breadbasket consistently outperforms natural expectations. If this secret were exposed — or if the Mycelian Brood's subterranean network disrupts the Ceque Lines that the Siddha mantras draw on — Taurian Grain's yield would collapse within a single season, causing western famine and cascading political crisis. This is precisely why the Ashen Coil's blight-rot campaign and the Brood's territorial expansion both target the Taurian Plains.<br><br><em>Exchange: 1 Spire = 8 sm. Taurian Grain contracts: face value only at Argentum and Taurian posts; 70% face value elsewhere.</em></div>
+    </div>
+
+    <div class="region" onclick="this.classList.toggle('open')">
+      <div class="rh"><div class="rn">Stone Kingdom of Dunmar — Iron Marks & Black Iron</div><span class="rc">Dunmarim · Ore-Backed</span></div>
+      <div class="rb">The Dunmarim use deep-minted Iron Marks internally for daily commerce (1 Iron Mark = 5 sm). But their true economic leverage on the global stage comes from direct barter of <strong>Black Iron</strong> — the highest quality smithing ore in the world, found exclusively in Dunmar's deep veins. Black Iron is dense, consistent, and produces blades that hold an edge longer than any alternative. For a Dunmarim, paper promises are worthless; wealth is measured by weight, density, and structural utility.<br><br>The <strong>Aether-Dampening Ore</strong> is a separate strategic export entirely — traded to the Order of Pure Reason in exchange for political agreements, not priced in any standard currency. Its value is measured in concessions, not coins.<br><br><em>Exchange: 1 Iron Mark = 5 sm. Black Iron barter: 1 lb Black Iron ≈ 80–120 gm equivalent depending on grade and buyer.</em></div>
+    </div>
+
+    <div class="region" onclick="this.classList.toggle('open')">
+      <div class="rh"><div class="rn">Aetheria — Balances & the Ink Exchange</div><span class="rc">Floating Isles · Alloy & Parchment</span></div>
+      <div class="rb">Two systems operate in Aetheria simultaneously. In <em>Equilibrium</em>, Lord Libra's judiciary enforces the <strong>Balance</strong> — a precisely weighted, feather-light alloy coin whose debasement is considered a spiritual crime against divine law. The coin's weight is monitored by Libra-aspected Siddha; a Balance that has lost even a fraction of its weight is invalid for judicial transactions.<br><br>Within the Twin Republics, the <strong>Ink and Scroll Exchange</strong> operates in parallel — magically watermarked parchment slips certified by the Siddha of the Divine Word, acting as promissory notes backed by volatile raw Aether or historical lore. These notes cannot be counterfeited (the watermark is Aetheric), but their backing commodity — raw Aether or lore — fluctuates in value based on Conclave news from Argent Spire.<br><br><em>Exchange: 1 Balance = 1 gm. Ink Exchange notes: face value at Twin Republic posts; 60–80% face value elsewhere; worthless to merchants who cannot access the backing commodity.</em></div>
+    </div>
+
+    <div class="region" onclick="this.classList.toggle('open')">
+      <div class="rh"><div class="rn">K'uh-la'an — Weep-Stone Shards</div><span class="rc">Southern Jungle · Crystal</span></div>
+      <div class="rb"><strong>Siderium Quartz — called Weep-Stone by common merchants — is K'uh-la'an's primary internal currency.</strong> Crystal shards hum with volatile Aetheric energy; denominations are determined by size, clarity, and resonance frequency rather than weight. The Petal-Weaver Castes maintain the assay standards. For transactions of immense value — securing the loyalty of a city-state, purchasing elite artifacts — the elite trade in <strong>Moon-Petal Lotus</strong>, a rare flora capable of curing magical blights and granting prolonged vitality.<br><br>The 400 Gold Mark price for Weep-Stone in Terra Firma markets reflects what <em>outsiders</em> pay to acquire it. Internally, K'uh-la'an's economy runs on shard denominations that have no Gold Mark equivalent — they are a different kind of money entirely.<br><br><em>Exchange: Weep-Stone (3-charge processed): 400 gm in Terra Firma; K'uh-la'an internal pricing non-convertible. Moon-Petal Lotus: not sold to outsiders at any standard price — barter only, for something of equivalent narrative significance.</em></div>
+    </div>
+
+    <div class="region" onclick="this.classList.toggle('open')">
+      <div class="rh"><div class="rn">Khem-Ma'at — Sun-Kissed Adamas Crystal</div><span class="rc">Desert Kingdom · Crystal-Backed</span></div>
+      <div class="rb">The Dragon Lords of Khem-Ma'at operate a bi-metallic system: copper rings for daily commerce, and <strong>Sun-Kissed Adamas crystal</strong> — brilliant golden crystal found exclusively in the southern mountains — as the ultimate standard of high-value exchange. The crystal itself is not spent; it is held as collateral or transferred in sealed assay chests. Because Adamas crystal can be refined into weapons devastating to the undead (see Special Materials), it carries an immense strategic premium and places Khem-Ma'at at the center of global anti-undead resource politics.<br><br><em>Exchange: Copper ring = 2 cp. Sun-Kissed Adamas crystal: no standard Gold Mark equivalent — treated as a strategic material, not a currency, outside Khem-Ma'at.</em></div>
+    </div>
+
+    <div class="region" onclick="this.classList.toggle('open')">
+      <div class="rh"><div class="rn">Jade Empire — Jade Coins</div><span class="rc">Eastern Empire · Jade</span></div>
+      <div class="rb">Jade Coins are struck from genuine jade, graded by the Azure Dragon Palace's assayers. The smallest denomination is Silver-equivalent — Copper Coins are not recognized. <strong>1 Jade Coin = 2 Gold Marks.</strong> The Jade Empire's economy is partially commoditized alongside the coin: Resonant Geodes are priced in Jade Coins exclusively within imperial territory, and the Grand Prime Forgeman's Conclave sets weekly Geode exchange rates.<br><br><em>Exchange: 1 Jade Coin = 2 gm. Jade Coins not accepted in Dunmar or K'uh-la'an.</em></div>
+    </div>
+
+    <div class="region" onclick="this.classList.toggle('open')">
+      <div class="rh"><div class="rn">Mori-Ōkami (Wolf-Shifter Territories) — Gift Economy & Barter</div><span class="rc">Northern Frontier · Barter</span></div>
+      <div class="rb">The Wolf-Shifter clans operate on a gift economy and strict barter system. Coins of any kind are regarded as meaningless abstraction — wealth is what you have made and what you are willing to give. Primary barter goods: <strong>Hearthwood</strong> (fire-immune, heat-storing timber from the deep Boreal forests — see Special Materials), masterwork weapons, and trade rights for Black Iron from Dunmarim runners who know the Uji clan routes.<br><br>A party that arrives in Wolf-Shifter territory with coin will be politely ignored. A party that arrives with Hearthwood, a quality weapon, or a genuine debt to call will be taken seriously.<br><br><em>Exchange: No coin equivalent. Hearthwood barter: 1 Hearthwood beam ≈ 150 gm equivalent to outside buyers; within Mori-Ōkami territories, priced only in reciprocal gift obligations.</em></div>
+    </div>
+
+    <div class="region" onclick="this.classList.toggle('open')">
+      <div class="rh"><div class="rn">Tuathan Archipelago — Noctilith & Seasonal Bargains</div><span class="rc">Fae Isles · Moon-Stone & Metaphysical</span></div>
+      <div class="rb">The fae-blooded inhabitants of the Tuathan Archipelago trade via the turning of seasons and metaphysical bargain. When dealing with the mainland at ports like Calm Harbour, they exchange <strong>Noctilith</strong> (called Moon-Stone by outsiders) — a pearlescent substance that absorbs moonlight and serves as a powerful focus for illusion Working. For transactions of deep significance, they trade in binding seasonal promises rather than any material substance at all.<br><br>Noctilith has no monetary value within Tuathan culture — it is a craft material, not currency. Its monetary value to outsiders (particularly Resonance Seekers and Stellar Cartographers) is purely based on its Working-focus applications.<br><br><em>Exchange: Noctilith (palm-sized piece): 200–500 gm to Working practitioners in Terra Firma; varies by purity and moonphase during collection.</em></div>
+    </div>
+
+    <div class="region" onclick="this.classList.toggle('open')">
+      <div class="rh"><div class="rn">Ashélands of Orun-Ayé — Cowrie & Barter</div><span class="rc">Southern Continent · Mixed</span></div>
+      <div class="rb">Rural Ashélands operate on mixed cowrie-shell and barter systems. Gold Marks are accepted in Port Damaris and all major trading towns. In Orisha shrine communities, <strong>ritual offerings</strong> function as currency within temple economies — goods consecrated to a patron Orisha have value within that shrine's network regardless of their material worth. A Healing Draught consecrated to Oshun is worth significantly more inside an Oshun shrine complex than on the open market.<br><br><em>Exchange: Gold Marks accepted in urban centres. Cowrie: regional only, no Gold Mark conversion. Ritual economy: internal to shrine networks, not convertible.</em></div>
+    </div>
+
+    <div class="region" onclick="this.classList.toggle('open')">
+      <div class="rh"><div class="rn">Sagittarian Steppes — Horse Economy</div><span class="rc">Open Steppes · Commodity</span></div>
+      <div class="rb">The Steppe clans and Centaur-Kin communities use horses as the de facto currency. A prime riding horse ≈ 50 Gold Marks equivalent, a prime warhorse ≈ 400 Gold Marks, a breeding pair ≈ 150 Gold Marks. Gold Marks are accepted but regarded as a foreign abstraction — a party that pays in coin is taken less seriously than one that pays in horses, and a party that can offer a Steppe-bred warhorse has leverage that coin cannot buy.<br><br><em>Exchange: Prime riding horse ≈ 50 gm. Warhorse ≈ 400 gm. Breeding pair ≈ 150 gm.</em></div>
+    </div>
+
+  </div>
+  <div class="sec">Trade Routes — The Three Contested Corridors</div>
+  <p class="lore" style="margin-bottom:.75rem">Commerce flows across Astrolan via three primary arteries, each carrying specific commodities between regional blocs — and each currently under active disruption.</p>
+
+  <table class="data-table">
+    <tr><th>Route</th><th>Key Actors</th><th>Core Commodities</th><th>Current Disruption</th></tr>
+    <tr>
+      <td><strong>The Western Sea Lanes</strong></td>
+      <td>Leonine Empire, Republic of Argentum, Dunmarim</td>
+      <td>Taurian Grain, Black Iron, Fine Marble, Finished Goods</td>
+      <td>Kuri operatives infiltrating major ports — their Infrastructure Knowledge makes them uniquely effective saboteurs. Civil instability in Aurelia (Leonine capital) as the succession crisis deepens. Solar Crown hoarding reducing liquidity at trading posts.</td>
+    </tr>
+    <tr>
+      <td><strong>The Southern Sea Circuits</strong></td>
+      <td>Khem-Ma'at merchants, K'uh-la'an Petal-Weaver Clans, Avian trade scouts</td>
+      <td>Sun-Kissed Adamas, Weep-Stone, Moon-Petal Lotus, Exotic Spices</td>
+      <td>The Serpent Coil Current — the vast oceanic phenomenon that swallows ships in the Mare Occultum — has intensified as the Abyssal Leviathan's dreaming grows more active. Avian scouts (the primary navigators of this circuit) report increased Leviathan-spawn activity on the southern approach routes. The Ashen Coil has been targeting Weep-Stone shipments specifically.</td>
+    </tr>
+    <tr>
+      <td><strong>The Aetherial Skypaths</strong></td>
+      <td>Floating islands of Aetheria, Twin Republics, Argent Spire agents</td>
+      <td>Liquid Ink (Aether-backed promissory medium), Raw Aether, Magical Scrolls, Ashé-harvested honey (lesser grade)</td>
+      <td>Unstable gravity fields around the <em>Scribe's Folly</em> ruins — a collapsed library in Aetheria whose experimental gravity Working shattered approximately sixty years ago. The <strong>Twin-Serpents</strong> (the Legendary Beast of Gemini) moved into the ruins shortly after the collapse and now use it as their primary lair. The gravity anomaly is not passive environmental damage — it is the combined Aetheric weight of two Legendary Beasts in residence. When the Twin-Serpents range away (as they currently have, toward Port Damaris), the anomaly lessens but does not clear. Cargo losses run at approximately 8% per transit when the Serpents are in residence; 3% when they have ranged. Merchants who want the Skypath fully cleared need the Twin-Serpents to permanently vacate the ruins — which is not a negotiation anyone has successfully initiated.</td>
+    </tr>
+  </table>
+
+  <div class="note"><strong>Note on Aetherial Honey:</strong> The Skypaths trade includes "Ashé-harvested honey" — a lesser product made by ordinary Ashé-attuned bees near Orisha shrines. This is a luxury good, not the Celestial Honey of the Queen Bee's Golden Hive. True Celestial Honey from the Golden Hive is not traded on any market at any price. The distinction matters — merchants who claim otherwise are selling the lesser product at inflated prices, and Stellar Cartographers can tell the difference immediately.</div>
+
+</div></div>
+
+<!-- ══════════════════════ WEAPONS ══════════════════════ -->
+<div class="panel" id="panel-weapons"><div class="wrap">
+  <div class="sec">Simple Weapons</div>
+  <table class="data-table">
+    <tr><th>Weapon</th><th>Damage</th><th>Properties</th><th>Cost</th></tr>
+    <tr><td>Club</td><td>1d4 bludgeoning</td><td>Light</td><td class="price">1 sm</td></tr>
+    <tr><td>Dagger</td><td>1d4 piercing</td><td>Finesse, Light, Thrown (20/60)</td><td class="price">2 gm</td></tr>
+    <tr><td>Greatclub</td><td>1d8 bludgeoning</td><td>Two-handed</td><td class="price">2 sm</td></tr>
+    <tr><td>Handaxe</td><td>1d6 slashing</td><td>Light, Thrown (20/60)</td><td class="price">5 gm</td></tr>
+    <tr><td>Light Hammer</td><td>1d4 bludgeoning</td><td>Light, Thrown (20/60)</td><td class="price">2 gm</td></tr>
+    <tr><td>Quarterstaff</td><td>1d6 bludgeoning</td><td>Versatile (1d8)</td><td class="price">2 sm</td></tr>
+    <tr><td>Spear</td><td>1d6 piercing</td><td>Thrown (20/60), Versatile (1d8)</td><td class="price">1 gm</td></tr>
+    <tr><td>Light Crossbow</td><td>1d8 piercing</td><td>Two-handed, Ranged (80/320), Loading</td><td class="price">25 gm</td></tr>
+    <tr><td>Shortbow</td><td>1d6 piercing</td><td>Two-handed, Ranged (80/320)</td><td class="price">25 gm</td></tr>
+    <tr><td>Sling</td><td>1d4 bludgeoning</td><td>Ranged (30/120)</td><td class="price">1 sm</td></tr>
+  </table>
+  <div class="sec">Martial Weapons</div>
+  <table class="data-table">
+    <tr><th>Weapon</th><th>Damage</th><th>Properties</th><th>Cost</th></tr>
+    <tr><td>Battleaxe</td><td>1d8 slashing</td><td>Versatile (1d10)</td><td class="price">10 gm</td></tr>
+    <tr><td>Flail</td><td>1d8 bludgeoning</td><td>—</td><td class="price">10 gm</td></tr>
+    <tr><td>Glaive</td><td>1d10 slashing</td><td>Heavy, Reach, Two-handed</td><td class="price">20 gm</td></tr>
+    <tr><td>Greatsword</td><td>2d6 slashing</td><td>Heavy, Two-handed</td><td class="price">50 gm</td></tr>
+    <tr><td>Longsword</td><td>1d8 slashing</td><td>Versatile (1d10)</td><td class="price">15 gm</td></tr>
+    <tr><td>Maul</td><td>2d6 bludgeoning</td><td>Heavy, Two-handed</td><td class="price">10 gm</td></tr>
+    <tr><td>Morningstar</td><td>1d8 piercing</td><td>—</td><td class="price">15 gm</td></tr>
+    <tr><td>Pike</td><td>1d10 piercing</td><td>Heavy, Reach, Two-handed</td><td class="price">5 gm</td></tr>
+    <tr><td>Rapier</td><td>1d8 piercing</td><td>Finesse</td><td class="price">25 gm</td></tr>
+    <tr><td>Scimitar</td><td>1d6 slashing</td><td>Finesse, Light</td><td class="price">25 gm</td></tr>
+    <tr><td>Shortsword</td><td>1d6 piercing</td><td>Finesse, Light</td><td class="price">10 gm</td></tr>
+    <tr><td>Warhammer</td><td>1d8 bludgeoning</td><td>Versatile (1d10)</td><td class="price">15 gm</td></tr>
+    <tr><td>Whip</td><td>1d4 slashing</td><td>Finesse, Reach</td><td class="price">2 gm</td></tr>
+    <tr><td>Hand Crossbow</td><td>1d6 piercing</td><td>Light, Ranged (30/120), Loading</td><td class="price">75 gm</td></tr>
+    <tr><td>Heavy Crossbow</td><td>1d10 piercing</td><td>Heavy, Two-handed, Ranged (100/400), Loading</td><td class="price">50 gm</td></tr>
+    <tr><td>Longbow</td><td>1d8 piercing</td><td>Heavy, Two-handed, Ranged (150/600)</td><td class="price">50 gm</td></tr>
+  </table>
+  <div class="note"><strong>Weapon Properties:</strong> <em>Finesse</em> — use Forcefulness or Swiftness for Strike Resonance and damage (your choice). <em>Light</em> — dual-wield with another Light weapon. <em>Thrown</em> — can be thrown (normal/maximum range; Resonant Discord beyond normal range). <em>Two-handed</em> — requires both hands. <em>Versatile</em> — one or two-handed; two-handed damage in parentheses. <em>Heavy</em> — Resonant Discord for Small creatures. <em>Reach</em> — melee reach extends to 10 ft. <em>Loading</em> — one Strike Resonance per Act regardless of Path features.</div>
+</div></div>
+
+<!-- ══════════════════════ ARMOR ══════════════════════ -->
+<div class="panel" id="panel-armor"><div class="wrap">
+  <div class="sec">Light Armor</div>
+  <table class="data-table">
+    <tr><th>Armor</th><th>Guard Rating</th><th>Stealth</th><th>Weight</th><th>Cost</th></tr>
+    <tr><td>Padded</td><td>11 + Swiftness mod</td><td>Resonant Discord</td><td>8 lbs</td><td class="price">5 gm</td></tr>
+    <tr><td>Leather</td><td>11 + Swiftness mod</td><td>—</td><td>10 lbs</td><td class="price">10 gm</td></tr>
+    <tr><td>Studded Leather</td><td>12 + Swiftness mod</td><td>—</td><td>13 lbs</td><td class="price">45 gm</td></tr>
+  </table>
+  <div class="sec">Medium Armor</div>
+  <table class="data-table">
+    <tr><th>Armor</th><th>Guard Rating</th><th>Stealth</th><th>Min. Forcefulness</th><th>Cost</th></tr>
+    <tr><td>Hide</td><td>12 + Swiftness mod (max +2)</td><td>—</td><td>—</td><td class="price">10 gm</td></tr>
+    <tr><td>Chain Shirt</td><td>13 + Swiftness mod (max +2)</td><td>—</td><td>—</td><td class="price">50 gm</td></tr>
+    <tr><td>Scale Mail</td><td>14 + Swiftness mod (max +2)</td><td>Resonant Discord</td><td>—</td><td class="price">50 gm</td></tr>
+    <tr><td>Breastplate</td><td>14 + Swiftness mod (max +2)</td><td>—</td><td>—</td><td class="price">400 gm</td></tr>
+    <tr><td>Half Plate</td><td>15 + Swiftness mod (max +2)</td><td>Resonant Discord</td><td>—</td><td class="price">750 gm</td></tr>
+  </table>
+  <div class="sec">Heavy Armor</div>
+  <table class="data-table">
+    <tr><th>Armor</th><th>Guard Rating</th><th>Stealth</th><th>Min. Forcefulness</th><th>Cost</th></tr>
+    <tr><td>Ring Mail</td><td>14</td><td>Resonant Discord</td><td>—</td><td class="price">30 gm</td></tr>
+    <tr><td>Chain Mail</td><td>16</td><td>Resonant Discord</td><td>13</td><td class="price">75 gm</td></tr>
+    <tr><td>Splint</td><td>17</td><td>Resonant Discord</td><td>15</td><td class="price">200 gm</td></tr>
+    <tr><td>Full Plate</td><td>18</td><td>Resonant Discord</td><td>15</td><td class="price">1,500 gm</td></tr>
+  </table>
+  <div class="sec">Shields</div>
+  <table class="data-table">
+    <tr><th>Shield</th><th>Guard Rating Bonus</th><th>Cost</th></tr>
+    <tr><td>Buckler</td><td>+1</td><td class="price">5 gm</td></tr>
+    <tr><td>Standard Shield</td><td>+2</td><td class="price">10 gm</td></tr>
+    <tr><td>Tower Shield</td><td>+3 (Resonant Discord on Strike Resonances while wielded)</td><td class="price">40 gm</td></tr>
+  </table>
+  <div class="note"><strong>Armor Mastery:</strong> Without Mastery in a type of armor, wearing it imposes Resonant Discord on all Active Resonances using Forcefulness and Swiftness, and on all Warding Resonances. Path features and Kindred traits grant Armor Mastery — check your Path. <strong>Minimum Forcefulness:</strong> Heavy armor with a minimum Forcefulness score cannot be equipped by characters who don't meet it.</div>
+</div></div>
+
+<!-- ══════════════════════ GEAR ══════════════════════ -->
+<div class="panel" id="panel-gear"><div class="wrap">
+  <div class="sec">Common Gear</div>
+  <table class="data-table">
+    <tr><th>Item</th><th>Cost</th><th>Notes</th></tr>
+    <tr><td>Backpack</td><td class="price">2 gm</td><td>Holds 1 cubic ft / 30 lbs</td></tr>
+    <tr><td>Bedroll</td><td class="price">1 gm</td><td>Required for wilderness Deep Attunement</td></tr>
+    <tr><td>Candle</td><td class="price">1 cp</td><td>Bright light 5 ft, dim light 5 ft beyond; burns 1 hour</td></tr>
+    <tr><td>Crowbar</td><td class="price">2 gm</td><td>Resonant Fortune on Forcefulness Active Resonances to pry open doors or containers</td></tr>
+    <tr><td>Healer's Kit</td><td class="price">5 gm</td><td>10 uses; stabilize downed character without Medicine Active Resonance (uses 1 charge)</td></tr>
+    <tr><td>Lantern (hooded)</td><td class="price">5 gm</td><td>Bright light 30 ft, dim light 30 ft beyond; can be shuttered to conceal light</td></tr>
+    <tr><td>Oil (flask)</td><td class="price">1 sm</td><td>Fuel for lantern (6 hours); can be used as weapon (1d4 fire on ignition)</td></tr>
+    <tr><td>Rations (1 day)</td><td class="price">5 sm</td><td>Preserved food; required to avoid Wretched lifestyle consequences</td></tr>
+    <tr><td>Rope (50 ft, hemp)</td><td class="price">1 gm</td><td>Snapped by DC 17 Forcefulness Active Resonance</td></tr>
+    <tr><td>Rope (50 ft, silk)</td><td class="price">10 gm</td><td>Lighter; snapped by DC 20 Forcefulness Active Resonance</td></tr>
+    <tr><td>Tent (two-person)</td><td class="price">2 gm</td><td>Required for comfortable wilderness rest; removes Wretched lifestyle Warding Resonance requirement</td></tr>
+    <tr><td>Thieves' Tools</td><td class="price">25 gm</td><td>Required for picking locks and disabling traps; Mastery required for most applications</td></tr>
+    <tr><td>Tinderbox</td><td class="price">5 sm</td><td>Start a fire in 1 minute (or 1 Act in emergencies, DC 10 Swiftness Active Resonance)</td></tr>
+    <tr><td>Torches (10)</td><td class="price">1 sm</td><td>Bright light 20 ft, dim light 20 ft beyond; burns 1 hour; improvised weapon (1d4 fire)</td></tr>
+    <tr><td>Waterskin</td><td class="price">2 sm</td><td>Holds 4 pints; required for daily hydration</td></tr>
+  </table>
+  <div class="sec">Alchemical & Healing Items</div>
+  <table class="data-table">
+    <tr><th>Item</th><th>Cost</th><th>Effect</th></tr>
+    <tr><td>Healing Draught (standard)</td><td class="price">50 gm</td><td>Restores 2d4+2 Vitality. Instinct to drink (or administer to adjacent creature as Act).</td></tr>
+    <tr><td>Healing Draught (greater)</td><td class="price">150 gm</td><td>Restores 4d4+4 Vitality.</td></tr>
+    <tr><td>Antidote</td><td class="price">50 gm</td><td>Removes all stacks of Corrupted condition (poison sources only). Resonant Fortune on Endurance Warding Resonances vs. poison for 1 hour.</td></tr>
+    <tr><td>Weep-Stone (Siderium Quartz)</td><td class="price">400 gm</td><td>3 charges. Each charge: −2 Lead-Scale Corruption levels (Coil-Stalker); disrupts Void-Husk coordination; component in Kanya blight-rot purification. This price reflects Terra Firma market rate — within K'uh-la'an, Weep-Stone shards are the primary currency.</td></tr>
+    <tr><td>Smoke Pellet</td><td class="price">25 gm</td><td>As Act, throw up to 20 ft — creates heavily obscured area 10 ft radius for 1 Pulse. Wind disperses it.</td></tr>
+    <tr><td>Tanglefoot Bag</td><td class="price">50 gm</td><td>Strike Resonance as thrown weapon (10 ft range): on hit, target makes Swiftness Warding Resonance DC 12 or is Seized for 1 minute.</td></tr>
+    <tr><td>Thunderstone</td><td class="price">30 gm</td><td>Strike Resonance as thrown weapon (20 ft range): 2d6 thunder in 5-ft radius; Endurance Warding DC 12 or Deafened for 1 Pulse.</td></tr>
+  </table>
+  <div class="sec">Starter Packs</div>
+  <table class="data-table">
+    <tr><th>Pack</th><th>Cost</th><th>Contents</th></tr>
+    <tr><td>Burglar's Pack</td><td class="price">16 gm</td><td>Backpack, 1,000 ball bearings, 10 ft string, bell, 5 candles, crowbar, hammer, 10 pitons, hooded lantern, 2 flasks oil, 5 days rations, tinderbox, waterskin, 50 ft hemp rope</td></tr>
+    <tr><td>Diplomat's Pack</td><td class="price">39 gm</td><td>Chest, 2 cases for maps/scrolls, fine clothes, bottle of ink, ink pen, lamp, 2 flasks oil, 5 sheets paper, vial of perfume, sealing wax, soap</td></tr>
+    <tr><td>Explorer's Pack</td><td class="price">10 gm</td><td>Backpack, bedroll, mess kit, tinderbox, 10 torches, 10 days rations, waterskin, 50 ft hemp rope</td></tr>
+    <tr><td>Priest's Pack</td><td class="price">19 gm</td><td>Backpack, blanket, 10 candles, tinderbox, alms box, 2 blocks incense, censer, vestments, 2 days rations, waterskin</td></tr>
+    <tr><td>Scholar's Pack</td><td class="price">40 gm</td><td>Backpack, book of lore, bottle of ink, ink pen, 10 sheets parchment, small bag of sand, small knife</td></tr>
+  </table>
+</div></div>
+
+<!-- ══════════════════════ SERVICES ══════════════════════ -->
+<div class="panel" id="panel-services"><div class="wrap">
+  <div class="sec">Common Services</div>
+  <table class="data-table">
+    <tr><th>Service</th><th>Cost</th><th>Notes</th></tr>
+    <tr><td>Messenger (city, same day)</td><td class="price">2 sm</td><td>Within a single city district</td></tr>
+    <tr><td>Messenger (long distance)</td><td class="price">1 sm per mile</td><td>Inter-city courier; minimum 1 gm</td></tr>
+    <tr><td>Hireling (unskilled, 1 day)</td><td class="price">2 sm</td><td>Carrying, digging, basic labor</td></tr>
+    <tr><td>Hireling (skilled craftsperson, 1 day)</td><td class="price">2 gm</td><td>Mastered trade — blacksmith, carpenter, etc.</td></tr>
+    <tr><td>Hireling (guard, 1 day)</td><td class="price">5 sm</td><td>Basic armored guard; does not enter dungeons</td></tr>
+    <tr><td>Hireling (veteran guard, 1 day)</td><td class="price">2 gm</td><td>Will accompany into moderate danger</td></tr>
+    <tr><td>Hireling (expert, 1 day)</td><td class="price">10+ gm</td><td>Sage, translator, specialized professional</td></tr>
+    <tr><td>Passage (river barge)</td><td class="price">1 sm/day</td><td>Shared deck; includes basic meals</td></tr>
+    <tr><td>Passage (ship, coastal)</td><td class="price">5 sm/day</td><td>Hammock berth; meals included</td></tr>
+    <tr><td>Passage (ship, private cabin)</td><td class="price">2 gm/day</td><td>Private cabin; meals included</td></tr>
+    <tr><td>Stabling (horse, 1 day)</td><td class="price">5 sm</td><td>Includes feed and basic grooming</td></tr>
+    <tr><td>Working (1st tier)</td><td class="price">10–50 gm</td><td>Varies by practitioner and Working complexity</td></tr>
+    <tr><td>Working (3rd tier)</td><td class="price">100–300 gm</td><td>Identification, Revivification, etc.</td></tr>
+    <tr><td>Working (5th tier)</td><td class="price">500+ gm</td><td>Restoration, Raise Dead; rare availability</td></tr>
+    <tr><td>Fate Number Reading (Stellar Cartographer)</td><td class="price">50–200 gm</td><td>Varies by Cartographer's Resonance Depth and reputation</td></tr>
+    <tr><td>Weep-Stone Treatment (Kanya Siddha)</td><td class="price">150 gm + 1 Weep-Stone</td><td>Removes 1d4 Void-Touched Exposure stacks; cures Ashen Coil blight-rot</td></tr>
+  </table>
+  <div class="sec">Mounts & Transport</div>
+  <table class="data-table">
+    <tr><th>Mount / Vehicle</th><th>Cost</th><th>Speed</th><th>Notes</th></tr>
+    <tr><td>Draft Horse</td><td class="price">50 gm</td><td>40 ft</td><td>Carry capacity 540 lbs; not suitable for combat</td></tr>
+    <tr><td>Riding Horse</td><td class="price">75 gm</td><td>60 ft</td><td>Standard mount; combat-trained horses cost 4× more</td></tr>
+    <tr><td>Warhorse</td><td class="price">400 gm</td><td>60 ft</td><td>Combat-trained; can make one hoof Strike Resonance (1d6 bludgeoning)</td></tr>
+    <tr><td>Mule</td><td class="price">8 gm</td><td>40 ft</td><td>Carry capacity 420 lbs; surefooted in rough terrain</td></tr>
+    <tr><td>Pony</td><td class="price">30 gm</td><td>40 ft</td><td>Suitable for Small riders; not combat-capable</td></tr>
+    <tr><td>Cart</td><td class="price">15 gm</td><td>—</td><td>Requires 1 draft horse or mule; capacity 200 lbs</td></tr>
+    <tr><td>Wagon</td><td class="price">35 gm</td><td>—</td><td>Requires 2 draft horses; capacity 400 lbs; covered option +20 gm</td></tr>
+    <tr><td>Rowboat</td><td class="price">50 gm</td><td>—</td><td>Capacity 4 Medium creatures + 300 lbs cargo</td></tr>
+    <tr><td>Keelboat</td><td class="price">3,000 gm</td><td>—</td><td>Crew 1–4; capacity 1/2 ton; rivers and coastal waters</td></tr>
+    <tr><td>Sailing Ship</td><td class="price">10,000 gm</td><td>—</td><td>Crew 20; capacity 100 tons; ocean-going</td></tr>
+    <tr><td>Saddle (standard)</td><td class="price">10 gm</td><td>—</td><td>Required for Resonant Fortune on Riding Active Resonances in combat</td></tr>
+    <tr><td>Saddlebags</td><td class="price">4 gm</td><td>—</td><td>Carry capacity 40 lbs (split between two bags)</td></tr>
+  </table>
+</div></div>
+
+<!-- ══════════════════════ SPECIAL MATERIALS ══════════════════════ -->
+<div class="panel" id="panel-special"><div class="wrap">
+  <p class="lore">Beyond standard materials, certain rare substances have Aetheric properties, strategic value, or world-historical significance that places them in a different category entirely. These are not simply expensive equipment. They are materials that the world's factions fight over, plot around, and build institutions to control.</p>
+
+  <div class="sec">Aetheric-Grade Materials</div>
+  <div class="material-grid">
+
+    <div class="material open" onclick="this.classList.toggle('open')">
+      <div class="mh"><div class="mn">Adamas · Precursor Alloy</div><span class="mp">2,000+ gm per lb</span></div>
+      <div class="mb">Recovered Kallos-era metal — the Precursor civilization's primary structural and weapons material. A weapon made of Adamas is treated as +1 for all purposes and cannot be damaged by mundane weapons. Requires an Aetheric Forge (Accord-Maker Tier III Blueprint) or Khem-Ma'at smithing conditions to work. Only a handful of Adamas smiths exist in the world.<br><br>Adamas is the refined metal. The raw crystal form found in Khem-Ma'at's southern mountains is <strong>Sun-Kissed Adamas crystal</strong> — processed through Khem-Ma'at's solar forge tradition into the worked metal form used for weapons and armor.</div>
+    </div>
+
+    <div class="material open" onclick="this.classList.toggle('open')">
+      <div class="mh"><div class="mn">Sun-Kissed Adamas · Solar-Forged</div><span class="mp">10,000+ gm per lb worked · Crystal form: strategic asset</span></div>
+      <div class="mb"><strong>Two forms exist:</strong><br><br><em>Crystal form (Sun-Kissed Adamas crystal):</em> Brilliant golden crystal found exclusively in Khem-Ma'at's southern mountains. Mined and held by the Dragon Lords as the highest standard of value in Khem-Ma'at's economy — transferred in sealed assay chests for major transactions. The crystal itself has no immediate Working properties, but carries radiant resonance detectable by Zodiac Priests and Stellar Cartographers. Because it can be refined into devastatingly effective anti-undead material, it commands enormous strategic premium worldwide.<br><br><em>Worked form (solar-forged metal):</em> Adamas crystal processed through Khem-Ma'at's solar forge tradition during the annual solar alignment. The worked metal grants: +2 to Strike Resonances; deals radiant damage in addition to base type; automatically succeeds on Strike Resonances against Void-Husks and undead. Extraordinarily rare — fewer than a dozen worked pieces exist in the known world.</div>
+    </div>
+
+    <div class="material" onclick="this.classList.toggle('open')">
+      <div class="mh"><div class="mn">Black Iron · Dunmarim Deep-Vein Ore</div><span class="mp">80–120 gm per lb (barter equivalent)</span></div>
+      <div class="mb">The highest-quality smithing ore in the world, found exclusively in Dunmar's deepest veins. Dense, consistent, and produces blades that hold an edge far longer than surface-mined iron. Black Iron is the Dunmarim's primary strategic export and internal store of value — their Iron Mark coinage is backed by Black Iron reserves, and direct Black Iron barter is the only form of exchange they truly respect.<br><br>A Black Iron weapon has no Aetheric properties — it is simply superior. Blades of Black Iron deal the same damage types as their base form but maintain their edge through Aether-Dampening Ore environments where Aetherically-enhanced weapons lose their properties. This makes Black Iron the weapon of choice for soldiers operating in the Stillness.<br><br><em>Not sold in standard markets. Obtained through Dunmarim trade negotiations, Black Iron runners on the Steppe routes, or exceptional favour with the Stone Kingdom.</em></div>
+    </div>
+
+    <div class="material renamed" onclick="this.classList.toggle('open')">
+      <div class="mh"><div class="mn">Serpent Iron · Void-Tempered</div><span class="mp">500 gm per lb</span></div>
+      <div class="mb">Iron exposed to prolonged Void-energy concentration zones — the forge-pits near active Coil operations, the Maw's deeper regions, or the Crystalline Core's geothermal vents. Formerly called "Black Iron" in some texts, but renamed to avoid confusion with Dunmarim high-grade ore.<br><br>A weapon of Serpent Iron deals +1d4 necrotic damage on hits; armor of Serpent Iron grants resistance to necrotic damage. Coil-Stalkers who wear Serpent Iron armor gain +1 to their Lead-Scale Corruption gauge per Deep Attunement spent in it — the ambient Void-energy seeps in. Serpent Iron weapons glow faintly purple in proximity to Void-Husks.<br><br><em>Available through Coil-adjacent markets, black-market contacts near the Maw, or recovered from defeated Coil operatives.</em></div>
+    </div>
+
+    <div class="material" onclick="this.classList.toggle('open')">
+      <div class="mh"><div class="mn">Resonant Geodes · Grades A / B / C</div><span class="mp">200 / 800 / 3,000 gm per unit</span></div>
+      <div class="mb"><strong>Grade C (200 gm):</strong> Low-grade; powers basic Accord-Maker constructs and standard Gear-Forged components.<br><strong>Grade B (800 gm):</strong> Standard grade; required for Blueprint construction at Tier II and above. The most commonly traded grade in the Jade Empire.<br><strong>Grade A (3,000 gm):</strong> High-grade; required for Tier IV/V Blueprints and Gear-Forged heart replacement. The Grand Prime Forgeman's Conclave sets weekly Grade A exchange rates.<br><br><strong>The Geode Cold War:</strong> Resonant Geode extraction beneath the subtropical forests of the Jade Empire is a heavily guarded state secret — the celestial bureaucracy treats the harvesting process as classified at the highest level. A Gear-Forged construct whose heart-Geode fails without replacement dies. This creates a profound political reality: <strong>free and rogue Gear-Forged populations in Elethorn who have left or escaped the Jade Empire must acquire Geodes through smuggling, piracy, and theft simply to survive and reproduce.</strong> The Jade Empire does not acknowledge the free Gear-Forged as persons — they are classified as escaped property. The free Gear-Forged do not acknowledge the Jade Empire's ownership claim. The Grand Prime Forgeman, who operates through the Argent Spire's Earthly Core Conclave, is the only authorized external Geode broker — and his loyalties are their own. This cold war periodically surfaces as Jade Empire enforcement actions against Elethorn Gear-Forged communities, and Gear-Forged piracy operations against Jade Empire Geode shipments on the Southern Sea Circuits.<br><br>Resonant Geodes in proximity to Weep-Stone operate at 25% reduced efficiency. Grades cannot be artificially elevated.</div>
+    </div>
+
+    <div class="material" onclick="this.classList.toggle('open')">
+      <div class="mh"><div class="mn">Siderium Quartz · Weep-Stone</div><span class="mp">100 gm per oz raw · 400 gm per 3-charge processed · K'uh-la'an internal currency</span></div>
+      <div class="mb">Crystalline mineral found exclusively in K'uh-la'an, controlled by the Petal-Weaver Castes. Raw Weep-Stone disrupts minor Void-energy effects on contact; refined (processed) Weep-Stone carries 3 charges: each charge removes 2 Lead-Scale Corruption levels (Coil-Stalker), disrupts Void-Husk coordination for 1 Pulse, and serves as a component in Kanya blight-rot purification.<br><br><strong>As currency:</strong> Within K'uh-la'an, Weep-Stone shards are the primary monetary unit. Denominations are by crystal size and resonance clarity, not weight. The 400 gm price reflects Terra Firma market rate — what outsiders pay. The Petal-Weaver Castes tightly regulate export, and the Ashen Coil has been attempting to disrupt K'uh-la'an's trade routes for two generations. An uninterrupted Weep-Stone supply is a strategic objective the party may not immediately recognize as significant.<br><br>In Dunmar, Weep-Stone import is banned — the Order of Pure Reason considers it incompatible with their program.</div>
+    </div>
+
+  </div>
+
+  <div class="sec">Rare & Narrative Materials</div>
+  <div class="material-grid">
+
+    <div class="material new-mat open" onclick="this.classList.toggle('open')">
+      <div class="mh"><div class="mn">Hearthwood · Boreal Fire-Timber</div><span class="mp">~150 gm equivalent per beam (outsider pricing) · Barter only in Mori-Ōkami territory</span></div>
+      <div class="mb">A timber found only in the deep Boreal forests of the northern frontier — specifically in groves where Wolf-Shifter Uji clans have performed generations of Shōgun-Kami ritual on the surrounding land. Hearthwood is fire-immune and heat-storing: it will not burn under ordinary flame, and once exposed to significant heat (forge fire, fire Working), it retains that heat for hours without cooling.<br><br><strong>Properties:</strong> Hearthwood weapons cannot be set alight against the wielder's will. Hearthwood structures survive fire damage automatically — they will not ignite regardless of source. A Hearthwood shield absorbs the first 10 fire damage dealt to its wielder per Pulse (the wood stores rather than transfers the heat). Hearthwood loses its properties if taken more than 100 miles from Boreal forest without a preservation ritual performed by a Wolf-Shifter or Primal Accord practitioner.<br><br><strong>The Hearthwood Border War:</strong> The Jarls of the Boreal Expanse — the Norse-aspected human settlements of the frozen northern frontier — launch persistent, illegal logging raids into Wolf-Shifter Uji clan territory to secure Hearthwood for survival in polar climates where ordinary timber cannot survive the winters. This is not a war of conquest; it is a war of desperation. The Jarls need Hearthwood to build structures that won't burn when the only heat source is fire. The Wolf-Shifters regard each raid as a violation of pack territory that demands blood response. The conflict is low-level but continuous, and has prevented any meaningful diplomatic relationship between the two peoples for three generations. Primal Jarl characters from the Berserker Calling may have direct personal history with this conflict on either side.<br><br>Within Mori-Ōkami territories, Hearthwood is the primary barter good — the gift economy's most valued exchange item. It is not available in standard markets. Acquisition requires entering Wolf-Shifter territory, earning their trust, and receiving it as a gift (or equivalent trade).</div>
+    </div>
+
+    <div class="material new-mat" onclick="this.classList.toggle('open')">
+      <div class="mh"><div class="mn">Noctilith · Moon-Stone</div><span class="mp">200–500 gm per palm-sized piece (Terra Firma markets)</span></div>
+      <div class="mb">A pearlescent substance native to the Tuathan Archipelago that absorbs and stores moonlight. During full moons, Noctilith pieces glow with a cold blue-white luminescence. Its primary use is as a Working focus for illusion and Otherworld-related Workings — a Noctilith focus reduces the Channel cost of illusion Workings by 1 tier (minimum 1st tier) when the moon is above the horizon.<br><br><strong>Properties as a Working focus:</strong> Illusion Workings woven through a Noctilith focus last twice as long as their stated duration, and require DC 3 higher Active Resonances to disbelieve. Fade-Guardian abilities that involve the Otherworld (Veil Walk, Veil Smite) cost 1 fewer Channel when channeled through Noctilith. Noctilith loses its charge after 1 month without exposure to open moonlight — a piece kept underground or in a sealed container becomes inert. Recharging requires one full night under open sky during a moon phase above crescent.<br><br>Within Tuathan culture, Noctilith is a craft material, not currency. It is traded with mainlanders in exchange for goods the Archipelago lacks (preserved food, worked metal, Weep-Stone). Pieces collected during the full moon are significantly more potent and command the higher end of the price range.</div>
+    </div>
+
+    <div class="material new-mat" onclick="this.classList.toggle('open')">
+      <div class="mh"><div class="mn">Moon-Petal Lotus · K'uh-la'an High-Value Trade</div><span class="mp">Not for sale at standard price · Barter for something of equivalent narrative significance</span></div>
+      <div class="mb">A rare flora found in the deepest canopy regions of K'uh-la'an — specifically in clearings where the Twin Dream-Fish's Aetheric influence is strongest. Cultivated exclusively by the <strong>Red Clan</strong> — a specialized Petal-Weaver Caste whose lineage has tended the sacred Moon-Petal cenotes for generations. The petals, when prepared by a Red Clan adept, can cure any Aetheric or biological blight and extend the consumer's natural lifespan.<br><br><strong>Properties:</strong> Consuming a prepared Moon-Petal Lotus petal: removes all stacks of Corrupted condition (any source); removes all Void-Touched Exposure stacks; cures Ashen Coil blight-rot without requiring Weep-Stone; restores 1d10 years of natural lifespan (does not affect Eldren's extended lifespan or Gear-Forged Dormancy). One lotus flower produces 3–5 petals. The preparation process takes 3 days and requires a Red Clan adept — the raw petal has no properties.<br><br><strong>Who wants it — and why:</strong> The aging Dragon Lords of Khem-Ma'at fund highly dangerous expeditions into K'uh-la'an's deep jungle to acquire Moon-Petal Lotus for personal longevity — the most reliable and least Aetherically destabilizing life extension available. Fading Eldren nobility (whose lifespan, while long, is not infinite) seek it for the same reason. Wealthy merchant-princes of Terra Firma sponsor expeditions as investments — a single prepared petal commands an extraordinary price from the right buyer. The Ashen Coil wants it specifically to counter the blight-rot effects of their own operations on Coil-adjacent operatives they wish to preserve. The Kanya Siddha want it as a research subject — they believe Moon-Petal Lotus and their own Purification mantra tradition share a common Precursor-era origin they have not yet proven.<br><br>Moon-Petal Lotus is K'uh-la'an's highest-value trade good, above even refined Weep-Stone. It is not sold. It is given, in exchange for something the Red Clan considers of equivalent or greater significance — a secret, a service, a promise, a sacrifice. The Concordance determines what a specific Red Clan adept considers fair exchange.</div>
+    </div>
+
+    <div class="material" onclick="this.classList.toggle('open')">
+      <div class="mh"><div class="mn">Celestial Honey · Golden Hive</div><span class="mp">Not for sale · Given by the Bee-Priestess only</span></div>
+      <div class="mb">Produced by the Queen Bee's Golden Hive in the Kanya Temple's sacred grove. One of the five components of the Resonant Binding ritual. Cannot be purchased at any price — it must be given by the Bee-Priestess, and she gives it only when the Queen Bee permits. One person in the last 500 years has received it. The Bee-Priestess knows who. The Queen Bee has been producing more than usual for the last several months.</div>
+    </div>
+
+    <div class="material" onclick="this.classList.toggle('open')">
+      <div class="mh"><div class="mn">Star-Metal · Stag Antler Fragment</div><span class="mp">Not for sale · Recovery or gift only</span></div>
+      <div class="mb">Shed antler fragments from the Star-Metal Stag — one of the five Resonant Binding components. The antlers shed on an astronomical cycle the Dhanus Temple can predict but not explain. A shed antler fragment from the Stag's most recent cycle is held in a location the Bee-Priestess knows. Must be recovered from a location where the Stag has shed, or gifted by the Stag itself during a Legendary Beast encounter. Attunement note: the Star-Metal Stag has altered its walking patterns in response to Grid-Point Seven's reactivation.</div>
+    </div>
+
+  </div>
+
+  <div class="note"><strong>On Acquiring Special Materials:</strong> The Concordance should treat special materials as narrative events, not shop inventory. Adamas is a campaign-level acquisition. Weep-Stone is a strategic resource controlled by K'uh-la'an. Black Iron requires Dunmarim diplomatic access. Hearthwood requires Wolf-Shifter trust. Noctilith requires Tuathan Archipelago contact. Moon-Petal Lotus requires something the Petal-Weavers consider worth trading for. Celestial Honey and Star-Metal are plot items. <strong>Access to these materials should feel earned — not purchased.</strong></div>
+
+</div></div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).style.display='block';
+  document.getElementById('panel-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
+}
+document.querySelectorAll('.panel').forEach(p=>{p.style.display='none'});
+document.getElementById('panel-currency').style.display='block';
+document.getElementById('panel-currency').classList.add('active');
+document.querySelectorAll('.nav-btn')[0].classList.add('active');
+</script>
+</body>
+</html>

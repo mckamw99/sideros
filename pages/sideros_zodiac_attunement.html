@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — Zodiac Attunement</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;500;600&family=Cinzel+Decorative:wght@400&display=swap');
+:root{
+  --void:#06080c;--void-mid:#0e1018;--parchment:#f0e6cc;--parchment-dim:rgba(240,230,204,0.52);
+  --gold:#c9a84c;--gold-dim:#7a6028;--gold-bright:#e8c870;
+  --star:#9090e8;--beast:#c0a040;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--parchment);line-height:1.75;min-height:100vh;
+  background-image:radial-gradient(ellipse at 50% 0%,rgba(144,144,232,0.04) 0%,transparent 50%);}
+.hero{text-align:center;padding:4rem 1.5rem 3rem;border-bottom:1px solid rgba(201,168,76,0.15)}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:.8rem}
+.hero-title{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,3.5vw,28px);color:var(--gold-bright);letter-spacing:.04em;margin-bottom:.4rem;line-height:1.2}
+.hero-sub{font-size:14px;font-style:italic;color:var(--parchment-dim);max-width:540px;margin:0 auto}
+.nav-strip{display:flex;gap:4px;flex-wrap:wrap;padding:.65rem .9rem;border-bottom:1px solid rgba(201,168,76,0.1);background:var(--void-mid);position:sticky;top:0;z-index:20}
+.nav-btn{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border:1px solid rgba(201,168,76,0.18);border-radius:3px;background:transparent;color:var(--parchment-dim);cursor:pointer;transition:all .15s;white-space:nowrap}
+.nav-btn.active{background:rgba(201,168,76,0.08);color:var(--gold-bright);border-color:rgba(201,168,76,0.4)}
+.panel{display:none}.panel.active{display:block}
+.wrap{max-width:900px;margin:0 auto;padding:2rem 1.25rem 4rem}
+.lore{font-size:14px;color:rgba(240,230,204,0.8);line-height:1.85;margin-bottom:.9rem}
+.lore strong{color:var(--parchment);font-weight:500}
+.sec{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:1.5rem 0 .65rem;display:flex;align-items:center;gap:.6rem}
+.sec::after{content:'';flex:1;height:1px;background:rgba(201,168,76,0.1)}
+.beast-grid{display:grid;gap:9px}
+.beast{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.13);border-radius:10px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.beast:hover,.beast.open{border-color:rgba(201,168,76,0.35)}
+.beast-head{padding:12px 15px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.beast-sign{font-size:20px;flex-shrink:0;line-height:1}
+.beast-info{flex:1}
+.beast-name{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.05em;color:var(--gold-bright);margin-bottom:.15rem}
+.beast-sub{font-size:12px;font-style:italic;color:var(--parchment-dim)}
+.beast-loc{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-dim);white-space:nowrap;flex-shrink:0}
+.beast-body{display:none;padding:0 15px 13px;border-top:1px solid rgba(201,168,76,0.08)}
+.beast.open .beast-body{display:block;padding-top:10px}
+.bb-section{margin-bottom:.75rem}
+.bb-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:.3rem;display:block}
+.bb-text{font-size:13px;color:rgba(240,230,204,0.78);line-height:1.65}
+.bb-text strong{color:var(--parchment);font-weight:500}
+.encounter-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:1rem}
+.encounter-table th{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);padding:6px 10px;text-align:left;border-bottom:1px solid rgba(201,168,76,0.18)}
+.encounter-table td{padding:6px 10px;border-bottom:1px solid rgba(201,168,76,0.06);color:rgba(240,230,204,0.75);vertical-align:top;font-size:12px;line-height:1.5}
+.encounter-table td:first-child{color:var(--parchment);font-weight:500;white-space:nowrap}
+.encounter-table tr:last-child td{border-bottom:none}
+.note{background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.18);border-radius:7px;padding:10px 12px;margin:.75rem 0;font-size:12px;color:rgba(240,230,204,0.75);line-height:1.65}
+.note strong{color:var(--parchment);font-weight:500}
+.rule-block{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.1);border-radius:8px;padding:11px 13px;margin-bottom:.75rem}
+.rl{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.06em;color:var(--gold-bright);margin-bottom:.4rem;display:block}
+.rt{font-size:13px;color:rgba(240,230,204,0.78);line-height:1.65}
+.rt strong{color:var(--parchment);font-weight:500}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-eyebrow">Sideros / Astrolan — The Living Zodiac</div>
+  <h1 class="hero-title">Zodiac Attunement</h1>
+  <p class="hero-sub">The Legendary Beasts are the fallen gods, walking the earth. To encounter one is to touch the Aether at its source. To survive that encounter is to be changed.</p>
+</div>
+<div class="nav-strip">
+  <button class="nav-btn active" onclick="show('system',this)">The System</button>
+  <button class="nav-btn" onclick="show('encounters',this)">Encounter Types</button>
+  <button class="nav-btn" onclick="show('beasts',this)">The Twelve Beasts</button>
+  <button class="nav-btn" onclick="show('accord',this)">Accord-Walker Integration</button>
+</div>
+
+<!-- THE SYSTEM -->
+<div class="panel active" id="panel-system"><div class="wrap">
+  <p class="lore">The twelve Legendary Beasts were once the twelve gods of Sideros — the Pantheonic Council that governed the world in Era I. When Ophiuchus was corrupted by the Hollow Serpent's influence and shattered its own divine form in Era II, the remaining twelve gods chose to follow, shattering themselves into vast Aetheric presences that could survive the Fall without dissolving into the Void. They became the Legendary Beasts: each carrying a fragment of divine consciousness, each attuned to one zodiac sign's cosmic domain, each wandering the world they once governed.</p>
+  <p class="lore">They are not approachable. They are not friendly. They are not gods in the active sense — they no longer govern. But they remember what they were, and they recognize mortals whose soul-frequency resonates with their domain. A mortal who encounters a Legendary Beast and survives the recognition is changed. That change, formalized, is the Zodiac Attunement system.</p>
+
+  <div class="sec">How Attunement Works — The Three Requirements</div>
+  <div class="rule-block">
+    <span class="rl">1. Encounter</span>
+    <div class="rt">The character must be in the physical presence of their sign's Legendary Beast — within 300 ft, aware of its presence, and recognized by the Beast in turn. The Beast must perceive the character. This cannot be faked, simulated, or achieved through recorded Aetheric impressions. The recognition must be real.<br><br>
+    <strong>What counts as an encounter:</strong> Direct proximity; a deliberate attempt to approach the Beast that the Beast acknowledges; being discovered by the Beast in its territory. Witnessing from a distance (greater than 300 ft) does not count unless the Beast actively turns its attention toward the character.<br><br>
+    <strong>What does not count:</strong> Viewing through Scrying; viewing through Arcane Eye or similar; reading accounts; dreaming about the Beast.</div>
+  </div>
+  <div class="rule-block">
+    <span class="rl">2. Survival</span>
+    <div class="rt">The character must survive the encounter with their Fate Number intact — not as a Void-Husk, not corrupted. A character who survives an encounter with their sign's Beast having been Void-Touched during it does not qualify; the Void-Touched exposure interferes with the recognition frequency. The Kanya Siddha can purify Void-Touched Exposure before an attempted second encounter.</div>
+  </div>
+  <div class="rule-block">
+    <span class="rl">3. Resonance Depth 4</span>
+    <div class="rt">The Zodiac Attunement Feat is available at Resonance Depth 4. A character who encounters their Beast before Depth 4 still qualifies for the prerequisite — the encounter does not need to happen at Depth 4, only before the Feat is taken. Characters may encounter their Beast at Depth 1 and wait until Depth 4 to formalize the Attunement.<br><br>
+    <strong>Exception — Gear-Forged:</strong> Gear-Forged are calibrated at creation to a zodiac sign and receive their Zodiac Attunement Feat automatically at Depth 1 without requiring an encounter. Their Geode heart is the encounter, in a sense.</div>
+  </div>
+  <div class="rule-block">
+    <span class="rl">Attunement of Another Sign's Beast</span>
+    <div class="rt">A character may encounter and be recognized by a Beast that is not their sign. This does not grant the Zodiac Attunement Feat (which is sign-locked) but does grant a Secondary Attunement — a single, specific ability from the other Beast's domain, available once per Deep Attunement. The Concordance determines the specific ability based on the encounter's circumstances and what the Beast appeared to offer. Secondary Attunements cannot be trained toward or predicted — they are gifts, and Beasts give what they choose.<br><br>
+    <strong>The Cross-Cultural Feat Variant</strong> at Resonance Depth 8 is a formalized version of Secondary Attunement — representing a character who has invested in the second tradition deeply enough for it to become reliable.</div>
+  </div>
+
+  <div class="sec">What the Attunement Feat Provides</div>
+  <p class="lore">The full mechanical details of each Zodiac Attunement Feat are in the Mechanics Codex. Summarized here: each Feat provides a passive benefit (always active), an active ability (once per Pulse or once per encounter), and a unique cosmic recognition (the Beast of your sign does not aggress toward you by default — you have been seen). The Feat scales at Resonance Depth 8 through the Cross-Cultural Feat Variant.</p>
+
+  <div class="note"><strong>On Legendary Beasts and Violence:</strong> The Legendary Beasts are not encounter bosses. They are world-scale entities whose combat statistics, if they existed, would be irrelevant to any mortal party. A fight with a Legendary Beast is not a fight — it is a catastrophe. The Concordance should treat encounters with Legendary Beasts as narrative events, not combat encounters. What the party does, how the Beast responds, and what survives are all Concordance decisions shaped by the session's needs. The Beasts are not plot obstacles. They are the world's heartbeat.</div>
+</div></div>
+
+<!-- ENCOUNTER TYPES -->
+<div class="panel" id="panel-encounters"><div class="wrap">
+  <p class="lore">Not all Legendary Beast encounters are the same. The Concordance has multiple encounter types to deploy depending on what the session needs — from a distant glimpse that still counts as recognition to a full active encounter where the Beast has specific intent.</p>
+
+  <div class="sec">Encounter Intensity Scale</div>
+  <table class="encounter-table">
+    <tr><th>Type</th><th>Description</th><th>Recognition?</th><th>Notes</th></tr>
+    <tr><td>Glimpse</td><td>The character briefly perceives the Beast at close range — within 100 ft — before it moves on. The Beast is aware of them but does not engage.</td><td>Yes, if Beast's sign matches character's sign and Beast shows any response (a look, a pause, a change in direction)</td><td>Easiest to arrange. The Beast happened to be here; the character happened to be here. The encounter is accidental and brief.</td></tr>
+    <tr><td>Observation</td><td>The character observes the Beast for an extended period — it is aware of them, permits the observation, and may even approach to within 30 ft before departing.</td><td>Yes — the Beast chose to be seen</td><td>Requires the character to be in the Beast's territory and to behave in a way the Beast finds non-threatening. Accord-Walkers are best positioned for this type.</td></tr>
+    <tr><td>Active Encounter</td><td>The Beast has intent toward the character — it approaches, tests, challenges, or communicates (non-verbally, through behavior and Aetheric presence). The encounter has stakes.</td><td>Yes — definitive</td><td>The character must respond to the Beast's intent. Combat is not the response — the Beast is testing the character's Aetheric frequency, not their strength. The response determines what Secondary Attunement (if any) the Beast offers.</td></tr>
+    <tr><td>Territorial Defence</td><td>The Beast treats the party as an intrusion and moves to drive them out — not kill, but displace. This is the closest thing to a "combat encounter" with a Legendary Beast.</td><td>Yes, but in a hostile register</td><td>Surviving a territorial defence qualifies as an encounter. The Beast saw the character, assessed the character's frequency, and determined they were not worth destroying (merely displacing). This is a form of recognition.</td></tr>
+    <tr><td>Communion</td><td>Rare. The Beast deliberately communicates with the character — Aetheric impressions, symbolic visions, emotional transmissions. This happens when a character has become cosmically relevant to the Beast's domain.</td><td>Yes — most significant</td><td>Communion grants the full encounter benefit plus the Concordance describes one specific piece of world information the Beast is aware of. Quint Bond formation or the Resonant Binding ritual may trigger Communion from multiple Beasts simultaneously.</td></tr>
+  </table>
+
+  <div class="sec">What Happens During an Encounter</div>
+  <div class="rule-block">
+    <span class="rl">The Recognition Moment</span>
+    <div class="rt">When a Legendary Beast is within 300 ft of a character whose sign matches its own, both the character and the Beast feel the resonance. The character feels it as a physical sensation — similar to Fated Bond recognition but more overwhelming, less personal. More like being struck by a bell tone than meeting a person. The Beast responds based on its current state (territorial/calm/curious/dormant).<br><br>
+    Stellar Cartographers within range automatically perceive the encounter as a massive Aetheric event — the Beast's presence reads as a Fate Number so large it nearly pushes off the scale. They cannot read the Beast's specific Number, only its vastness.</div>
+  </div>
+  <div class="rule-block">
+    <span class="rl">Endurance Warding Resonances During Encounter</span>
+    <div class="rt">Characters in the presence of a Legendary Beast make an Attunement Warding Resonance DC 15 each Pulse or become Dazed for that Pulse as the Aetheric pressure overwhelms their perceptual capacity. Characters whose sign matches the Beast have Resonant Fortune on this Warding Resonance. Accord-Walker Beast Companions of the same sign as the Beast are immune — they have been calibrated to this frequency.<br><br>
+    Failure does not disqualify the encounter. A Dazed character still counts as present and perceived by the Beast.</div>
+  </div>
+  <div class="rule-block">
+    <span class="rl">The Departure</span>
+    <div class="rt">Legendary Beasts do not linger unless they have specific intent. Most encounters end with the Beast departing — it has seen what it came to see, assessed the Aetheric situation, and moved on. The aftermath is: all characters within 300 ft make Attunement Active Resonances DC 12 or spend the next hour processing the encounter (effectively non-functional for complex tasks). Characters whose sign matched the Beast's automatically succeed this check — for them, the encounter feels like recognition rather than intrusion.</div>
+  </div>
+</div></div>
+
+<!-- THE TWELVE BEASTS -->
+<div class="panel" id="panel-beasts"><div class="wrap">
+  <p class="lore">Twelve Legendary Beasts walk the world — each a fallen god, each attuned to one zodiac domain, each aware of the world they once governed at a level that makes mortal comprehension of their interior lives impossible. What follows is what can be known about each.</p>
+
+  <div class="beast-grid">
+
+  <div class="beast open" onclick="this.classList.toggle('open')">
+    <div class="beast-head">
+      <div class="beast-sign">♈</div>
+      <div class="beast-info"><div class="beast-name">The Ashen Ram — Mesha (Aries)</div><div class="beast-sub">First-to-charge, Fire-Walker, the Initiating Force</div></div>
+      <span class="beast-loc">Volcanic Caldera Range, near Mesha Temple</span>
+    </div>
+    <div class="beast-body">
+      <div class="bb-section"><span class="bb-label">Appearance</span><div class="bb-text">A ram the size of a small building, coat perpetually smouldering as if the wool has nearly caught fire but never quite does. Hooves leave scorched impressions in stone. The eyes are two points of white-hot intensity that read to Stellar Cartographers as Number 1 — the beginning of everything.</div></div>
+      <div class="bb-section"><span class="bb-label">Behaviour</span><div class="bb-text">The Ashen Ram is always moving. It charges — not at anything in particular, just perpetually forward. Encounters happen because you are in its path, not because it sought you out. It is the only Legendary Beast that will run directly through an obstacle rather than around it. The Mesha Temple was built where the Ram charges, not where it rests.</div></div>
+      <div class="bb-section"><span class="bb-label">Attunement Gift — Mesha's Charge</span><div class="bb-text">See Mechanics Codex — Zodiac Attunement Feats. The Ram's gift is initiative and momentum: always act first, and your charges knock foes prone.</div></div>
+      <div class="bb-section"><span class="bb-label">Current Status</span><div class="bb-text">Active and uncontested in its territory. Lord Aries has ongoing friction with the Mesha Temple over whether the Ram's charge patterns have changed — the Temple says no; Lord Aries' surveyors say the charge trajectories have shifted 12 degrees southeast over the last century, toward Grid-Point Seven.</div></div>
+    </div>
+  </div>
+
+  <div class="beast" onclick="this.classList.toggle('open')">
+    <div class="beast-head">
+      <div class="beast-sign">♉</div>
+      <div class="beast-info"><div class="beast-name">Khalkotauros — Vrishabha (Taurus)</div><div class="beast-sub">The Bronze Bull, Earth-Keeper, the Patient One</div></div>
+      <span class="beast-loc">Taurian Plains (active range) · Minotaur-Warden's Demesne, Arcadia Major (deep lair)</span>
+    </div>
+    <div class="beast-body">
+      <div class="bb-section"><span class="bb-label">Appearance</span><div class="bb-text">A bull of living earth and stone, slow-moving, massive. The horns are actual granite. When it breathes, the ground above it trembles. It is always underground except during the Spring Attunement — a three-day period when it rises and walks the Plains before returning below.<br><br><strong>Arcadia Major:</strong> The Minotaur-Warden's Demesne — the Khalkotauros's true labyrinthine lair — is located in Arcadia Major, the frontier continent of natural and beast territories distinct from both Elethorn (Precursor ruins) and the mainland. The Bull's influence is felt throughout the Taurian Plains (its active range), but its physical presence is primarily in Arcadia Major.</div></div>
+      <div class="bb-section"><span class="bb-label">Behaviour</span><div class="bb-text">Patient to a degree that humans find disconcerting. Khalkotauros can remain motionless for years. When the Mycelian Brood's network began disturbing its underground territory, it did not respond immediately. It has been watching for a decade. Lady Taurus's hidden agricultural network accidentally aligns with the Bull's own territorial monitoring patterns — the Bull knows about the Triad and is permitting it, for now.</div></div>
+      <div class="bb-section"><span class="bb-label">Attunement Gift — Khalkotauros's Endurance</span><div class="bb-text">Massively expanded Vitality maximum and the ability to refuse death once per Deep Attunement. The Bull does not die easily; neither does its Attuned.</div></div>
+      <div class="bb-section"><span class="bb-label">Current Status</span><div class="bb-text">Underground. The Mycelian Brood situation has made it increasingly active — tremors in the Taurian Plains that the Order of Pure Reason attributes to geological activity are actually Khalkotauros repositioning. If it surfaces off-schedule, something has gone badly wrong.</div></div>
+    </div>
+  </div>
+
+  <div class="beast" onclick="this.classList.toggle('open')">
+    <div class="beast-head">
+      <div class="beast-sign">♊</div>
+      <div class="beast-info"><div class="beast-name">The Twin-Serpents — Mithuna (Gemini)</div><div class="beast-sub">Two Beings as One, the Mirror-Pair, the Debate Without End</div></div>
+      <span class="beast-loc">Scribe's Folly ruins · Twin Republics · Aetherian coastline</span>
+    </div>
+    <div class="beast-body">
+      <div class="bb-section"><span class="bb-label">Appearance</span><div class="bb-text">Two enormous serpents, apparently identical, that are never more than 30 ft apart and never less than 10 ft apart. They do not touch. When one is perceived as stationary, the other is moving. When one is above water, the other is below. Scholars debate whether they are one consciousness or two — the Mithuna Temple says the debate is the point.</div></div>
+      <div class="bb-section"><span class="bb-label">Behaviour</span><div class="bb-text">The Twin-Serpents are the most communicative of the Legendary Beasts, though what they communicate is always ambiguous. They appear to be in constant argument with each other through behavior — one approaches, one retreats; one displays a territory, the other ignores it. Encounters with Gemini-sign characters produce what witnesses describe as "being shown both sides of something" simultaneously.</div></div>
+      <div class="bb-section"><span class="bb-label">Attunement Gift — Twin-Serpents' Duality</span><div class="bb-text">Maintain two Sustained Resonance Workings simultaneously; reroll any failed Active Resonance once per Deep Attunement. The gift of holding opposites without resolution.</div></div>
+      <div class="bb-section"><span class="bb-label">Current Status</span><div class="bb-text">The Twin-Serpents have been sighted three times near Port Damaris in the last year — unusual for their range. Port Damaris's Shadow-Council considers their presence an omen and has been attempting to identify what they are watching.<br><br><strong>Scribe's Folly:</strong> The Twin-Serpents' actual lair is the <strong>Scribe's Folly</strong> — the unstable, ruined levels of a magically collapsed library in Aetheria. The library collapsed approximately sixty years ago when experimental gravity Working shattered; the Twin-Serpents moved into the ruins shortly afterward, drawn by the magical instability. <strong>The gravity anomaly disrupting the Aetherial Skypaths is not passive environmental damage — it is the Aetheric weight of the Twin-Serpents' combined presence.</strong> When both Serpents are in residence at Scribe's Folly, the gravity fields around the ruins destabilize and cargo losses on the Skypaths run at approximately 8% per transit. When they range away (as they currently have toward Port Damaris), the anomaly lessens but does not fully clear — the ruins retain residual Aetheric imprinting. Merchants who want the Skypath anomaly resolved need the Twin-Serpents to either leave the ruins permanently or return to them. Neither outcome is negotiable through conventional means.</div></div>
+    </div>
+  </div>
+
+  <div class="beast" onclick="this.classList.toggle('open')">
+    <div class="beast-head">
+      <div class="beast-sign">♋</div>
+      <div class="beast-info"><div class="beast-name">The Adamant Crab — Karkata (Cancer)</div><div class="beast-sub">Shell-Bearer, the Warden of the Shore, Tide-Walker</div></div>
+      <span class="beast-loc">Sundered Coast tidal zones (active territory) · Regency of the Snapper / Carapace Archipelago, Abyssal Sea (resting grounds)</span>
+    </div>
+    <div class="beast-body">
+      <div class="bb-section"><span class="bb-label">Appearance</span><div class="bb-text">A crab the size of a city block, shell dense enough that it has accumulated coral, smaller sea life, and in one case a small shipwreck on its back over centuries. It moves between the tidal zone and open sea on a rhythm only the Karkata Temple can predict — and only approximately. Its shell is one of the five Resonant Binding components.</div></div>
+      <div class="bb-section"><span class="bb-label">The Carapace Archipelago</span><div class="bb-text">The Adamant Crab migrates between two territories. Its active territory is the tidal zones of the Sundered Coast — where it patrols and guards. Its resting territory is the <strong>Carapace Archipelago</strong> in the Abyssal Sea of Tiamat to the south — a cluster of islands formed over millennia from shed shell fragments and accumulated rock around old molting sites. The living Crab visits the Archipelago during its resting cycle; between visits, the islands stand unoccupied and serve as a navigational waypoint for the <strong>Court of the Sunken Stars</strong> — a culture of hardy, deeply superstitious seafarers who inhabit the Abyssal Sea and navigate by the leviathans of the deep rather than the stars.</div></div>
+      <div class="bb-section"><span class="bb-label">Behaviour</span><div class="bb-text">The Adamant Crab is protective. It does not aggress unless something it is protecting is threatened. Its protected territory shifts — it appears to be guarding something that moves, though what that something is has never been identified. The Karkata Temple believes it is guarding the threshold between the living world and the ancestor-space — the liminal zone where the dead linger before dissolving.</div></div>
+      <div class="bb-section"><span class="bb-label">Attunement Gift — Adamant's Ward</span><div class="bb-text">Impose Resonant Discord on attacks against adjacent allies as a Reflex; always know the exact position of every creature within 30 ft. The Crab's gift is awareness and protection of those nearby.</div></div>
+      <div class="bb-section"><span class="bb-label">Current Status</span><div class="bb-text">Active. A fragment of its shell shed during the last molting cycle is held by the Bee-Priestess of the Golden Hive — one of the five Resonant Binding components. It does not know this. If it did, it might care.</div></div>
+    </div>
+  </div>
+
+  <div class="beast" onclick="this.classList.toggle('open')">
+    <div class="beast-head">
+      <div class="beast-sign">♌</div>
+      <div class="beast-info"><div class="beast-name">The Nemean Lion — Simha (Leo)</div><div class="beast-sub">The Unconquerable, Solar-Maned, King-Maker</div></div>
+      <span class="beast-loc">Leonine Empire, Aurelia savannah (active range) · Lion-Champion's Demesne, Arcadia Major (den)</span>
+    </div>
+    <div class="beast-body">
+      <div class="bb-section"><span class="bb-label">Appearance</span><div class="bb-text">A lion whose mane is sunlight — not yellow fur but actual radiant light, shifting from dawn gold to noon white to dusk amber depending on time of day. The roar physically resonates — those within 500 ft feel it in their chest. <strong>Arcadia Major:</strong> The Lion-Champion's Demesne — a sun-bleached, bone-strewn cavern in Arcadia Major's chaparral — is the Nemean Lion's true den. It ranges through the Leonine Empire's savannah south of Aurelia but returns to Arcadia Major to rest. The savannah encounters are the Lion on patrol, not the Lion at home. Its eyes are the color of the sun at solar noon: too bright to look at directly for more than a moment.</div></div>
+      <div class="bb-section"><span class="bb-label">Behaviour</span><div class="bb-text">The Nemean Lion watches the Leonine Empire the way a parent watches a child who has grown into something unexpected. It does not interfere. It observes. When the Solar King's legitimacy was last fully genuine (three kings ago), the Lion was seen at the palace gates at dawn. It has not been seen there since. The succession crisis has made it restless — it has been pacing further into human territory than it has for generations.</div></div>
+      <div class="bb-section"><span class="bb-label">Attunement Gift — Nemean's Glory</span><div class="bb-text">When you reduce a creature to 0 Vitality, allies gain temporary Vitality and Resonant Fortune. You become immune to Dread-Struck; fear effects reverse onto their sources. The Lion's gift is sovereign radiance.</div></div>
+      <div class="bb-section"><span class="bb-label">Current Status</span><div class="bb-text">Restless. The Mantra of Divine Right at the Simha Temple is growing quieter — the Lion is aware of this and does not like it. Finding the Lunar Queen (the legitimate Omega-line heir) would likely bring the Lion back to the palace gates. Failing to find them will not.</div></div>
+    </div>
+  </div>
+
+  <div class="beast" onclick="this.classList.toggle('open')">
+    <div class="beast-head">
+      <div class="beast-sign">♍</div>
+      <div class="beast-info"><div class="beast-name">The Queen Bee — Kanya (Virgo)</div><div class="beast-sub">Golden Hive-Mother, Purifier, the Bee-Priestess's Patron</div></div>
+      <span class="beast-loc">Kanya Temple sacred grove, Kanya region (Golden Hive outpost) · Golden Hive Mountain Labyrinth, Arcadia Major (true lair)</span>
+    </div>
+    <div class="beast-body">
+      <div class="bb-section"><span class="bb-label">Appearance</span><div class="bb-text">A bee the size of a horse, exuding a faint honey-warmth that reduces pain within 30 ft. Its hive — the Golden Hive — is the source of Celestial Honey, one of the five Resonant Binding components. The hive is tended by the Bee-Priestess, who is the only mortal the Queen Bee permits within 10 ft of her. <strong>Arcadia Major:</strong> The Queen Bee's true lair is the Golden Hive Mountain Labyrinth — a perfectly ordered hexagonal cave system in Arcadia Major. The Golden Hive tended by the Bee-Priestess at the Kanya Temple is a sacred outpost; the true hive, and the true Celestial Honey production, is in Arcadia Major and has never been visited by a non-Bee-aspected mortal. The Kanya Siddha treat access to the Queen as the highest spiritual privilege in their tradition.</div></div>
+      <div class="bb-section"><span class="bb-label">Behaviour</span><div class="bb-text">Methodical. The Queen Bee has been tending the same patterns for 400 years. She is aware of every mortal who enters the sacred grove, assesses their Aetheric frequency, and decides within moments whether they belong here. She has never harmed a Kanya-sign character. She has expelled from the grove, without violence, everyone the Ashen Coil has sent to steal the Celestial Honey — eleven times in the last decade.</div></div>
+      <div class="bb-section"><span class="bb-label">Attunement Gift — Queen Bee's Precision</span><div class="bb-text">Add Attunement modifier to damage once per Moment; Help grants Resonant Fortune on two rolls instead of one; diagnose any Aetheric condition in 1 minute. The Bee's gift is precise and complete perception.</div></div>
+      <div class="bb-section"><span class="bb-label">Current Status</span><div class="bb-text">Stable. The Bee-Priestess knows who has received Celestial Honey — one person in the last 500 years — and has told no one. The Queen knows the Resonant Binding ritual is approaching. She has been producing more Honey than usual. The Concordance decides whether this is preparation or coincidence.</div></div>
+    </div>
+  </div>
+
+  <div class="beast" onclick="this.classList.toggle('open')">
+    <div class="beast-head">
+      <div class="beast-sign">♎</div>
+      <div class="beast-info"><div class="beast-name">The Great Roc — Tula (Libra)</div><div class="beast-sub">Sky-Arbiter, the Wind That Does Not Choose Sides</div></div>
+      <span class="beast-loc">Above Aetheria; nests in the upper atmosphere, rarely lands</span>
+    </div>
+    <div class="beast-body">
+      <div class="bb-section"><span class="bb-label">Appearance</span><div class="bb-text">A bird large enough to cast a shadow visible from the ground when it passes between clouds. Its wingspan has never been measured — no instrument can track its full extent. Its feathers are the color of sky at the precise threshold between blue and grey. It carries a fragment of Orunmila's divine consciousness — one third of the distributed Orunmila bond.</div></div>
+      <div class="bb-section"><span class="bb-label">Behaviour</span><div class="bb-text">The Great Roc observes and does not intervene. It has the most complete perspective of any Legendary Beast — its altitude gives it a view of the entire continent simultaneously. Lord Libra's denial of his Fated Bond has made the Roc increasingly restive — it perches near Aetheria for longer periods than usual, which causes structural strain on buildings not designed for its weight.</div></div>
+      <div class="bb-section"><span class="bb-label">Attunement Gift — Great Roc's Equilibrium</span><div class="bb-text">Treat near-misses on Active Resonances and Warding Resonances as successes with complications; force two creatures to cease hostility with a Binding Judgment. The Roc's gift is the ability to find balance in imbalance.</div></div>
+      <div class="bb-section"><span class="bb-label">Current Status</span><div class="bb-text">Observing. It knows about every active Fated Bond in the world at this altitude. It knows about the Quint Bond cluster in the 55–58 range. It has not acted on this knowledge. The Roc waits for the Arbiter to stop denying his bond and start making decisions.</div></div>
+    </div>
+  </div>
+
+  <div class="beast" onclick="this.classList.toggle('open')">
+    <div class="beast-head">
+      <div class="beast-sign">♏</div>
+      <div class="beast-info"><div class="beast-name">The Stygian Scorpion — Vrishchika (Scorpio)</div><div class="beast-sub">Heart-Stinger, Keeper of What Is Hidden, the Transformative Death</div></div>
+      <span class="beast-loc">Vrishchika Temple waterfall cave, Viridian Principalities (accessible entry) · Sunken Peat-Cavern, Great Kurgan Bog (deep lair)</span>
+    </div>
+    <div class="beast-body">
+      <div class="bb-section"><span class="bb-label">Appearance</span><div class="bb-text">A scorpion the size of a large building, carapace so dark it absorbs light rather than reflecting it. The stinger is called the Heart-Sting by the Vrishchika Temple — a single sting can suppress Working access (Resonance-Locked) for a week. The tail casts no shadow. Those who can see Aetheric fields describe the Scorpion as surrounded by the most concentrated void-that-isn't-void-energy in the world — not Hollow Serpent energy but something older.<br><br><strong>Dual territory:</strong> The Vrishchika Temple's waterfall cave is where the Siddha tend the central psychic energy pool — the accessible entry into the Scorpion's sphere. The Scorpion's true lair is the <strong>Sunken Peat-Cavern</strong> beneath the Great Kurgan Bog, reached through the cave system deeper than any non-Scorpio practitioner has mapped.</div></div>
+      <div class="bb-section"><span class="bb-label">Behaviour</span><div class="bb-text">Territorial in a specific and unusual way — it protects the Vrishchika Temple's central pool (the font of raw psychic energy) as if the pool is more important than the Beast itself. The Loom of Fate has been attempting to access the pool for years. The Scorpion has denied them every time. The Loom does not know why the pool matters this much to the Beast.</div></div>
+      <div class="bb-section"><span class="bb-label">Attunement Gift — Stygian Revelation</span><div class="bb-text">Read emotional history of touched objects; learn a secret from damaged creatures; Resonant Fortune on both Deception and Insight; always know when being lied to. The Scorpion's gift is complete perceptual truth.</div></div>
+      <div class="bb-section"><span class="bb-label">Current Status</span><div class="bb-text">Territorial and alert. The Scorpion-Inquisitor (Loom of Fate's apex operative) being stalled in the Sunken Peat-Cavern is partly because the Scorpion has been sending subtle Aetheric signals toward the Bog — not directing him, but influencing the probability landscape in ways that make his mission harder.</div></div>
+    </div>
+  </div>
+
+  <div class="beast" onclick="this.classList.toggle('open')">
+    <div class="beast-head">
+      <div class="beast-sign">♐</div>
+      <div class="beast-info"><div class="beast-name">The Star-Metal Stag — Dhanus (Sagittarius)</div><div class="beast-sub">Horizon-Walker, Far-Seer, the Arrow That Carries Its Own Bow</div></div>
+      <span class="beast-loc">Sagittarian Steppes; moves constantly, never stays in one territory</span>
+    </div>
+    <div class="beast-body">
+      <div class="bb-section"><span class="bb-label">Appearance</span><div class="bb-text">A stag whose antlers are actual star-metal — Precursor-era alloy that radiates a faint navigational signal detectable by Moana-kin and Stellar Cartographers within 100 miles. The antlers shed and regrow on an astronomical cycle that the Dhanus Temple can predict but not explain. Shed antlers are one of the five Resonant Binding components. The hooves make no sound on any surface.</div></div>
+      <div class="bb-section"><span class="bb-label">Behaviour</span><div class="bb-text">The Star-Metal Stag is always moving — not with the Ram's charging momentum but with the quiet purpose of something following a map only it can read. It crosses the Steppes in patterns the Centaur-Kin have tracked for centuries, and those patterns correspond to Ceque Line paths. It is walking the Lines — not because it needs to, but because it is maintaining something.</div></div>
+      <div class="bb-section"><span class="bb-label">Attunement Gift — Star-Stag's Horizon</span><div class="bb-text">Ignore all cover with ranged Strike Resonances and Workings; +10 ft speed; ask one factual question about a destination once per Deep Attunement. The Stag's gift is perfect range and direction.</div></div>
+      <div class="bb-section"><span class="bb-label">Current Status</span><div class="bb-text">Moving. A shed antler from the Stag's last antler cycle was recovered by a Ceque-Keeper 40 years ago and is held in a location the Bee-Priestess knows. Grid-Point Seven's reactivation has altered the Stag's walking patterns — the Centaur-Kin have noticed it is now avoiding the Seven's location rather than passing through it as usual.</div></div>
+    </div>
+  </div>
+
+  <div class="beast" onclick="this.classList.toggle('open')">
+    <div class="beast-head">
+      <div class="beast-sign">♑</div>
+      <div class="beast-info"><div class="beast-name">The Sea-Goat — Makara (Capricorn)</div><div class="beast-sub">Summit-Keeper, Karmic Climber, the Weight That Rises</div></div>
+      <span class="beast-loc">Karmatic Mountain Monastery range, Dunmar (surface territory) · Regency of the Goat-Fish, Abyssal Sea (ocean domain)</span>
+    </div>
+    <div class="beast-body">
+      <div class="bb-section"><span class="bb-label">Appearance</span><div class="bb-text">Half mountain goat, half deep-sea creature — the lower body is scaled like something that belongs at the bottom of the ocean, while the upper body is a goat built for the highest altitude. It lives in both the mountain peaks and the deep Dunmarim cave-lakes with equal ease. The Karmatic Mountain Monastery was built at the site where the Sea-Goat rests during its annual surface period.<br><br><strong>Two domains:</strong> The Sea-Goat's surface territory spans the Dunmar mountain range and the Karmatic Monastery's heights. Its ocean domain is the <strong>Regency of the Goat-Fish</strong> — a deep-sea mountain cave thousands of feet beneath the Abyssal Sea, where it spends the majority of the year unreachable by any surface expedition.</div></div>
+      <div class="bb-section"><span class="bb-label">Behaviour</span><div class="bb-text">Patient and goal-oriented. The Sea-Goat does not rush. It is climbing toward something — not physically, but in the Aetheric sense. What it is climbing toward is one of the enduring mysteries of the Dunmarim, who have more recorded encounters with the Sea-Goat than any other people but have never reached a consensus on what it wants. Lady Capricorn's government officially classifies it as a geological feature.</div></div>
+      <div class="bb-section"><span class="bb-label">Attunement Gift — Sea-Goat's Ascent</span><div class="bb-text">Climb any surface; Resonant Fortune on session-goal-related Active Resonances; 4 hours needed for Deep Attunement. The Sea-Goat's gift is sustained upward momentum regardless of terrain.</div></div>
+      <div class="bb-section"><span class="bb-label">Current Status</span><div class="bb-text">Present at its mountain location. The Karmatic Mountain Monastery's diplomatic pressure on Lady Capricorn is partly driven by Sea-Goat behaviour — it has been spending more time at the surface and less time in the cave-lakes, which the Monastery interprets as urgency. Lady Capricorn's government interprets it as weather patterns.</div></div>
+    </div>
+  </div>
+
+  <div class="beast" onclick="this.classList.toggle('open')">
+    <div class="beast-head">
+      <div class="beast-sign">♒</div>
+      <div class="beast-info"><div class="beast-name">The Kelp-Weaver — Kumbha (Aquarius)</div><div class="beast-sub">Network-Mind, Collective-Root, the Ocean's Parliament</div></div>
+      <span class="beast-loc">The Weaver's Loom — vast kelp network, Aquarian Archipelago seabed</span>
+    </div>
+    <div class="beast-body">
+      <div class="bb-section"><span class="bb-label">Appearance</span><div class="bb-text">Not a single creature — a vast network of bioluminescent kelp and coral that spans the Aquarian Archipelago's seabed and produces a coordinated Aetheric consciousness. Individual parts of the Kelp-Weaver can be physically separated from the network and still maintain Aetheric connection. It is the only Legendary Beast that exists in multiple places simultaneously — every conscious piece is the Beast.</div></div>
+      <div class="bb-section"><span class="bb-label">Behaviour</span><div class="bb-text">Communicates through bioluminescent pattern. The Kumbha Temple has partially decoded these patterns — enough to know that the Kelp-Weaver has opinions about Aetheric events worldwide, and that it has been alarmed for about six months. The specific alarm has not been decoded. The Mycelian Brood is attempting to interface with the Kelp-Weaver's network — the Brood treats it as a competitor collective intelligence.</div></div>
+      <div class="bb-section"><span class="bb-label">Attunement Gift — Kelp-Weaver's Network</span><div class="bb-text">Maintain telepathic contact with up to 5 willing creatures simultaneously on the same plane, no Sustained Resonance required; broadcast to all as an Instinct. The Beast's gift is the network itself.</div></div>
+      <div class="bb-section"><span class="bb-label">Current Status</span><div class="bb-text">Alarmed. The specific alarm signal has been intensifying. The Kumbha Temple has sent three scholarly delegations to Argent Spire in the last year requesting consultation. The Conclaves have not responded.</div></div>
+    </div>
+  </div>
+
+  <div class="beast" onclick="this.classList.toggle('open')">
+    <div class="beast-head">
+      <div class="beast-sign">♓</div>
+      <div class="beast-info"><div class="beast-name">The Twin Dream-Fish — Meena (Pisces)</div><div class="beast-sub">Dream-Weavers, the Last Dreaming, the Dissolution That Waits</div></div>
+      <span class="beast-loc">K'uh-la'an; the Cenote of Waking Dreams (accessible only through the Dream-Fish's permission)</span>
+    </div>
+    <div class="beast-body">
+      <div class="bb-section"><span class="bb-label">Appearance</span><div class="bb-text">Two enormous fish — each the length of a large ship — that exist simultaneously in the material plane and the dream-space. Their physical forms in the Cenote are visible but translucent — you can see through them to the cenote's walls. Their dream-space forms, accessible during sleep or Meena Working-induced trance, are solid and fully present. The water of the Cenote is one of the five Resonant Binding components.</div></div>
+      <div class="bb-section"><span class="bb-label">Behaviour</span><div class="bb-text">The Twin Dream-Fish are the most accessible of the Legendary Beasts for the right kind of approach — a character who meditates at the cenote's edge and sleeps can encounter them in dream-space. The encounter is not violent; it is disorienting. The Dream-Fish do not communicate in ways that respect linear time — they show past, present, and future simultaneously and leave it to the mortal to sort out which is which.</div></div>
+      <div class="bb-section"><span class="bb-label">Attunement Gift — Dream-Fish's Sight</span><div class="bb-text">Once per Deep Attunement, enter prophetic trance during Brief Attunement and ask one yes/no question about the next 24 hours; communicate with sleeping creatures within 1 mile. The Fish's gift is perception that does not require being awake.</div></div>
+      <div class="bb-section"><span class="bb-label">Current Status</span><div class="bb-text">Present and deeply dreaming. Regent Ichthyes's fractured prophetic visions in the Trench Keepers' territory are partly the Dream-Fish's consciousness bleeding through his Void-Touched frequency — the Fish are dreaming harder than usual and the bleed is wider than normal. The Cenote water, one of the Resonant Binding components, is held in the care of the Petal-Weaver Castes of K'uh-la'an and accessed only with the Dream-Fish's permission.</div></div>
+    </div>
+  </div>
+
+  </div>
+</div></div>
+
+<!-- ACCORD-WALKER INTEGRATION -->
+<div class="panel" id="panel-accord"><div class="wrap">
+  <p class="lore">The Primal Accord Path's Accord-Walker Calling has the deepest mechanical integration with the Zodiac Attunement system. While all characters can gain a Zodiac Attunement Feat through encounter, the Accord-Walker builds a lifetime practice of cross-sign Beast attunement that goes beyond the Feat system entirely.</p>
+
+  <div class="sec">Accord-Walker Beast Resonance Pools</div>
+  <p class="lore">At Resonance Depth 3 (when the Accord-Walker Calling is selected), the character begins accumulating Beast Resonance Pools — one per Beast they have meaningfully encountered. Each pool starts at 5 points and can be built up through ongoing encounter and practice, to a maximum of 20.</p>
+
+  <div class="rule-block">
+    <span class="rl">Building Beast Resonance Pools</span>
+    <div class="rt">
+    <strong>Initial encounter:</strong> Pool opens at 5 points automatically.<br>
+    <strong>Ongoing encounters:</strong> Each subsequent meaningful encounter with the same Beast adds 1d6 to the pool (maximum 20).<br>
+    <strong>Walking the Beast's Ceque Line:</strong> Full-line walk adds 1d4 to that Beast's pool permanently.<br>
+    <strong>Deep Attunement at a Beast's node location:</strong> Adds 1 point (maximum once per month per location).<br>
+    <strong>Beast Companion of the same sign (if applicable):</strong> The companion's presence adds 1 point to that Beast's pool per week of companionship.
+    </div>
+  </div>
+
+  <div class="rule-block">
+    <span class="rl">Spending Beast Resonance</span>
+    <div class="rt">
+    Beast Resonance Points are spent to activate Accord-Walker features associated with that Beast's sign — sign-aspected Wild Shape forms, Ceque Line abilities, cross-sign attunement effects. Specific costs are detailed in the Primal Accord Path document.<br><br>
+    Points refresh on Deep Attunement: roll 1d6 for each active pool and restore that many points (maximum the pool's current maximum, not 20).
+    </div>
+  </div>
+
+  <div class="rule-block">
+    <span class="rl">The Accord-Walker and the Encounter Threshold</span>
+    <div class="rt">
+    Accord-Walkers have reduced encounter requirements for Beast Resonance Pools compared to other characters for the Zodiac Attunement Feat:
+    <table class="encounter-table" style="margin-top:.5rem">
+      <tr><th>Character Type</th><th>Encounter Requirement for Zodiac Attunement Feat</th></tr>
+      <tr><td>Standard character</td><td>Within 300 ft, Beast perceives them, they survive</td></tr>
+      <tr><td>Accord-Walker</td><td>Within 300 ft, Beast perceives them — the Accord-Walker's attunement framework means the Beast finds them immediately recognizable. The encounter is less jarring, more like a formal introduction.</td></tr>
+      <tr><td>Void-Hunter (Beast Companion)</td><td>Reduced to 2 meaningful encounters with same Beast rather than 1 (the first removes the Beast's hostility; the second produces recognition)</td></tr>
+      <tr><td>Beast-Descended (same-sign lineage)</td><td>Encounter qualifies immediately — the Beast recognizes the lineage before the character speaks</td></tr>
+    </table>
+    </div>
+  </div>
+
+  <div class="sec">The Concordance Note on Encounter Frequency</div>
+  <p class="lore">Legendary Beast encounters are campaign events, not session filler. A Concordance who deploys them too frequently devalues them; one who withholds them entirely frustrates players whose characters are built around Accord-Walker or Beast-Descended features. The following pacing is suggested:</p>
+  <table class="encounter-table">
+    <tr><th>Campaign Stage</th><th>Encounter Frequency</th><th>Notes</th></tr>
+    <tr><td>Early (Depths 1–4)</td><td>1–2 Glimpse encounters, possibly 1 Observation</td><td>Establish that the Beasts exist and are real. Plant the attunement hook without delivering it.</td></tr>
+    <tr><td>Mid (Depths 5–10)</td><td>1–2 Active Encounters; possibly 1 Territorial Defence</td><td>Characters are significant enough that some Beasts have opinions about them. The Stakes have escalated.</td></tr>
+    <tr><td>Late (Depths 11–16)</td><td>Communion possible; multiple Beasts may respond to the same event simultaneously</td><td>The Quint Bond's formation, the Resonant Binding ritual progress, or Aethar's Stage 4 will draw Beast attention.</td></tr>
+    <tr><td>Endgame (Depths 17–20)</td><td>The Beasts respond to the campaign's climax collectively</td><td>A Quint Bond fully formed, in the presence of the Resonant Binding's five components, may attract all twelve Legendary Beasts simultaneously. The Concordance decides what that looks like.</td></tr>
+  </table>
+</div></div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).style.display='block';
+  document.getElementById('panel-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
+}
+document.querySelectorAll('.panel').forEach(p=>{p.style.display='none'});
+document.getElementById('panel-system').style.display='block';
+document.getElementById('panel-system').classList.add('active');
+document.querySelectorAll('.nav-btn')[0].classList.add('active');
+</script>
+</body>
+</html>

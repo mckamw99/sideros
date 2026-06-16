@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sideros — Player's Comprehensive Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@700;900&family=EB+Garamond:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#0a0a0e; --void2:#12121a; --gold:#c9a84c; --gold-dim:#8a7330;
+    --parch:#f0e6cc; --line:rgba(201,168,76,.22);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:radial-gradient(120% 80% at 50% -10%, #16161f 0%, var(--void) 60%) fixed;
+    color:var(--parch); font-family:"EB Garamond",Georgia,serif; line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  header{
+    text-align:center; padding:64px 20px 32px; border-bottom:1px solid var(--line);
+  }
+  .kicker{font-family:"Cinzel",serif; letter-spacing:.42em; font-size:.72rem; color:var(--gold-dim); text-transform:uppercase; margin:0 0 14px}
+  h1{font-family:"Cinzel Decorative",serif; font-weight:900; font-size:clamp(2.1rem,6vw,3.6rem); color:var(--gold); margin:0; text-shadow:0 0 24px rgba(201,168,76,.18)}
+  .sub{font-style:italic; color:#cdbf9a; margin-top:12px; font-size:1.05rem}
+  main{max-width:980px; margin:0 auto; padding:40px 20px 80px}
+  section{margin:38px 0}
+  h2{
+    font-family:"Cinzel",serif; font-weight:600; font-size:1.04rem; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--gold); margin:0 0 14px; padding-bottom:8px;
+    border-bottom:1px solid var(--line);
+  }
+  h2 .gm{font-size:.62rem; letter-spacing:.2em; color:#c98a8a; border:1px solid rgba(201,138,138,.4); padding:2px 8px; border-radius:10px; margin-left:10px; vertical-align:middle}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px}
+  a.card{
+    display:block; text-decoration:none; color:var(--parch);
+    background:linear-gradient(180deg, var(--void2), #0c0c12);
+    border:1px solid var(--line); border-radius:10px; padding:14px 16px;
+    transition:border-color .18s, transform .18s, box-shadow .18s;
+  }
+  a.card:hover{border-color:var(--gold); transform:translateY(-2px); box-shadow:0 6px 22px rgba(201,168,76,.12)}
+  a.card .t{font-family:"Cinzel",serif; font-size:.92rem; color:var(--gold); letter-spacing:.02em}
+  .guides .grid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+  .guides a.card{background:linear-gradient(180deg,#161208,#0c0a06); border-color:rgba(201,168,76,.4)}
+  .guides .t{font-size:1rem}
+  .meta{font-size:.8rem; color:#9c9078; margin-top:4px}
+  footer{text-align:center; padding:30px 20px 50px; border-top:1px solid var(--line); color:#8a8068; font-size:.82rem}
+  footer .mark{color:var(--gold-dim); font-family:"Cinzel",serif; letter-spacing:.12em}
+</style>
+</head>
+<body>
+<header>
+  <p class="kicker">A Tabletop Roleplaying Game · Set in the World of Astrolan</p>
+  <h1>Sideros</h1>
+  <p class="sub">The Player's Comprehensive Guide &amp; System Reference</p>
+</header>
+<main>
+
+  <section class="guides">
+    <h2>The Complete Guide</h2>
+    <div class="grid">
+      <a class="card" href="guide/sideros_comprehensive_guide.docx">
+        <div class="t">Player's Comprehensive Guide</div>
+        <div class="meta">Full printable binder · .docx</div>
+      </a>
+      <a class="card" href="guide/sideros_comprehensive_guide_v16_binder.docx">
+        <div class="t">Comprehensive Guide — v16 Binder</div>
+        <div class="meta">Binder edition · .docx</div>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Core Rules</h2>
+    <div class="grid">
+      <a class="card" href="pages/sideros_character_creation.html"><div class="t">Character Creation</div></a>
+      <a class="card" href="pages/sideros_origins.html"><div class="t">Origins</div></a>
+      <a class="card" href="pages/sideros_mechanics_codex.html"><div class="t">Mechanics Codex</div></a>
+      <a class="card" href="pages/sideros_character_sheet.html"><div class="t">Character Sheet</div></a>
+    </div>
+  </section>
+
+  <section>
+    <h2>The Kindreds</h2>
+    <div class="grid">
+      <a class="card" href="pages/sideros_kindred_compendium.html"><div class="t">Kindred Compendium</div></a>
+      <a class="card" href="pages/sideros_kindred_vol2.html"><div class="t">Kindred Compendium · Vol. II</div></a>
+      <a class="card" href="pages/sideros_kindred_vol3.html"><div class="t">Kindred Compendium · Vol. III</div></a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Paths &amp; Weaving</h2>
+    <div class="grid">
+      <a class="card" href="pages/sideros_magic_paths.html"><div class="t">The Five Paths to Magic</div></a>
+      <a class="card" href="pages/sideros_paths_adapted.html"><div class="t">The Adapted Paths</div></a>
+      <a class="card" href="pages/sideros_paths_unique.html"><div class="t">The Four Unique Paths</div></a>
+      <a class="card" href="pages/sideros_working_lists.html"><div class="t">Working Lists</div></a>
+      <a class="card" href="pages/sideros_aetheric_lexicon.html"><div class="t">The Aetheric Lexicon</div></a>
+      <a class="card" href="pages/sideros_zodiac_attunement.html"><div class="t">Zodiac Attunement</div></a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Callings &amp; Orders</h2>
+    <div class="grid">
+      <a class="card" href="pages/sideros_callings_solar_guard.html"><div class="t">Solar Guard · All Callings</div></a>
+      <a class="card" href="pages/sideros_callings_oathed_vanguard.html"><div class="t">Oathed Vanguard · All Callings</div></a>
+      <a class="card" href="pages/sideros_callings_primal_jarl.html"><div class="t">Primal Jarl · All Callings</div></a>
+      <a class="card" href="pages/sideros_callings_remaining.html"><div class="t">Remaining Callings</div></a>
+      <a class="card" href="pages/sideros_kallos_sworn.html"><div class="t">The Kallos-Sworn</div></a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Cultures &amp; the Zodiac</h2>
+    <div class="grid">
+      <a class="card" href="pages/sideros_zodiac_cultures.html"><div class="t">The Zodiac Across Cultures</div></a>
+      <a class="card" href="pages/sideros_three_new_cultures.html"><div class="t">Three New Zodiac Cultures</div></a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Bonds, Accords &amp; Companions</h2>
+    <div class="grid">
+      <a class="card" href="pages/sideros_fated_bond.html"><div class="t">The Fated Bond</div></a>
+      <a class="card" href="pages/sideros_primal_accord.html"><div class="t">The Primal Accord</div></a>
+      <a class="card" href="pages/sideros_accord_maker.html"><div class="t">The Accord-Maker</div></a>
+      <a class="card" href="pages/sideros_beast_companion.html"><div class="t">The Beast Companion System</div></a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Play Systems</h2>
+    <div class="grid">
+      <a class="card" href="pages/sideros_combat_rules.html"><div class="t">Combat Rules</div></a>
+      <a class="card" href="pages/sideros_conditions.html"><div class="t">Conditions Reference</div></a>
+      <a class="card" href="pages/sideros_equipment.html"><div class="t">Equipment &amp; Economy</div></a>
+      <a class="card" href="pages/sideros_legendary_depth.html"><div class="t">Legendary Depth System</div></a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Concordance <span class="gm">GM Only</span></h2>
+    <div class="grid">
+      <a class="card" href="pages/sideros_concordance_tools.html"><div class="t">Concordance Tools</div></a>
+      <a class="card" href="pages/sideros_npc_essence.html"><div class="t">Primal Essence &amp; NPC Dynamics</div></a>
+      <a class="card" href="pages/sideros_bonds_npcs.html"><div class="t">Bonds, Mates &amp; the Ashen Coil</div></a>
+    </div>
+  </section>
+
+</main>
+<footer>
+  <p class="mark">SIDEROS · ASTROLAN</p>
+  <p>&copy; 2026 Matt. All Rights Reserved. This is an original work; Sideros, Astrolan, and all associated names and systems are the property of the author.</p>
+</footer>
+</body>
+</html>

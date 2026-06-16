@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — Solar Guard · All Callings</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;500;600&display=swap');
+:root{
+  --void:#0a0c0e;--void-mid:#121518;--gold:#c9a84c;--gold-dim:#7a6028;--gold-bright:#e8c870;
+  --parchment:#f0e6cc;--parchment-dim:rgba(240,230,204,0.55);
+  --guard:#c8a040;--guard-dim:#785820;--guard-bright:#e8c060;
+  --alpha:#d4724a;--beta:#4a8ec4;--omega:#9066c8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--parchment);line-height:1.7;min-height:100vh}
+.hero{text-align:center;padding:3rem 1.5rem 2.5rem;background:radial-gradient(ellipse at 50% 0%,rgba(200,160,64,0.1) 0%,transparent 60%);border-bottom:1px solid rgba(200,160,64,0.2)}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--guard-dim);margin-bottom:.8rem}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(20px,3.5vw,30px);font-weight:500;color:var(--guard-bright);letter-spacing:.06em;margin-bottom:.4rem}
+.hero-sub{font-size:14px;font-style:italic;color:var(--parchment-dim);max-width:500px;margin:0 auto}
+.nav-strip{display:flex;gap:4px;flex-wrap:wrap;padding:.65rem .9rem;border-bottom:1px solid rgba(200,160,64,0.12);background:var(--void-mid);position:sticky;top:0;z-index:20}
+.nav-btn{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border:1px solid rgba(200,160,64,0.2);border-radius:3px;background:transparent;color:var(--parchment-dim);cursor:pointer;transition:all .15s;white-space:nowrap}
+.nav-btn:hover{background:rgba(200,160,64,0.06);color:var(--guard-dim)}
+.nav-btn.active{background:rgba(200,160,64,0.1);color:var(--guard-bright);border-color:rgba(200,160,64,0.4)}
+.panel{display:none}.panel.active{display:block}
+.wrap{max-width:860px;margin:0 auto;padding:2rem 1.25rem 4rem}
+.calling-header{margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:1px solid rgba(200,160,64,0.15)}
+.ch-badge{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--guard-dim);margin-bottom:.6rem;display:block}
+.ch-name{font-family:'Cinzel',serif;font-size:22px;font-weight:500;color:var(--guard-bright);letter-spacing:.04em;margin-bottom:.3rem}
+.ch-origin{font-size:13px;font-style:italic;color:var(--parchment-dim);margin-bottom:.6rem}
+.ch-essence{display:inline-block;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:3px;border:1px solid}
+.lore{font-size:14px;color:rgba(240,230,204,0.8);line-height:1.85;margin-bottom:.9rem}
+.lore strong{color:var(--parchment);font-weight:500}
+.sec{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--guard-dim);margin:1.5rem 0 .65rem;display:flex;align-items:center;gap:.6rem}
+.sec::after{content:'';flex:1;height:1px;background:rgba(200,160,64,0.12)}
+.feat-grid{display:grid;gap:7px}
+.feat{background:rgba(255,255,255,0.022);border:1px solid rgba(200,160,64,0.14);border-radius:8px;padding:11px 13px;cursor:pointer;overflow:hidden;transition:border-color .15s}
+.feat:hover,.feat.open{border-color:rgba(200,160,64,0.38)}
+.feat-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.feat-name{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.04em;color:var(--guard-bright)}
+.feat-depth{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;padding:2px 6px;border-radius:3px;border:1px solid rgba(200,160,64,0.3);color:var(--guard-dim);white-space:nowrap;flex-shrink:0}
+.feat-body{display:none;margin-top:8px;padding-top:8px;border-top:1px solid rgba(200,160,64,0.1);font-size:13px;color:rgba(240,230,204,0.75);line-height:1.7}
+.feat.open .feat-body{display:block}
+.feat-body strong{color:var(--parchment);font-weight:500}
+.feat-body em{color:var(--guard-dim)}
+.note{background:rgba(200,160,64,0.05);border:1px solid rgba(200,160,64,0.22);border-radius:8px;padding:10px 12px;margin:.75rem 0;font-size:13px;color:rgba(240,230,204,0.75);line-height:1.65}
+.note strong{color:var(--parchment);font-weight:500}
+.already-built{background:rgba(90,154,72,0.05);border:1px solid rgba(90,154,72,0.2);border-radius:8px;padding:10px 12px;margin-bottom:1rem;font-size:13px;color:rgba(240,230,204,0.7);line-height:1.6}
+.already-built strong{color:rgba(122,186,96,0.9);font-weight:500}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Sideros · Path Compendium · Solar Guard</div>
+  <h1 class="hero-title">Solar Guard — All Callings</h1>
+  <p class="hero-sub">Nine Callings across the world's most adaptable combat tradition. The prepared warrior who wins before the fight begins.</p>
+</div>
+
+<div class="nav-strip">
+  <button class="nav-btn active" onclick="show('chivalry',this)">Solar Chivalry</button>
+  <button class="nav-btn" onclick="show('psi',this)">Psi-Warrior</button>
+  <button class="nav-btn" onclick="show('runic',this)">Runic Knight</button>
+  <button class="nav-btn" onclick="show('tactician',this)">The Tactician</button>
+  <button class="nav-btn" onclick="show('aetherblade',this)">Aether-Blade</button>
+  <button class="nav-btn" onclick="show('resonantarcher',this)">Resonant Archer</button>
+  <button class="nav-btn" onclick="show('loomecho',this)">The Loom Echo</button>
+  <button class="nav-btn" onclick="show('warden',this)">The Warden</button>
+  <button class="nav-btn" onclick="show('stillblade',this)">The Still-Blade</button>
+</div>
+
+<!-- SOLAR CHIVALRY (already built) -->
+<div class="panel active" id="panel-chivalry">
+<div class="wrap">
+  <div class="already-built"><strong>Solar Chivalry</strong> — previously built in the Adapted Paths document. Features: Chivalric Precision (Depth 3), Know Your Enemy (Depth 7), Relentless (Depth 10). The Leonine Empire's knightly tradition — precision, reconnaissance, and the refusal to fall.</div>
+</div>
+</div>
+
+<!-- PSI-WARRIOR (already built) -->
+<div class="panel" id="panel-psi">
+<div class="wrap">
+  <div class="already-built"><strong>Psi-Warrior</strong> — previously built in the Adapted Paths document. Features: Psionic Strike (Depth 3), Telekinetic Movement (Depth 7), Bulwark of Force (Depth 10). The Jade Empire's warrior tradition — the mind as a weapon alongside the body.</div>
+</div>
+</div>
+
+<!-- RUNIC KNIGHT (already built) -->
+<div class="panel" id="panel-runic">
+<div class="wrap">
+  <div class="already-built"><strong>Runic Knight</strong> — previously built in the Adapted Paths document. Features: Rune Carving (Depth 3), Giant's Might (Depth 7), Runic Shield (Depth 10). The Norse tradition of the Boreal Expanse — ancient runes that reshape the body and the battlefield.</div>
+</div>
+</div>
+
+<!-- THE TACTICIAN (Battle Master) -->
+<div class="panel" id="panel-tactician">
+<div class="wrap">
+  <div class="calling-header">
+    <span class="ch-badge">Solar Guard · Calling IV</span>
+    <div class="ch-name" style="color:var(--guard-bright)">The Tactician</div>
+    <div class="ch-origin">Replacing: Battle Master · Cultural home: Solar Chivalry officer tradition, Leonine military academies</div>
+    <span class="ch-essence" style="color:var(--beta);border-color:rgba(74,142,196,0.3);background:rgba(74,142,196,0.05)">Beta-aspected</span>
+  </div>
+  <p class="lore">Where the Solar Chivalry produces warriors of individual excellence, the Tactician tradition produces commanders — those who study combat as a system and exploit its patterns. The Leonine Empire's military academies teach the Tactician's core curriculum: every engagement has a shape, every opponent has a center of gravity, and the warrior who identifies both first has already won. <strong>The Tactician does not fight harder. They fight more precisely, in places that matter, at moments that compound.</strong></p>
+  <div class="sec">Calling Features</div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Combat Gambits</div><span class="feat-depth">Depth 3</span></div>
+      <div class="feat-body">The Tactician gains a pool of <strong>Gambit Dice</strong> (d8s) equal to their Mastery Bonus, refreshed on a Brief or Deep Attunement. These dice are spent to fuel Gambit maneuvers — tactical interventions that modify a Strike Resonance's outcome beyond raw damage.<br><br>
+      <strong>Gambit list (learn 6 at Depth 3, 2 more at Depths 7 and 10):</strong><br>
+      • <em>Disarming Strike:</em> Add Gambit Die to damage; target makes Forcefulness Warding Resonance (DC = 8 + Mastery + Forcefulness mod) or drops one held item.<br>
+      • <em>Pushing Strike:</em> Add die to damage; push target 15 ft.<br>
+      • <em>Tripping Strike:</em> Add die to damage; target makes Forcefulness Warding Resonance or falls prone.<br>
+      • <em>Commanding Strike:</em> Forgo one of your attacks to direct an ally — they make one Strike Resonance as a Reflex.<br>
+      • <em>Riposte:</em> When a creature misses you with a melee attack, use your Reflex to make one Strike Resonance against them, adding a Gambit Die to damage.<br>
+      • <em>Feinting Strike:</em> Use Instinct to feint — Resonant Fortune on your next Strike Resonance this Moment against that target.<br>
+      • <em>Precision Strike:</em> Add a Gambit Die to one Strike Resonance roll (not damage) — surgical targeting over raw force.<br>
+      • <em>Rally:</em> Use Instinct to inspire one ally within 60 ft — they gain temporary Vitality equal to the Gambit Die roll + your Resonance modifier.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Know the Field</div><span class="feat-depth">Depth 7</span></div>
+      <div class="feat-body">At the start of each encounter, the Tactician may spend 1 Pulse studying the battlefield without attacking. At the end of that Pulse, they gain three pieces of information the Concordance delivers: one environmental advantage in the area, one tactical vulnerability of the enemy group, and one position that would be optimal for the party to control. These are accurate assessments, not predictions — the Tactician is reading what is already true. Additionally: Gambit Dice increase to d10s.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Master of Gambits</div><span class="feat-depth">Depth 10</span></div>
+      <div class="feat-body">When the Tactician rolls a Gambit Die and rolls the maximum value, the die is not expended — it fires and returns. Additionally: the Tactician may spend a Gambit Die without attaching it to a Strike Resonance — they may use any Gambit's secondary effect (the push, the trip, the disarm) as a standalone Instinct against a creature within 5 ft, without the damage component. Gambit Dice increase to d12s.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- AETHER-BLADE (Eldritch Knight) -->
+<div class="panel" id="panel-aetherblade">
+<div class="wrap">
+  <div class="calling-header">
+    <span class="ch-badge">Solar Guard · Calling V</span>
+    <div class="ch-name" style="color:var(--guard-bright)">The Aether-Blade</div>
+    <div class="ch-origin">Replacing: Eldritch Knight · Cultural home: Comet-Mage / Solar Guard crossover tradition, Argent Spire's warrior-scholars</div>
+    <span class="ch-essence" style="color:var(--beta);border-color:rgba(74,142,196,0.3);background:rgba(74,142,196,0.05)">Beta-aspected</span>
+  </div>
+  <p class="lore">Most Comet-Magi never pick up a sword. Most Solar Guards never open an Aetheric Channel. The Aether-Blade is the rare practitioner who did both — and discovered that the synthesis is more powerful than either tradition practiced alone. The blade disrupts. The Working finishes. The opponent doesn't survive the interval between the two. <strong>The Aether-Blade is not a mage who fights. They are a fighter who understands exactly enough Aetheric theory to be lethal.</strong></p>
+  <div class="sec">Calling Features</div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Aetheric Supplement</div><span class="feat-depth">Depth 3</span></div>
+      <div class="feat-body">The Aether-Blade gains limited Weaving access — specifically Abjuration and Evocation Workings from the Comet-Mage's list. They prepare a small number (Acuity modifier, minimum 3) from these schools and have Aetheric Channels: two 1st-tier and two 2nd-tier per Deep Attunement (increasing at Depths 7 and 10).<br><br>
+      <strong>War Weaving:</strong> When the Aether-Blade takes the Strike Act, they may replace one of their strikes with a Working that has a casting time of 1 Action. This costs the normal Channel. They do not sacrifice attacks to cast — they substitute one strike for one Working within the same Act economy. This is the critical synthesis: the fight and the Working are the same motion.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Aetheric Bond Weapon</div><span class="feat-depth">Depth 7</span></div>
+      <div class="feat-body">The Aether-Blade bonds one weapon to their Aetheric field — spending a Brief Attunement to complete the bond. The bonded weapon: cannot be disarmed; can be summoned to hand as a free action from anywhere on the same plane; deals additional damage equal to the Aether-Blade's Acuity modifier on every hit (force damage — Aetheric resonance bleeding through the blade's edge); and counts as an Aetheric focus, allowing the Aether-Blade to deliver touch-range Workings through it at melee range without a separate touch attack.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Arcane Surge</div><span class="feat-depth">Depth 10</span></div>
+      <div class="feat-body">Once per Deep Attunement when the Aether-Blade uses Combat Surge (their extra Act), they may use the additional Act to cast one Working of 3rd-tier or lower without expending a Channel — the Combat Surge draws on Aetheric reserve rather than their prepared pool. Additionally: when they concentrate a Sustained Resonance Working during combat, they may add their Endurance modifier (rather than Endurance modifier alone) as a bonus to the Warding Resonance check to maintain it — their combat training extends to sustaining Workings under physical pressure.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- RESONANT ARCHER (Arcane Archer) -->
+<div class="panel" id="panel-resonantarcher">
+<div class="wrap">
+  <div class="calling-header">
+    <span class="ch-badge">Solar Guard · Calling VI</span>
+    <div class="ch-name" style="color:var(--guard-bright)">The Resonant Archer</div>
+    <div class="ch-origin">Replacing: Arcane Archer · Cultural home: Avian tradition, Sagittarian Steppe hunters, Void-Hunter crossover</div>
+    <span class="ch-essence" style="color:var(--beta);border-color:rgba(74,142,196,0.3);background:rgba(74,142,196,0.05)">Beta-aspected</span>
+  </div>
+  <p class="lore">The Resonant Archer infuses ammunition with Aetheric properties — not through formal weaving, but through a technically distinct process of imprinting zodiac-resonant energy into the arrow or bolt at the moment of drawing. The Avian tradition developed this as a judicial tool: an arrow that compels truth, or one that marks the unjust. The Sagittarian Steppe hunters adapted it for practical use. The Solar Guard adopted it because arrows that do things other than pierce are extraordinarily useful in the kinds of situations Solar Guards find themselves in. <strong>The Resonant Archer never wastes a shot.</strong></p>
+  <div class="sec">Calling Features</div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Resonant Shots</div><span class="feat-depth">Depth 3</span></div>
+      <div class="feat-body">Twice per Brief Attunement, the Resonant Archer may declare a shot Resonant before rolling. Choose one effect:<br><br>
+      <strong>Seeking Shot:</strong> The arrow bends around obstacles — ignore all cover. On a miss, may re-roll once.<br>
+      <strong>Banishing Shot:</strong> On a hit, target makes an Attunement Warding Resonance (DC = 8 + Mastery + Acuity) or is briefly displaced — teleported to an empty space within 30 ft of its current position (Concordance chooses a tactically disadvantageous position).<br>
+      <strong>Beguiling Shot:</strong> On a hit, target is Soul-Swayed toward the Archer for 1 minute (treats the Archer as an ally; will not attack the Archer unless attacked first).<br>
+      <strong>Shadow Shot:</strong> Arrow passes through one obstacle as if it doesn't exist, then resumes normal trajectory. The obstacle takes no damage.<br>
+      <strong>Enfeebling Shot:</strong> On a hit, target has Resonant Discord on all Strike Resonances until the start of the Archer's next Moment.<br>
+      <strong>Grasping Arrow:</strong> On a hit, spectral vines erupt from impact point — target is Seized (speed 0) until it uses its Act to tear free (DC 15 Forcefulness Active Resonance).</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Curving Shot</div><span class="feat-depth">Depth 7</span></div>
+      <div class="feat-body">When the Resonant Archer misses with a ranged Strike Resonance, they may use their Reflex to redirect the arrow — selecting a new target within 60 ft of the original target and making a new Strike Resonance against them. The arrow curves mid-flight, following the Aetheric imprint. Usable once per Pulse. The Resonant Archer never truly wastes a shot — the arrow simply finds a more suitable destination.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Ever-Ready Shot</div><span class="feat-depth">Depth 10</span></div>
+      <div class="feat-body">The Resonant Archer's Resonant Shot uses per Brief Attunement increase to 4. Additionally: one Resonant Shot effect (chosen at the start of each Deep Attunement) is always loaded — the first shot of each combat encounter automatically applies that effect without spending a Resonant Shot use. The Archer is always prepared. The shot they were waiting to take was nocked before the fight began.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- THE LOOM ECHO (Echo Knight) -->
+<div class="panel" id="panel-loomecho">
+<div class="wrap">
+  <div class="calling-header">
+    <span class="ch-badge">Solar Guard · Calling VII</span>
+    <div class="ch-name" style="color:var(--guard-bright)">The Loom Echo</div>
+    <div class="ch-origin">Replacing: Echo Knight · Cultural home: Stellar Cartographer crossover, Loom of Fate research division, theorized Kallos technique</div>
+    <span class="ch-essence" style="color:var(--omega);border-color:rgba(144,102,200,0.3);background:rgba(144,102,200,0.05)">Omega-aspected</span>
+  </div>
+  <p class="lore">The Loom does not weave one thread per soul. It weaves all the threads that soul <em>could</em> have been, maintaining them as potential until each moment of choice collapses potential into actuality. The Loom Echo has learned — through means the Kallos-Sworn refuse to explain and the Loom of Fate declines to acknowledge — to briefly manifest one of those unchosen threads as a physical presence. <strong>Their Echo is not a copy. It is an alternative version of themselves from a thread where they stood somewhere else.</strong> It acts. It attacks. When it is destroyed, it simply stops being — that thread remains unchosen.</p>
+  <div class="sec">Calling Features</div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Manifest Echo</div><span class="feat-depth">Depth 3</span></div>
+      <div class="feat-body">As an Instinct, the Loom Echo manifests their Echo — an alternate-thread version of themselves that appears in any unoccupied space within 15 ft. The Echo:<br><br>
+      • Has 1 Vitality and shares the Loom Echo's Guard Rating<br>
+      • Is destroyed if it takes any damage<br>
+      • Occupies space and triggers Reflex Strikes normally<br>
+      • On the Loom Echo's Moment, the Loom Echo may attack from either their own position or the Echo's (range: 5 ft for melee, normal range for ranged)<br>
+      • May move up to 30 ft on the Loom Echo's Moment (using the Loom Echo's Instinct to direct it)<br>
+      • If the Echo is within 5 ft of a creature and the Loom Echo attacks that creature, the attack has Resonant Fortune<br><br>
+      Only one Echo may exist at a time. Summoning a new one dismisses the previous. The Echo does not persist between encounters.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Unleash Incarnation</div><span class="feat-depth">Depth 7</span></div>
+      <div class="feat-body">When the Loom Echo takes the Strike Act, they may make one additional Strike Resonance through the Echo (the Echo attacks from its position). This does not cost an additional Act or Instinct — the alternate thread acts simultaneously. Additionally: when the Echo is within 5 ft of a creature, that creature has Resonant Discord on Strike Resonances against the <em>original</em> Loom Echo — the presence of an alternate version of the same person is deeply disorienting to target-lock. Uses per Deep Attunement: Resonance modifier (minimum 2).</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Legion of One</div><span class="feat-depth">Depth 10</span></div>
+      <div class="feat-body">When the Loom Echo is reduced to 0 Vitality, they may use their Reflex to swap positions with their Echo — the Echo collapses back into unchosen potential, and the Loom Echo manifests where the Echo was. This counts as the Echo being destroyed (the swap ends it). Additionally: the Loom Echo may now maintain their Echo between encounters — it persists until destroyed. At the start of each Deep Attunement, the Echo is automatically refreshed at its last known position if the Loom Echo wishes.<br><br>
+      <div class="note"><strong>Lore note:</strong> A Stellar Cartographer who reads a Loom Echo's Fate Number reports seeing something unusual — a brief doubling of the thread, as if two Numbers occupy the same space at slightly different frequencies. The Loom of Fate has requested three separate briefings on the Loom Echo technique. They have not explained why they are concerned. This should be treated as a story hook, not a mechanic.</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- THE WARDEN (Cavalier) -->
+<div class="panel" id="panel-warden">
+<div class="wrap">
+  <div class="calling-header">
+    <span class="ch-badge">Solar Guard · Calling VIII</span>
+    <div class="ch-name" style="color:var(--guard-bright)">The Warden</div>
+    <div class="ch-origin">Replacing: Cavalier · Cultural home: Solar Chivalry mounted tradition, Centaur-Kin allied warriors, Trench Keepers of the Maw garrison</div>
+    <span class="ch-essence" style="color:var(--alpha);border-color:rgba(212,114,74,0.3);background:rgba(212,114,74,0.05)">Alpha-aspected</span>
+  </div>
+  <p class="lore">The Warden does not fight to win. They fight to <em>hold</em>. Every Warden has internalized a simple operational truth: the most important thing in any engagement is the thing being protected, and everything else — the Warden's own survival included — is subordinate to that priority. The Solar Chivalry produces Wardens as its garrison commanders. The Trench Keepers of the Maw garrison are almost entirely Wardens, chosen for the quality that matters most when your job is standing between the world and something the world cannot afford to face. <strong>The Warden does not advance. They do not retreat. They are where they are, and what they are protecting does not fall.</strong></p>
+  <div class="sec">Calling Features</div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Hold the Line</div><span class="feat-depth">Depth 3</span></div>
+      <div class="feat-body">The Warden designates one creature or object as their <strong>Ward</strong> as a free action at the start of any encounter (or when circumstances change mid-encounter). While the Warden is within 5 ft of their Ward:<br>
+      • The Warden may use their Reflex to impose Resonant Discord on any Strike Resonance targeting the Ward<br>
+      • Any creature that strikes the Ward provokes a Reflex Strike from the Warden (not limited to one per Pulse — every attacker triggers this)<br>
+      • The Warden cannot be moved more than 5 ft from the Ward by any forced movement effect<br><br>
+      <strong>Unwavering Mark:</strong> When a creature within 5 ft of the Warden hits a creature other than the Warden, the marked creature has Resonant Discord on all Strike Resonances until the start of the Warden's next Moment. The Warden is the threat. Ignoring them has consequences.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Ferocious Presence</div><span class="feat-depth">Depth 7</span></div>
+      <div class="feat-body">As an Act, the Warden issues a direct challenge — all hostile creatures within 30 ft that can hear them must make a Resonance Warding Resonance (DC = 8 + Mastery + Resonance modifier) or be compelled to attack the Warden rather than any other target for 1 minute. Creatures that succeed are immune to this effect for 24 hours. Creatures that fail cannot move away from the Warden voluntarily — they must take the most direct path to the Warden each Moment. Once per Brief Attunement.<br><br>
+      This is not a Working. It is presence — the weight of someone who has decided nothing is getting past them, expressed with enough conviction that the enemy's threat assessment recalibrates.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Vigilant Defender</div><span class="feat-depth">Depth 10</span></div>
+      <div class="feat-body">The Warden may now designate up to their Mastery Bonus in Ward targets simultaneously. Additionally: when the Warden uses Combat Surge (their extra Act), they may move up to their full speed as part of that surge without provoking Reflex Strikes — they close gaps between themselves and threatened Wards with practiced efficiency. Finally: when any Ward reaches 0 Vitality while the Warden is conscious, the Warden immediately moves up to their full speed toward the source of that attack as a free action. They cannot be stopped by difficult terrain or opportunity attacks during this movement. This is not a decision. The Warden simply goes.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- THE STILL-BLADE (Samurai) -->
+<div class="panel" id="panel-stillblade">
+<div class="wrap">
+  <div class="calling-header">
+    <span class="ch-badge">Solar Guard · Calling IX</span>
+    <div class="ch-name" style="color:var(--guard-bright)">The Still-Blade</div>
+    <div class="ch-origin">Replacing: Samurai · Cultural home: Mori-Ōkami warrior tradition, Pine Shadow Clan discipline practice, Jade Empire dueling courts</div>
+    <span class="ch-essence" style="color:var(--beta);border-color:rgba(74,142,196,0.3);background:rgba(74,142,196,0.05)">Beta-aspected</span>
+  </div>
+  <p class="lore">The Still-Blade tradition emerged from the Pine Shadow Clan's philosophy that the most dangerous warrior is one who has achieved complete stillness of purpose — no hesitation, no doubt, no divided attention. The mind is clear. The blade follows. The Jade Empire's dueling courts adopted a parallel tradition independently and arrived at the same conclusion through different cultural expression: the warrior who has decided what they are willing to die for fights with a quality that technique alone cannot produce. <strong>The Still-Blade does not build to a strike. They simply strike, with the full weight of their commitment behind it.</strong></p>
+  <div class="sec">Calling Features</div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Fighting Spirit</div><span class="feat-depth">Depth 3</span></div>
+      <div class="feat-body">As an Instinct on the Still-Blade's Moment, they may call upon their fighting spirit. For the rest of this Moment: Resonant Fortune on all Strike Resonances; gain temporary Vitality equal to 5 + Resonance modifier. Usable three times per Deep Attunement.<br><br>
+      <strong>Elegant Courtier:</strong> The Still-Blade gains Mastery in Persuasion and either History or Insight. The warrior tradition of Mori-Ōkami demands social facility alongside martial excellence — a blade is only drawn when words have failed, and words should be chosen with the same precision as techniques.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Tireless Spirit</div><span class="feat-depth">Depth 7</span></div>
+      <div class="feat-body">When the Still-Blade rolls Pulse Order at the start of an encounter and rolls lower than 5, the result becomes 5. The Still-Blade is never caught fully unprepared — the stillness of mind produces consistent readiness that cannot fall below a baseline. Additionally: if the Still-Blade has no uses of Fighting Spirit remaining and takes damage that reduces them below half Vitality, they immediately regain one use. The spirit reasserts itself when most needed.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Strength Before Death</div><span class="feat-depth">Depth 10</span></div>
+      <div class="feat-body">Once per Deep Attunement, when the Still-Blade takes damage that would reduce them to 0 Vitality, they may delay falling — remaining at 1 Vitality until the end of their next Moment. During this time: immune to all additional Loom Test triggers (they cannot be killed by further damage in this window — only the moment's end causes them to finally fall if they have not been healed); all Strike Resonances have Resonant Fortune; they deal maximum damage on all hits.<br><br>
+      When this Moment ends, if the Still-Blade has not been restored to at least 1 Vitality through healing, they fall and begin making Loom Tests normally. The spirit sustains the body for exactly as long as the mind requires.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).style.display='block';
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+document.querySelectorAll('.panel').forEach(p=>{p.style.display='none'});
+document.getElementById('panel-chivalry').style.display='block';
+</script>
+</body>
+</html>

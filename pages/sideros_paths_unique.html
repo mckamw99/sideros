@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — The Four Unique Paths</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;500;600&display=swap');
+
+:root{
+  --void:#0b0910; --void-mid:#130f1e; --void-up:#1c1630;
+  --gold:#c9a84c; --gold-dim:#7a6028; --gold-bright:#e8c870;
+  --parchment:#f0e6cc; --parchment-dim:rgba(240,230,204,0.55);
+  --cartographer:#6a9ec8;
+  --ashe:#c07844;
+  --coil:#8a4a6a;
+  --geode:#6a9a8a;
+  --alpha:#d4724a; --beta:#4a8ec4; --omega:#9066c8;
+  --red:#c04040; --green:#4a8a56;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--parchment);line-height:1.7;min-height:100vh}
+
+.hero{text-align:center;padding:3.5rem 1.5rem 2.5rem;background:radial-gradient(ellipse at 50% 0%,rgba(201,168,76,0.08) 0%,transparent 60%);border-bottom:1px solid rgba(201,168,76,0.15)}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:.9rem}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(20px,4vw,32px);font-weight:500;color:var(--gold);letter-spacing:.06em;margin-bottom:.5rem}
+.hero-sub{font-size:15px;font-style:italic;color:var(--parchment-dim);max-width:500px;margin:0 auto}
+
+.selector{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-bottom:1px solid rgba(201,168,76,0.15);background:var(--void-mid);position:sticky;top:0;z-index:20}
+.sel-btn{padding:14px 6px 12px;border:none;border-right:1px solid rgba(201,168,76,0.1);background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;transition:background .2s}
+.sel-btn:last-child{border-right:none}
+.sel-btn:hover{background:rgba(255,255,255,0.03)}
+.sel-btn.active{background:rgba(201,168,76,0.07)}
+.sel-icon{font-size:22px}
+.sel-name{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--parchment-dim);text-align:center;line-height:1.3}
+.sel-btn.active .sel-name{color:var(--gold)}
+.sel-line{height:2px;width:100%;border-radius:1px;opacity:0;transition:opacity .2s}
+.sel-btn.active .sel-line{opacity:1}
+
+.panel{display:none}.panel.active{display:block}
+.path-wrap{max-width:880px;margin:0 auto;padding:2.5rem 1.25rem 4rem}
+
+/* PATH HEADER */
+.ph{display:grid;grid-template-columns:80px 1fr;gap:20px;align-items:start;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(201,168,76,0.15)}
+.ph-sigil{width:72px;height:72px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:30px;border:1px solid;flex-shrink:0}
+.ph-name{font-family:'Cinzel',serif;font-size:26px;font-weight:500;letter-spacing:.04em;margin-bottom:3px}
+.ph-base{font-size:13px;font-style:italic;color:var(--parchment-dim);margin-bottom:6px}
+.ph-essence{display:inline-block;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 9px;border-radius:4px;border:1px solid;margin-right:6px;margin-bottom:4px}
+.ph-vitality{display:inline-block;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 9px;border-radius:4px;border:1px solid rgba(201,168,76,0.3);color:var(--gold-dim);background:rgba(201,168,76,0.05)}
+
+/* LORE */
+.lore-para{font-size:15px;color:rgba(240,230,204,0.8);line-height:1.85;margin-bottom:.9rem}
+.lore-para strong{color:var(--parchment);font-weight:500}
+.lore-para em{color:var(--gold-dim);font-style:italic}
+
+/* SECTION */
+.sec-head{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin:1.75rem 0 .75rem;display:flex;align-items:center;gap:.7rem}
+.sec-head::after{content:'';flex:1;height:1px;background:rgba(201,168,76,0.15)}
+
+/* PROGRESSION TABLE */
+.prog-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:1rem}
+.prog-table th{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);padding:7px 10px;text-align:left;border-bottom:1px solid rgba(201,168,76,0.2)}
+.prog-table td{padding:6px 10px;border-bottom:1px solid rgba(201,168,76,0.07);color:rgba(240,230,204,0.75);vertical-align:top;line-height:1.45;font-size:12px}
+.prog-table td:first-child{color:var(--gold-bright);font-family:'Cinzel',serif;font-size:11px;white-space:nowrap}
+.prog-table td:nth-child(2){color:var(--parchment);font-weight:500}
+.prog-table tr:last-child td{border-bottom:none}
+.prog-table tr:hover td{background:rgba(255,255,255,0.015)}
+.prog-table tr.milestone td{background:rgba(201,168,76,0.04)}
+.prog-table tr.epic td{background:rgba(168,126,232,0.04)}
+
+/* FEATURE CARDS */
+.feature-grid{display:grid;gap:8px;margin-bottom:1rem}
+.feat{background:rgba(255,255,255,0.022);border:1px solid rgba(201,168,76,0.15);border-radius:9px;padding:12px 14px;cursor:pointer;overflow:hidden;transition:border-color .15s}
+.feat:hover,.feat.open{border-color:rgba(201,168,76,0.35)}
+.feat-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.feat-name{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.04em}
+.feat-level{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:3px;border:1px solid;white-space:nowrap;flex-shrink:0}
+.feat-body{display:none;margin-top:9px;padding-top:9px;border-top:1px solid rgba(201,168,76,0.1);font-size:13px;color:rgba(240,230,204,0.75);line-height:1.7}
+.feat.open .feat-body{display:block}
+.feat-body strong{color:var(--parchment);font-weight:500}
+.feat-body em{color:var(--gold-dim)}
+
+/* CALLING CARDS */
+.calling-grid{display:grid;gap:8px;margin-bottom:1rem}
+.calling{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.15);border-radius:9px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.calling:hover,.calling.open{border-color:rgba(201,168,76,0.3)}
+.calling-head{padding:12px 14px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.calling-name{font-family:'Cinzel',serif;font-size:13px;letter-spacing:.04em}
+.calling-tag{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:3px;border:1px solid;white-space:nowrap;flex-shrink:0}
+.calling-body{display:none;padding:0 14px 13px;border-top:1px solid rgba(201,168,76,0.1)}
+.calling.open .calling-body{display:block;padding-top:10px}
+.calling-body p{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.7;margin-bottom:8px}
+.calling-body p strong{color:var(--parchment);font-weight:500}
+.calling-body p:last-child{margin-bottom:0}
+
+/* STAT SPREAD */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:1rem}
+.stat-cell{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.13);border-radius:7px;padding:8px 10px;text-align:center}
+.sc-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px}
+.sc-val{font-size:14px;font-weight:500}
+.sc-note{font-size:10px;color:var(--parchment-dim);margin-top:2px;line-height:1.35}
+
+/* INFO */
+.info-block{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.12);border-radius:8px;padding:10px 12px;margin-bottom:8px}
+.ib-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:4px}
+.ib-text{font-size:13px;color:rgba(240,230,204,0.8);line-height:1.6}
+.ib-text strong{color:var(--parchment);font-weight:500}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.9rem}
+
+/* RESOURCE DISPLAYS */
+.gauge-display{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.15);border-radius:8px;padding:12px 14px;margin-bottom:1rem}
+.gauge-label{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:8px}
+.gauge-track{display:flex;gap:3px;margin-bottom:5px}
+.gauge-seg{height:10px;flex:1;border-radius:2px;border:1px solid rgba(255,255,255,0.08)}
+.gauge-zone{font-size:10px;color:rgba(240,230,204,0.4);display:flex;justify-content:space-between}
+
+/* NOTES */
+.note-block{background:rgba(168,126,232,0.05);border:1px solid rgba(168,126,232,0.2);border-radius:8px;padding:11px 13px;margin-top:1rem}
+.nb-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#a87ee8;margin-bottom:5px}
+.nb-text{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.65}
+.nb-text strong{color:var(--parchment);font-weight:500}
+
+.warning-block{background:rgba(192,64,64,0.05);border:1px solid rgba(192,64,64,0.2);border-radius:8px;padding:11px 13px;margin-top:.75rem}
+.wb-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:5px}
+.wb-text{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.65}
+.wb-text strong{color:var(--parchment);font-weight:500}
+
+.gold-block{background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:8px;padding:11px 13px;margin-top:.75rem}
+.gb-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:5px}
+.gb-text{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.65}
+.gb-text strong{color:var(--parchment);font-weight:500}
+
+.divider{height:1px;background:linear-gradient(to right,transparent,rgba(201,168,76,0.2),transparent);margin:1.5rem 0}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Sideros / Astrolan — Path Compendium · Volume I</div>
+  <h1 class="hero-title">The Four Original Paths</h1>
+  <p class="hero-sub">These Paths exist nowhere else. They were born from the world and cannot be separated from it.</p>
+</div>
+
+<div class="selector">
+  <button class="sel-btn active" onclick="show('cartographer',this)">
+    <div class="sel-icon">✦</div>
+    <div class="sel-name">Stellar Cartographer</div>
+    <div class="sel-line" style="background:var(--cartographer)"></div>
+  </button>
+  <button class="sel-btn" onclick="show('ashe',this)">
+    <div class="sel-icon">🌿</div>
+    <div class="sel-name">Ashé-Medium</div>
+    <div class="sel-line" style="background:var(--ashe)"></div>
+  </button>
+  <button class="sel-btn" onclick="show('coil',this)">
+    <div class="sel-icon">🐍</div>
+    <div class="sel-name">Coil-Stalker</div>
+    <div class="sel-line" style="background:var(--coil)"></div>
+  </button>
+  <button class="sel-btn" onclick="show('geode',this)">
+    <div class="sel-icon">⚙</div>
+    <div class="sel-name">Geode-Pilot</div>
+    <div class="sel-line" style="background:var(--geode)"></div>
+  </button>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- STELLAR CARTOGRAPHER -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel active" id="panel-cartographer">
+<div class="path-wrap">
+  <div class="ph">
+    <div class="ph-sigil" style="background:rgba(106,158,200,0.08);border-color:rgba(106,158,200,0.3)">✦</div>
+    <div>
+      <div class="ph-name" style="color:var(--cartographer)">Stellar Cartographer</div>
+      <div class="ph-base">The fate-mappers. They read the Loom directly — storing luck, redirecting probability, and seeing the Fate Numbers that bind the world together.</div>
+      <span class="ph-essence" style="color:var(--omega);border-color:rgba(144,102,200,0.4);background:rgba(144,102,200,0.06)">Omega-aspected</span>
+      <span class="ph-vitality">Vitality Die: d8</span>
+    </div>
+  </div>
+
+  <p class="lore-para">A Stellar Cartographer does not predict the future. They read the Loom's current threading and act on what they find there — storing the moments when fate swings wildly (the natural 20, the catastrophic 1) and redirecting that stored probability where it is needed most. <strong>Where other Paths weave cosmic force outward, the Stellar Cartographer channels it through time</strong> — saving a moment of fate from one instant and spending it in another. The Loom of Fate named itself after what Stellar Cartographers do. The faction appropriated the metaphor. The Path predates them by centuries.</p>
+
+  <p class="lore-para">Stellar Cartographers are also, practically, the world's most reliable intelligence gatherers on Fated Bonds. Their ability to read Fate Numbers as a Instinct makes them the character who walks into a room and immediately knows who is bonded to whom, which bonds are healthy, and which are inverted by Void-energy. Serath of the Closed Circle is a Stellar Cartographer. The Loom of Fate employs dozens. Arch-Oracle Lyra wishes she had one in the Shifting Horizons Conclave and keeps sending messages that never arrive.</p>
+
+  <div class="sec-head">Core Resource — Fate-Knots</div>
+  <div class="gauge-display">
+    <div class="gauge-label">Fate-Knot Storage — Maximum knots = Resonance modifier (minimum 2)</div>
+    <div class="gauge-track">
+      <div class="gauge-seg" style="background:rgba(106,158,200,0.6)"></div>
+      <div class="gauge-seg" style="background:rgba(106,158,200,0.6)"></div>
+      <div class="gauge-seg" style="background:rgba(106,158,200,0.4)"></div>
+      <div class="gauge-seg" style="background:rgba(106,158,200,0.4)"></div>
+      <div class="gauge-seg" style="background:rgba(255,255,255,0.08)"></div>
+      <div class="gauge-seg" style="background:rgba(255,255,255,0.08)"></div>
+    </div>
+    <div class="gauge-zone"><span>Empty</span><span>Stored Knots (shown: 2 natural 20s, 2 natural 1s)</span><span>Full</span></div>
+  </div>
+
+  <p class="lore-para">A <strong>Fate-Knot</strong> is a stored moment of fate — captured from a natural 20 (a Bright Knot) or a natural 1 (a Dark Knot) rolled by any creature the Cartographer can see within 60 feet. Storing a Knot is a Reflex requiring no action cost. The Knot holds the probability weight of that moment.</p>
+
+  <div class="two-col">
+    <div class="info-block">
+      <div class="ib-label">Bright Knot (from natural 20)</div>
+      <div class="ib-text">Spend to grant any creature within 60 ft <strong>Resonant Fortune</strong> on one roll, or to turn any roll result into a natural 20 after the die is cast but before the result is adjudicated. The moment of fate is redistributed, not created.</div>
+    </div>
+    <div class="info-block">
+      <div class="ib-label">Dark Knot (from natural 1)</div>
+      <div class="ib-text">Spend to force any creature within 60 ft to reroll with <strong>Resonant Discord</strong>, or to turn any roll result into a natural 1 after the die is cast. The bad luck that missed one target finds another. <em>Using a Dark Knot on an ally requires their consent.</em></div>
+    </div>
+  </div>
+
+  <div class="sec-head">Path Features by Resonance Depth</div>
+  <div class="feature-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--cartographer)">Fate Number Reading</div><span class="feat-level" style="color:var(--cartographer);border-color:rgba(106,158,200,0.3)">Depth 1</span></div>
+      <div class="feat-body">As an Instinct, the Stellar Cartographer may read the Fate Number of any creature they can see within 30 feet. They learn: the exact Fate Number, the creature's Primal Essence (Alpha/Beta/Omega), and whether any active Fated Bond connection exists. They do not automatically learn who the bond connects to — that requires the creature to be within sight simultaneously. <strong>Void-Touched Numbers (13, 66, 99) are immediately apparent</strong> — they register differently from all other Numbers, like a note played in the wrong octave. A Void-Touched character's Number reads correctly, but the Cartographer feels the Hollow Serpent's frequency behind it.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--cartographer)">Fate-Knot Weaving</div><span class="feat-level" style="color:var(--cartographer);border-color:rgba(106,158,200,0.3)">Depth 1</span></div>
+      <div class="feat-body">The core Fate-Knot system becomes active. Maximum stored Knots = Resonance modifier (minimum 2). All Knots clear at the end of each Deep Attunement — stored probability cannot be held indefinitely, it begins to express itself in unpredictable ways after 8 hours. <strong>Knots stored during the current encounter only</strong>: any Knot not spent by the end of the encounter in which it was captured releases spontaneously — the Concordance secretly rolls on the Knot Release table (see below).</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--cartographer)">Bond Cartography</div><span class="feat-level" style="color:var(--cartographer);border-color:rgba(106,158,200,0.3)">Depth 3</span></div>
+      <div class="feat-body">The Stellar Cartographer can now map Bond connections visible to them. When they read two creatures' Fate Numbers simultaneously, they know: whether the creatures are bonded, the tier of the bond (Paired/Triad/Quad/Quint), the bond's current health (stable, strained, severed, or inverted by Void-energy), and whether the bond is acknowledged or denied. <strong>Denied bonds register as two taut threads</strong> — both Numbers are present but pulling toward each other without meeting. An inverted (Void-Husk) bond registers as one Number present and one Number-shaped hole.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--cartographer)">Probability Threading</div><span class="feat-level" style="color:var(--cartographer);border-color:rgba(106,158,200,0.3)">Depth 5</span></div>
+      <div class="feat-body">The Cartographer may now spend two Fate-Knots of the same type simultaneously to produce an enhanced effect: <strong>Two Bright Knots</strong> — grant Resonant Fortune and a +5 bonus to one roll (the probability is genuinely weighted, not just amplified). <strong>Two Dark Knots</strong> — force a reroll with Resonant Discord and a −5 penalty. <strong>One Bright + One Dark</strong> — the Woven Thread: a roll that succeeds but produces a complication of equal weight to the success, or fails but produces an unexpected benefit. The Concordance designs the complication/benefit. This is the Loom in motion — nothing is ever simply good or simply bad.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--cartographer)">Loom Sight</div><span class="feat-level" style="color:var(--cartographer);border-color:rgba(106,158,200,0.3)">Depth 7</span></div>
+      <div class="feat-body">Once per Deep Attunement, the Stellar Cartographer may spend 10 minutes in focused reading of the Loom's current state in their area. They learn: which Fate Numbers in the current location are approaching a threshold (a significant event is imminent for a specific creature), whether any Quint Bond cluster is within 100 miles (they sense the numerical proximity, not the individuals), and one specific action any creature in the area is likely to take in the next 24 hours (the creature with the most taut thread). <strong>Serath of the Closed Circle has this feature</strong> — and uses it to monitor emerging Quint Bond formations for the Coil.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--cartographer)">Fate-Knot Expansion</div><span class="feat-level" style="color:var(--cartographer);border-color:rgba(106,158,200,0.3)">Depth 9</span></div>
+      <div class="feat-body">Maximum stored Knots increases to Resonance modifier + Mastery Bonus. The Cartographer may now store Knots from their own rolls as well as others'. Additionally: Knots no longer release spontaneously at encounter's end — they can be held until the end of the current Deep Attunement cycle. <strong>Extended storage carries cost</strong>: each Knot held more than 4 hours causes 1 point of psychic pressure (cosmetic — the Cartographer experiences intrusive probability visions) that clears when the Knot is spent.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--cartographer)">Thread Severance</div><span class="feat-level" style="color:var(--cartographer);border-color:rgba(106,158,200,0.3)">Depth 11</span></div>
+      <div class="feat-body">Once per Deep Attunement, by spending three Fate-Knots (any combination), the Stellar Cartographer may attempt to temporarily sever a Fated Bond connection they can perceive. Both bonded creatures make a Resonance Warding Resonance (Threshold 18). If both fail, all Bond benefits are suppressed for 24 hours — the connection exists but cannot function. If either succeeds, the attempt fails and the Cartographer loses the Knots. <strong>This is the most ethically contested ability in the Path</strong> — the Loom of Fate uses it to separate inconvenient bonds. The ability does not permanently sever bonds. Permanent severance requires death or Void-Husk corruption. This is a suppression, not a cutting.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--cartographer)">Quint Recognition</div><span class="feat-level" style="color:var(--cartographer);border-color:rgba(106,158,200,0.3)">Depth 15</span></div>
+      <div class="feat-body">The Stellar Cartographer can now identify Quint Bond cluster members on sight — any creature whose Fate Number falls within the 3-point margin of an active cluster glows faintly in the Cartographer's perception, visible at 300 ft range. They also know, always, whether the Quint Bond has been fully acknowledged (all five members in contact) or is still forming. <strong>If the Cartographer themselves is a Quint Bond member</strong>, their recognition extends to 1 mile and they always know the direction of each other member. The Ifá prophecy ("the Five Who Remember") refers specifically to a moment when all five simultaneously achieve Quint Recognition.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Callings</div>
+  <div class="calling-grid">
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--cartographer)">The Loom's Hand</div><span class="calling-tag" style="color:var(--cartographer);border-color:rgba(106,158,200,0.3)">Fate-Agent</span></div>
+      <div class="calling-body">
+        <p>The Loom's Hand Cartographers operate as agents of fate — they do not read the Loom passively but actively shape its threading. Available at Depth 3.</p>
+        <p><strong>Thread Reinforcement (Depth 3):</strong> When you spend a Bright Knot on an ally, they also gain temporary Vitality equal to your Resonance modifier. The Loom strengthens what it endorses.</p>
+        <p><strong>Probability Cascade (Depth 7):</strong> When you spend a Bright Knot and the recipient rolls a natural 20 on the boosted roll, you automatically store a new Bright Knot. Fortune compounds.</p>
+        <p><strong>Fate's Armor (Depth 11):</strong> Passive. Once per Pulse, when you would take damage that would reduce you to 0 Vitality, you may spend one Bright Knot to reduce that damage to 1 Vitality instead. The Loom has use for you yet.</p>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--cartographer)">The Unwritten</div><span class="calling-tag" style="color:var(--cartographer);border-color:rgba(106,158,200,0.3)">Fate-Eraser</span></div>
+      <div class="calling-body">
+        <p>The Unwritten Cartographers operate in the gaps — removing probability from situations rather than redirecting it. Where the Loom's Hand adds, the Unwritten subtracts. Available at Depth 3.</p>
+        <p><strong>Probability Void (Depth 3):</strong> When you spend a Dark Knot, the target's next roll after the forced reroll cannot benefit from Resonant Fortune, Bond abilities, or any probability-modifying effect. The bad luck doesn't just strike — it strips the cushion around the next moment.</p>
+        <p><strong>Number Masking (Depth 7):</strong> You can suppress a creature's Fate Number from being read — your own, or any creature you touch for 1 minute of work. The Number still exists but reads as static to any Fate Number Reading ability. Duration: 24 hours. <strong>This is the Fate-Breaker ability</strong> — the Unwritten Cartographer is the true specialist, while the Fate-Breaker Path borrows a lesser version.</p>
+        <p><strong>Thread Cutting (Depth 11):</strong> Once per Deep Attunement, you may spend three Dark Knots to permanently remove a minor Fated Bond benefit (one specific ability, not the entire bond) from a bonded creature you touch. The bond remains. That particular resonance is simply no longer accessible. The Loom of Fate used this to create the "Denied Bond" condition in some historical cases.</p>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--cartographer)">The Star-Reader</div><span class="calling-tag" style="color:var(--cartographer);border-color:rgba(106,158,200,0.3)">Celestial-Scholar</span></div>
+      <div class="calling-body">
+        <p>The Star-Reader Cartographers combine fate-mapping with stellar observation — connecting the Loom's threading to the zodiac's physical expression. Available at Depth 3.</p>
+        <p><strong>Sign Reading (Depth 3):</strong> When you read a creature's Fate Number, you also learn their zodiac sign and whether they have taken their Zodiac Attunement. If they haven't, you know why — the Attunement's prerequisite (Legendary Beast encounter) either has or hasn't been met, and you sense which Beast would recognize them.</p>
+        <p><strong>Celestial Map (Depth 7):</strong> Once per Deep Attunement, you may create a probability map of the next 24 hours for one location. The Concordance places three markers on the map: one threat, one opportunity, one wildcard. All three will manifest somewhere in the location within the time frame. You know the category but not the specific event.</p>
+        <p><strong>Legendary Attunement Reading (Depth 11):</strong> You can determine whether a Legendary Beast has noticed a specific creature — whether it is aware of them, whether it considers them a peer, and whether it would receive them peacefully. This knowledge is useful for planning Zodiac Attunement encounters. You cannot force the Beast's recognition. You can tell the character whether they're ready.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="gold-block">
+    <div class="gb-title">Knot Release Table — Unspent Knots at Encounter's End (roll d6)</div>
+    <div class="gb-text">
+      <strong>Bright Knot released:</strong> 1–2: One ally of Concordance's choice gains Resonant Fortune on their next roll. 3–4: The Cartographer gains a vision of a nearby Fate Number interaction (one Bond, one threshold). 5–6: The luck disperses harmlessly — a small good thing happens to someone nearby.<br><br>
+      <strong>Dark Knot released:</strong> 1–2: One creature (Concordance's choice, possibly an ally) must reroll their next roll and take the lower. 3–4: The Cartographer experiences a 1-hour headache as the dark probability presses against their skull. 5–6: The bad luck finds an enemy — a hostile creature makes a small error.
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- ASHÉ-MEDIUM -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-ashe">
+<div class="path-wrap">
+  <div class="ph">
+    <div class="ph-sigil" style="background:rgba(192,120,68,0.08);border-color:rgba(192,120,68,0.3)">🌿</div>
+    <div>
+      <div class="ph-name" style="color:var(--ashe)">Ashé-Medium</div>
+      <div class="ph-base">The vessel-walkers. They invite divine presence rather than weaving divine force — becoming a living conduit for the Orishas' direct expression in the mortal world.</div>
+      <span class="ph-essence" style="color:var(--omega);border-color:rgba(144,102,200,0.4);background:rgba(144,102,200,0.06)">Omega-aspected</span>
+      <span class="ph-vitality">Vitality Die: d8</span>
+    </div>
+  </div>
+
+  <p class="lore-para">The Ashé-Medium does not cast Workings. They do not open Aetheric Channels. They <strong>invite</strong>. The distinction matters because an invited force is not under the Medium's control — it is under the Orisha's. The Medium's skill lies in cultivating a relationship of sufficient trust and resonance that the Orisha chooses to come when called, expresses through the Medium's body with care for the Medium's survival, and departs when the situation is resolved rather than lingering to serve its own agenda. <strong>Every Ashé-Medium is, at all times, in an ongoing relationship with a being of immense power.</strong> The Path is the cultivation of that relationship.</p>
+
+  <p class="lore-para">Ashé-Mediums are not exclusively Ashé-Touched Kindred, though the Path is most naturally walked by those whose biology already carries Orisha resonance. A Human or Eldren who has spent years in the Ashélands, completing genuine community service and earning initiation through the Table of Ifá's recognition, may also walk this Path. The Orisha are not exclusive — they are discerning. They come to those who have earned the relationship, regardless of Kindred.</p>
+
+  <div class="sec-head">Core Resource — Ashé Vessel</div>
+  <div class="gauge-display">
+    <div class="gauge-label">Ashé Vessel — 0 to 10 (maximum 10)</div>
+    <div class="gauge-track">
+      <div class="gauge-seg" style="background:rgba(192,120,68,0.3)"></div>
+      <div class="gauge-seg" style="background:rgba(192,120,68,0.4)"></div>
+      <div class="gauge-seg" style="background:rgba(192,120,68,0.5)"></div>
+      <div class="gauge-seg" style="background:rgba(192,120,68,0.6)"></div>
+      <div class="gauge-seg" style="background:rgba(192,120,68,0.7)"></div>
+      <div class="gauge-seg" style="background:rgba(192,120,68,0.7)"></div>
+      <div class="gauge-seg" style="background:rgba(192,120,68,0.6)"></div>
+      <div class="gauge-seg" style="background:rgba(192,120,68,0.5)"></div>
+      <div class="gauge-seg" style="background:rgba(192,120,68,0.4)"></div>
+      <div class="gauge-seg" style="background:rgba(192,120,68,0.3)"></div>
+    </div>
+    <div class="gauge-zone"><span>0 — Empty</span><span>5 — Invocation ready</span><span>8+ — Possession threshold</span><span>10 — Full</span></div>
+  </div>
+
+  <div class="two-col">
+    <div class="info-block">
+      <div class="ib-label">Filling the Vessel</div>
+      <div class="ib-text"><strong>+1 Ashé:</strong> Complete an Act that directly benefits another creature (healing, protecting, sharing). <strong>+2 Ashé:</strong> Complete a significant communal obligation (fulfill a promise, resolve a community dispute, lead a ritual). <strong>+3 Ashé:</strong> Complete a ritual sacrifice — offer something of genuine value at an Orisha shrine. <strong>+Full restore:</strong> Deep Attunement at an Orisha shrine or in the Ashélands.</div>
+    </div>
+    <div class="info-block">
+      <div class="ib-label">Spending the Vessel</div>
+      <div class="ib-text"><strong>Orisha Invocation (3 Ashé):</strong> Call partial Orisha presence — Domain bonus active for 1 minute, drains 1 Ashé per round. <strong>Full Possession (8 Ashé):</strong> Complete Orisha inhabitation — 3 rounds, Concordance control, character drops to 0 Vitality after (stabilizes). <strong>Ashé Workings:</strong> Channel Ashé instead of Aetheric Channels for specific Workings — 1 Ashé per tier equivalent.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Path Features by Resonance Depth</div>
+  <div class="feature-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--ashe)">Orisha Patron & Ashé Vessel</div><span class="feat-level" style="color:var(--ashe);border-color:rgba(192,120,68,0.3)">Depth 1</span></div>
+      <div class="feat-body">Choose your patron Orisha (Eshu-Elegbara, Ogun, Shango, Yemaya, Oshun, Oya, Obatala, or Orunmila). This is your primary divine relationship — the Orisha you have spent years cultivating contact with. The Ashé Vessel system becomes active. <strong>Patron Domain:</strong> Your patron's Domain ability (from Kindred traits if Ashé-Touched, or learned through initiation otherwise) activates at double potency when you have 5+ Ashé in the Vessel. <strong>Communal Instinct:</strong> Whenever you complete an Act that benefits another creature, you may immediately restore 1 Ashé as an Instinct — the act of giving fills the vessel automatically.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--ashe)">Orisha Workings</div><span class="feat-level" style="color:var(--ashe);border-color:rgba(192,120,68,0.3)">Depth 1</span></div>
+      <div class="feat-body">The Ashé-Medium gains access to Workings powered by Ashé rather than Aetheric Channels — these cannot be suppressed by Aether-Dampening Ore (Ashé predates the Aetheric system). Beginning Working list varies by patron:<br><br>
+      <strong>Eshu-Elegbara:</strong> Open/Close Threshold, Comprehend Languages, Misfortune<br>
+      <strong>Ogun:</strong> Sharpness, Iron Skin, Righteous Strike, Unbreakable<br>
+      <strong>Shango:</strong> Call Lightning, Thunder Clap, Storm Sight, Judgment Strike<br>
+      <strong>Yemaya:</strong> Healing Waters, Breathe Water, Ocean's Embrace, Wave Wall<br>
+      <strong>Oshun:</strong> Sweet Persuasion, Truth Waters, Fertility Blessing, Emotional Reading<br>
+      <strong>Oya:</strong> Wind Walk, Ancestor Speak, Storm Cloak, Death's Threshold<br>
+      <strong>Obatala:</strong> Peace Aura, Purify, Calm Emotions, White Light Ward<br>
+      <strong>Orunmila:</strong> Ifá Reading, Fate Sight, Destiny Nudge, Truth Compulsion<br><br>
+      Each Working costs 1–3 Ashé depending on power. The Concordance sets costs at the table based on the effect's magnitude.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--ashe)">Orisha Invocation</div><span class="feat-level" style="color:var(--ashe);border-color:rgba(192,120,68,0.3)">Depth 2</span></div>
+      <div class="feat-body">Using 3 Ashé as an Act, call partial Orisha presence. For 1 minute (10 rounds): patron Domain ability activates at full potency; all patron Workings cost 1 fewer Ashé; the Medium's presence is perceptible to those with spiritual sensitivity (Attunement DC 12 Active Resonance to feel the divine nearness). Drain: 1 Ashé per round while Invocation is active. When Ashé drops to 0, the Invocation ends immediately. <strong>The Orisha is present but not in control</strong> — the Medium acts with divine support, not divine replacement.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--ashe)">Second Orisha Contact</div><span class="feat-level" style="color:var(--ashe);border-color:rgba(192,120,68,0.3)">Depth 5</span></div>
+      <div class="feat-body">Through years of expanded ritual practice, the Ashé-Medium establishes contact with a <strong>secondary Orisha</strong> (chosen from the list, different from the patron). They gain 3 Workings from the secondary Orisha's list, usable at standard Ashé cost. The secondary Orisha cannot be Invoked — that intimacy belongs to the patron only. <strong>However</strong>: once per Deep Attunement, the secondary Orisha may speak through the Medium briefly (1 Pulse) without Ashé cost — these moments are not chosen by the Medium. The Concordance decides when the secondary Orisha has something to say.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--ashe)">Full Possession</div><span class="feat-level" style="color:var(--ashe);border-color:rgba(192,120,68,0.3)">Depth 7</span></div>
+      <div class="feat-body">Once per Deep Attunement, spending 8 Ashé as an Act, the patron Orisha fully inhabits the Medium's body for 3 rounds. The Concordance runs the character as the Orisha — not maliciously, but with divine priority rather than the character's personal agenda. The Orisha will not act against the character's fundamental nature but pursues its own objectives for those 3 rounds.<br><br>
+      <strong>Orisha stats during Possession:</strong> Forcefulness and Resonance increase by 4; all Workings from the patron list cost 0 Ashé; the Orisha may use one ability the Medium does not normally have access to (Concordance designs this based on the Orisha's nature). After Possession: character drops to 0 Vitality and stabilizes immediately. Ashé resets to 0.<br><br>
+      <strong>The Orisha remembers.</strong> Actions taken during Possession are remembered by the patron — consistently reckless use of Possession damages the relationship. The Orisha may eventually decline to come when called if the relationship is abused.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--ashe)">Communal Anchor</div><span class="feat-level" style="color:var(--ashe);border-color:rgba(192,120,68,0.3)">Depth 9</span></div>
+      <div class="feat-body">The Ashé-Medium becomes a node of communal spiritual protection. All allies within 30 feet of the Medium have Resonant Fortune on Warding Resonances against Dread-Struck, Soul-Swayed, and Void-Touched Exposure. This is not a Working — it is the ambient presence of accumulated Orisha relationship radiating outward. <strong>Against Ashen Coil Workings specifically</strong>: allies within 30 feet may add the Medium's Resonance modifier to their Warding Resonances. The Orishas and the Hollow Serpent are ancient opposites. The Medium's body has become a claim staked against entropy.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--ashe)">Orisha Convergence</div><span class="feat-level" style="color:var(--ashe);border-color:rgba(192,120,68,0.3)">Depth 13</span></div>
+      <div class="feat-body">The Ashé-Medium may now Invoke their secondary Orisha simultaneously with their patron. Both Orisha are present but neither is in full control — the Medium navigates between them. During Dual Invocation (costs 6 Ashé to initiate, drains 2 Ashé per round): access to both patron and secondary Working lists at half cost; the Medium's body shows traits of both Orishas simultaneously; creatures witnessing this must make an Attunement Warding Resonance (Threshold 16) or be Dread-Struck for 1 round — not from malice, but from proximity to two divine presences in one mortal frame. <strong>Dual Invocation cannot escalate to Full Possession</strong> — the Orishas will not share a body completely. Attempting to force Full Possession during Dual Invocation causes both to withdraw and costs 1 week of relationship repair before either can be contacted again.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Callings</div>
+  <div class="calling-grid">
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--ashe)">The Community Healer</div><span class="calling-tag" style="color:var(--ashe);border-color:rgba(192,120,68,0.3)">Restoration</span></div>
+      <div class="calling-body">
+        <p>Community Healers orient their Orisha relationship toward the restoration of individuals and communities. Available at Depth 3.</p>
+        <p><strong>Deep Healing (Depth 3):</strong> Your healing Workings restore Vitality equal to double the normal amount when cast on a creature at or below half their maximum Vitality. The Orisha gives more to those who need more.</p>
+        <p><strong>Community Restoration (Depth 7):</strong> Once per Deep Attunement, by spending 4 Ashé in a 1-hour community ritual involving at least 5 willing participants, you remove one curse, magical disease, or long-term condition from each participant simultaneously. The ritual requires genuine communal participation — performed as a service, not a transaction.</p>
+        <p><strong>Orisha's Gift (Depth 11):</strong> When you complete a Full Possession, choose one ally who witnessed it. They gain full Vitality restoration and all conditions removed — the Orisha's passing through heals its wake.</p>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--ashe)">The War-Medium</div><span class="calling-tag" style="color:var(--ashe);border-color:rgba(192,120,68,0.3)">Combat</span></div>
+      <div class="calling-body">
+        <p>War-Mediums call specifically on the martial Orishas — Ogun and Shango most often — and orient the Path toward righteous conflict. Available at Depth 3.</p>
+        <p><strong>Iron Body (Depth 3):</strong> During Orisha Invocation, your Guard Rating increases by 3 and all Strike Resonances deal +1d6 damage of your patron's domain type. The Orisha's combat nature flows through you during the Invocation.</p>
+        <p><strong>Righteous Fury (Depth 7):</strong> When you reduce a hostile creature to 0 Vitality while Invoking your patron, you gain 2 Ashé immediately — the Orisha approves. This can only trigger once per Pulse.</p>
+        <p><strong>Full Possession — War Form (Depth 11):</strong> When you use Full Possession with a martial patron, the Orisha's stat bonuses increase to +6 Forcefulness and all attacks during Possession are Resonant Strikes (maximum damage) without rolling. The price: after Possession ends, you are at 0 Vitality AND gain one level of Aetheric Depletion. The Orisha burns brighter in the War-Medium's body.</p>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--ashe)">The Ancestor-Speaker</div><span class="calling-tag" style="color:var(--ashe);border-color:rgba(192,120,68,0.3)">Divination</span></div>
+      <div class="calling-body">
+        <p>Ancestor-Speakers orient toward Oya and Orunmila, working the threshold between living and dead. Available at Depth 3.</p>
+        <p><strong>Extended Threshold (Depth 3):</strong> You can speak with the dead for up to 1 hour after death (extended from 10 minutes). The dead remember everything up to the moment of dying and answer honestly — they have nothing left to protect.</p>
+        <p><strong>Ifá Consultation (Depth 7):</strong> Once per session, spend 2 Ashé and 1 hour in divination ritual. Ask the Concordance one complex question about any creature's past, nature, or motivation. The answer is always accurate and always filtered through the Orisha's perspective — Orunmila answers in patterns, Oya answers in endings.</p>
+        <p><strong>Persistent Ancestor (Depth 11):</strong> Once per Deep Attunement, spend 5 Ashé to invite a specific dead individual's presence as a spiritual advisor. They remain for 24 hours, invisible to non-spiritual-sensitive creatures, able to advise but not act. The Medium chooses who. The ancestor chooses whether to come.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- COIL-STALKER -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-coil">
+<div class="path-wrap">
+  <div class="ph">
+    <div class="ph-sigil" style="background:rgba(138,74,106,0.08);border-color:rgba(138,74,106,0.3)">🐍</div>
+    <div>
+      <div class="ph-name" style="color:var(--coil)">Coil-Stalker</div>
+      <div class="ph-base">The controlled-corruption warriors. They carry Void-energy as a weapon — knowing that the line between using it and being consumed by it requires constant vigilance.</div>
+      <span class="ph-essence" style="color:var(--beta);border-color:rgba(74,142,196,0.4);background:rgba(74,142,196,0.06)">Beta-aspected</span>
+      <span class="ph-vitality">Vitality Die: d10</span>
+    </div>
+  </div>
+
+  <p class="lore-para">The Coil-Stalker is not a villain. They are someone who looked at the Ashen Coil's power, understood what it actually is, and decided that carrying it in a controlled form was better than leaving it exclusively in the Coil's hands. The original Coil-Stalkers were agents of the Loom of Fate who were tasked with infiltrating the Ashen Coil — and who discovered, over time, that infiltration required genuine corruption, and genuine corruption required management. <strong>The Lead-Scale Corruption gauge is the management system they developed to survive.</strong></p>
+
+  <p class="lore-para">The Coil-Stalker is the most morally complex Path in Sideros because the power it uses is objectively entropic — it does not simply harm enemies, it harms the Coil-Stalker too. Every use of Void-energy pushes the gauge. A Coil-Stalker who loses discipline becomes what they were fighting. The Siderium Quartz (Weep-Stone) economy that reduces corruption is therefore not a convenience — it is a lifeline. <strong>A Coil-Stalker without access to Weep-Stone is a Coil-Stalker on a timer.</strong></p>
+
+  <div class="sec-head">Core Resource — Lead-Scale Corruption Gauge</div>
+  <div class="gauge-display">
+    <div class="gauge-label">Lead-Scale Corruption — 0 (Cold) to 20 (Void-Husk Threshold)</div>
+    <div class="gauge-track">
+      <div class="gauge-seg" style="background:#3b6d11"></div>
+      <div class="gauge-seg" style="background:#4a8020"></div>
+      <div class="gauge-seg" style="background:#6a9020"></div>
+      <div class="gauge-seg" style="background:#8aaa20"></div>
+      <div class="gauge-seg" style="background:#aab820"></div>
+      <div class="gauge-seg" style="background:#c8c030"></div>
+      <div class="gauge-seg" style="background:#c89830"></div>
+      <div class="gauge-seg" style="background:#c87030"></div>
+      <div class="gauge-seg" style="background:#c84830"></div>
+      <div class="gauge-seg" style="background:#c82020"></div>
+      <div class="gauge-seg" style="background:#a81010"></div>
+      <div class="gauge-seg" style="background:#880808"></div>
+      <div class="gauge-seg" style="background:#6a0404"></div>
+      <div class="gauge-seg" style="background:#500202"></div>
+      <div class="gauge-seg" style="background:#380000"></div>
+      <div class="gauge-seg" style="background:#280000"></div>
+      <div class="gauge-seg" style="background:#180000"></div>
+      <div class="gauge-seg" style="background:#100000"></div>
+      <div class="gauge-seg" style="background:#080000"></div>
+      <div class="gauge-seg" style="background:#040000;border-color:rgba(255,0,0,0.3)"></div>
+    </div>
+    <div class="gauge-zone"><span>0–5: Cold</span><span>6–10: Tempered</span><span>11–15: Burning</span><span>16–19: Searing</span><span>20: Threshold</span></div>
+  </div>
+
+  <div class="two-col">
+    <div class="info-block">
+      <div class="ib-label">Gauge Increase (corruption fills)</div>
+      <div class="ib-text"><strong>+1:</strong> Using any Corruption ability. <strong>+2:</strong> Entering Void-Frenzy. <strong>+3:</strong> Void-Frenzy lasting more than 3 rounds. <strong>+1:</strong> Each hour spent adjacent to active Coil ritual or Void-Husk. <strong>+Varies:</strong> Failed Warding Resonance against Void-energy attacks.</div>
+    </div>
+    <div class="info-block">
+      <div class="ib-label">Gauge Decrease (corruption clears)</div>
+      <div class="ib-text"><strong>−1 per charge:</strong> Siderium Quartz (Weep-Stone) application, 1 action. <strong>−2:</strong> Deep Attunement in Coil-free area. <strong>−3:</strong> Kanya Siddha purification ritual (1 hour). <strong>−Full reset:</strong> Weeping Silver Moon-Petal Lotus (one dose, extremely rare — the only known Coil blight-rot cure).</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Corruption Stage Abilities</div>
+  <div class="feature-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:#4a8020">Stage: Cold (0–5) — The Carrier</div><span class="feat-level" style="color:#4a8020;border-color:rgba(74,128,32,0.3)">Always Active</span></div>
+      <div class="feat-body">The Coil-Stalker carries Void-energy but has not integrated it. No bonuses, no penalties. <strong>Passive benefits</strong>: detect Coil agents within 60 ft (they register as corruption on the gauge — a subtle pull in the right direction); Void-Husks do not immediately attack a Cold Coil-Stalker (they process them as potentially Coil-aligned); complete immunity to the Corrupted condition from mundane poison sources.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:#c89830">Stage: Tempered (6–10) — The Weapon</div><span class="feat-level" style="color:#c89830;border-color:rgba(200,152,48,0.3)">Active at 6+</span></div>
+      <div class="feat-body"><strong>Corruption Strikes:</strong> Melee strikes deal +1d4 necrotic damage. The Void-energy bleeds through physical contact. <strong>Void-Sense:</strong> Passive awareness of all active Coil Workings within 300 ft — the Cartographer reads the Loom, the Coil-Stalker reads the rot. <strong>Necrotic Resistance:</strong> Resistance to necrotic and poison damage. The corruption has begun to immunize. <strong>Glow:</strong> Faint purple light from corruption sites on the skin — Stealth has Resonant Discord in darkness unless the light is covered. This is not optional. The gauge shows.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:#c84830">Stage: Burning (11–15) — The Hazard</div><span class="feat-level" style="color:#c84830;border-color:rgba(200,72,48,0.3)">Active at 11+</span></div>
+      <div class="feat-body"><strong>Enhanced Corruption Strikes:</strong> +1d8 necrotic. <strong>Void-Husk Neutrality:</strong> Void-Husks ordered to attack the Coil-Stalker must make a Warding Resonance (Threshold 14) to do so — they instinctively classify the Stalker as Coil-adjacent. <strong>Psychic Pressure:</strong> Wisdom Warding Resonances against Coil compulsions have Resonant Discord — the burning gauge makes the Coil's whispers louder. <strong>Stealth failure:</strong> The purple glow is now bright enough to be visible at 30 ft in darkness even through cover. Social encounters with Coil-unaware parties become difficult — the corruption is visible to anyone with Attunement DC 10.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:#a80000">Stage: Searing (16–19) — The Edge</div><span class="feat-level" style="color:#a80000;border-color:rgba(168,0,0,0.3)">Active at 16+</span></div>
+      <div class="feat-body"><strong>Maximum Corruption Strikes:</strong> +2d6 necrotic. <strong>Void-Frenzy available</strong> (see below). <strong>Identity Strain:</strong> All Attunement and Resonance Active Resonances have Resonant Discord — the Coil's frequency is competing with the Stalker's own. <strong>Coil Recognition:</strong> Aethar and the 13 Scions are aware of the Coil-Stalker's existence and approximate location — a Searing Coil-Stalker is large enough in the Void-energy field to be visible to those who read it. The Fang of the Whisper will make contact. Whether that contact is an attack or a recruitment attempt depends on the Stalker's recent actions.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--red)">Void-Frenzy — Requires 16+ Gauge</div><span class="feat-level" style="color:var(--red);border-color:rgba(192,64,64,0.3)">Active · Instinct</span></div>
+      <div class="feat-body">Activate as an Instinct. For 1 minute: one extra Strike Resonance per Pulse (Instinct); all Corruption Strikes deal maximum necrotic damage without rolling; cannot distinguish friend from foe — Attunement Warding Resonance (Threshold 14) at the start of each Moment to choose targets (fail = nearest creature, ally or enemy). Gauge increases by 2 immediately on activation, then +1 per round. Spend one Weep-Stone charge as an Instinct to end Frenzy early. <strong>On Frenzy end</strong>: Gauge is at current level. If Gauge hits 20 during Frenzy, Void-Husk threshold triggers immediately — no Warding Resonance during Frenzy.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Path Features by Resonance Depth</div>
+  <div class="feature-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--coil)">Corruption Tolerance</div><span class="feat-level" style="color:var(--coil);border-color:rgba(138,74,106,0.3)">Depth 1</span></div>
+      <div class="feat-body">The Coil-Stalker's body has learned to process Void-energy without immediate degradation. The Gauge system becomes active. <strong>Weep-Stone Mastery:</strong> Siderium Quartz reduces the Gauge by 2 per charge rather than 1 — the Stalker's practiced application is more efficient. <strong>Corruption Sense:</strong> The Stalker always knows their current Gauge level without checking — they feel the weight of the corruption in their bones.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--coil)">Controlled Bleed</div><span class="feat-level" style="color:var(--coil);border-color:rgba(138,74,106,0.3)">Depth 3</span></div>
+      <div class="feat-body">The Coil-Stalker may deliberately increase their Gauge by 1 as an Instinct to immediately deal their current Corruption Strike damage to one creature within 5 ft — a burst of Void-energy expelled through physical proximity rather than a strike. This does not require an attack roll — it is a direct corruption transfer. <strong>The creature takes the damage; the Stalker takes the Gauge increase.</strong> A controlled trade that requires knowing exactly how much room is left in the gauge.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--coil)">Void Reading</div><span class="feat-level" style="color:var(--coil);border-color:rgba(138,74,106,0.3)">Depth 5</span></div>
+      <div class="feat-body">The Stalker's corruption has reached sufficient depth to perceive the Coil's operational structure. Once per Brief Attunement, by concentrating for 1 minute, the Stalker may ask the Concordance: the current location of the nearest active Coil cell, one name among the Scions who is directing operations in this region, and whether any Void-Husks in the area are being actively directed or acting autonomously. <strong>This information is accurate but not real-time</strong> — it reflects the state of the Coil's network as of the last 24 hours.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--coil)">Corruption Armor</div><span class="feat-level" style="color:var(--coil);border-color:rgba(138,74,106,0.3)">Depth 7</span></div>
+      <div class="feat-body">The Void-energy integrated into the Coil-Stalker's body becomes defensive as well as offensive. Guard Rating increases by 1 for every 5 points of current Gauge (maximum +3 at Gauge 15+). Additionally: the Stalker may use their Reflex to impose Resonant Discord on one Strike Resonance targeting them per Pulse — the corruption deflects, absorbing and briefly destabilizing the incoming force. <strong>The armor is the poison</strong> — a higher Gauge provides more protection but brings the Void-Husk threshold closer.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--coil)">Gauge Ceiling</div><span class="feat-level" style="color:var(--coil);border-color:rgba(138,74,106,0.3)">Depth 11</span></div>
+      <div class="feat-body">The experienced Coil-Stalker has established an internal discipline that prevents accidental Gauge overflow. The Void-Husk threshold is now 22 rather than 20 — two additional points of buffer before the dissolution begins. <strong>Additionally</strong>: once per Deep Attunement, the Stalker may choose to cap a Gauge increase — when corruption would push the Gauge above 18, they may hold it at 18 by making an Endurance Warding Resonance (Threshold 14). The excess corruption discharges outward as a 10-ft burst of necrotic energy (2d10 damage, Endurance Warding Resonance for half). Control costs expression.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Callings</div>
+  <div class="calling-grid">
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--coil)">The Infiltrator</div><span class="calling-tag" style="color:var(--coil);border-color:rgba(138,74,106,0.3)">Coil-Agent</span></div>
+      <div class="calling-body">
+        <p>Infiltrators use their corruption as cover — they pass as Coil operatives to gather intelligence. Available at Depth 3.</p>
+        <p><strong>Deep Cover (Depth 3):</strong> At Tempered stage or higher, you may pass as a genuine Coil operative to any creature without Fate Number reading ability. Coil agents will not question your presence or credentials without a specific reason for suspicion.</p>
+        <p><strong>Scion Contact (Depth 7):</strong> You may deliberately initiate contact with one of the 13 Scions. They will meet with you once, believing you are a high-gauge operative seeking guidance. The meeting is real. The Scion will eventually realize you are not what you claimed — but not during the first meeting.</p>
+        <p><strong>Double Agent (Depth 11):</strong> You maintain two simultaneous identities with Resonant Fortune on Active Resonances to sustain either. When one identity is compromised, the other is not automatically — the Concordance treats them as genuinely separate unless a specific connection is discovered.</p>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--coil)">The Purgator</div><span class="calling-tag" style="color:var(--coil);border-color:rgba(138,74,106,0.3)">Anti-Coil</span></div>
+      <div class="calling-body">
+        <p>Purgators use their corruption knowledge to dismantle Coil operations — fighting fire with fire, but deliberately. Available at Depth 3.</p>
+        <p><strong>Corruption Counter (Depth 3):</strong> When you strike a Coil operative or Void-Husk, you may expend 2 points of your own Gauge to deal double your Corruption Strike damage to that target only. You carry the same energy. You know exactly where the vulnerabilities are.</p>
+        <p><strong>Ritual Disruption (Depth 7):</strong> By entering a Coil ritual site while at Tempered stage or higher, you can disrupt the ritual by spending 3 Gauge points and using your Act for 3 consecutive rounds. The disruption is guaranteed — but each round you remain in the ritual's field, your Gauge increases by 2.</p>
+        <p><strong>Void-Husk Severance (Depth 11):</strong> Once per Deep Attunement, you may touch a Void-Husk and attempt to sever the Coil's control — not restore the creature's Fate Number, but free it from active direction. Endurance Warding Resonance (Threshold 18) for the Void-Husk. On failure: the Coil's control breaks, the Void-Husk collapses (0 Vitality, stable). Your Gauge increases by 4. On success: the Void-Husk resists — your Gauge increases by 2 and the attempt fails.</p>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--coil)">The Scion-Hunter</div><span class="calling-tag" style="color:var(--coil);border-color:rgba(138,74,106,0.3)">Assassin</span></div>
+      <div class="calling-body">
+        <p>Scion-Hunters specialize in eliminating the 13 Scions specifically — the Coil's zodiac-sign-aligned commanders. Available at Depth 3.</p>
+        <p><strong>Scion Sight (Depth 3):</strong> You can identify a Scion of the Ashen Coil by their corruption signature — each Scion has a distinct zodiac-corrupted frequency that you recognize on sight. You always know a Scion's approximate Gauge level and which zodiac sign they represent.</p>
+        <p><strong>Sign Exploit (Depth 7):</strong> When fighting a Scion, you may align your Corruption Strikes to exploit their sign's domain vulnerability. Your strikes deal +1d10 additional damage of the type their sign's domain would be opposed to (fire vs. water-sign Scion, etc.). This requires 1 round of observation to identify the sign's weakness.</p>
+        <p><strong>The Thirteenth Problem (Depth 11):</strong> Having studied the Scions deeply, you understand that defeating one Scion creates a vacancy. You know, intuitively, whether Aethar has already selected a replacement — and roughly where that replacement is being cultivated. This knowledge doesn't prevent the replacement. But it gives you a head start on the next hunt.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="warning-block">
+    <div class="wb-title">The Void-Husk Threshold — Gauge 20</div>
+    <div class="wb-text">When the Gauge reaches 20, the Coil-Stalker must make an Attunement Warding Resonance at the start of each of their Moments (Threshold 18). On a failed save: they become a Void-Husk for 24 hours — Concordance-controlled, driven by the Coil's will. On a success: the Gauge drops to 18 and they retain control. <strong>A Bonded party member within 30 ft converts one failed Void-Husk save to a success per Pulse</strong> — the bond's weight counteracts the Hollow Serpent's pull. Three consecutive failures (across any time frame) results in permanent Void-Husk status. The character is not dead. They are something else.</div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- GEODE-PILOT -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-geode">
+<div class="path-wrap">
+  <div class="ph">
+    <div class="ph-sigil" style="background:rgba(106,154,138,0.08);border-color:rgba(106,154,138,0.3)">⚙</div>
+    <div>
+      <div class="ph-name" style="color:var(--geode)">Geode-Pilot</div>
+      <div class="ph-base">The resonant engineers. They bond with Resonant Geode-powered mechanical frames — extending their capabilities through a suit that is both tool and partner.</div>
+      <span class="ph-essence" style="color:var(--beta);border-color:rgba(74,142,196,0.4);background:rgba(74,142,196,0.06)">Beta-aspected</span>
+      <span class="ph-vitality">Vitality Die: d8 (Frame adds separate Vitality pool)</span>
+    </div>
+  </div>
+
+  <p class="lore-para">A Resonant Frame is not armor. It is not a vehicle. It is a <strong>second body</strong> — one powered by a Geode calibrated to the Pilot's zodiac frequency, one that responds to the Pilot's Aetheric state as naturally as their biological body responds to their nervous system. The Frame cannot be used by anyone else — it is tuned to one specific Pilot's resonance. Another person attempting to operate a Pilot's Frame finds it unresponsive, as if the machinery had simply stopped working. The machinery has simply stopped recognizing the operator.</p>
+
+  <p class="lore-para">The Grand Prime Forgeman of Argent Spire is the oldest Geode-Pilot in the world — having piloted, repaired, upgraded, and rebuilt his Frame for four centuries. His Frame is so extensively modified that it no longer resembles any standard Jade Empire design. He knows things about Frame operation that no living Pilot has independently discovered. He does not share this knowledge freely. <strong>A Geode-Pilot who earns his trust gains access to techniques that cannot be learned anywhere else.</strong></p>
+
+  <div class="sec-head">The Resonant Frame — Core System</div>
+  <div class="two-col">
+    <div class="info-block">
+      <div class="ib-label">Frame Vitality Pool</div>
+      <div class="ib-text">Separate from the Pilot's own Vitality. Frame Vitality = Pilot's Resonance Depth × 5. Damage taken while in the Frame always hits the Frame Vitality first — the Pilot's body is inside the Frame. When Frame Vitality reaches 0, the Frame is disabled and the Pilot is exposed — subsequent attacks target the Pilot's Vitality directly. <strong>Repair</strong>: Frame Vitality recovers at 10 per 10 minutes of work with artisan's tools. Full repair during Brief Attunement.</div>
+    </div>
+    <div class="info-block">
+      <div class="ib-label">Frame Modes</div>
+      <div class="ib-text">Switch as an Instinct. <strong>Sentinel:</strong> +4 Guard Rating, half movement, Resonant Fortune on Forcefulness. <strong>Scout:</strong> normal Guard Rating, full movement + 10 ft, Resonant Fortune on Swiftness and Stealth. <strong>Resonance:</strong> no Guard bonus, full movement, all Geode Pulse costs reduced by 1 tier, Resonant Fortune on Weaving. <strong>Cannot switch more than once per Moment.</strong></div>
+    </div>
+  </div>
+
+  <div class="sec-head">Path Features by Resonance Depth</div>
+  <div class="feature-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--geode)">Frame Bond & Geode Pulse</div><span class="feat-level" style="color:var(--geode);border-color:rgba(106,154,138,0.3)">Depth 1</span></div>
+      <div class="feat-body">The Pilot bonds with their Resonant Frame — a process requiring 1 week of continuous occupancy and calibration. Once bonded: the Frame responds to thought (no verbal commands needed); the Pilot feels damage to the Frame as phantom pressure (not pain); and the Pilot can sense the Frame's structural integrity without inspection.<br><br>
+      <strong>Geode Pulse (Act, expend Aetheric Channel 1st–3rd tier):</strong> The Frame's Geode emits a burst of resonant energy in a 20-ft radius. All creatures make an Endurance Warding Resonance (Threshold = 8 + Mastery Bonus + Weaving Attribute) or take 1d6 thunder damage per Channel tier expended and are pushed 10 ft from the Frame. The damage type may shift to the Geode's zodiac sign type at the Pilot's choice (fire for Aries-calibrated, lightning for Sagittarius-calibrated, etc.).</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--geode)">Frame Modification System</div><span class="feat-level" style="color:var(--geode);border-color:rgba(106,154,138,0.3)">Depth 1 + every 2 Depths</span></div>
+      <div class="feat-body">At Depth 1 and every even Resonance Depth thereafter, choose one Frame Modification:<br><br>
+      <strong>Reinforced Plating:</strong> +2 Guard Rating in Sentinel Mode<br>
+      <strong>Integrated Weapon:</strong> one weapon permanently mounted — requires no hands to use<br>
+      <strong>Optical Suite:</strong> Darkvision 120 ft, or Resonant Fortune on ranged Strike Resonances beyond 60 ft<br>
+      <strong>Mobility System:</strong> gain climb speed equal to movement, or 30-ft leap as part of movement<br>
+      <strong>Resonant Amplifier:</strong> +1 to Working Threshold for Geode's sign domain<br>
+      <strong>Communication Array:</strong> send and receive across the Kelp-Weaver's psychic network<br>
+      <strong>Self-Repair Sequence:</strong> once per Deep Attunement, Frame Vitality restores 20 points automatically<br>
+      <strong>Stealth Field:</strong> Frame becomes Aether-Veiled in Scout Mode for up to 1 minute per Deep Attunement<br><br>
+      Modifications can be reconfigured with 1 week of work and access to artisan's tools and materials.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--geode)">Resonant Attunement</div><span class="feat-level" style="color:var(--geode);border-color:rgba(106,154,138,0.3)">Depth 3</span></div>
+      <div class="feat-body">The Pilot's Geode and the Frame's Geode begin to harmonize. In Resonance Mode: the Pilot may treat any Working they enact as if opened through the Geode's zodiac sign (adding sign-domain effects to non-aligned Workings). Additionally: the Frame Vitality pool increases by 10 (now Resonance Depth × 5 + 10). <strong>Geode Resonance:</strong> when the Frame takes damage, the Pilot gains 1 Aetheric Channel of the lowest available tier — the structural stress generates power the Pilot can immediately redirect. Maximum 3 Channels gained this way per Pulse.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--geode)">Overclock</div><span class="feat-level" style="color:var(--geode);border-color:rgba(106,154,138,0.3)">Depth 5</span></div>
+      <div class="feat-body">Once per Deep Attunement: push the Geode beyond safe parameters for 1 minute. During Overclock: Resonant Fortune on all Active Resonances and Strike Resonances; Frame Vitality regenerates 5 per Pulse; all Frame Modifications function at enhanced level (double effects where applicable); the Frame emits light matching the Geode's zodiac color — visible at 300 ft. <strong>After Overclock</strong>: Frame Vitality drops by 20 immediately (structural strain); no further Overclock until next Deep Attunement maintenance cycle. Gear-Forged Pilots: their Aetheric Overdrive and Frame Overclock share one use between them — they are the same system.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--geode)">Frame Synchronization</div><span class="feat-level" style="color:var(--geode);border-color:rgba(106,154,138,0.3)">Depth 9</span></div>
+      <div class="feat-body">The Pilot and Frame are now so deeply bonded that the Frame responds to subconscious intent. <strong>Mode switching is now free</strong> — it no longer costs an Instinct. Additionally: the Pilot may enact Workings while in Sentinel Mode without the half-speed penalty — the Frame holds the position while the Pilot's mind reaches elsewhere. <strong>Emergency Ejection (Reflex):</strong> when Frame Vitality would drop to 0, the Pilot may auto-eject — landing in a safe adjacent space, Frame disabled. The Pilot emerges at full Vitality (the Frame absorbed all the damage). This counts as using the Frame's Vitality as a sacrifice. Cannot be used again until the Frame is fully repaired.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--geode)">Resonant Cascade</div><span class="feat-level" style="color:var(--geode);border-color:rgba(106,154,138,0.3)">Depth 13</span></div>
+      <div class="feat-body">Once per Deep Attunement, the Pilot may trigger a Resonant Cascade — deliberately overloading the Frame's Geode to release all stored Aetheric energy simultaneously. The Cascade: all Aetheric Channels are expended at once; the total energy releases in a 60-ft radius burst dealing 1d8 per Channel tier expended (all targets, Endurance Warding Resonance for half); the Frame is disabled for 1 hour after (needs repair); the Pilot is unharmed inside the Frame's final protective pulse. <strong>The Grand Prime Forgeman has used Resonant Cascade exactly once</strong> — the site is now a persistent magical anomaly in Antarctos's glacier.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Callings</div>
+  <div class="calling-grid">
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--geode)">The Sentinel</div><span class="calling-tag" style="color:var(--geode);border-color:rgba(106,154,138,0.3)">Protector</span></div>
+      <div class="calling-body">
+        <p>Sentinels orient toward defense and protection — the Frame as a shield for those around them. Available at Depth 3.</p>
+        <p><strong>Covering Fire (Depth 3):</strong> As a Reflex, when an ally within 30 ft is targeted by an attack, you may move up to 15 ft (no Act cost) to interpose the Frame — the attack targets the Frame instead. The movement does not provoke Reflex Strikes.</p>
+        <p><strong>Aegis Field (Depth 7):</strong> In Sentinel Mode, all allies within 10 ft of the Frame gain +2 Guard Rating — the Frame's Geode emits a stabilizing resonance field. Passive, no activation required.</p>
+        <p><strong>Last Stand (Depth 11):</strong> When Frame Vitality drops below 10, Sentinel Mode automatically activates and all Frame Vitality loss is halved until the Frame reaches 0. The Frame burns its last reserves protecting its Pilot and allies.</p>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--geode)">The Engineer</div><span class="calling-tag" style="color:var(--geode);border-color:rgba(106,154,138,0.3)">Artificer</span></div>
+      <div class="calling-body">
+        <p>Engineers orient toward modification and invention — the Frame as a platform for ongoing innovation. Available at Depth 3.</p>
+        <p><strong>Rapid Reconfiguration (Depth 3):</strong> You may reconfigure one Frame Modification during a Brief Attunement rather than requiring 1 week — the Engineer's intimate knowledge of the Frame allows field adjustments that other Pilots cannot manage.</p>
+        <p><strong>Dual Modification (Depth 7):</strong> One of your Frame Modifications may be active simultaneously with a second that is normally exclusive — you have solved the integration problem that prevents this in standard Frame architecture.</p>
+        <p><strong>Grand Design (Depth 11):</strong> Once per campaign, you may spend 1 month of dedicated work to add a custom Modification designed collaboratively with the Concordance — an ability not on the standard list, derived from your character's specific experiences and the unique properties of your Geode. The Grand Prime Forgeman considers this the only truly interesting question a Pilot ever asks him.</p>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--geode)">The Scout</div><span class="calling-tag" style="color:var(--geode);border-color:rgba(106,154,138,0.3)">Infiltrator</span></div>
+      <div class="calling-body">
+        <p>Scouts orient toward mobility and reconnaissance — the Frame as a tool for getting where others cannot and returning with what was found. Available at Depth 3.</p>
+        <p><strong>Silent Running (Depth 3):</strong> In Scout Mode, the Frame makes no mechanical noise — Stealth Active Resonances have Resonant Fortune and the Frame does not trigger vibration-based detection.</p>
+        <p><strong>Terrain Adaptation (Depth 7):</strong> The Frame automatically adapts to terrain types encountered. After 1 hour in any specific terrain (underwater, underground, extreme cold, extreme heat), the Frame gains full environmental protection for that terrain type and movement is not impeded.</p>
+        <p><strong>Ghost Protocol (Depth 11):</strong> Once per Deep Attunement in Scout Mode, activate for up to 10 minutes: the Frame is completely Aether-Veiled — invisible to sight, magical detection, Attunement Sense, and Te Kapo's Absence Reading. Only Kore-kore perception can detect the Geode's resonance signature, and only if the Te Kapo is specifically looking for it.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="note-block">
+    <div class="nb-title">The Precursor Connection</div>
+    <div class="nb-text">Ceque-Keepers in Elethorn's ruins have found Precursor constructs that bear unmistakable structural similarities to modern Geode-Pilot Frames — same resonant architecture, same Geode-heart placement, same mode-switching logic. The Jade Empire's Gear-Forged innovation and the Geode-Pilot Path may both be rediscoveries of Kallos-era technology. A Geode-Pilot who visits Elethorn and studies the Precursor constructs with the Grand Prime Forgeman's guidance (he has seen them) may unlock a <strong>Precursor Modification</strong> — an ability the modern tradition lost and has not yet recovered. The Concordance designs this ability based on what the character's Frame has revealed about its own potential over the course of play.</div>
+  </div>
+</div>
+</div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  document.querySelectorAll('.sel-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).style.display='block';
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+document.querySelectorAll('.panel').forEach(p=>{p.style.display='none'});
+document.getElementById('panel-cartographer').style.display='block';
+</script>
+</body>
+</html>

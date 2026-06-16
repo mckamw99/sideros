@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — The Adapted Paths</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;500;600&display=swap');
+
+:root {
+  --void:#0b0910; --void-mid:#130f1e;
+  --gold:#c9a84c; --gold-dim:#7a6028; --gold-bright:#e8c870;
+  --parchment:#f0e6cc; --parchment-dim:rgba(240,230,204,0.55);
+  --alpha:#d4724a; --beta:#4a8ec4; --omega:#9066c8;
+  --red:#c04040; --green:#4a8a56;
+  /* Path accent colours */
+  --jarl:#b06030;    --seeker:#9060b0;  --priest:#7090c0;
+  --guardian:#608050;--guard:#c09040;   --siddha:#a05050;
+  --vanguard:#c08040;--hunter:#507050;  --breaker:#606080;
+  --starborn:#8060a0;--scion:#504070;   --mage:#407090;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--parchment);line-height:1.7;min-height:100vh}
+
+.hero{text-align:center;padding:3rem 1.5rem 2rem;background:radial-gradient(ellipse at 50% 0%,rgba(201,168,76,0.07) 0%,transparent 60%);border-bottom:1px solid rgba(201,168,76,0.15)}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:.8rem}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(18px,3.5vw,28px);font-weight:500;color:var(--gold);letter-spacing:.06em;margin-bottom:.4rem}
+.hero-sub{font-size:14px;font-style:italic;color:var(--parchment-dim);max-width:520px;margin:0 auto}
+
+/* NAV — scrollable pill row */
+.nav-strip{display:flex;gap:4px;flex-wrap:wrap;padding:.75rem 1rem;border-bottom:1px solid rgba(201,168,76,0.12);background:var(--void-mid);position:sticky;top:0;z-index:20}
+.nav-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border:1px solid rgba(201,168,76,0.2);border-radius:4px;background:transparent;color:var(--parchment-dim);cursor:pointer;transition:all .15s;white-space:nowrap}
+.nav-btn:hover{background:rgba(201,168,76,0.06);color:var(--gold-dim)}
+.nav-btn.active{background:rgba(201,168,76,0.1);color:var(--gold);border-color:rgba(201,168,76,0.4)}
+
+.panel{display:none}.panel.active{display:block}
+.path-wrap{max-width:860px;margin:0 auto;padding:2rem 1.25rem 4rem}
+
+/* PATH HEADER */
+.ph{display:grid;grid-template-columns:68px 1fr;gap:16px;align-items:start;margin-bottom:1.75rem;padding-bottom:1.25rem;border-bottom:1px solid rgba(201,168,76,0.12)}
+.ph-sigil{width:60px;height:60px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:26px;border:1px solid;flex-shrink:0}
+.ph-name{font-family:'Cinzel',serif;font-size:22px;font-weight:500;letter-spacing:.04em;margin-bottom:2px}
+.ph-also{font-size:12px;font-style:italic;color:var(--parchment-dim);margin-bottom:6px}
+.ph-tags{display:flex;flex-wrap:wrap;gap:5px}
+.ph-tag{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:3px;border:1px solid}
+
+/* SIDEROS CORE BOX — the key original mechanic for each path */
+.sideros-core{background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:9px;padding:14px 16px;margin-bottom:1.25rem}
+.sc-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.sc-title{font-family:'Cinzel',serif;font-size:14px;color:var(--gold-bright);margin-bottom:6px;letter-spacing:.03em}
+.sc-text{font-size:13px;color:rgba(240,230,204,0.8);line-height:1.72}
+.sc-text strong{color:var(--parchment);font-weight:500}
+.sc-text em{color:var(--gold-dim)}
+
+/* FEATURE ROWS */
+.feature-list{display:grid;gap:7px;margin-bottom:1rem}
+.feat{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.13);border-radius:8px;padding:10px 13px;cursor:pointer;overflow:hidden;transition:border-color .15s}
+.feat:hover,.feat.open{border-color:rgba(201,168,76,0.32)}
+.feat-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.feat-name{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.04em}
+.feat-depth{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;padding:2px 6px;border-radius:3px;border:1px solid rgba(201,168,76,0.25);color:var(--gold-dim);white-space:nowrap;flex-shrink:0}
+.feat-body{display:none;margin-top:8px;padding-top:8px;border-top:1px solid rgba(201,168,76,0.1);font-size:13px;color:rgba(240,230,204,0.75);line-height:1.7}
+.feat.open .feat-body{display:block}
+.feat-body strong{color:var(--parchment);font-weight:500}
+.feat-body em{color:var(--gold-dim)}
+
+/* CALLINGS */
+.calling-grid{display:grid;gap:7px;margin-bottom:1rem}
+.calling{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.13);border-radius:8px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.calling:hover,.calling.open{border-color:rgba(201,168,76,0.28)}
+.calling-head{display:flex;justify-content:space-between;align-items:center;padding:10px 13px;gap:8px}
+.calling-name{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.04em}
+.calling-tag{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.09em;text-transform:uppercase;padding:2px 6px;border-radius:3px;border:1px solid;white-space:nowrap;flex-shrink:0}
+.calling-body{display:none;padding:0 13px 12px;border-top:1px solid rgba(201,168,76,0.08)}
+.calling.open .calling-body{display:block;padding-top:9px}
+.cb-feat{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.7;margin-bottom:6px}
+.cb-feat:last-child{margin-bottom:0}
+.cb-feat strong{color:var(--parchment);font-weight:500}
+
+/* STAT ROW */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:.9rem}
+.stat-cell{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.12);border-radius:6px;padding:7px 9px;text-align:center}
+.sc2-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.09em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:2px}
+.sc2-val{font-size:13px;font-weight:500}
+
+/* INFO BLOCKS */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:.9rem}
+.info-block{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.12);border-radius:7px;padding:9px 11px}
+.ib-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.11em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px}
+.ib-text{font-size:12px;color:rgba(240,230,204,0.78);line-height:1.6}
+.ib-text strong{color:var(--parchment);font-weight:500}
+
+.sec-head{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:1.5rem 0 .65rem;display:flex;align-items:center;gap:.6rem}
+.sec-head::after{content:'';flex:1;height:1px;background:rgba(201,168,76,0.12)}
+
+.note-block{background:rgba(168,126,232,0.05);border:1px solid rgba(168,126,232,0.2);border-radius:8px;padding:10px 12px;margin:.75rem 0}
+.nb-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:#a87ee8;margin-bottom:4px}
+.nb-text{font-size:12px;color:rgba(240,230,204,0.75);line-height:1.65}
+.nb-text strong{color:var(--parchment);font-weight:500}
+
+.lore-para{font-size:14px;color:rgba(240,230,204,0.78);line-height:1.82;margin-bottom:.8rem}
+.lore-para strong{color:var(--parchment);font-weight:500}
+.lore-para em{color:var(--gold-dim)}
+
+.divider{height:1px;background:linear-gradient(to right,transparent,rgba(201,168,76,0.18),transparent);margin:1.25rem 0}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Sideros / Astrolan — Path Compendium · Volume II</div>
+  <h1 class="hero-title">The Eleven Adapted Paths</h1>
+  <p class="hero-sub">Each Path built from a D&D foundation — completely re-skinned with Sideros-native mechanics, renamed abilities, and world-specific flavor.</p>
+</div>
+
+<div class="nav-strip">
+  <button class="nav-btn active" onclick="show('jarl',this)">Primal Jarl</button>
+  <button class="nav-btn" onclick="show('seeker',this)">Resonance Seeker</button>
+  <button class="nav-btn" onclick="show('priest',this)">Zodiac Priest</button>
+  <button class="nav-btn" onclick="show('guardian',this)">Fade-Guardian</button>
+  <button class="nav-btn" onclick="show('guard',this)">Solar Guard</button>
+  <button class="nav-btn" onclick="show('siddha',this)">Rāśi-Siddha</button>
+  <button class="nav-btn" onclick="show('vanguard',this)">Oathed Vanguard</button>
+  <button class="nav-btn" onclick="show('hunter',this)">Void-Hunter</button>
+  <button class="nav-btn" onclick="show('breaker',this)">Fate-Breaker</button>
+  <button class="nav-btn" onclick="show('starborn',this)">Star-Born</button>
+  <button class="nav-btn" onclick="show('scion',this)">Scion-Pledged</button>
+  <button class="nav-btn" onclick="show('mage',this)">Comet-Mage</button>
+</div>
+
+<!-- ══════════════════════ PRIMAL JARL ══════════════════════ -->
+<div class="panel active" id="panel-jarl">
+<div class="path-wrap">
+  <div class="ph">
+    <div class="ph-sigil" style="background:rgba(176,96,48,0.08);border-color:rgba(176,96,48,0.3)">⚔</div>
+    <div>
+      <div class="ph-name" style="color:var(--jarl)">Primal Jarl</div>
+      <div class="ph-also">Base: Barbarian · Alpha-aspected · Vitality Die: d12</div>
+      <div class="ph-tags">
+        <span class="ph-tag" style="color:var(--alpha);border-color:rgba(212,114,74,0.3);background:rgba(212,114,74,0.06)">Alpha-dominant</span>
+        <span class="ph-tag" style="color:var(--gold-dim);border-color:rgba(201,168,76,0.25)">Highest Vitality Die</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="lore-para">The Primal Jarl walks the edge between civilization and the force that existed before it. For Wolf-Shifters, this edge is the Omote-Ura Gauge — the tension between human discipline and wolf instinct. For all other Primal Jarls, it is <strong>the Wrath State</strong> — a surge of primal cosmic force that overwhelms rational restraint and channels raw Aetheric momentum directly through the body.</p>
+
+  <div class="sideros-core">
+    <div class="sc-label">Core Mechanic — Sideros Original</div>
+    <div class="sc-title">The Wrath State (replaces Rage)</div>
+    <div class="sc-text">Entering Wrath is not losing control — it is <strong>releasing the filter</strong> that normally stands between the character's will and the full force of their Aetheric nature. As an Instinct, enter the Wrath State for up to 1 minute. Uses per Deep Attunement: 2 (increases to 3 at Depth 6, 4 at Depth 12, unlimited at Depth 17).<br><br>
+    <strong>While in Wrath State:</strong> Resonant Fortune on Forcefulness Active Resonances and Warding Resonances; +2 to melee damage (increases to +3 at Depth 9, +4 at Depth 16); resistance to slashing, piercing, and bludgeoning damage from non-magical sources; cannot enact Workings or use Weaving abilities — the Aetheric field is fully physical.<br><br>
+    <strong>Wrath ends</strong> if the character hasn't attacked or taken damage since their last Moment, or if they choose to end it. After Wrath ends: Resonant Discord on all Active Resonances for 1 Pulse (the filter resettles).<br><br>
+    <strong>Wolf-Shifters</strong> replace the Wrath State entirely with the Omote-Ura Gauge system — their primal surge is culturally and biologically distinct. A Wolf-Shifter Primal Jarl never uses Wrath; they deepen their Ura expression instead.</div>
+  </div>
+
+  <div class="sec-head">Signature Path Features</div>
+  <div class="feature-list">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--jarl)">Primal Endurance</div><span class="feat-depth">Depth 2</span></div>
+      <div class="feat-body">While in Wrath State, the Primal Jarl may add their Endurance modifier to damage rolls in addition to their Forcefulness modifier. The body's resilience becomes offense — every hit they can take, they can also give. <strong>Reckless Strike</strong>: before making a Strike Resonance while in Wrath, choose to have Resonant Fortune on that Strike Resonance — all Strike Resonances against you have Resonant Fortune until your next Moment.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--jarl)">Primal Anchor</div><span class="feat-depth">Depth 7</span></div>
+      <div class="feat-body">While in Wrath State, the Primal Jarl cannot be moved against their will by any force short of a Legendary Beast. Grapples, shoves, Workings that push or pull — none of them work. The Primal Jarl has <em>planted themselves</em> in the world. Additionally: if a creature tries to grapple the Primal Jarl while they are in Wrath, the Primal Jarl may immediately attempt a counter-grapple as a Reflex.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--jarl)">Eternal Wrath</div><span class="feat-depth">Depth 15</span></div>
+      <div class="feat-body">The Primal Jarl may choose to enter a Persistent Wrath State — one that does not end between encounters and lasts until they choose to exit or take a Deep Attunement. While in Persistent Wrath: all Wrath State benefits apply at all times; cannot take Deep Attunement without first ending Persistent Wrath; Forcefulness Active Resonances are always made with Resonant Fortune. <strong>The cost</strong>: social Disciplines (Persuasion, Deception, Performance) all have Resonant Discord while Persistent Wrath is active. The Aether is fully physical. Words have no weight.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Callings</div>
+  <div class="calling-grid">
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--jarl)">Path of the Berserker</div><span class="calling-tag" style="color:var(--jarl);border-color:rgba(176,96,48,0.3)">Norse Tradition</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Frenzied Strike (Depth 3):</strong> Once per Wrath State, make one additional melee Strike Resonance as an Instinct. After Wrath ends, gain one level of Aetheric Depletion — the frenzy burns the body's reserves.</div>
+        <div class="cb-feat"><strong>Mindless Wrath (Depth 6):</strong> While in Wrath State, immune to Dread-Struck and Soul-Swayed. The Hollow Serpent's whispers cannot find purchase in a mind burning this hot.</div>
+        <div class="cb-feat"><strong>Retaliation Strike (Depth 10):</strong> When you take damage in Wrath State, you may use your Reflex to immediately make one melee Strike Resonance against the attacker.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--jarl)">Path of the Steppe Sovereign</div><span class="calling-tag" style="color:var(--jarl);border-color:rgba(176,96,48,0.3)">Centaur Tradition</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Battle Cry (Depth 3):</strong> When entering Wrath State, all allies within 30 ft gain +1d4 to their next Strike Resonance damage roll. The Jarl's surge pulls the pack with it.</div>
+        <div class="cb-feat"><strong>Pack Wrath (Depth 6):</strong> While in Wrath State, you deal +1d6 damage per ally within 10 ft who is also engaged in melee combat. Maximum +3d6. You fight better surrounded by your own.</div>
+        <div class="cb-feat"><strong>Sovereign's Challenge (Depth 10):</strong> When entering Wrath State, choose one creature within 60 ft. That creature has Resonant Discord on Strike Resonances against anyone except you until your Wrath ends — the sovereign has claimed priority.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--jarl)">Path of the Beast-Soul</div><span class="calling-tag" style="color:var(--jarl);border-color:rgba(176,96,48,0.3)">Arcadian Tradition</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Beast Aspect (Depth 3):</strong> When entering Wrath State, choose one Beast Aspect: <em>Ram</em> (charge deals +2d6, target knocked prone); <em>Claw</em> (unarmed strikes deal 1d8 + Forcefulness modifier); <em>Pelt</em> (natural armor, Guard Rating = 13 + Endurance modifier while unarmored). The aspect lasts for the Wrath's duration.</div>
+        <div class="cb-feat"><strong>Bestial Soul (Depth 6):</strong> While in Wrath State, you can communicate with beasts and they will not attack you unless you attack first. The primal frequency is universal.</div>
+        <div class="cb-feat"><strong>Legendary Beast Empathy (Depth 10):</strong> When you encounter a Legendary Beast while not in Wrath State, the Beast registers your Beast-Soul aspect and does not immediately classify you as prey. You have one Pulse of safe contact before normal Beast behavior resumes.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════ RESONANCE SEEKER ══════════════════════ -->
+<div class="panel" id="panel-seeker">
+<div class="path-wrap">
+  <div class="ph">
+    <div class="ph-sigil" style="background:rgba(144,96,176,0.08);border-color:rgba(144,96,176,0.3)">♪</div>
+    <div>
+      <div class="ph-name" style="color:var(--seeker)">Resonance Seeker</div>
+      <div class="ph-also">Base: Bard · Omega-aspected · Vitality Die: d8</div>
+      <div class="ph-tags">
+        <span class="ph-tag" style="color:var(--omega);border-color:rgba(144,102,200,0.3);background:rgba(144,102,200,0.06)">Omega-dominant</span>
+        <span class="ph-tag" style="color:var(--gold-dim);border-color:rgba(201,168,76,0.25)">Bond-Adjacent Path</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="lore-para">The Resonance Seeker understands something the Comet-Magi spent centuries trying to formulate: <strong>the Aether responds to harmony</strong>. Not musical harmony specifically — though music is one of the most reliable ways to produce it — but the resonance between frequencies that allows one thing to amplify, sustain, or transform another. The Resonance Seeker's art is finding that harmony and exploiting it. They are the Path most naturally aligned with the Fated Bond system because bonds are, in the most literal sense, two frequencies resonating.</p>
+
+  <div class="sideros-core">
+    <div class="sc-label">Core Mechanic — Sideros Original</div>
+    <div class="sc-title">Resonant Chord (replaces Bardic Inspiration)</div>
+    <div class="sc-text">As an Instinct, the Resonance Seeker strikes a <strong>Resonant Chord</strong> — a specific harmonic frequency directed at one creature within 60 ft. That creature gains a Resonant Chord Die they may use within the next 10 minutes.<br><br>
+    <strong>Using the Chord Die:</strong> Add the Chord Die to one Active Resonance, Strike Resonance, Working Threshold roll, or Warding Resonance roll — after seeing the initial result, before the Concordance determines success. The die is then spent.<br><br>
+    <strong>Chord Die size:</strong> d6 at Depths 1–4; d8 at Depths 5–9; d10 at Depths 10–14; d12 at Depths 15–20.<br><br>
+    <strong>Chords available per Deep Attunement:</strong> Equal to Resonance modifier (minimum 1). Recharge on Deep Attunement — except: if a creature uses a Chord Die and rolls the maximum value, the Resonance Seeker regains one Chord use immediately. The harmony was perfect. It gives back.<br><br>
+    <strong>Bond Chord:</strong> When a Resonant Chord is directed at a Bonded creature, the die size increases by one step (d6→d8, etc.) — the existing harmonic connection amplifies the new one.</div>
+  </div>
+
+  <div class="sec-head">Signature Path Features</div>
+  <div class="feature-list">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--seeker)">Frequency Mastery</div><span class="feat-depth">Depth 2</span></div>
+      <div class="feat-body">The Resonance Seeker becomes Mastered in any Discipline after observing an expert use it once in their presence — they don't learn the skill, they harmonize with the frequency of someone who already has it. This Mastery lasts until the next Deep Attunement, at which point it either deepens into permanent Half-Mastery or fades entirely (player's choice whether to maintain through continued contact with that expert).</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--seeker)">Countersong</div><span class="feat-depth">Depth 6</span></div>
+      <div class="feat-body">When a creature within 60 ft is targeted by a Working that relies on sound or spoken language, the Resonance Seeker may use their Reflex to produce a countering frequency. The targeted creature has Resonant Fortune on their Warding Resonance against that Working. This covers Soul-Swayed (Charm) effects, Dread-Struck triggered by spoken compulsion, and any Working with a verbal component. <strong>Against Auroran communication being disrupted</strong>: Countersong doubles in effectiveness — the Seeker can temporarily stabilize an Auroran's frequency in an Aether-Dampening field.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--seeker)">Harmonic Resonance Field</div><span class="feat-depth">Depth 14</span></div>
+      <div class="feat-body">The Resonance Seeker's mastery reaches a point where their presence itself harmonizes the Aetheric field around them. All allies within 30 ft may add the Seeker's Resonance modifier to their Warding Resonances against Dread-Struck, Soul-Swayed, and Resonance-Shattered conditions. This is passive, permanent, and does not require Sustained Resonance. <strong>Additionally</strong>: all Bonded allies within 30 ft have Resonant Fortune on rolls to use their Bond abilities — the Seeker's harmonic field amplifies the Bond's existing resonance.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Callings</div>
+  <div class="calling-grid">
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--seeker)">The Lore-Keeper</div><span class="calling-tag" style="color:var(--seeker);border-color:rgba(144,96,176,0.3)">Scholar-Performer</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Cutting Frequency (Depth 3):</strong> Once per Pulse, when a creature within 60 ft makes an Active Resonance or Strike Resonance, you may use your Reflex to impose Resonant Discord on that roll — you've identified and broadcast the dissonant frequency in their technique.</div>
+        <div class="cb-feat"><strong>Frequency Archive (Depth 6):</strong> You retain the harmonic impression of every Working you have witnessed — you know the frequency and can reproduce it as a Working of equivalent tier, once, before the impression fades. This is not learning the Working; it is mimicking the frequency one time.</div>
+        <div class="cb-feat"><strong>Lore Mastery (Depth 14):</strong> Mastered in all knowledge Disciplines (Aetheric Lore, History, Nature). You are the walking record of the world's frequencies. When you recite knowledge relevant to the current situation, all allies who hear you have Resonant Fortune on their next relevant Active Resonance.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--seeker)">The Valor-Singer</div><span class="calling-tag" style="color:var(--seeker);border-color:rgba(144,96,176,0.3)">Combat-Performer</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Battle Chord (Depth 3):</strong> You may use Resonant Chords in combat without sacrificing your Act. Chords granted as Instinct during combat persist through the entire encounter rather than expiring in 10 minutes.</div>
+        <div class="cb-feat"><strong>Armor of Frequencies (Depth 6):</strong> While you can hear and speak, your Resonance Seeker Workings that require Sustained Resonance do not break when you take damage — the frequency holds because your body reinforces it in real time.</div>
+        <div class="cb-feat"><strong>Combat Inspiration (Depth 14):</strong> Creatures who use your Resonant Chord on a Strike Resonance may add the die result to the damage roll as well as the attack roll — the Chord amplifies the entire strike, not just the aim.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--seeker)">The Bond-Harmonist</div><span class="calling-tag" style="color:var(--seeker);border-color:rgba(144,96,176,0.3)">Fated Bond Specialist</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Bond Sight (Depth 3):</strong> You perceive Fated Bonds as visible threads of light between Bonded individuals — always active, no Instinct required. You see tier, health, and whether the bond is acknowledged, same as the Stellar Cartographer's Bond Cartography but without reading Fate Numbers.</div>
+        <div class="cb-feat"><strong>Bond Amplification (Depth 6):</strong> Once per Deep Attunement, by performing 10 minutes of focused harmonic work directed at a Bonded pair or group, you amplify their Bond for 24 hours: all Bond abilities operate at one tier higher than their current tier. The harmony you create supplements the existing resonance.</div>
+        <div class="cb-feat"><strong>Resonant Weaving (Depth 14):</strong> You may attempt to introduce two unBonded individuals whose Fate Numbers are within range to each other — facilitating a Paired Bond formation as a 1-hour ritual. Both individuals must be present and willing. The Loom decides whether the bond takes; your work creates the conditions but cannot force the recognition. Success rate: Resonant Fortune on the Loom Test for both individuals.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════ ZODIAC PRIEST ══════════════════════ -->
+<div class="panel" id="panel-priest">
+<div class="path-wrap">
+  <div class="ph">
+    <div class="ph-sigil" style="background:rgba(112,144,192,0.08);border-color:rgba(112,144,192,0.3)">✦</div>
+    <div>
+      <div class="ph-name" style="color:var(--priest)">Zodiac Priest</div>
+      <div class="ph-also">Base: Cleric · Omega-aspected · Vitality Die: d8 · Epic Tier to Depth 30</div>
+      <div class="ph-tags">
+        <span class="ph-tag" style="color:var(--omega);border-color:rgba(144,102,200,0.3);background:rgba(144,102,200,0.06)">Omega-dominant</span>
+        <span class="ph-tag" style="color:#7090c0;border-color:rgba(112,144,192,0.3);background:rgba(112,144,192,0.06)">Epic Tier Path</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="lore-para">The Zodiac Priest does not worship a god. Every god is a beast now — stripped of divinity, wandering the earth it once governed from the sky. The Zodiac Priest <strong>tends the memory</strong> of what those gods were. They serve the zodiac domain itself — the cosmic force that persists even after its divine embodiment has fallen. A Leo-domain Priest serves heroic courage and solar majesty not because the Nemean Lion ordained them, but because those forces are real, and someone has to hold them.</p>
+
+  <div class="sideros-core">
+    <div class="sc-label">Core Mechanic — Sideros Original</div>
+    <div class="sc-title">Aetheric Benediction (replaces Channel Divinity)</div>
+    <div class="sc-text">Twice per Deep Attunement (increases at Depth 6), the Zodiac Priest may channel their sign's domain force directly through themselves — not a Working, but a <strong>Benediction</strong>, an act of cosmic law expressing through a mortal vessel.<br><br>
+    <strong>Benediction of Restoration:</strong> Touch one creature. Restore Vitality equal to 5 × Mastery Bonus. Remove one condition. Cannot be used in combat on yourself.<br><br>
+    <strong>Benediction of the Domain:</strong> Express your sign's domain force in an encounter-reshaping way. The specific effect is determined by the Zodiac Calling chosen (see below) — each sign's domain benediction is unique. This is not a Working; it cannot be suppressed by Aether-Dampening Ore.<br><br>
+    <strong>Aetheric Recovery:</strong> Once per Deep Attunement, regain one expended Aetheric Channel of any tier up to half the Priest's Resonance Depth (rounded down). The domain gives back what it uses. Replaces Arcane Recovery's equivalent function for this Path.</div>
+  </div>
+
+  <div class="sec-head">Signature Path Features</div>
+  <div class="feature-list">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--priest)">Domain Discipline Mastery</div><span class="feat-depth">Depth 1</span></div>
+      <div class="feat-body">Each Zodiac Priest gains Mastery in two Disciplines determined by their sign's domain. These Disciplines always benefit from the domain's Aetheric enhancement — the Priest's connection to their sign amplifies even mundane application of these skills. Additionally: Zodiac Priests prepare their Workings from the full list of their sign's domain, plus the universal Priest list — they do not prepare individual Workings but rather have access to any Working in their domain at any time. The domain is always open to them.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--priest)">Legendary Beast Communion</div><span class="feat-depth">Depth 7</span></div>
+      <div class="feat-body">The Zodiac Priest may attempt direct communion with their sign's Legendary Beast once per week — a 1-hour meditation ritual. The Beast is not controlled and may refuse. On a successful Attunement Active Resonance (Threshold 18, Resonant Fortune), the Priest receives one communication from the Beast — not language, but intention, image, and emotional weight. The Beast's cognitive state (confused, angry, serene, alert) is always clear; what it is responding to often requires interpretation. <strong>A Zodiac Priest who has achieved Depth 21</strong> can communicate two-directionally — the Beast begins to respond to them specifically rather than simply broadcasting.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--priest)">Domain Embodiment</div><span class="feat-depth">Depth 17</span></div>
+      <div class="feat-body">For 1 minute per Deep Attunement, the Zodiac Priest may fully embody their sign's domain force. During Embodiment: all Benediction effects double; all domain Workings cost no Aetheric Channels; the Priest's appearance shifts to reflect the domain (a Leo Priest's eyes become solar gold, a Scorpio Priest's shadow moves independently). Creatures witnessing Embodiment must make a Resonance Warding Resonance (Threshold 18) or be Dread-Struck for 1 Pulse — not from malice, but from proximity to a mortal fully expressing divine force.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Callings — The Twelve Sign Domains</div>
+  <p style="font-size:13px;color:var(--parchment-dim);margin-bottom:.75rem;font-style:italic">Each Calling defines the sign domain's unique Benediction and domain Working list. Select at Depth 3.</p>
+  <div class="calling-grid">
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--priest)">♈ Aries Domain — Initiative & Primal Fire</div><span class="calling-tag" style="color:var(--priest);border-color:rgba(112,144,192,0.3)">Fire Benediction</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Domain Benediction:</strong> All allies within 30 ft act before all enemies for the next Pulse, regardless of Pulse Order — the domain of initiative reshapes the moment of beginning.</div>
+        <div class="cb-feat"><strong>Domain Workings include:</strong> Fireball variants, Haste, Divine Favor (fire-aspected), Flame Strike, Wall of Fire. All deal fire damage regardless of base type.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--priest)">♉ Taurus Domain — Endurance & Earthly Wealth</div><span class="calling-tag" style="color:var(--priest);border-color:rgba(112,144,192,0.3)">Earth Benediction</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Domain Benediction:</strong> Touch the ground. A 30-ft radius becomes hallowed terrain — all allies within gain Resonant Fortune on Warding Resonances against being moved against their will for 24 hours.</div>
+        <div class="cb-feat"><strong>Domain Workings include:</strong> Stoneskin, Earth Tremor, Spike Growth, Transmute Rock, Move Earth. Enhanced stability and geological force.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--priest)">♋ Cancer Domain — Protection & Sheltering</div><span class="calling-tag" style="color:var(--priest);border-color:rgba(112,144,192,0.3)">Ward Benediction</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Domain Benediction:</strong> Create a sanctuary around one creature you touch. For 1 hour: all Strike Resonances against them have Resonant Discord; they have Resonant Fortune on all Warding Resonances. The shelter of the Adamant Crab, expressed through a mortal intermediary.</div>
+        <div class="cb-feat"><strong>Domain Workings include:</strong> Shield of Faith, Sanctuary, Warding Bond, Aura of Protection (Vitality drain variant), Forcecage. All oriented toward keeping others safe.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--priest)">♌ Leo Domain — Heroism & Solar Light</div><span class="calling-tag" style="color:var(--priest);border-color:rgba(112,144,192,0.3)">Solar Benediction</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Domain Benediction:</strong> Emanate solar light in a 30-ft radius for 1 minute. All Void-Husks and undead within take 3d8 radiant damage immediately. All allies gain temporary Vitality equal to your Attunement modifier and immunity to Dread-Struck for the duration.</div>
+        <div class="cb-feat"><strong>Domain Workings include:</strong> Guiding Bolt, Daylight, Sunbeam, Wall of Light, Dawn. All deal radiant damage and suppress Void-energy in their area of effect.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--priest)">♍ Virgo Domain — Community & Purification</div><span class="calling-tag" style="color:var(--priest);border-color:rgba(112,144,192,0.3)">Purification Benediction</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Domain Benediction:</strong> Purify a 30-ft radius. All Corrupted, Soul-Swayed, and Dread-Struck conditions are removed from all allies within. Ashen Coil blight-rot is suppressed for 24 hours. The Stygian Scorpion's Heart-Sting Toxin is neutralized completely.</div>
+        <div class="cb-feat"><strong>Domain Workings include:</strong> Cure Wounds (enhanced), Lesser/Greater Restoration, Protection from Poison, Mass Healing Word, Heal. All restoration effects function at double potency.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--priest)">♎ Libra Domain — Divine Law & Balance</div><span class="calling-tag" style="color:var(--priest);border-color:rgba(112,144,192,0.3)">Law Benediction</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Domain Benediction:</strong> Declare one action taken in this encounter unjust. The creature who took that action must make a Resonance Warding Resonance (Threshold 18) or be Resonance-Locked for 1 round — the domain of divine law refusing to allow the injustice to continue unchallenged.</div>
+        <div class="cb-feat"><strong>Domain Workings include:</strong> Command, Zone of Truth, Hold Person/Monster, Banishment, Divine Word. All compel truthfulness or righteous constraint.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--priest)">♏ Scorpio Domain — Secrets & Transformation</div><span class="calling-tag" style="color:var(--priest);border-color:rgba(112,144,192,0.3)">Death Benediction</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Domain Benediction:</strong> Touch a creature at 0 Vitality. They are stabilized and held in stasis for up to 24 hours — experiencing the threshold between life and death without crossing it. During stasis, they cannot be targeted by further effects and do not make Loom Tests. The Priest determines when stasis ends.</div>
+        <div class="cb-feat"><strong>Domain Workings include:</strong> Inflict Wounds, Speak with Dead, Animate Dead (Sideros: temporary moral alignment required), Harm, Power Word Kill. All interact with the boundary between living and dead.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--priest)">♐ Sagittarius Domain — Exploration & Stars</div><span class="calling-tag" style="color:var(--priest);border-color:rgba(112,144,192,0.3)">Horizon Benediction</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Domain Benediction:</strong> All allies within 30 ft gain 30 ft of additional movement speed for 1 minute and cannot be reduced below 1 movement speed by any effect. The domain of exploration refuses to let anything stop the journey.</div>
+        <div class="cb-feat"><strong>Domain Workings include:</strong> Longstrider, Pass Without Trace, Far Step, Teleportation Circle, Plane Shift. All enhance range, reach, and the capacity to go where others cannot.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--priest)">♑ Capricorn Domain — Ambition & Mastery</div><span class="calling-tag" style="color:var(--priest);border-color:rgba(112,144,192,0.3)">Mastery Benediction</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Domain Benediction:</strong> Grant one ally Mastery in any Discipline they can observe being used — permanently. The domain of mastery can compress years of practice into a moment of cosmic recognition. Usable once per week per recipient.</div>
+        <div class="cb-feat"><strong>Domain Workings include:</strong> Enhance Ability, Skill Empowerment, Heroes' Feast, Foresight, Wish (limited to skill and capability enhancement). All enhance mortal capacity.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--priest)">♒ Aquarius Domain — Creation & Community</div><span class="calling-tag" style="color:var(--priest);border-color:rgba(112,144,192,0.3)">Communion Benediction</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Domain Benediction:</strong> Create a Shared Resonance Field lasting 1 hour — all Bonded creatures within 60 ft may freely use each other's Aetheric Channels and Tapas Points as if they were their own. Resources flow between bond members without restriction.</div>
+        <div class="cb-feat"><strong>Domain Workings include:</strong> Create Food and Water, Leomund's Tiny Hut, Telepathic Bond, Mass Cure Wounds, Temple of the Gods. All sustain and shelter communities.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--priest)">♓ Pisces Domain — Prophecy & Dreams</div><span class="calling-tag" style="color:var(--priest);border-color:rgba(112,144,192,0.3)">Vision Benediction</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Domain Benediction:</strong> All creatures within 30 ft experience a 6-second prophetic vision simultaneously — the Concordance delivers one true image of an imminent threat or pivotal choice. All who receive the vision have Resonant Fortune on their next roll related to what they saw.</div>
+        <div class="cb-feat"><strong>Domain Workings include:</strong> Augury, Divination, Dream, Foresight, True Seeing. All reveal what is hidden in time or the subconscious.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--priest)">♊ Gemini Domain — Duality & Knowledge</div><span class="calling-tag" style="color:var(--priest);border-color:rgba(112,144,192,0.3)">Duality Benediction</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Domain Benediction:</strong> Split one Working's effect: cast any Priest Working and apply its full effect to two targets simultaneously at no additional Channel cost. The domain of duality extends what was one into two without diminishing either.</div>
+        <div class="cb-feat"><strong>Domain Workings include:</strong> Identify, Detect Thoughts, Sending, Arcane Eye, Legend Lore. All gather, transmit, or process knowledge across distance or minds.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════ FADE-GUARDIAN ══════════════════════ -->
+<div class="panel" id="panel-guardian">
+<div class="path-wrap">
+  <div class="ph">
+    <div class="ph-sigil" style="background:rgba(96,128,80,0.08);border-color:rgba(96,128,80,0.3)">🌿</div>
+    <div>
+      <div class="ph-name" style="color:var(--guardian)">Fade-Guardian</div>
+      <div class="ph-also">Paladin Subclass: Oath of the Fading Veil · Omega-aspected · Vitality Die: d10</div>
+      <div class="ph-tags">
+        <span class="ph-tag" style="color:var(--guardian);border-color:rgba(96,128,80,0.3);background:rgba(96,128,80,0.06)">Veil-Walker</span>
+        <span class="ph-tag" style="color:var(--gold-dim);border-color:rgba(201,168,76,0.25)">Paladin Subclass</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="lore-para">The Fade-Guardians take the Oath of the Fading Veil — the oath to stand at the threshold between the mortal world and the Otherworld and ensure nothing crosses in either direction without reason. They are not gatekeepers of death. They are <strong>watchers of permeability</strong> — the places where the veil thins, the moments when something bleeds through, the creatures that exist partly on both sides. The Fae-Blooded Kindred makes the most natural Fade-Guardian, but any Kindred who has spent time in the Fade-Bleed zone of Argentum, the Otherworld border-zones of the Tuathan Archipelago, or Deep Anthos City's lower caverns may be called to this oath.</p>
+
+  <div class="sideros-core">
+    <div class="sc-label">Core Mechanic — Sideros Original</div>
+    <div class="sc-title">Veil Walk & Veil Smite (replaces Channel Divinity + Divine Smite)</div>
+    <div class="sc-text"><strong>Veil Walk (Channel Divinity, 1 use):</strong> As an Act, step halfway into the Otherworld for up to 1 minute. While Veil-Walking: translucent and partially visible to both worlds; attacks against you have Resonant Discord; you move through creatures as difficult terrain; you can perceive and interact with Otherworld entities invisible to others; you cannot make physical attacks against fully material creatures. Ending Veil Walk: Attunement Warding Resonance (Threshold 12) — on failure, you step fully through and require allies or an Otherworld entity's assistance to return.<br><br>
+    <strong>Veil Smite (replaces Divine Smite):</strong> When you hit with a melee Strike Resonance, expend one Aetheric Channel to deal bonus radiant damage: 2d8 per Channel tier, +1d8 against Void-Husks and creatures with dissolved Fate Numbers. The damage is not fire or force — it is the Otherworld's light, which Void-energy cannot absorb.</div>
+  </div>
+
+  <div class="sec-head">Oath Features</div>
+  <div class="feature-list">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--guardian)">Seasonal Power</div><span class="feat-depth">Depth 3</span></div>
+      <div class="feat-body">The Fade-Guardian's connection to the Tuathan Otherworld tradition aligns them with the Celtic Tree Zodiac. Their Oath powers are enhanced during their birth-tree's season: both Channel Divinity uses recharge at sunrise during the season; Veil Walk duration doubles; Veil Smite deals +1d8 additional damage. Outside their season, one Channel Divinity use per Deep Attunement instead of two. <strong>At solstices and equinoxes</strong>: both effects (seasonal and off-season) become available simultaneously for 24 hours.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--guardian)">Otherworld Sight</div><span class="feat-depth">Depth 7</span></div>
+      <div class="feat-body">The Fade-Guardian no longer needs to Veil Walk to perceive Otherworld entities — they always see the full spectrum of both worlds simultaneously. This grants: automatic detection of Fae-Blooded Kindred using their Twilight Step; awareness of active Otherworld incursions (something crossing the Veil) within 300 ft; the ability to communicate with Otherworld entities without entering the Otherworld. <strong>The cost</strong>: the Guardian occasionally experiences intrusive Otherworld sensory overlaps — the Concordance describes these as narrative flavor during moments of stress or significance.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--guardian)">Veil Seal</div><span class="feat-depth">Depth 15</span></div>
+      <div class="feat-body">Once per week, the Fade-Guardian may permanently seal a specific Otherworld threshold — a Faerie Mound, a Fade-Bleed zone boundary, or a known crossing point. The seal lasts for one year and one day (a traditional Tuathan binding period), after which it must be renewed. While sealed: no entity may cross the threshold in either direction without the Guardian's explicit permission. A sealed threshold registers on Fae-Blooded perception as an unnatural absence — they feel the doorway and cannot open it.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Oath Spells (added to Oathed Vanguard spell list)</div>
+  <div class="two-col">
+    <div class="info-block">
+      <div class="ib-label">Depths 3–9</div>
+      <div class="ib-text"><strong>Depth 3:</strong> Speak with Animals, Faerie Fire<br><strong>Depth 5:</strong> Moonbeam, Pass without Trace<br><strong>Depth 9:</strong> Conjure Animals, Plant Growth</div>
+    </div>
+    <div class="info-block">
+      <div class="ib-label">Depths 13–17</div>
+      <div class="ib-text"><strong>Depth 13:</strong> Guardian of Faith, Hallucinatory Terrain<br><strong>Depth 17:</strong> Tree Stride, Commune with Nature</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════ SOLAR GUARD ══════════════════════ -->
+<div class="panel" id="panel-guard">
+<div class="path-wrap">
+  <div class="ph">
+    <div class="ph-sigil" style="background:rgba(192,144,64,0.08);border-color:rgba(192,144,64,0.3)">☀</div>
+    <div>
+      <div class="ph-name" style="color:var(--guard)">Solar Guard</div>
+      <div class="ph-also">Base: Fighter · Alpha/Beta-aspected · Vitality Die: d10</div>
+      <div class="ph-tags">
+        <span class="ph-tag" style="color:var(--alpha);border-color:rgba(212,114,74,0.3);background:rgba(212,114,74,0.06)">Alpha or Beta</span>
+        <span class="ph-tag" style="color:var(--gold-dim);border-color:rgba(201,168,76,0.25)">Most Adaptable Path</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="lore-para">The Solar Guard is the world's most versatile warrior — not because they have cosmic gifts or inherited power, but because they have <strong>mastered the discipline of preparation</strong>. Every Solar Guard has a Fighting Discipline (their chosen combat tradition) and an Action Surge equivalent they call the <em>Surge of Will</em> — the ability to push beyond their body's normal limits through sheer trained determination. Where other Paths weave the Aether through cosmic lineage or divine connection, the Solar Guard channels it through <em>will</em>.</p>
+
+  <div class="sideros-core">
+    <div class="sc-label">Core Mechanic — Sideros Original</div>
+    <div class="sc-title">Surge of Will (replaces Second Wind + Action Surge)</div>
+    <div class="sc-text"><strong>Vitality Surge (Instinct, 1/Short or Deep Attunement):</strong> Restore Vitality equal to 1d10 + Resonance Depth. This is not magical healing — it is trained stress response. Works in anti-magic fields. Works in The Stillness. Will does not require the Aether.<br><br>
+    <strong>Combat Surge (Act, 2/Short or Deep Attunement — increases at higher Depths):</strong> On your Moment, you may take one additional Act. Not an Instinct — a full additional Act. Replaces Action Surge. A Solar Guard in Combat Surge can: attack twice and use an Instinct and still have an Act remaining. This represents trained efficiency reaching a point of genuine superhuman performance without cosmic aid.<br><br>
+    <strong>Fighting Discipline (chosen at Depth 1):</strong> Select one fighting tradition — Archery, Defense, Dueling, Great Weapon, Protection, Throwing, or Unarmed. Each grants a specific passive benefit. Multiple Disciplines may be taken at higher Depths.</div>
+  </div>
+
+  <div class="sec-head">Signature Path Features</div>
+  <div class="feature-list">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--guard)">Tactical Reading</div><span class="feat-depth">Depth 3</span></div>
+      <div class="feat-body">The Solar Guard has studied combat long enough to read it. At the start of each encounter, they may use their first Instinct to assess all hostile creatures within 60 ft — learning each creature's approximate Vitality (full/bloodied/near death), primary attack method (melee/ranged/magical), and one tactical vulnerability (a specific positioning weakness or a condition they have not yet resisted this encounter). This is observation, not magic. It cannot be suppressed.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--guard)">Extra Strikes</div><span class="feat-depth">Depth 5, 11, 20</span></div>
+      <div class="feat-body">When the Solar Guard uses the Strike Act, they may make two Strike Resonances instead of one (Depth 5). This increases to three at Depth 11 and four at Depth 20. The Solar Guard is the Path with the highest raw strike volume — not because of cosmic power, but because they have trained every day since they could hold a weapon and they have simply gotten very, very good at this.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--guard)">Indomitable</div><span class="feat-depth">Depth 9</span></div>
+      <div class="feat-body">Once per Deep Attunement, when the Solar Guard fails a Warding Resonance, they may reroll it with Resonant Fortune. The reroll must be used. At Depth 13: twice per Deep Attunement. At Depth 17: three times. This is not cosmic resilience — it is the refusal of a trained warrior to accept what just happened to them. A Solar Guard who has failed a save looks at the result and decides it is unacceptable.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Callings</div>
+  <div class="calling-grid">
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--guard)">Solar Chivalry</div><span class="calling-tag" style="color:var(--guard);border-color:rgba(192,144,64,0.3)">Leonine Tradition</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Chivalric Precision (Depth 3):</strong> Once per Pulse, add your Mastery Bonus to one damage roll after seeing the Strike Resonance result.</div>
+        <div class="cb-feat"><strong>Know Your Enemy (Depth 7):</strong> After observing a creature for 1 minute, or after one combat encounter with it, you know its exact current Vitality, all resistances and immunities, and its Primal Essence.</div>
+        <div class="cb-feat"><strong>Relentless (Depth 10):</strong> When you are reduced to 0 Vitality but not killed outright, you may make one Strike Resonance before falling. The Solar Chivalry's code requires one last act of defiance.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--guard)">Psi-Warrior</div><span class="calling-tag" style="color:var(--guard);border-color:rgba(192,144,64,0.3)">Jade Tradition</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Psionic Strike (Depth 3):</strong> Once per Pulse, when you hit with a Strike Resonance, add 1d6 psychic damage. The Jade Empire's warrior tradition trains the mind as a weapon.</div>
+        <div class="cb-feat"><strong>Telekinetic Movement (Depth 7):</strong> Move one object or creature within 30 ft up to 30 ft as an Instinct. Creatures make a Forcefulness Warding Resonance (Threshold = 8 + Mastery + Attunement) to resist.</div>
+        <div class="cb-feat"><strong>Bulwark of Force (Depth 10):</strong> Once per Deep Attunement, create an invisible barrier of psychic force within 30 ft — a 10-ft cube that blocks all movement through it for 1 minute.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--guard)">Runic Knight</div><span class="calling-tag" style="color:var(--guard);border-color:rgba(192,144,64,0.3)">Norse Tradition</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Rune Carving (Depth 3):</strong> Learn two runes from the Elder Futhark tradition. Each rune may be inscribed on one weapon or piece of armor per Deep Attunement, granting a specific passive benefit (Cloud: Resonant Fortune on Swiftness; Stone: +2 Guard Rating; Fire: +1d6 fire on strikes; Frost: Warding Resonance immunity to cold).</div>
+        <div class="cb-feat"><strong>Giant's Might (Depth 7):</strong> As an Instinct, grow to Large size for 1 minute. Gain Resonant Fortune on Forcefulness Active Resonances, +1d6 damage, and can grapple creatures up to Huge size.</div>
+        <div class="cb-feat"><strong>Runic Shield (Depth 10):</strong> When an ally within 60 ft is hit by a Strike Resonance, use your Reflex to impose Resonant Discord on that roll — the runes extend their protection through the warrior's will.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════ RĀŚI-SIDDHA ══════════════════════ -->
+<div class="panel" id="panel-siddha">
+<div class="path-wrap">
+  <div class="ph">
+    <div class="ph-sigil" style="background:rgba(160,80,80,0.08);border-color:rgba(160,80,80,0.3)">🕉</div>
+    <div>
+      <div class="ph-name" style="color:var(--siddha)">Rāśi-Siddha</div>
+      <div class="ph-also">Base: Monk · Omega-aspected · Vitality Die: d8 · Most complete Path</div>
+      <div class="ph-tags">
+        <span class="ph-tag" style="color:var(--omega);border-color:rgba(144,102,200,0.3);background:rgba(144,102,200,0.06)">Omega-dominant</span>
+        <span class="ph-tag" style="color:var(--gold-dim);border-color:rgba(201,168,76,0.25)">Tapas Points (fully built)</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="lore-para">The Rāśi-Siddha is the most complete Path in the game — Tapas Points are fully defined, all three expenditure tiers (Satvic/Rajasic/Tamasic) are built, and the Kanya exception (curing Ashen Coil blight-rot) is established. This entry defines the <strong>remaining elements</strong>: the Unarmored Guard Rating formula, the Resonance Depth progression, and the twelve Scattered Temple Callings.</p>
+
+  <div class="sideros-core">
+    <div class="sc-label">Core Mechanic — Already Built</div>
+    <div class="sc-title">Tapas Points (fully defined in Mechanics Codex)</div>
+    <div class="sc-text">Pool = Mastery Bonus × Attunement modifier (minimum 2). Three expenditure tiers: <strong>Satvic</strong> (purification, lower cost), <strong>Rajasic</strong> (active, standard cost), <strong>Tamasic</strong> (corrupting, higher cost, Tapas Depletion risk). Regeneration: full on Deep Attunement; partial on meditative Brief Attunement.<br><br>
+    <strong>Unarmored Guard Rating:</strong> 10 + Attunement modifier + Mastery Bonus while at full Tapas pool (Ascetic Stillness ability). Without a full pool: 10 + Attunement modifier + Swiftness modifier.<br><br>
+    <strong>Siddha Strike:</strong> Unarmed strikes count as Aetheric Artifacts for the purpose of overcoming damage resistance — the mantra in the body makes the fist a Working. Unarmed damage: 1d6 at Depths 1–4; 1d8 at 5–10; 1d10 at 11–16; 1d12 at 17+.</div>
+  </div>
+
+  <div class="sec-head">The Twelve Scattered Temple Callings</div>
+  <p style="font-size:13px;color:var(--parchment-dim);margin-bottom:.75rem;font-style:italic">Each Temple aligns to one zodiac sign. The Calling shapes which Tapas abilities the Siddha emphasizes.</p>
+  <div class="calling-grid">
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--siddha)">Mesha Temple (♈ Aries)</div><span class="calling-tag" style="color:var(--siddha);border-color:rgba(160,80,80,0.3)">Initiative</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>First Breath (Depth 3):</strong> You always act first in the first Pulse of any encounter, regardless of Pulse Order — no roll required.</div>
+        <div class="cb-feat"><strong>Blazing Mantra (Depth 6):</strong> Your Mantra Strike deals fire damage and sets the target ablaze (1d4 fire at start of their Moment) for 1 minute unless they spend their Act extinguishing it. Fire cost: 1 additional Tapas (Rajasic).</div>
+        <div class="cb-feat"><strong>Surge Form (Depth 11):</strong> Once per encounter, as a free action after reducing a creature to 0 Vitality, immediately move up to your full speed and make one additional Mantra Strike. No Tapas cost — the momentum is free.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--siddha)">Kanya Temple (♍ Virgo)</div><span class="calling-tag" style="color:var(--siddha);border-color:rgba(160,80,80,0.3)">Purification</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Blight-Rot Cure (Depth 3):</strong> Spend 3 Tapas (Satvic — never Tamasic) to cure Ashen Coil blight-rot on a touched creature. The only non-Lotus cure in the world.</div>
+        <div class="cb-feat"><strong>Purifying Strike (Depth 6):</strong> Your Mantra Strike removes one condition (Corrupted, Soul-Swayed, or Dread-Struck) from the target on a hit in addition to dealing damage. The Purification touch is weapon and medicine simultaneously.</div>
+        <div class="cb-feat"><strong>Community Shield (Depth 11):</strong> Passive. All allies within 30 ft have Resonant Fortune on Warding Resonances against Corrupted and disease conditions while you have 4+ Tapas remaining.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--siddha)">Vrishchika Temple (♏ Scorpio)</div><span class="calling-tag" style="color:var(--siddha);border-color:rgba(160,80,80,0.3)">Shadow</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Shadow Step (Depth 3):</strong> Spend 1 Tapas (Rajasic) to teleport from one area of dim light or darkness to another within 60 ft as an Instinct.</div>
+        <div class="cb-feat"><strong>Shroud of Night (Depth 6):</strong> Spend 2 Tapas to wrap yourself in shadow for 1 minute — Stealth Active Resonances have Resonant Fortune; dim-light conditions count as darkness for you.</div>
+        <div class="cb-feat"><strong>Death Touch (Depth 11):</strong> Spend 4 Tapas (Tamasic — risk of Depletion). On a successful unarmed strike: target makes an Endurance Warding Resonance (Threshold = 8 + Mastery + Attunement) or drops to 0 Vitality immediately. On success: takes 4d10 necrotic damage instead. One use per encounter.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--siddha)">Tula Temple (♎ Libra)</div><span class="calling-tag" style="color:var(--siddha);border-color:rgba(160,80,80,0.3)">Balance</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Deflecting Palm (Depth 3):</strong> When you are hit by a Strike Resonance, spend 2 Tapas (Satvic) as a Reflex to deflect — reduce damage by 1d10 + Attunement modifier.</div>
+        <div class="cb-feat"><strong>Balanced Form (Depth 6):</strong> While your Tapas pool is exactly at half its maximum (not above, not below), all your Active Resonances and Warding Resonances have Resonant Fortune. The balance point is power.</div>
+        <div class="cb-feat"><strong>Redirect (Depth 11):</strong> When you successfully deflect a missile attack to 0 damage (using Deflecting Palm), spend 1 additional Tapas to redirect it at any creature within range — using your own Strike Resonance modifier.</div>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:12px;color:var(--parchment-dim);font-style:italic;margin-top:.5rem">The remaining eight Temple Callings follow the same structure — each expressing their sign's domain through the Tapas system's Satvic/Rajasic/Tamasic framework. The Concordance may build additional Temples using the four above as templates.</p>
+</div>
+</div>
+
+<!-- ══════════════════════ OATHED VANGUARD ══════════════════════ -->
+<div class="panel" id="panel-vanguard">
+<div class="path-wrap">
+  <div class="ph">
+    <div class="ph-sigil" style="background:rgba(192,128,64,0.08);border-color:rgba(192,128,64,0.3)">🛡</div>
+    <div>
+      <div class="ph-name" style="color:var(--vanguard)">Oathed Vanguard</div>
+      <div class="ph-also">Base: Paladin · Alpha-aspected · Vitality Die: d10</div>
+      <div class="ph-tags">
+        <span class="ph-tag" style="color:var(--alpha);border-color:rgba(212,114,74,0.3);background:rgba(212,114,74,0.06)">Alpha-dominant</span>
+        <span class="ph-tag" style="color:var(--gold-dim);border-color:rgba(201,168,76,0.25)">Oath-Bound Path</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="lore-para">The Oathed Vanguard's power comes from a cosmic contract — an Oath sworn before the Loom of Fate itself, witnessed by whatever divine force aligns with the Vanguard's chosen cause. The Oath is not symbolic. <strong>Breaking it has mechanical consequences.</strong> The Vanguard's power is entirely contingent on the Oath remaining intact — which makes the Oathed Vanguard the Path most vulnerable to moral compromise and the most interesting character to watch navigate situations where the Oath and the obvious right choice diverge.</p>
+
+  <div class="sideros-core">
+    <div class="sc-label">Core Mechanic — Sideros Original</div>
+    <div class="sc-title">Vitality of the Oath (replaces Lay on Hands) + Aether Smite (replaces Divine Smite)</div>
+    <div class="sc-text"><strong>Vitality of the Oath:</strong> A pool of healing equal to 5 × Resonance Depth, refreshed each Deep Attunement. As an Act, touch a creature and restore any amount of Vitality from this pool. Also use pool to cure disease or poison (5 points per condition). The pool represents the Oath's living power — the cosmic force backing the Vanguard's commitment, expressing as healing through their hands.<br><br>
+    <strong>Aether Smite:</strong> When a Strike Resonance hits, expend one Aetheric Channel to add radiant damage: 2d8 per Channel tier, +1d8 against Void-Husks and creatures with dissolved Fate Numbers, +1d8 against creatures the Vanguard's Oath designates as enemies. The smite cannot be used retroactively — it must be declared before the roll is made.<br><br>
+    <strong>Aura of Oath (Depth 6):</strong> All allies within 10 ft (20 ft at Depth 18) add the Vanguard's Resonance modifier to all Warding Resonances. The Oath extends outward — those who stand near a genuine commitment share its protection.</div>
+  </div>
+
+  <div class="sec-head">Callings — The Oaths</div>
+  <div class="calling-grid">
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--vanguard)">Oath of the Solar Compact</div><span class="calling-tag" style="color:var(--vanguard);border-color:rgba(192,128,64,0.3)">Devotion</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Tenets:</strong> Honesty. Courage. Compassion for the weak. Duty to the Solar Throne's ideals (if not its current holder).</div>
+        <div class="cb-feat"><strong>Sacred Weapons (Depth 3):</strong> As an Instinct, infuse one weapon with Oath-light for 1 minute. It deals +1d4 radiant damage, sheds bright light in 20 ft, and counts as Sun-Kissed Adamas for the purpose of affecting undead.</div>
+        <div class="cb-feat"><strong>Turn Void-Husks (Depth 3, Channel Divinity):</strong> All Void-Husks within 30 ft that can see or hear you must make a Resonance Warding Resonance (Threshold = 8 + Mastery + Resonance) or be unable to willingly move toward you for 1 minute.</div>
+        <div class="cb-feat"><strong>Oath Aura (Depth 7):</strong> Allies in your Aura of Oath are immune to Dread-Struck and have Resonant Fortune on all Active Resonances made to resist Soul-Swayed.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--vanguard)">Oath of the Loom's Justice</div><span class="calling-tag" style="color:var(--vanguard);border-color:rgba(192,128,64,0.3)">Vengeance</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Tenets:</strong> Fight the greater evil. No mercy for those who prey on the innocent. By any means necessary — the Loom measures results.</div>
+        <div class="cb-feat"><strong>Vow of Enmity (Depth 3):</strong> As an Instinct, declare one creature your Quarry. For 1 minute: Resonant Fortune on all Strike Resonances against the Quarry; if the Quarry dies, you may immediately designate a new Quarry as a free action.</div>
+        <div class="cb-feat"><strong>Misty Step variant (Depth 3, Channel Divinity):</strong> Teleport up to 30 ft to a space adjacent to your Quarry as an Instinct — the Loom pulls the thread tight.</div>
+        <div class="cb-feat"><strong>Relentless Pursuit (Depth 7):</strong> Your movement is not impeded by difficult terrain when moving toward your Quarry. If your Quarry becomes Aether-Veiled, you can still perceive their general location within 30 ft.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--vanguard)">Oath of Ancient Sideros</div><span class="calling-tag" style="color:var(--vanguard);border-color:rgba(192,128,64,0.3)">Ancients</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Tenets:</strong> Protect the light of the zodiac. Preserve life — mortal, divine, and Legendary Beast. The beauty of the living world is worth dying for.</div>
+        <div class="cb-feat"><strong>Nature's Wrath (Depth 3, Channel Divinity):</strong> Spectral vines erupt around all hostile creatures within 10 ft — Forcefulness Warding Resonance (Threshold = 8 + Mastery + Resonance) or Resonance-Locked until the start of your next Moment.</div>
+        <div class="cb-feat"><strong>Aura of Warding (Depth 7):</strong> Allies in your Aura of Oath gain resistance to damage from Workings — halve all Working damage taken.</div>
+        <div class="cb-feat"><strong>Legendary Beast Accord (Depth 15):</strong> You have established a covenant with all Legendary Beasts. They will not attack you unprovoked. You may request one audience with any Beast per year — they will receive you, though they are not obligated to help.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════ VOID-HUNTER ══════════════════════ -->
+<div class="panel" id="panel-hunter">
+<div class="path-wrap">
+  <div class="ph">
+    <div class="ph-sigil" style="background:rgba(80,112,80,0.08);border-color:rgba(80,112,80,0.3)">🏹</div>
+    <div>
+      <div class="ph-name" style="color:var(--hunter)">Void-Hunter</div>
+      <div class="ph-also">Base: Ranger · Beta-aspected · Vitality Die: d10</div>
+      <div class="ph-tags">
+        <span class="ph-tag" style="color:var(--beta);border-color:rgba(74,142,196,0.3);background:rgba(74,142,196,0.06)">Beta-dominant</span>
+        <span class="ph-tag" style="color:var(--gold-dim);border-color:rgba(201,168,76,0.25)">Coil Tracker</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="lore-para">The Void-Hunter has dedicated themselves to tracking, understanding, and eliminating Void-energy manifestations — Coil operatives, Void-Husks, entropic corruption zones, and the Scion commanders who direct them. Where the Coil-Stalker carries corruption as a weapon, the Void-Hunter carries <strong>knowledge</strong> as a weapon. They know more about how the Coil operates than the Coil expects anyone outside it to know.</p>
+
+  <div class="sideros-core">
+    <div class="sc-label">Core Mechanic — Sideros Original</div>
+    <div class="sc-title">Void Quarry (replaces Favored Enemy + Hunter's Mark)</div>
+    <div class="sc-text">As an Instinct, designate one creature as your Void Quarry. This designation lasts until the creature is dead or until you designate a new Quarry (only one at a time, no cost to switch after a kill).<br><br>
+    <strong>Against Void Quarry:</strong> +1d6 damage on all Strike Resonances; Resonant Fortune on Attunement Active Resonances to track, perceive, or gather information about the Quarry; always know the Quarry's direction and approximate distance (within 1 mile) as long as you have seen them in the last 24 hours.<br><br>
+    <strong>Void Quarry — Coil Specialization:</strong> Against Void-Husks, Coil operatives, and creatures with active Lead-Scale Corruption, the bonus damage increases to +1d8 and you know the target's current Corruption Gauge level on sight. You have studied this enemy category more deeply than any other.<br><br>
+    <strong>Terrain Attunement (replaces Natural Explorer):</strong> Choose two terrain types at Depth 1. In these terrains: always know the cardinal direction; movement not impeded by difficult terrain; Resonant Fortune on Active Resonances to track, forage, navigate, and detect ambush. Additional terrain types at Depths 6 and 10.</div>
+  </div>
+
+  <div class="sec-head">Callings</div>
+  <div class="calling-grid">
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--hunter)">Void-Slayer</div><span class="calling-tag" style="color:var(--hunter);border-color:rgba(80,112,80,0.3)">Combat</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Colossus Slayer (Depth 3):</strong> Once per Pulse, when you hit a creature below its maximum Vitality, deal +1d8 additional damage. The Hunter has learned that everything has a threshold — hit something that's already hurting and it hurts more.</div>
+        <div class="cb-feat"><strong>Multiattack Defense (Depth 7):</strong> When a creature hits you with multiple strikes in one Moment, gain +4 Guard Rating against all subsequent strikes from that creature in the same Moment.</div>
+        <div class="cb-feat"><strong>Stand Against the Tide (Depth 11):</strong> When a hostile creature misses you with a melee Strike Resonance, you may use your Reflex to make one Strike Resonance against it immediately.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--hunter)">Stalker's Eye</div><span class="calling-tag" style="color:var(--hunter);border-color:rgba(80,112,80,0.3)">Ambush</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Skirmisher (Depth 3):</strong> When a hostile creature ends its Moment adjacent to you, you may use your Reflex to move up to half your speed. This movement does not provoke Reflex Strikes.</div>
+        <div class="cb-feat"><strong>Sudden Strike (Depth 7):</strong> When you use the Strike Act while hidden from a creature, you may make an additional Strike Resonance against it as part of the same Act before it can perceive you.</div>
+        <div class="cb-feat"><strong>Ambush Master (Depth 11):</strong> If you act in the first Pulse of combat while hidden, all Strike Resonances in that Pulse have Resonant Fortune and deal +2d6 damage.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--hunter)">Fang of the Resistance</div><span class="calling-tag" style="color:var(--hunter);border-color:rgba(80,112,80,0.3)">Intelligence</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Coil Network Reading (Depth 3):</strong> In any settlement, spend 1 hour in observation to identify: whether a Coil operative is present, their approximate Corruption Gauge, and one current Coil objective in this location. You cannot identify who the operative is — only that they're there and what they're doing.</div>
+        <div class="cb-feat"><strong>Counter-Network (Depth 7):</strong> You have built a loose network of informants across your traveled regions. Once per session, ask the Concordance one question about Coil movements in any location you've spent at least a week in. The answer is current and accurate.</div>
+        <div class="cb-feat"><strong>The Long Hunt (Depth 11):</strong> You may designate one Scion of the Ashen Coil as a Permanent Quarry — this Quarry designation never expires and cannot be replaced by a new Quarry. The bonus damage against the Permanent Quarry increases to +2d8 and you always know their general continental location.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════ FATE-BREAKER ══════════════════════ -->
+<div class="panel" id="panel-breaker">
+<div class="path-wrap">
+  <div class="ph">
+    <div class="ph-sigil" style="background:rgba(96,96,128,0.08);border-color:rgba(96,96,128,0.3)">⚡</div>
+    <div>
+      <div class="ph-name" style="color:var(--breaker)">Fate-Breaker</div>
+      <div class="ph-also">Base: Rogue · Beta-aspected · Vitality Die: d8</div>
+      <div class="ph-tags">
+        <span class="ph-tag" style="color:var(--beta);border-color:rgba(74,142,196,0.3);background:rgba(74,142,196,0.06)">Beta-dominant</span>
+        <span class="ph-tag" style="color:var(--gold-dim);border-color:rgba(201,168,76,0.25)">Fate Number Specialist</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="lore-para">The Fate-Breaker disrupts probability. Where the Stellar Cartographer stores and redistributes fate moments, the Fate-Breaker simply <strong>refuses to be read</strong> — and then refuses to let others be read either. The Loom of Fate employs Fate-Breakers specifically to protect high-value assets from Stellar Cartographer surveillance. Serath of the Closed Circle, who has identified three Quint Bond cluster members, has also identified the Fate-Breaker who is protecting the cluster's fourth member — and has not yet decided what to do about either of them.</p>
+
+  <div class="sideros-core">
+    <div class="sc-label">Core Mechanic — Sideros Original</div>
+    <div class="sc-title">Probability Strike (replaces Sneak Attack) + Number Masking</div>
+    <div class="sc-text"><strong>Probability Strike:</strong> When the Fate-Breaker has Resonant Fortune on a Strike Resonance, or when an ally is adjacent to the target, deal bonus damage: 1d6 at Depth 1, scaling by 1d6 every odd Depth (2d6 at 3, 3d6 at 5, etc., to 10d6 at Depth 19). The damage represents hitting the target at the precise moment when fate aligned against them — not skill, but reading and exploiting probability windows.<br><br>
+    <strong>Number Masking (replaces Thieves' Cant in strategic importance):</strong> As an Act (1 minute of subtle manipulation), the Fate-Breaker suppresses one creature's Fate Number — their own or any creature they touch. For 24 hours: the Number reads as static to Fate Number Reading; Bond abilities that require Number-proximity don't register the masked creature; Stellar Cartographers have Resonant Discord on any attempt to read the masked creature's destiny. This is a lesser version of the Stellar Cartographer's Unwritten Calling ability — the Fate-Breaker can mask but cannot cut threads.</div>
+  </div>
+
+  <div class="sec-head">Signature Path Features</div>
+  <div class="feature-list">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--breaker)">Cunning Act</div><span class="feat-depth">Depth 2</span></div>
+      <div class="feat-body">The Fate-Breaker may use the Help, Hide, or Disengage Acts as an Instinct rather than an Act. This is the core efficiency of the Path — the Fate-Breaker never wastes a full action on positioning when a half-action will do. Additionally: the Fate-Breaker may use their Instinct to read one creature's emotional state (fear, aggression, deception, hidden agenda) without an Active Resonance — the probability windows people operate in are readable if you know what to look for.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--breaker)">Uncanny Dodge</div><span class="feat-depth">Depth 5</span></div>
+      <div class="feat-body">When the Fate-Breaker can see an attacker, use their Reflex to halve the damage from that attack — they're reading the probability of where the strike will land and not being there. This works against Workings that require a Strike Resonance. It does not work against Workings that only require Warding Resonances — those don't have a physical trajectory to read.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name" style="color:var(--breaker)">Reliable Discipline</div><span class="feat-depth">Depth 11</span></div>
+      <div class="feat-body">When making an Active Resonance in a Mastered Discipline, treat any roll of 9 or lower as a 10. The Fate-Breaker cannot fail at the things they have practiced. The floor rises. This is not luck — it is the accumulated competence of someone who has done this particular thing hundreds of times and knows exactly what a bad roll looks like and compensates for it automatically.</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Callings</div>
+  <div class="calling-grid">
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--breaker)">The Probability Thief</div><span class="calling-tag" style="color:var(--breaker);border-color:rgba(96,96,128,0.3)">Arcane Trickster</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Working Access (Depth 3):</strong> Gain access to Workings from the illusion and manipulation domains (Mage Hand, Minor Illusion, Disguise Self). These Workings are powered by Aetheric Channels — the Fate-Breaker learns to open them through probability intuition rather than formal training.</div>
+        <div class="cb-feat"><strong>Misdirection (Depth 9):</strong> Once per encounter, cause a creature that can see you to believe you are in a different location for 1 Pulse. All Strike Resonances against you from that creature during that Pulse automatically miss — they are hitting where you were, not where you are.</div>
+        <div class="cb-feat"><strong>Spell Theft (Depth 13):</strong> When a creature within 30 ft fails a Warding Resonance against a Working you can see being prepared, you may steal the Working — redirecting its effect to a new target of your choice. Once per encounter.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--breaker)">The Loom Operative</div><span class="calling-tag" style="color:var(--breaker);border-color:rgba(96,96,128,0.3)">Assassin</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Assassination (Depth 3):</strong> When you attack a creature that has not yet acted in combat (surprise round), Strike Resonances have Resonant Fortune and any hit is automatically a Resonant Strike (maximum damage). Probability fully aligned against a target that isn't ready.</div>
+        <div class="cb-feat"><strong>Infiltration Expertise (Depth 9):</strong> Create false identities with 7 days of work. The identity includes documentation, established backstory, and contacts who will vouch for it. The Concordance cannot have NPCs see through the identity without specific, targeted investigation beyond routine checks.</div>
+        <div class="cb-feat"><strong>Impostor (Depth 13):</strong> After 3 hours of careful observation, perfectly replicate a specific creature's appearance, voice, and mannerisms. Combined with Infiltration Expertise, this is the most complete identity toolkit in the game.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--breaker)">The Street Philosopher</div><span class="calling-tag" style="color:var(--breaker);border-color:rgba(96,96,128,0.3)">Scout</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Skirmisher's Eye (Depth 3):</strong> As an Instinct, disengage and move half your speed — no Reflex Strikes triggered. The Fate-Breaker is never where the danger expects them to be.</div>
+        <div class="cb-feat"><strong>Ambush Coordinator (Depth 9):</strong> When you initiate an ambush and are hidden, all allies who can see you also count as hidden from the targets for the first Pulse — your positioning reads the field and your body language communicates it to those who know to watch.</div>
+        <div class="cb-feat"><strong>Superior Mobility (Depth 13):</strong> Movement speed increases by 10 ft. You may move through the spaces of hostile creatures without provoking Reflex Strikes. You may climb and swim at full speed without Active Resonances.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════ STAR-BORN ══════════════════════ -->
+<div class="panel" id="panel-starborn">
+<div class="path-wrap">
+  <div class="ph">
+    <div class="ph-sigil" style="background:rgba(128,96,160,0.08);border-color:rgba(128,96,160,0.3)">★</div>
+    <div>
+      <div class="ph-name" style="color:var(--starborn)">Star-Born</div>
+      <div class="ph-also">Base: Sorcerer · Omega-aspected · Vitality Die: d6</div>
+      <div class="ph-tags">
+        <span class="ph-tag" style="color:var(--omega);border-color:rgba(144,102,200,0.3);background:rgba(144,102,200,0.06)">Omega-dominant</span>
+        <span class="ph-tag" style="color:var(--gold-dim);border-color:rgba(201,168,76,0.25)">Zodiac Surge</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="lore-para">The Star-Born did not learn to weave the Aether. They were <strong>born already weaving it</strong>. Their zodiac sign's cosmic force runs so strongly through their lineage that it expresses without training, without mantras, without formal study. This is the source of both their extraordinary power and their central challenge: <strong>a surge you didn't ask for is a surge you can't fully control</strong>. The Star-Born's Path is learning to direct what the cosmos already decided to pour through them.</p>
+
+  <div class="sideros-core">
+    <div class="sc-label">Core Mechanic — Sideros Original</div>
+    <div class="sc-title">Zodiac Surge Points (replaces Sorcery Points)</div>
+    <div class="sc-text">The Star-Born has a pool of <strong>Zodiac Surge Points</strong> equal to their Resonance Depth. Surge Points refresh on Deep Attunement.<br><br>
+    <strong>Spending Surge Points:</strong><br>
+    • Convert 1 Surge Point into one 1st-tier Aetheric Channel (or 2 Points for 2nd-tier, 3 for 3rd, 5 for 4th, 7 for 5th)<br>
+    • Convert an expended Channel back into 2 Surge Points<br>
+    • Quickened Working (2 Points): cast a Working that takes an Act as an Instinct instead<br>
+    • Empowered Working (1 Point): reroll a number of damage dice equal to Weaving Attribute modifier; must use new rolls<br>
+    • Extended Working (1 Point): double the duration of a Sustained Resonance Working<br><br>
+    <strong>Wild Surge:</strong> When the Star-Born rolls a natural 1 on a Working Strike Resonance, or when they push their Channel capacity beyond their safe limit, the Concordance rolls on the Wild Surge table — a cosmic expression beyond the character's intent. Surges range from minor (Working affects wrong target) to dramatic (Working doubles in area and power) to dangerous (adjacent creatures take damage). The Star-Born cannot fully suppress Wild Surges. They can, at Depth 14, attempt to shape them.</div>
+  </div>
+
+  <div class="sec-head">Callings</div>
+  <div class="calling-grid">
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--starborn)">Zodiac Bloodline</div><span class="calling-tag" style="color:var(--starborn);border-color:rgba(128,96,160,0.3)">Inherited Power</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Sign Surge (Depth 1):</strong> All Workings you cast deal their primary damage type as your sign's domain type instead (if it changes the damage type — a Scorpio Star-Born's fire Working becomes necrotic/poison). The sign's energy overwrites the Working's base expression.</div>
+        <div class="cb-feat"><strong>Elemental Affinity (Depth 6):</strong> Add your Weaving Attribute modifier to damage rolls for any Working dealing your sign's domain damage type. Additionally, spend 1 Surge Point after a Working is cast to gain resistance to that damage type for 1 hour.</div>
+        <div class="cb-feat"><strong>Dragon Wings variant (Depth 14):</strong> Spend 3 Surge Points to manifest your sign's domain energy as flight for 1 hour. Aries: fire-jet propulsion (50 ft fly, fire trail). Scorpio: shadow-wings (40 ft fly, Aether-Veiled while flying). Each sign manifests differently.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--starborn)">Wild Surge Master</div><span class="calling-tag" style="color:var(--starborn);border-color:rgba(128,96,160,0.3)">Chaos Channeler</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Surge Control (Depth 1):</strong> When a Wild Surge occurs, you may spend 2 Surge Points to select the result from the top 3 options on the Concordance's roll rather than taking the worst. You can't stop the surge but you can shape what it becomes.</div>
+        <div class="cb-feat"><strong>Bend Luck (Depth 6):</strong> Spend 2 Surge Points as a Reflex when any creature within 30 ft makes a roll — add or subtract 1d4 from the result. The Star-Born's inherent probability-warping nature can push fate in small ways constantly.</div>
+        <div class="cb-feat"><strong>Controlled Chaos (Depth 14):</strong> Once per Deep Attunement, deliberately trigger a Wild Surge — choosing the result rather than rolling. The Concordance offers three options appropriate to the current situation. The Star-Born selects one.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--starborn)">The Veil-Touched</div><span class="calling-tag" style="color:var(--starborn);border-color:rgba(128,96,160,0.3)">Shadow Magic</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Eyes of the Dark (Depth 1):</strong> Darkvision 120 ft. Additionally, cast a specific darkness Working once per Deep Attunement without expending a Channel or Surge Points — the darkness that flows through your lineage always has a reserve.</div>
+        <div class="cb-feat"><strong>Strength of the Grave (Depth 6):</strong> When damage would reduce you to 0 Vitality, make an Endurance Warding Resonance (Threshold = 5 + damage dealt). On success: drop to 1 Vitality instead. Cannot use against radiant damage or Resonant Strikes. The Veil-Touched lineage resists death specifically because death is not quite foreign to them.</div>
+        <div class="cb-feat"><strong>Umbral Form (Depth 14):</strong> Spend 3 Surge Points to become shadow-substance for 1 minute: resistance to all non-radiant damage; move through creatures without impediment; become fully Aether-Veiled in dim light or darkness. The Star-Born's lineage briefly reasserts its Otherworld nature.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════ SCION-PLEDGED ══════════════════════ -->
+<div class="panel" id="panel-scion">
+<div class="path-wrap">
+  <div class="ph">
+    <div class="ph-sigil" style="background:rgba(80,64,112,0.08);border-color:rgba(80,64,112,0.3)">🌑</div>
+    <div>
+      <div class="ph-name" style="color:var(--scion)">Scion-Pledged</div>
+      <div class="ph-also">Base: Warlock · Omega-aspected · Vitality Die: d8</div>
+      <div class="ph-tags">
+        <span class="ph-tag" style="color:var(--omega);border-color:rgba(144,102,200,0.3);background:rgba(144,102,200,0.06)">Omega-dominant</span>
+        <span class="ph-tag" style="color:var(--gold-dim);border-color:rgba(201,168,76,0.25)">Patron-Bound · 14 Patrons</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="lore-para">The Scion-Pledged has made a deal. Not a divine covenant like the Oathed Vanguard — a <strong>contract</strong>, with something powerful enough to give power and demanding enough to want something in return. The thirteen Scions of the Ashen Coil are the most available patrons — each one a zodiac-sign-corrupted commander who offers power drawn from Void-energy in exchange for service. But there are other patrons: the Legendary Beasts (rare, dangerous, and unpredictable), the Otherworld entities of the Tuathan tradition, and, most terrifyingly, Aethar himself.</p>
+
+  <div class="sideros-core">
+    <div class="sc-label">Core Mechanic — Sideros Original</div>
+    <div class="sc-title">Patron Channels (replaces Warlock Aetheric Channels) + Scion Boons (replaces Eldritch Invocations)</div>
+    <div class="sc-text"><strong>Patron Channels:</strong> The Scion-Pledged has 1–4 Patron Channels (number increases with Resonance Depth), always of the maximum tier available to them. These refresh on Brief Attunement — the Patron replenishes what it has leant. The Patron owns the power. The Pledged borrows it. <strong>Missing a Brief Attunement refresh</strong>: the Patron notices. Three missed refreshes: the Patron sends a representative to inquire about their investment.<br><br>
+    <strong>Patron's Mark (replaces Eldritch Blast):</strong> A ranged Working (120 ft, no Channel cost) dealing 1d10 damage of the Patron's energy type. Scales with Resonance Depth. This is the Patron's direct expression through the Pledged — it works as long as the contract holds.<br><br>
+    <strong>Scion Boons:</strong> At Depths 2, 5, 7, 9, 12, 15, and 18, choose one Scion Boon — a permanent ability granted by the Patron in exchange for deepening the contract. The Boon list is specific to each Patron (see Callings).</div>
+  </div>
+
+  <div class="sec-head">Callings — The Patrons</div>
+  <div class="calling-grid">
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--scion)">The Legendary Beast Pact</div><span class="calling-tag" style="color:var(--scion);border-color:rgba(80,64,112,0.3)">Fey/Celestial equivalent</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>The Patron:</strong> One of the twelve Legendary Beasts — the fallen gods themselves. This is the rarest and most dangerous Patron, because the Beast does not understand contracts. It responded to something in the Pledged's nature. The relationship is instinctual, not negotiated. The Beast may withdraw at any time.</div>
+        <div class="cb-feat"><strong>Beast Mark (Depth 1):</strong> The Patron's Mark deals radiant or force damage (Pledged's choice per use). The Patron's energy is divine, even degraded. Once per encounter, when you use the Patron's Mark, the Beast's Aetheric presence briefly manifests — creatures within 30 ft must make a Resonance Warding Resonance (Threshold 14) or be Dread-Struck for 1 Pulse.</div>
+        <div class="cb-feat"><strong>Sample Boons:</strong> Legendary Beast Resistance (resistance to the Beast's domain damage type); Companion Spirit (a small manifestation of the Beast as a familiar); Vitality Transfer (spend 1d6 Vitality to restore equal Vitality to an ally).</div>
+        <div class="cb-feat"><strong>The risk:</strong> If the Pledged ever acts directly against the Legendary Beast's nature — hunting it, harming creatures it protects, acting against its domain's values — the contract suspends. No power until the Pledged makes amends in a way the Beast recognizes.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--scion)">The Scion Pact</div><span class="calling-tag" style="color:var(--scion);border-color:rgba(80,64,112,0.3)">Fiend equivalent</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>The Patron:</strong> One of the thirteen Scions of the Ashen Coil — a zodiac-sign-corrupted Coil commander. Each Scion offers power derived from Void-energy corrupted through their sign's domain. This is not necessarily a villainous choice — some Scion-Pledged are infiltrators, some are desperate, some genuinely believe the Coil's vision of controlled dissolution.</div>
+        <div class="cb-feat"><strong>Void Mark (Depth 1):</strong> The Patron's Mark deals necrotic damage. Once per encounter, on a hit, the target must make an Endurance Warding Resonance (Threshold = 8 + Mastery + Weaving Attribute) or gain one Void-Touched Exposure. The Scion is slowly corrupting everything the Pledged touches.</div>
+        <div class="cb-feat"><strong>Sample Boons:</strong> Dark One's Blessing (when reducing a creature to 0 Vitality, gain temporary Vitality equal to Weaving Attribute modifier + Resonance Depth); Corruption Tolerance (Lead-Scale Corruption Gauge reduced by 2 per encounter, compatible with Coil-Stalker multiclassing); Voice of the Scion (advantage on Resonance Active Resonances when using the Scion's name as authority).</div>
+        <div class="cb-feat"><strong>The risk:</strong> The Scion monitors the Pledged. Any significant action against the Ashen Coil is noticed. At three significant anti-Coil actions, the Scion withdraws the contract and sends the Fang of the Whisper.</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--scion)">The Aethar Pact</div><span class="calling-tag" style="color:var(--scion);border-color:rgba(80,64,112,0.3)">Great Old One equivalent</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>The Patron:</strong> Aethar the Serpent Bearer himself — the fractured tactical mind of Ophiuchus, former 12th Circle Comet-Mage, the primary villain. This Patron does not offer power out of mutual benefit. It offers power because a Pledged who carries Aethar's mark is a tool, a probe, and eventually a vulnerability in the heroes' party. <em>The Concordance should discuss this Calling carefully with any player who chooses it.</em></div>
+        <div class="cb-feat"><strong>Void Core Mark (Depth 1):</strong> The Patron's Mark deals void damage (bypasses all resistances except divine immunity). Once per session, Aethar may communicate directly through the Pledged — a message, a vision, or a compulsion the Pledged may resist (Attunement Warding Resonance, Threshold 20).</div>
+        <div class="cb-feat"><strong>Sample Boons:</strong> Awakened Mind (telepathy within 30 ft); Entropic Ward (resistance to one damage type that changes each Deep Attunement — Aethar chooses which); Far Scrying (Aethar can observe through the Pledged's senses at will — the Pledged always knows when this is happening, but cannot stop it).</div>
+        <div class="cb-feat"><strong>The risk:</strong> Everything. Aethar knows everything the Pledged learns. He is patient and he has a plan. The Pledged is part of it.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════ COMET-MAGE ══════════════════════ -->
+<div class="panel" id="panel-mage">
+<div class="path-wrap">
+  <div class="ph">
+    <div class="ph-sigil" style="background:rgba(64,112,144,0.08);border-color:rgba(64,112,144,0.3)">☄</div>
+    <div>
+      <div class="ph-name" style="color:var(--mage)">Comet-Mage</div>
+      <div class="ph-also">Base: Wizard · Beta-aspected · Vitality Die: d6</div>
+      <div class="ph-tags">
+        <span class="ph-tag" style="color:var(--beta);border-color:rgba(74,142,196,0.3);background:rgba(74,142,196,0.06)">Beta-dominant</span>
+        <span class="ph-tag" style="color:var(--gold-dim);border-color:rgba(201,168,76,0.25)">Three Conclaves</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="lore-para">The Comet-Magi of Argent Spire believe magic is a science — a systematic interaction with cosmic forces that can be studied, recorded, and reproduced. Their three Conclaves represent three schools of this scientific tradition: the <em>Shifting Horizons</em> (celestial observation and prediction), the <em>Earthly Core</em> (material resonance and transmutation), and the <em>Veil-Walkers</em> (liminal and threshold magic). Aethar was a 12th Circle Comet-Mage of the Shifting Horizons Conclave before he fell. The Conclave still uses his theoretical frameworks. They have excised his name.</p>
+
+  <div class="sideros-core">
+    <div class="sc-label">Core Mechanic — Sideros Original</div>
+    <div class="sc-title">Weave Recovery (replaces Arcane Recovery) + Formulation Book (replaces Spellbook)</div>
+    <div class="sc-text"><strong>Weave Recovery:</strong> Once per day during a Brief Attunement, the Comet-Mage may recover expended Aetheric Channels with total combined tier equal to half their Resonance Depth (rounded up). This represents not magical regeneration but intellectual clarity — the Mage reviewing their Formulation notes and finding the efficiency they missed in the heat of application.<br><br>
+    <strong>Formulation Ledger:</strong> The Comet-Mage's personal research journal, containing every Working they have learned, modified, and theorized. Unlike other Paths who access their Workings intuitively, the Comet-Mage <em>prepares</em> a specific selection each Deep Attunement — choosing from the Ledger which Formulations to have ready. They may prepare a number equal to their Acuity modifier + Resonance Depth.<br><br>
+    <strong>Formulation Scribing:</strong> Any Working the Comet-Mage encounters (from a scroll, another caster's use, or recovered texts) can be inscribed into the Ledger during a 2-hour research process. The Precursor script the Eldren can read appears in certain ancient Formulation notation systems — an Eldren Comet-Mage can access Kallos-era Formulations no other tradition possesses.</div>
+  </div>
+
+  <div class="sec-head">Callings — The Three Conclaves</div>
+  <div class="calling-grid">
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--mage)">Conclave of Shifting Horizons</div><span class="calling-tag" style="color:var(--mage);border-color:rgba(64,112,144,0.3)">Celestial Observation</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Zodiac Formulation (Depth 2):</strong> All Formulations dealing your zodiac sign's domain damage deal +1d6 additional damage and have +1 to their Working Threshold. The Conclave trains extensively in celestial alignment — a Mage who has studied their own sign deeply channels it more effectively.</div>
+        <div class="cb-feat"><strong>Portent (Depth 6):</strong> After a Deep Attunement, roll two d20s and record the results. Once per day each, replace any Active Resonance, Strike Resonance, or Warding Resonance made by any creature you can see with one of these recorded rolls. The Shifting Horizons tradition reads fate lines and applies them deliberately.</div>
+        <div class="cb-feat"><strong>12th Circle Aspirant (Depth 14):</strong> You have been identified by the Conclave as a candidate for 12th Circle advancement — the same designation Aethar held. Your Ledger is now accessible to the full Conclave library. Once per Deep Attunement, prepare one Working from the Conclave's restricted collection (Concordance selects three options; you choose one).</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--mage)">Conclave of the Earthly Core</div><span class="calling-tag" style="color:var(--mage);border-color:rgba(64,112,144,0.3)">Material Resonance</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Material Mastery (Depth 2):</strong> Transmutation and material-alteration Formulations cost 1 fewer Channel tier (minimum 1st). Additionally, you may cast one transmutation Formulation per Deep Attunement without expending a Channel — the Earthly Core's power is the domain you have most deeply internalized.</div>
+        <div class="cb-feat"><strong>Stone's Endurance (Depth 6):</strong> As an Instinct, gain resistance to one damage type until the start of your next Moment — the Mage draws on material-resonance to briefly align with the struck element. Once per Brief Attunement.</div>
+        <div class="cb-feat"><strong>Master Transmuter (Depth 14):</strong> Once per Deep Attunement, perform one of the following without Channel cost: cure all diseases and neutralize all poisons; restore 2d10 × 10 Vitality; restore life to a creature that died within the last hour; temporarily convert one non-precious material to a precious one (duration: 1 hour).</div>
+      </div>
+    </div>
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head"><div class="calling-name" style="color:var(--mage)">Conclave of the Veil-Walkers</div><span class="calling-tag" style="color:var(--mage);border-color:rgba(64,112,144,0.3)">Threshold Magic</span></div>
+      <div class="calling-body">
+        <div class="cb-feat"><strong>Veil Research (Depth 2):</strong> You have Mastery in all knowledge Active Resonances related to Otherworld entities, Fae-Blooded phenomena, and the boundary between material and spiritual reality. Divination Formulations you cast have doubled duration and +2 Working Threshold.</div>
+        <div class="cb-feat"><strong>Third Eye (Depth 6):</strong> Once per Deep Attunement, spend 8 hours in meditation to gain one of the following lasting 24 hours: Darkvision 60 ft; see invisible creatures; see the Otherworld simultaneously with the material world; read thoughts of creatures within 30 ft (they make Attunement Warding Resonance Threshold 16 to resist).</div>
+        <div class="cb-feat"><strong>Veil Mastery (Depth 14):</strong> Illusion and conjuration Formulations cannot be disbelieved — creatures that succeed on Warding Resonances against them see through them visually but still experience their effects physically. Reality and perception are different things. You have made them more different.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note-block">
+    <div class="nb-title">Aethar's Legacy in the Ledger</div>
+    <div class="nb-text">Every Shifting Horizons Comet-Mage who has been in the Conclave for more than a decade has encountered, in the suppressed archive, the theoretical framework developed by the Mage who became Aethar the Serpent Bearer. His work on <strong>Controlled Dissolution Theory</strong> and <strong>Void-Frequency Harmonics</strong> is the most sophisticated Formulation theory ever produced — and it leads, logically, inevitably, to the Crystalline Core's conclusions. The Conclave suppressed it not because it is wrong, but because it is right about things no one should know are right. A Comet-Mage who finds and fully reads Aethar's suppressed work must make a Resonance Depth-dependent Attunement Warding Resonance or gain one Void-Touched Exposure per chapter of reading.</div>
+  </div>
+</div>
+</div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).style.display='block';
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+document.querySelectorAll('.panel').forEach(p=>{p.style.display='none'});
+document.getElementById('panel-jarl').style.display='block';
+</script>
+</body>
+</html>

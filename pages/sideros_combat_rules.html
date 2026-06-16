@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — Combat Rules</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;500;600&display=swap');
+:root{
+  --void:#080a08;--void-mid:#101410;--parchment:#f0e6cc;--parchment-dim:rgba(240,230,204,0.55);
+  --gold:#c9a84c;--gold-dim:#7a6028;--gold-bright:#e8c870;
+  --red:#c04040;--amber:#c87840;--green:#4a8a56;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--parchment);line-height:1.75;min-height:100vh}
+.hero{text-align:center;padding:3.5rem 1.5rem 3rem;border-bottom:1px solid rgba(201,168,76,0.15)}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:.8rem}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(20px,3.5vw,28px);font-weight:500;color:var(--gold-bright);letter-spacing:.05em;margin-bottom:.4rem}
+.hero-sub{font-size:14px;font-style:italic;color:var(--parchment-dim);max-width:500px;margin:0 auto}
+.nav-strip{display:flex;gap:4px;flex-wrap:wrap;padding:.65rem .9rem;border-bottom:1px solid rgba(201,168,76,0.1);background:var(--void-mid);position:sticky;top:0;z-index:20}
+.nav-btn{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border:1px solid rgba(201,168,76,0.18);border-radius:3px;background:transparent;color:var(--parchment-dim);cursor:pointer;transition:all .15s;white-space:nowrap}
+.nav-btn.active{background:rgba(201,168,76,0.08);color:var(--gold-bright);border-color:rgba(201,168,76,0.4)}
+.panel{display:none}.panel.active{display:block}
+.wrap{max-width:880px;margin:0 auto;padding:2rem 1.25rem 4rem}
+.lore{font-size:14px;color:rgba(240,230,204,0.8);line-height:1.85;margin-bottom:.9rem}
+.lore strong{color:var(--parchment);font-weight:500}
+.sec{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:1.5rem 0 .65rem;display:flex;align-items:center;gap:.6rem}
+.sec::after{content:'';flex:1;height:1px;background:rgba(201,168,76,0.1)}
+.rule-block{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.12);border-radius:8px;padding:12px 14px;margin-bottom:.8rem}
+.rb-label{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.08em;color:var(--gold-bright);margin-bottom:.5rem;display:block}
+.rb-text{font-size:13px;color:rgba(240,230,204,0.78);line-height:1.7}
+.rb-text strong{color:var(--parchment);font-weight:500}
+.rb-text em{color:var(--gold-dim)}
+.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:1rem}
+.action-card{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.14);border-radius:8px;padding:11px 13px}
+.ac-name{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.04em;color:var(--gold-bright);margin-bottom:.3rem}
+.ac-cost{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:.4rem;display:block}
+.ac-text{font-size:12px;color:rgba(240,230,204,0.75);line-height:1.6}
+.ac-text strong{color:var(--parchment);font-weight:500}
+.data-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:1rem}
+.data-table th{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);padding:6px 10px;text-align:left;border-bottom:1px solid rgba(201,168,76,0.18)}
+.data-table td{padding:6px 10px;border-bottom:1px solid rgba(201,168,76,0.06);color:rgba(240,230,204,0.75);vertical-align:top;line-height:1.5;font-size:12px}
+.data-table td:first-child{color:var(--parchment);font-weight:500}
+.data-table tr:last-child td{border-bottom:none}
+.note{border-radius:7px;padding:10px 12px;margin:.75rem 0;font-size:12px;line-height:1.65}
+.note strong{color:var(--parchment);font-weight:500}
+.flow{display:grid;grid-template-columns:repeat(5,1fr) 40px;gap:0;border:1px solid rgba(201,168,76,0.15);border-radius:9px;overflow:hidden;margin-bottom:1rem}
+.flow-step{padding:12px 10px;text-align:center;border-right:1px solid rgba(201,168,76,0.1)}
+.flow-step:last-child{border-right:none;background:rgba(201,168,76,0.04)}
+.fs-num{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:.3rem;display:block}
+.fs-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.04em;color:var(--gold-bright);margin-bottom:.25rem}
+.fs-desc{font-size:11px;color:rgba(240,230,204,0.6);line-height:1.45}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-eyebrow">Sideros / Astrolan — Player Reference</div>
+  <h1 class="hero-title">Combat Rules</h1>
+  <p class="hero-sub">How encounters work — Pulses, Moments, action economy, Vitality, and what happens when things go wrong.</p>
+</div>
+<div class="nav-strip">
+  <button class="nav-btn active" onclick="show('structure',this)">Structure</button>
+  <button class="nav-btn" onclick="show('actions',this)">Actions</button>
+  <button class="nav-btn" onclick="show('strikes',this)">Strike Resonances</button>
+  <button class="nav-btn" onclick="show('movement',this)">Movement</button>
+  <button class="nav-btn" onclick="show('vitality',this)">Vitality & Dying</button>
+  <button class="nav-btn" onclick="show('working',this)">Weaving in Combat</button>
+  <button class="nav-btn" onclick="show('special',this)">Special Situations</button>
+</div>
+
+<!-- STRUCTURE -->
+<div class="panel active" id="panel-structure"><div class="wrap">
+  <div class="sec">The Pulse — The Basic Unit of Combat</div>
+  <p class="lore">Combat in Sideros is measured in Pulses — the heartbeat of an encounter. Each Pulse, every combatant takes one <strong>Moment</strong>: a window of action in which they can move, act, and react. Pulses continue until the encounter ends — by one side's defeat, surrender, flight, or resolution through other means.</p>
+  <p class="lore">A Pulse lasts approximately 6 seconds of in-world time. This is not meant to be simulated precisely — it is a dramatic unit, and the Concordance describes events within it as whatever serves the scene.</p>
+
+  <div class="flow">
+    <div class="flow-step"><span class="fs-num">Step 1</span><div class="fs-name">Pulse Order</div><div class="fs-desc">All combatants roll d20 + Swiftness modifier. Highest acts first.</div></div>
+    <div class="flow-step"><span class="fs-num">Step 2</span><div class="fs-name">Moments</div><div class="fs-desc">Each combatant takes their Moment in order, highest to lowest.</div></div>
+    <div class="flow-step"><span class="fs-num">Step 3</span><div class="fs-name">Reflexes</div><div class="fs-desc">Reflex actions occur in response to triggers during others' Moments.</div></div>
+    <div class="flow-step"><span class="fs-num">Step 4</span><div class="fs-name">End of Pulse</div><div class="fs-desc">Duration effects tick. Conditions check. Sustained Resonances checked.</div></div>
+    <div class="flow-step"><span class="fs-num">Step 5</span><div class="fs-name">New Pulse</div><div class="fs-desc">New Pulse Order rolled. Process repeats.</div></div>
+    <div class="flow-step" style="display:flex;align-items:center;justify-content:center"><span style="font-size:20px;color:var(--gold-dim)">↺</span></div>
+  </div>
+
+  <div class="sec">Pulse Order — How Initiative Works</div>
+  <div class="rule-block">
+    <span class="rb-label">Rolling Pulse Order</span>
+    <div class="rb-text">At the start of each Pulse, every combatant rolls d20 and adds their Swiftness modifier. The Concordance may also add the Mastery Bonus for creatures of significant threat. Ties are broken by: higher Swiftness modifier, then higher Fate Number, then Concordance decision.<br><br>
+    <strong>Pulse Order resets each Pulse</strong> — it is not fixed for the entire encounter. A character might act first in Pulse 1 and fourth in Pulse 2. This reflects the dynamic, flowing nature of real combat.</div>
+  </div>
+  <div class="rule-block">
+    <span class="rb-label">Surprise</span>
+    <div class="rb-text">If one side is unaware of the other when combat begins, that side does not act in the first Pulse — they spend it becoming aware of the threat. Characters and creatures with the <strong>Feral Instinct</strong> trait (Beast-Kin), <strong>Helm of Awareness</strong> Infusion, or similar abilities cannot be surprised.</div>
+  </div>
+
+  <div class="sec">Your Moment — What You Can Do</div>
+  <p class="lore">On your Moment, you have access to three categories of action:</p>
+  <div class="action-grid">
+    <div class="action-card">
+      <div class="ac-name">The Act</div>
+      <span class="ac-cost">1 per Moment (some features grant 2)</span>
+      <div class="ac-text">Your primary action. Strike, Weave a Working, Dash, Disengage, Grapple, Help an ally, Use an Item, Search, or any other significant action. <strong>The Act is the most valuable resource on your Moment.</strong></div>
+    </div>
+    <div class="action-card">
+      <div class="ac-name">The Instinct</div>
+      <span class="ac-cost">1 per Moment</span>
+      <div class="ac-text">Your secondary action — faster, smaller, or supplementary. Draw a weapon, activate a Path feature, drink a potion, make one additional unarmed strike, direct a companion. <strong>Many Path features cost an Instinct rather than an Act.</strong></div>
+    </div>
+    <div class="action-card">
+      <div class="ac-name">Movement</div>
+      <span class="ac-cost">Up to Speed per Moment (can split)</span>
+      <div class="ac-text">Move up to your speed. You can split movement before and after your Act. Difficult terrain costs 2 ft of movement per 1 ft traveled. <strong>Movement is not an action — it does not cost your Act or Instinct.</strong></div>
+    </div>
+    <div class="action-card">
+      <div class="ac-name">The Reflex</div>
+      <span class="ac-cost">1 per Pulse (triggers on others' Moments)</span>
+      <div class="ac-text">Triggered by a specific event during another creature's Moment — a Reflex Strike when an enemy leaves your reach, a defensive Path feature, a Fated Bond ability. <strong>You only get 1 Reflex per Pulse total.</strong> Choose carefully what to spend it on.</div>
+    </div>
+  </div>
+
+  <div class="sec">Free Actions</div>
+  <div class="rule-block">
+    <div class="rb-text">Some things cost nothing: speaking up to one sentence, dropping a held object, falling prone. The Concordance may limit free actions if a player attempts to use them to avoid meaningful cost — a 10-minute monologue is not a free action.</div>
+  </div>
+</div></div>
+
+<!-- ACTIONS -->
+<div class="panel" id="panel-actions"><div class="wrap">
+  <div class="sec">Full Action List</div>
+  <table class="data-table">
+    <tr><th>Action</th><th>Cost</th><th>Effect</th></tr>
+    <tr><td>Strike</td><td>Act</td><td>Make one or more Strike Resonances against a target. Path features determine how many. Default: 1 Strike Resonance.</td></tr>
+    <tr><td>Weave a Working</td><td>Act (or Instinct for some)</td><td>Expend an Aetheric Channel and Weave a prepared Working. Working Threshold = 8 + Mastery Bonus + Weaving Attribute modifier.</td></tr>
+    <tr><td>Dash</td><td>Act</td><td>Gain additional movement equal to your speed this Moment. Total movement this Moment = Speed × 2.</td></tr>
+    <tr><td>Disengage</td><td>Act</td><td>Move this Moment without provoking Reflex Strikes. Does not prevent Reflex Strikes from others' special abilities — only from the base movement trigger.</td></tr>
+    <tr><td>Dodge</td><td>Act</td><td>All Strike Resonances against you have Resonant Discord until your next Moment. You have Resonant Fortune on Swiftness Warding Resonances. Ends if you are Resonance-Locked or fall prone.</td></tr>
+    <tr><td>Help</td><td>Act</td><td>Grant one ally Resonant Fortune on their next Active Resonance or Strike Resonance against one target you can reach or threaten. The benefit is used before your next Moment or it is lost.</td></tr>
+    <tr><td>Grapple</td><td>Act (part of Strike)</td><td>Make a Forcefulness Active Resonance contested by the target's Forcefulness or Swiftness Active Resonance. On success: target is Grappled (speed 0, you can drag them). Ends if you release, are incapacitated, or target breaks free (Act, same contested check).</td></tr>
+    <tr><td>Shove</td><td>Act (part of Strike)</td><td>Forcefulness Active Resonance contested by Forcefulness or Swiftness. On success: target pushed 10 ft or knocked prone (your choice). Can only target creatures up to one size larger than you.</td></tr>
+    <tr><td>Search</td><td>Act</td><td>Make a Perception or Investigation Active Resonance to locate something hidden, obscured, or concealed. Concordance sets the DC.</td></tr>
+    <tr><td>Use Object</td><td>Act (or Instinct for simple items)</td><td>Activate an item with a defined use — drink a potion, activate an Aetheric Artifact, use a tool. Simple draws/stows cost only an Instinct.</td></tr>
+    <tr><td>Ready</td><td>Act + Reflex</td><td>Declare a trigger and an action. When the trigger occurs before your next Moment, use your Reflex to take the readied action. If the trigger doesn't occur, the Act is spent and nothing happens.</td></tr>
+    <tr><td>Improvise</td><td>Act</td><td>Do something not on this list. The Concordance adjudicates whether it's possible, what roll (if any) is required, and what the consequence is. Sideros actively encourages improvised actions.</td></tr>
+  </table>
+
+  <div class="sec">The Act vs. Instinct Distinction</div>
+  <p class="lore">The difference between Act and Instinct is not speed — it is <em>weight</em>. An Act is the thing that defines your Moment. An Instinct is what you do in the margin of an Act. Some Path features convert Act-cost actions to Instinct-cost actions at higher Resonance Depths — this represents mastery, not shortcuts.</p>
+
+  <div class="sec">Combat Surge (Solar Guard Feature)</div>
+  <div class="rule-block">
+    <div class="rb-text">The Solar Guard's <strong>Combat Surge</strong> grants a second Act on their Moment, usable twice per Deep Attunement. This second Act can be any Act-cost action — another Strike, a Working, a Dash. It cannot be used to take a third Act if the first use of Combat Surge grants additional strikes through a Path feature that already scales.</div>
+  </div>
+</div></div>
+
+<!-- STRIKE RESONANCES -->
+<div class="panel" id="panel-strikes"><div class="wrap">
+  <div class="sec">How Strike Resonances Work</div>
+  <div class="rule-block">
+    <span class="rb-label">The Strike Resonance Roll</span>
+    <div class="rb-text"><strong>d20 + Mastery Bonus + Attribute modifier vs. Target's Guard Rating</strong><br><br>
+    The Attribute used depends on the weapon: Forcefulness for most melee weapons; Swiftness for finesse weapons and ranged attacks; Acuity for Workings that deal damage. Path features may specify a different attribute (the Rāśi-Siddha uses Attunement for Mantra Strikes; the Shadow-Blade Pact Scion-Pledged uses Resonance).<br><br>
+    <strong>Hit:</strong> Roll damage dice + the same attribute modifier. Add any bonuses from Path features, Infusions, or conditions.<br>
+    <strong>Miss:</strong> No damage. Some Path features and Gambits trigger on a miss.<br>
+    <strong>Critical Hit (natural 20):</strong> Roll all damage dice twice and add the results. Some Kindred and Path features add additional effects on a critical hit.</div>
+  </div>
+
+  <div class="sec">Guard Rating — How Defence Works</div>
+  <div class="rule-block">
+    <div class="rb-text">Guard Rating represents how difficult a creature is to land a meaningful blow on — a combination of armor, Swiftness, and Aetheric protection.<br><br>
+    <strong>Unarmored:</strong> Guard Rating = 10 + Swiftness modifier<br>
+    <strong>Light Armor:</strong> Guard Rating = armor value + Swiftness modifier<br>
+    <strong>Medium Armor:</strong> Guard Rating = armor value + Swiftness modifier (max +2)<br>
+    <strong>Heavy Armor:</strong> Guard Rating = armor value (fixed, no Swiftness)<br>
+    <strong>Shield:</strong> +2 Guard Rating<br><br>
+    Some Kindred traits (Dunmarim's natural Ore-hardening, Crab-Kin's carapace) provide natural Guard Rating that stacks with armor only if specifically stated.</div>
+  </div>
+
+  <div class="sec">Resonant Fortune and Resonant Discord</div>
+  <div class="rule-block">
+    <div class="rb-text"><strong>Resonant Fortune:</strong> Roll 2d20, take the higher result. Applies when conditions favor success — flanking, attacking a prone target, using a Gambit setup, having a Fated Bond advantage trigger.<br><br>
+    <strong>Resonant Discord:</strong> Roll 2d20, take the lower result. Applies when conditions work against you — attacking while prone, using a heavy weapon as a small creature, attacking a Dodging target, being Dread-Struck.<br><br>
+    <strong>Fortune and Discord cancel each other out</strong> — if a character has both simultaneously (from multiple different sources), they cancel and the character rolls one d20 normally. Multiple sources of Fortune don't stack; multiple sources of Discord don't stack.</div>
+  </div>
+
+  <div class="sec">Multiple Strike Resonances</div>
+  <div class="rule-block">
+    <div class="rb-text">Some Paths grant multiple Strike Resonances per Act (Solar Guard Extra Strike at Depth 5, Blade-Singer Extra Strike at Depth 6, etc.). Each Strike Resonance is a separate roll against the target's Guard Rating. You can split strikes between multiple targets. You cannot split movement between strikes unless a specific feature grants this.<br><br>
+    <strong>Two-Weapon Fighting:</strong> If wielding two light weapons, you may make one additional Strike Resonance with your off-hand weapon as an Instinct (not an Act). Add no Attribute modifier to off-hand damage unless a feature specifically grants this.</div>
+  </div>
+</div></div>
+
+<!-- MOVEMENT -->
+<div class="panel" id="panel-movement"><div class="wrap">
+  <div class="sec">Movement Rules</div>
+  <table class="data-table">
+    <tr><th>Situation</th><th>Rule</th></tr>
+    <tr><td>Difficult terrain</td><td>Costs 2 ft of movement per 1 ft traveled — mud, rubble, shallow water, dense undergrowth.</td></tr>
+    <tr><td>Standing from prone</td><td>Costs half your speed. If you don't have enough movement remaining, you cannot stand.</td></tr>
+    <tr><td>Crawling</td><td>Difficult terrain — costs 2 ft per 1 ft. You are prone while crawling.</td></tr>
+    <tr><td>Climbing</td><td>Difficult terrain unless you have a climb speed. Surfaces requiring balance may need an Athletics Active Resonance.</td></tr>
+    <tr><td>Swimming</td><td>Difficult terrain unless you have a swim speed. Fully armored: Endurance Warding Resonance DC 10 each Pulse or begin sinking.</td></tr>
+    <tr><td>Jumping (long)</td><td>Athletics Active Resonance or automatic: Forcefulness modifier × 3 ft running (Forcefulness modifier × 1.5 ft standing).</td></tr>
+    <tr><td>Jumping (high)</td><td>Automatically: 3 + Forcefulness modifier ft. Athletics Active Resonance can exceed this.</td></tr>
+    <tr><td>Moving through enemy space</td><td>Possible only by Disengaging first, or if the enemy is two or more sizes larger/smaller than you.</td></tr>
+    <tr><td>Moving through ally space</td><td>Always possible but it counts as difficult terrain.</td></tr>
+    <tr><td>Falling</td><td>Take 1d6 bludgeoning damage per 10 ft fallen (maximum 20d6). Land prone unless a feature prevents this.</td></tr>
+  </table>
+
+  <div class="sec">Reflex Strikes (Opportunity Attacks)</div>
+  <div class="rule-block">
+    <div class="rb-text">When a creature within your reach moves out of your reach without Disengaging, you may use your <strong>Reflex</strong> to make one Strike Resonance against them. This uses your one Reflex for the Pulse. The strike occurs the moment the movement begins.<br><br>
+    <strong>Triggers for Reflex Strikes:</strong> Moving out of reach (standard). Some Path features and Kindred traits add additional Reflex Strike triggers — the Warden's Hold the Line adds triggers for anything attacking their Ward; the Rune Knight's Stone Rune can trigger Reflex Strikes on a failed save.<br><br>
+    <strong>Does not trigger:</strong> Teleportation (Misty Step, Star-Metal Stag attunement); Disengage action; being moved by someone else (thrown, pushed, etc.).</div>
+  </div>
+</div></div>
+
+<!-- VITALITY & DYING -->
+<div class="panel" id="panel-vitality"><div class="wrap">
+  <div class="sec">Vitality — Your Life Measure</div>
+  <div class="rule-block">
+    <span class="rb-label">Maximum Vitality</span>
+    <div class="rb-text">At Resonance Depth 1, your maximum Vitality = your Vitality Die maximum + your Endurance modifier. At each new Depth, roll the Vitality Die (or take the average, rounded up) and add your Endurance modifier — this is added to your maximum.<br><br>
+    <strong>Which Vitality Die do you use?</strong> Use the higher of your Kindred's die or your Path's die. The Primal Jarl's d12 overrides the Eldren's d8; the Dunmarim's d10 overrides the Resonance Seeker's d8.<br><br>
+    <strong>Temporary Vitality:</strong> Some effects grant temporary Vitality — a buffer on top of your current total. Temporary Vitality is always lost first. Multiple sources of temporary Vitality don't stack — take the higher amount.</div>
+  </div>
+
+  <div class="sec">Loom Tests — What Happens at 0 Vitality</div>
+  <div class="rule-block">
+    <span class="rb-label">The Loom Test Sequence</span>
+    <div class="rb-text">When you drop to 0 Vitality, you fall unconscious and begin making Loom Tests at the start of each of your Moments. Roll d20:<br><br>
+    <strong>10 or higher:</strong> Success — record it. Three successes before three failures: you stabilize at 0 Vitality and stop making Loom Tests (you remain unconscious but are no longer dying).<br>
+    <strong>9 or lower:</strong> Failure — record it. Three failures before three successes: your thread ends. The character is dead.<br>
+    <strong>Natural 20:</strong> Instant success and you regain 1 Vitality, regaining consciousness immediately.<br>
+    <strong>Natural 1:</strong> Counts as two failures.<br><br>
+    <strong>Taking damage at 0 Vitality:</strong> Each instance of damage counts as one Loom Test failure. A critical hit counts as two failures.<br><br>
+    <strong>Massive damage:</strong> If damage from a single hit reduces you from full Vitality to 0 Vitality AND the remaining damage exceeds your maximum Vitality, your thread ends immediately — no Loom Tests.</div>
+  </div>
+
+  <div class="rule-block">
+    <span class="rb-label">Healing at 0 Vitality</span>
+    <div class="rb-text">Any healing effect that restores Vitality to a creature at 0 Vitality brings them back to consciousness with the healed amount of Vitality. All accumulated Loom Test successes and failures are cleared. They can act normally on their next Moment.</div>
+  </div>
+
+  <div class="rule-block">
+    <span class="rb-label">Stabilizing a Downed Creature</span>
+    <div class="rb-text">As an Act, a creature within 5 ft can stabilize a downed character with a Medicine Active Resonance DC 10. A stabilized character stops making Loom Tests but remains unconscious. They regain 1 Vitality after 1d4 hours of rest.<br><br>
+    Some features (the Fated Bond's Shared Threshold, Vitality potions, the Restoration Vanguard's healing) can stabilize without a roll.</div>
+  </div>
+
+  <div class="sec">Vitality Recovery</div>
+  <table class="data-table">
+    <tr><th>Method</th><th>Vitality Restored</th><th>Time Required</th></tr>
+    <tr><td>Healing Draught (standard)</td><td>2d4 + 2</td><td>Instinct to drink</td></tr>
+    <tr><td>Healing Draught (greater)</td><td>4d4 + 4</td><td>Instinct to drink</td></tr>
+    <tr><td>Brief Attunement</td><td>Spend and roll one or more Vitality Dice + Endurance modifier per die</td><td>1 hour minimum</td></tr>
+    <tr><td>Deep Attunement</td><td>All Vitality restored; all Vitality Dice restored</td><td>8 hours minimum</td></tr>
+    <tr><td>Stabilising Presence (Fated Bond)</td><td>+1 Vitality Die during Brief Attunement within 10 ft of bond-mate</td><td>Part of Brief Attunement</td></tr>
+  </table>
+
+  <div class="note" style="background:rgba(192,64,64,0.05);border:1px solid rgba(192,64,64,0.2)"><strong>Vitality Dice:</strong> You have a number of Vitality Dice equal to your Resonance Depth. You spend them during Brief Attunements. All are restored on Deep Attunement. Track them as a pool — when they run out, Brief Attunements restore no Vitality until you rest fully.</div>
+</div></div>
+
+<!-- WEAVING IN COMBAT -->
+<div class="panel" id="panel-working"><div class="wrap">
+  <div class="sec">Weaving Workings in Combat</div>
+  <div class="rule-block">
+    <span class="rb-label">The Working Threshold</span>
+    <div class="rb-text">Every Working has a Working Threshold — the difficulty of expressing it correctly under pressure. For most Weave-capable characters:<br><br>
+    <strong>Working Threshold = 8 + Mastery Bonus + Weaving Attribute modifier</strong><br><br>
+    When an enemy forces a Sustained Resonance check (by dealing damage to a concentrating Weaver), the Weaver makes an Endurance Warding Resonance DC = max(10, half the damage taken). On failure, the Working ends.</div>
+  </div>
+  <div class="rule-block">
+    <span class="rb-label">Aetheric Channels</span>
+    <div class="rb-text">Workings cost Aetheric Channels — expended slots of stored Aetheric potential. Channels are tiered (1st through 9th). You can always expend a higher-tier Channel for a lower-tier Working — the effect doesn't increase unless the Working's description specifically says it scales with Channel tier.<br><br>
+    All Channels restore on Deep Attunement. Some features (the Resonance Seeker's Resonant Recovery, the Comet-Mage's Weave Recovery) restore Channels during Brief Attunement.</div>
+  </div>
+  <div class="rule-block">
+    <span class="rb-label">Sustained Resonance Workings</span>
+    <div class="rb-text">Some Workings require Sustained Resonance — an ongoing Aetheric thread that persists as long as the Weaver maintains it. A Weaver can only maintain one Sustained Resonance Working at a time (unless a feature specifically allows otherwise). Maintaining a Sustained Resonance Working requires no action — it is continuous. It ends if the Weaver:<br>
+    • Begins maintaining a different Sustained Resonance Working<br>
+    • Falls unconscious<br>
+    • Fails an Endurance Warding Resonance after taking damage<br>
+    • Willingly ends it (free action)</div>
+  </div>
+  <div class="rule-block">
+    <span class="rb-label">Weaving While Threatened</span>
+    <div class="rb-text">Weaving a Working while within reach of a hostile creature does not normally provoke a Reflex Strike unless the Working requires physical movement through the creature's space. The Weaver can Weave freely while threatened. However, if the Weaver moves out of reach while beginning a Working, the movement may provoke a Reflex Strike before the Working completes.</div>
+  </div>
+</div></div>
+
+<!-- SPECIAL SITUATIONS -->
+<div class="panel" id="panel-special"><div class="wrap">
+  <div class="sec">Grappling</div>
+  <div class="rule-block">
+    <div class="rb-text">To grapple, make a Forcefulness Active Resonance as part of your Strike Act — using one of your Strike Resonances. The target makes a Forcefulness or Swiftness Active Resonance (their choice) to resist. On success: target gains the Grappled condition (speed 0, can't be moved away, Resonant Discord on Strike Resonances against creatures other than you).<br><br>
+    While grappling, you can drag the grappled creature by moving at half speed. You can release at any time as a free action. The grappled creature can break free by using their Act to contest the Forcefulness check again.</div>
+  </div>
+
+  <div class="sec">Prone</div>
+  <div class="rule-block">
+    <div class="rb-text">A prone creature: can only crawl (difficult terrain movement); melee Strike Resonances against them have Resonant Fortune; ranged Strike Resonances against them have Resonant Discord.<br><br>
+    Standing from prone costs half your movement speed for the Moment. If you don't have enough movement remaining, you cannot stand until your next Moment.</div>
+  </div>
+
+  <div class="sec">Cover</div>
+  <table class="data-table">
+    <tr><th>Cover Type</th><th>Guard Rating Bonus</th><th>Warding Resonance Bonus</th></tr>
+    <tr><td>Half Cover (waist-high wall, furniture)</td><td>+2</td><td>+2</td></tr>
+    <tr><td>Three-Quarter Cover (pillars, arrow slits)</td><td>+5</td><td>+5</td></tr>
+    <tr><td>Full Cover (complete obstruction)</td><td>Cannot be targeted directly</td><td>—</td></tr>
+  </table>
+
+  <div class="sec">Darkness and Sight</div>
+  <div class="rule-block">
+    <div class="rb-text"><strong>Bright Light:</strong> Normal conditions. No bonuses or penalties from sight.<br>
+    <strong>Dim Light / Lightly Obscured:</strong> Resonant Discord on Perception Active Resonances relying on sight.<br>
+    <strong>Darkness / Heavily Obscured:</strong> Effectively blind — Resonant Discord on Strike Resonances; attackers have Resonant Fortune against you; you cannot see anything that doesn't have blindsight or a similar sense.<br><br>
+    <strong>Darkvision:</strong> See in darkness as if it were dim light (no Resonant Discord on Perception, but cannot discern color). Does not help in magical darkness.<br>
+    <strong>Blindsight:</strong> Perceive surroundings without relying on sight within the specified range. Not affected by darkness or invisibility.<br>
+    <strong>Tremorsense:</strong> Detect and locate anything in contact with the ground within range. Not useful against flying targets.</div>
+  </div>
+
+  <div class="sec">Flanking</div>
+  <div class="rule-block">
+    <div class="rb-text">When two allied creatures are on directly opposite sides of an enemy (both within melee reach), both have Resonant Fortune on Strike Resonances against that enemy. <strong>Flanking is optional</strong> — the Concordance may disable it for faster play. When disabled, Pack Tactics abilities (which provide Resonant Fortune through positioning) remain active as written.</div>
+  </div>
+
+  <div class="sec">Mounted Combat</div>
+  <div class="rule-block">
+    <div class="rb-text">A mounted combatant uses the mount's speed and may control the mount's movement as part of their own Moment (without spending their own movement) if the mount is trained or willing. Falling from a mount when reduced to 0 Vitality lands the rider prone within 5 ft of the mount's position.<br><br>
+    Centaur-Kin mounts are an exception — a Centaur-Kin who accepts a rider uses their own movement normally, and the rider may act independently on their own Moment.</div>
+  </div>
+</div></div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).style.display='block';
+  document.getElementById('panel-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
+}
+document.querySelectorAll('.panel').forEach(p=>{p.style.display='none'});
+document.getElementById('panel-structure').style.display='block';
+document.getElementById('panel-structure').classList.add('active');
+document.querySelectorAll('.nav-btn')[0].classList.add('active');
+</script>
+</body>
+</html>

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — Three New Zodiac Cultures</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f0f0f;color:#e8e4dc;padding:2rem 1rem;max-width:860px;margin:0 auto;line-height:1.6}
+h1{font-size:20px;font-weight:500;margin-bottom:4px;color:#f0ead8}
+.intro{font-size:13px;color:#888;margin-bottom:1.5rem;line-height:1.7}
+.nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem}
+.nav-btn{padding:6px 12px;font-size:12px;border:1px solid #333;border-radius:6px;background:transparent;color:#888;cursor:pointer;transition:all .15s}
+.nav-btn:hover,.nav-btn.active{background:#1e1e1e;color:#e8e4dc;border-color:#555;font-weight:500}
+.panel{display:none}.panel.active{display:block}
+
+.culture-hero{border-radius:14px;border:2px solid;padding:22px;margin-bottom:16px}
+.ch-eyebrow{font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:6px}
+.ch-title{font-size:24px;font-weight:500;color:#f0ead8;margin-bottom:4px}
+.ch-subtitle{font-size:14px;color:#aaa;margin-bottom:16px;line-height:1.6}
+.ch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:7px;margin-bottom:16px}
+.ch-cell{background:#111;border-radius:8px;padding:9px 11px;border:1px solid #1e1e1e}
+.ch-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#555;margin-bottom:3px}
+.ch-val{font-size:12px;color:#ccc;line-height:1.45}
+.ch-val strong{color:#e8e4dc;font-weight:500}
+
+.section-head{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#555;margin:18px 0 8px}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.info-block{background:#111;border-radius:8px;padding:10px 12px;border:1px solid #1e1e1e}
+.info-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#555;margin-bottom:4px}
+.info-text{font-size:12px;color:#bbb;line-height:1.6}
+.info-text strong{color:#e8e4dc;font-weight:500}
+
+.sign-row{display:grid;grid-template-columns:44px 1fr 1fr;gap:10px;align-items:start;background:#111;border-radius:8px;border:1px solid #1e1e1e;padding:10px 12px;margin-bottom:6px;cursor:pointer;overflow:hidden;transition:border-color .15s}
+.sign-row:hover,.sign-row.expanded{border-color:#2a2a2a}
+.sign-row.expanded .sr-body{display:block}
+.sr-glyph{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;border:1px solid;flex-shrink:0}
+.sr-local{font-size:13px;font-weight:500;color:#e8e4dc;margin-bottom:2px}
+.sr-domain{font-size:11px;color:#888}
+.sr-access{font-size:11px;color:#aaa;text-align:right}
+.sr-body{display:none;grid-column:1/-1;padding-top:8px;border-top:1px solid #1e1e1e;margin-top:6px;font-size:12px;color:#aaa;line-height:1.7}
+.sr-body strong{color:#e8e4dc;font-weight:500}
+
+.lore-block{background:#0a1a14;border:1px solid #0a3a2a;border-radius:8px;padding:12px 14px;margin-top:10px}
+.lb-title{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#3b9e6e;margin-bottom:5px}
+.lb-text{font-size:12px;color:#aaa;line-height:1.65}
+.lb-text strong{color:#e8e4dc;font-weight:500}
+
+.warning-block{background:#1e0a0a;border:1px solid #3a0a0a;border-radius:8px;padding:12px 14px;margin-top:8px}
+.wb-title{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#cc4444;margin-bottom:5px}
+.wb-text{font-size:12px;color:#aaa;line-height:1.65}
+.wb-text strong{color:#e8e4dc;font-weight:500}
+
+.gold-block{background:#1a140a;border:1px solid #3a2a0a;border-radius:8px;padding:12px 14px;margin-top:8px}
+.gb-title{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#c9a84c;margin-bottom:5px}
+.gb-text{font-size:12px;color:#aaa;line-height:1.65}
+.gb-text strong{color:#e8e4dc;font-weight:500}
+
+.detail-text{font-size:13px;color:#aaa;line-height:1.75;margin-bottom:10px}
+.detail-text strong{color:#e8e4dc;font-weight:500}
+
+.location-grid{display:grid;gap:6px;margin-bottom:10px}
+.location{background:#111;border-radius:8px;border:1px solid #1e1e1e;padding:10px 12px;cursor:pointer;overflow:hidden;transition:border-color .15s}
+.location:hover,.location.expanded{border-color:#2a2a2a}
+.location.expanded .loc-body{display:block}
+.loc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.loc-name{font-size:13px;font-weight:500;color:#e8e4dc}
+.loc-type{font-size:11px;padding:1px 7px;border-radius:4px;border:1px solid;white-space:nowrap;flex-shrink:0}
+.loc-sub{font-size:11px;color:#666;margin-top:2px}
+.loc-body{display:none;margin-top:8px;padding-top:8px;border-top:1px solid #1a1a1a;font-size:12px;color:#aaa;line-height:1.7}
+.loc-body strong{color:#e8e4dc;font-weight:500}
+
+.npc-block{background:#141414;border:1px solid #222;border-radius:10px;padding:14px;margin-bottom:8px}
+.npc-name{font-size:14px;font-weight:500;color:#f0ead8;margin-bottom:3px}
+.npc-role{font-size:11px;color:#666;margin-bottom:8px}
+.npc-text{font-size:12px;color:#aaa;line-height:1.7}
+.npc-text strong{color:#e8e4dc;font-weight:500}
+
+.trait-row{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0 8px}
+.trait{font-size:11px;padding:2px 8px;border-radius:100px;background:#1a1a1a;border:1px solid #2a2a2a;color:#999}
+
+.integration-box{background:#0a0f1a;border:1px solid #1a2a3a;border-radius:10px;padding:14px;margin-top:12px}
+.ib-title{font-size:12px;font-weight:500;color:#5aabe8;margin-bottom:8px}
+.ib-text{font-size:12px;color:#aaa;line-height:1.7}
+.ib-text strong{color:#e8e4dc;font-weight:500}
+</style>
+</head>
+<body>
+<h1>Three New Zodiac Cultures</h1>
+<p class="intro">Three traditions not yet present in Sideros — each with a completely different relationship to the zodiac forces than anything already built. The Polynesian wayfinders read the cosmos through movement and direction. The dark-constellation cave-dwellers read it through absence. The Andean ceque-keepers map it onto the land itself. Together they fill the final gaps in the world's cosmological vocabulary.</p>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="show('polynesian',this)">I. Te Moana-nui</button>
+  <button class="nav-btn" onclick="show('dark',this)">II. The Obsidian Deep</button>
+  <button class="nav-btn" onclick="show('andean',this)">III. Elethorn / Kallos</button>
+  <button class="nav-btn" onclick="show('integration',this)">World Integration</button>
+</div>
+
+<!-- ============================================================ -->
+<!-- I. POLYNESIAN — TE MOANA-NUI -->
+<!-- ============================================================ -->
+<div class="panel active" id="panel-polynesian">
+
+<div class="culture-hero" style="border-color:#00aacc44;background:#0a1420">
+  <div class="ch-eyebrow" style="color:#00aacc">The First Tradition — Navigation Zodiac</div>
+  <div class="ch-title">Te Moana-nui — The Great Ocean People</div>
+  <div class="ch-subtitle">A Polynesian-inspired seafaring civilization scattered across the deep ocean islands between the known continents. They read the zodiac not as personality, domain, or spiritual force — but as <em>direction, current, and path.</em> Every sign is a star used for positioning. Every divine force is a bearing on the horizon.</div>
+  <div class="ch-grid">
+    <div class="ch-cell"><div class="ch-label">Location</div><div class="ch-val"><strong>Te Moana-nui Archipelago</strong> — the deep ocean island chains scattered between Terra Firma, Arcadia Major, the Ashélands, and K'uh-la'an. Previously unnamed on the world map.</div></div>
+    <div class="ch-cell"><div class="ch-label">People</div><div class="ch-val"><strong>The Moana-kin</strong> — deep ocean navigators and island cultivators. Broadly Polynesian cultural inspiration. Organized into navigational lineages (Waka — canoe clans) rather than zodiac signs.</div></div>
+    <div class="ch-cell"><div class="ch-label">Zodiac framework</div><div class="ch-val"><strong>The Ara Moana</strong> (Pathways of the Ocean) — twelve star-paths used for celestial navigation, each governing a direction, a current, a wind, and a season.</div></div>
+    <div class="ch-cell"><div class="ch-label">Relationship to gods</div><div class="ch-val">The Legendary Beasts are perceived as <strong>living weather systems</strong> — the Ashen Ram is the volcanic wind, the Great Roc is the high-altitude current, the Kelp-Weaver is the deep ocean swell. Not worshipped but <em>navigated.</em></div></div>
+    <div class="ch-cell"><div class="ch-label">Magic type</div><div class="ch-val"><strong>Wayfinding magic</strong> — spells that find, orient, path, and move. The most mobile magical tradition in Sideros. Useless in a fixed location; unmatched across open water or unmapped terrain.</div></div>
+    <div class="ch-cell"><div class="ch-label">Unique insight</div><div class="ch-val">The only tradition that perceives the zodiac as <strong>relational rather than essential</strong> — signs are not forces you align with, they are forces you navigate between. You are always between two of them.</div></div>
+  </div>
+</div>
+
+<p class="section-head">The Ara Moana — How They Read the Twelve Signs</p>
+<p class="detail-text">Where every other tradition asks "what does this sign govern?" the Moana-kin ask "where does this sign point?" Every zodiac force is a star on their celestial compass — a fixed bearing from which position is determined. They have no concept of being "born under" a sign. Instead, every person is born <em>between</em> two signs — the rising star and the setting star at the moment of their birth — and their identity is defined by the path between those two points.</p>
+
+<div style="display:grid;gap:6px;margin-bottom:12px">
+  <div class="sign-row" onclick="this.classList.toggle('expanded')">
+    <div class="sr-glyph" style="background:#2a1208;border-color:#e8854c44">♈</div>
+    <div><div class="sr-local">Hika-i-uta — The Wind From Land</div><div class="sr-domain">Aries as the offshore wind that carries voyagers away from home toward the unknown</div></div>
+    <div class="sr-access">Unique access: spells of departure, beginning journeys, breaking free of harbors — literal and metaphorical</div>
+    <div class="sr-body">In the Ara Moana, Aries energy is the offshore wind — the force that pushes a canoe away from the island into open ocean. It is not courage in the abstract; it is the <strong>specific courage of leaving</strong>. Hika-i-uta practitioners are the ones who read when conditions are right to depart — even when the destination is unknown and the only certainty is that staying is wrong. A Moana-kin navigator who reads Hika-i-uta can determine the optimal moment to initiate any action, not just sea voyages. Their Unique Access: <strong>The First Step</strong> — they can guarantee that any action they initiate will succeed at its first step, regardless of conditions. What happens after is not promised. But the departure always works.</div>
+  </div>
+  <div class="sign-row" onclick="this.classList.toggle('expanded')">
+    <div class="sr-glyph" style="background:#121a08;border-color:#8aaa4444">♉</div>
+    <div><div class="sr-local">Papa-whenua — The Deep Swell</div><div class="sr-domain">Taurus as the deep ocean swell — the long slow rhythm that carries canoes across the open sea</div></div>
+    <div class="sr-access">Unique access: sustained movement over vast distances, endurance-travel magic, reading the ocean's deep memory</div>
+    <div class="sr-body">The deep ocean swell is nothing like surface waves — it moves through the water at depths that affect the entire ocean simultaneously, generated thousands of miles away, arriving days later as a consistent rhythmic force. Taurus in the Moana-kin tradition is this swell: <strong>the force that was initiated far away and long ago and is still moving.</strong> A Papa-whenua practitioner can read the deep swell to determine what happened far away — not prophecy, but geological and oceanic memory. The swell carries information about distant storms, volcanic eruptions, and large-scale movements of creatures. Unique Access: <strong>Deep Reading</strong> — they can determine the origin point, direction, and approximate timing of any distant large-scale event by reading its current effects on the present environment.</div>
+  </div>
+  <div class="sign-row" onclick="this.classList.toggle('expanded')">
+    <div class="sr-glyph" style="background:#180a28;border-color:#a87ee844">♊</div>
+    <div><div class="sr-local">Hoa-kau — The Twin Stars</div><div class="sr-domain">Gemini as Castor and Pollux — the two stars used together for positioning, never one without the other</div></div>
+    <div class="sr-access">Unique access: triangulation, finding position between two reference points, navigating spaces that have no fixed landmarks</div>
+    <div class="sr-body">A navigator never uses a single star to determine position — they use two simultaneously, finding themselves in the relationship between the pair. The Moana-kin read Gemini as <strong>the principle of relative positioning</strong>: you know where you are only in relation to at least two other things. Hoa-kau practitioners are extraordinary mediators and translators because they instinctively locate themselves relative to all parties simultaneously — they always know where they stand in relation to multiple perspectives. Unique Access: <strong>Triangulation</strong> — they can find anyone or anything in any environment, magical or mundane, by identifying two reference points and finding the intersection. Works in spirit realms, time-distorted spaces, and magical concealment zones that defeat all other forms of detection.</div>
+  </div>
+  <div class="sign-row" onclick="this.classList.toggle('expanded')">
+    <div class="sr-glyph" style="background:#0a1228;border-color:#5aabe844">♋</div>
+    <div><div class="sr-local">Ama-uri — The Safe Harbor Star</div><div class="sr-domain">Cancer as the star that marks the direction of home and shelter</div></div>
+    <div class="sr-access">Unique access: always finding shelter, returning home regardless of disorientation, sanctuary magic</div>
+    <div class="sr-body">Cancer in the Moana-kin tradition is not protection in general — it is the <strong>specific star that points toward shelter</strong> when you are lost and exhausted. Ama-uri is the star navigators look for when they have lost their bearing and need to find land before nightfall. It always points toward the nearest safe harbor. Ama-uri practitioners can find safety in any environment — the nearest place of genuine refuge, the person in a crowd who means no harm, the safest path through hostile territory. Unique Access: <strong>Shelter Sense</strong> — passive ability, always active. They cannot be ambushed in a location they have spent more than one hour in. They instinctively know the safest exit from any space they occupy.</div>
+  </div>
+  <div class="sign-row" onclick="this.classList.toggle('expanded')">
+    <div class="sr-glyph" style="background:#20180a;border-color:#c9a84c44">♌</div>
+    <div><div class="sr-local">Ra-nui — The Great Sun</div><div class="sr-domain">Leo as the sun itself — the primary navigational reference, unmistakable, unglamorous in its constancy</div></div>
+    <div class="sr-access">Unique access: orientation without stars (daylight navigation), commanding presence, the force that makes all other navigation possible</div>
+    <div class="sr-body">The Moana-kin read Leo not as the lion or the champion but as the sun itself — and their relationship to the sun is practical rather than reverential. The sun is the great navigator's constant reference. You navigate by it all day and by its absence all night. <strong>Leo in this tradition is not about glory — it is about being the one thing everyone else orients from.</strong> Ra-nui practitioners are the quiet centers of any group — the ones whose steadiness allows everyone else to find their direction. They are often not the most dramatic person in the room; they are the most necessary. Unique Access: <strong>Daylight Reading</strong> — they can perform any navigation or orientation magic without the stars, using only ambient light. In environments of complete darkness they are not disabled — they navigate by residual warmth, pressure differentials, and the memory of light.</div>
+  </div>
+  <div class="sign-row" onclick="this.classList.toggle('expanded')">
+    <div class="sr-glyph" style="background:#0a1a0a;border-color:#8aaa4444">♍</div>
+    <div><div class="sr-local">Kaitiaki-moana — The Ocean Steward</div><div class="sr-domain">Virgo as the careful management of provisions and resources across a long voyage</div></div>
+    <div class="sr-access">Unique access: resource optimization, waste elimination, detecting when a system is consuming more than it produces</div>
+    <div class="sr-body">On a long ocean voyage, Virgo energy is the discipline of rationing — the precise calculation of how much water, food, and rope is available versus how much is needed to reach the next island. The Moana-kin read Virgo as <strong>the force of sustainable sufficiency</strong>: not abundance (that's Taurus), not precision for its own sake (that's the Western tradition), but the careful stewardship that makes a long journey possible. Kaitiaki-moana practitioners can assess any system's sustainability with a glance — how long a community can survive its current practices, where a magical working is consuming more than it generates, when an institution is approaching its resource limits. Unique Access: <strong>Voyage Assessment</strong> — they can determine the exact resource requirements for any undertaking, including intangible resources like trust, political will, and magical energy. This makes them extraordinary strategic advisors and devastating auditors.</div>
+  </div>
+  <div class="sign-row" onclick="this.classList.toggle('expanded')">
+    <div class="sr-glyph" style="background:#0a1228;border-color:#5aabe844">♎</div>
+    <div><div class="sr-local">Tū-āhuru — The Steady Wind</div><div class="sr-domain">Libra as the trade wind — the constant, reliable wind that makes oceanic travel predictable and possible</div></div>
+    <div class="sr-access">Unique access: establishing predictable patterns, creating reliable conditions from chaos, the magic of consistency</div>
+    <div class="sr-body">The trade wind is the great gift of the ocean — a consistent, reliable wind at a predictable bearing that makes long-distance voyaging possible. Without it, the Moana-kin couldn't have populated the ocean. The Moana-kin read Libra as <strong>the principle of reliable pattern</strong> — not justice, not balance between opposites, but the steady force that makes planning possible. Tū-āhuru practitioners can create stable conditions in unstable environments — not by forcing balance between extremes (Western Libra) but by establishing a reliable pattern that others can depend on. Unique Access: <strong>Steady State</strong> — once per Deep Attunement, they can make any single condition in their environment stable and predictable for 24 hours. A chaotic storm becomes a steady (if strong) wind. A politically volatile situation enters a period of predictable status quo. An unpredictable magical environment regularizes.</div>
+  </div>
+  <div class="sign-row" onclick="this.classList.toggle('expanded')">
+    <div class="sr-glyph" style="background:#180a28;border-color:#a87ee844">♏</div>
+    <div><div class="sr-local">Rua-i-raro — The Deep Current</div><div class="sr-domain">Scorpio as the deep subsurface current — invisible from above, powerful below, pulling ships off course when unread</div></div>
+    <div class="sr-access">Unique access: detecting hidden forces, reading what moves beneath apparent surfaces, the power of what is not shown</div>
+    <div class="sr-body">The deep current is the most dangerous thing in the ocean for an unprepared navigator — invisible on the surface, often moving perpendicular to the wind, pulling a canoe silently off course over hours. Experienced navigators feel it through the canoe's hull and correct. The Moana-kin read Scorpio as <strong>the force that moves beneath what is visible</strong>. Rua-i-raro practitioners can feel hidden currents in any system — the political undercurrent in a diplomatic conversation, the magical current running beneath an apparently stable location, the emotional current beneath a composed demeanor. Unique Access: <strong>Hull Sense</strong> — they feel the hidden force before it becomes visible. They always know when a situation is moving in a direction different from what appears on the surface, and roughly how long before that movement becomes apparent to everyone else.</div>
+  </div>
+  <div class="sign-row" onclick="this.classList.toggle('expanded')">
+    <div class="sr-glyph" style="background:#1a1208;border-color:#e8854c44">♐</div>
+    <div><div class="sr-local">Kāhui-o-Matariki — The Pleiades Cluster</div><div class="sr-domain">Sagittarius as the Pleiades — the star cluster that marks the new year, the planting season, and the beginning of voyaging season</div></div>
+    <div class="sr-access">Unique access: timing, knowing when conditions for a specific action are optimal, the magic of the right moment</div>
+    <div class="sr-body">The Pleiades rising on the horizon marks the beginning of voyaging season for the Moana-kin — the moment when conditions across the ocean become favorable for long-distance travel. Sagittarius in this tradition is not about exploration per se but about <strong>the timing of exploration</strong> — knowing when the horizon is ready to be crossed. Kāhui practitioners have an unerring sense of optimal timing for any action. They don't always know where to go — but they always know when. Unique Access: <strong>Season Reading</strong> — they can determine the optimal time window for any action (from an hour to a year) with precision that no other divination tradition matches. This includes the optimal time to have a difficult conversation, to launch a military campaign, to cast a specific spell, or to plant a specific seed. The window they identify is always correct. Whether the action succeeds within it depends on execution.</div>
+  </div>
+  <div class="sign-row" onclick="this.classList.toggle('expanded')">
+    <div class="sr-glyph" style="background:#0a1a0a;border-color:#8aaa4444">♑</div>
+    <div><div class="sr-local">Pou-tū-te-rangi — The Pillar of Heaven</div><div class="sr-domain">Capricorn as the southern celestial pole — the fixed point that never moves, around which all other stars rotate</div></div>
+    <div class="sr-access">Unique access: absolute orientation, the fixed point in any chaotic system, being the thing that does not move when everything else does</div>
+    <div class="sr-body">In the northern hemisphere, navigators use Polaris. In the southern ocean, there is no equivalent — the southern celestial pole is a dark space that experienced navigators identify by the absence of rotation around it. Capricorn in the Moana-kin tradition is this invisible fixed point: <strong>the thing that does not move and therefore makes all movement legible</strong>. Pou-tū practitioners are the stable center in any system — they don't lead, they don't follow, they provide the fixed reference that makes everyone else's movement coherent. Unique Access: <strong>The Unmoving Point</strong> — once established in a location, they cannot be magically displaced, teleported against their will, pushed, or repositioned. They also always know true north (or the equivalent) in any environment, including planes of existence that have no directional axis.</div>
+  </div>
+  <div class="sign-row" onclick="this.classList.toggle('expanded')">
+    <div class="sr-glyph" style="background:#0a1228;border-color:#5aabe844">♒</div>
+    <div><div class="sr-local">Waiora — The Living Water</div><div class="sr-domain">Aquarius as freshwater — the miraculous resource that makes island life and long voyages possible</div></div>
+    <div class="sr-access">Unique access: finding freshwater anywhere, the communal magic of shared survival, what makes civilization possible in hostile conditions</div>
+    <div class="sr-body">On a small island in the middle of the ocean, freshwater is the difference between life and death. The Moana-kin read Aquarius not as the abstract water-bearer but as <strong>the specific miracle of freshwater in a saltwater world</strong>. Finding a spring on a new island, knowing which plants collect dew, understanding how to read the land for underground water — this is Waiora. Unique Access: <strong>Living Water</strong> — they can find freshwater in any environment, including metaphorical freshwater (the one trustworthy person in a corrupt institution, the genuine offer in a hostile negotiation, the safe path through a poisoned landscape). This works literally and figuratively simultaneously. They also cannot be dehydrated, poisoned through water, or harmed by water-based magic.</div>
+  </div>
+  <div class="sign-row" onclick="this.classList.toggle('expanded')">
+    <div class="sr-glyph" style="background:#0a1228;border-color:#5aabe844">♓</div>
+    <div><div class="sr-local">Tūturu-o-whiti — The Horizon</div><div class="sr-domain">Pisces as the horizon itself — the boundary between known and unknown, sky and sea, the line that moves as you approach it</div></div>
+    <div class="sr-access">Unique access: perceiving what lies just beyond current perception, the magic of the almost-visible</div>
+    <div class="sr-body">The horizon is the most important feature of ocean navigation — and the most philosophically complex. It appears fixed but retreats as you approach it. It is the boundary of the visible world, and beyond it lies everything you are sailing toward. The Moana-kin read Pisces as <strong>the principle of the ever-receding boundary</strong> — not dreams and prophecy but the specific experience of being between the known and the unknown, with the unknown constantly beckoning and never arriving. Tūturu practitioners can see one step further than anyone else — into the next room before they enter it, into the next phase of a conversation before it happens, toward the next island before it rises above the horizon. Unique Access: <strong>Horizon Sight</strong> — they can perceive things at the very edge of perception that no other sense can reach: the first signs of an approaching threat, the earliest stages of a magical working before it manifests, the exact moment a person decides to act before they act.</div>
+  </div>
+</div>
+
+<p class="section-head">Key Locations — Te Moana-nui Archipelago</p>
+<div class="location-grid">
+  <div class="location expanded" onclick="this.classList.toggle('expanded')">
+    <div class="loc-head"><div><div class="loc-name">Hōkūle'a Atoll — The Navigator's Cradle</div><div class="loc-sub">Capital / Sacred center of wayfinding knowledge</div></div><span class="loc-type" style="color:#00aacc;border-color:#00aacc44;background:#0a1420">Capital</span></div>
+    <div class="loc-body">A circular atoll with a perfectly calm central lagoon that acts as a natural celestial mirror — at night, the lagoon reflects the sky so precisely that navigators can practice star reading horizontally rather than vertically. The <strong>Waka-tōhora (Navigator-Priests)</strong> live in the central structure — a coral building shaped like a canoe prow pointing true north. The atoll's position in the archipelago is itself cosmologically significant: it sits at the exact intersection of four major ocean currents, making it the hub from which all Moana-kin navigational paths radiate. The oldest star charts in the world, carved into the coral walls, predate the Pantheonic Fall — suggesting the Moana-kin had direct contact with the zodiac forces before their divine fragmentation.</div>
+  </div>
+  <div class="location" onclick="this.classList.toggle('expanded')">
+    <div class="loc-head"><div><div class="loc-name">Roto-a-Kiwa — The Mirror Sea</div><div class="loc-sub">The supernatural calm zone between the archipelago's southern islands</div></div><span class="loc-type" style="color:#c9a84c;border-color:#c9a84c44;background:#1a1408">Major Location</span></div>
+    <div class="loc-body">A section of ocean approximately 200 miles across where the water is unnaturally calm regardless of surrounding conditions. No wind, no swell, no current — the absolute antithesis of navigable ocean. The Moana-kin consider it sacred and terrifying. Their navigational tradition has no vocabulary for stillness — a place without current, wind, or wave is a place where the Ara Moana (zodiac path system) cannot be read. <strong>This is the Moana-kin perception of the Hollow Serpent's influence</strong> — not an active destructive force but a zone of absolute navigational absence. No Moana-kin practitioner has ever crossed it and returned. The Mirror Sea is expanding. The rate of expansion, measured by the Waka-tōhora against old star charts, has accelerated in the last three years — precisely aligned with when Aethar's stage three (fracturing mortal authority) began.</div>
+  </div>
+  <div class="location" onclick="this.classList.toggle('expanded')">
+    <div class="loc-head"><div><div class="loc-name">Marae Tāwhiti — The Far Temple</div><div class="loc-sub">A floating island that moves with the currents — never in the same place twice</div></div><span class="loc-type" style="color:#cc4444;border-color:#cc444444;background:#1e0a0a">Dungeon</span></div>
+    <div class="loc-body">An island of dense rainforest and volcanic rock that has no fixed position — it follows the deep ocean current called the Rua-i-raro (Scorpio current) in a circuit that takes exactly one solar year to complete. A Moana-kin navigator who knows the Ara Moana can predict its position at any given time. Anyone else who finds it considers it a miracle. The island's interior contains the <strong>Te Kore Pō</strong> — the Temple of Absolute Darkness — a structure built so that on the winter solstice, no light reaches its interior chamber, even from luminescent creatures. Within the chamber, the Waka-tōhora perform the one ritual that interfaces directly with the zodiac forces in their raw, non-navigational form. What the ritual does exactly is not shared outside the lineage. What is known: it has been performed every solstice for four thousand years without interruption. It was not performed two winters ago. No one in the archipelago will say why.</div>
+  </div>
+</div>
+
+<p class="section-head">Key NPCs</p>
+<div class="npc-block">
+  <div class="npc-name">Hinerangi of the Long Horizon — The Waka-tōhora Grand Navigator</div>
+  <div class="npc-role">Leader of the Navigator-Priests · Beta (Ω adjacent) · Fate Number: 58 — potentially part of the Quint Bond cluster</div>
+  <div class="trait-row"><span class="trait">Reads weather three days out</span><span class="trait">Cannot navigate the Mirror Sea</span><span class="trait">Knows the ritual was missed</span><span class="trait">Has not told her people why</span></div>
+  <div class="npc-text">Hinerangi is the most accurate weather and ocean reader alive — a Kāhui-o-Matariki (Sagittarius) practitioner who has extended her timing-sense to oceanic systems with forty years of refinement. She knows the Mirror Sea is expanding. She knows the solstice ritual was skipped because the island moved to the wrong position — moved, she believes, because something disrupted the Rua-i-raro current that it follows. <strong>She believes the Hollow Serpent's pressure on the Maw is now strong enough to distort major ocean currents.</strong> She has been trying to get this information to someone who can act on it for two years. She doesn't know who the right person is. Her Fate Number of 58 places her squarely in the theoretical Quint Bond cluster — something Serath of the Closed Circle has noted and has not reported to Voss.</div>
+</div>
+
+<div class="gold-block">
+  <div class="gb-title">Integration with Existing World</div>
+  <div class="gb-text">The Moana-kin's navigational zodiac fills the gap in the ocean between known continents. Their perception of the Legendary Beasts as living weather systems is not wrong — the Ashen Ram's volcanic eruptions do generate offshore winds, the Great Roc's wing movements do create high-altitude currents, the Kelp-Weaver's body does generate the deep ocean swell. The Moana-kin have been <strong>accurately observing the physical effects of the Legendary Beasts' presence</strong> for four thousand years while every other tradition was focused on their metaphysical significance. Their star charts predate the Pantheonic Fall — which means they may contain accurate observations of what the zodiac forces looked like <em>before</em> the Fall, when they were still gods rather than beasts. The Waka-tōhora's pre-Fall charts are the most strategically valuable documents in the world that no one outside the archipelago knows exist.</div>
+</div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- II. DARK CONSTELLATION — THE OBSIDIAN DEEP -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-dark">
+
+<div class="culture-hero" style="border-color:#44446644;background:#0a0a14">
+  <div class="ch-eyebrow" style="color:#8888cc">The Second Tradition — Absence Zodiac</div>
+  <div class="ch-title">The Veil-Readers of the Obsidian Deep</div>
+  <div class="ch-subtitle">A civilization of cave-dwelling people who have never seen the stars directly — they live in an enormous underground sea cave system accessible only from the ocean floor. They have developed the most sophisticated understanding of the zodiac's <em>negative space</em>: the dark patches between constellations, the voids in the Aether where divine energy is absent. They read the cosmos through what is not there.</div>
+  <div class="ch-grid">
+    <div class="ch-cell"><div class="ch-label">Location</div><div class="ch-val"><strong>The Obsidian Deep</strong> — a vast network of sea caves and underground ocean chambers beneath a mid-ocean volcanic ridge, accessible from the ocean surface through underwater passages. Between the Abyssal Sea and Te Moana-nui.</div></div>
+    <div class="ch-cell"><div class="ch-label">People</div><div class="ch-val"><strong>The Veil-Readers (Te Kapo)</strong> — "The Blind Ones" in Moana-kin. Not actually blind — but they navigate primarily by touch, echolocation-adjacent sense, and the perception of Aetheric absence. Bioluminescent markings on skin.</div></div>
+    <div class="ch-cell"><div class="ch-label">Zodiac framework</div><div class="ch-val"><strong>The Ngārara-kore</strong> (The Void-Between) — twelve dark patches between the constellations that the Te Kapo perceive as the true zodiac. Each "dark sign" is the space around one of the twelve forces rather than the force itself.</div></div>
+    <div class="ch-cell"><div class="ch-label">Relationship to gods</div><div class="ch-val">The Legendary Beasts are perceived as <strong>sources of Aetheric light that cast shadows</strong>. The Te Kapo study the shadows, not the sources. They know more about the shape of each beast than any surface culture — by the outline of what surrounds them.</div></div>
+    <div class="ch-cell"><div class="ch-label">Magic type</div><div class="ch-val"><strong>Void-perception magic</strong> — detecting absence, concealment, corruption, and the Hollow Serpent's movements. The only tradition that can perceive the Hollow Serpent's influence directly before it manifests. Aethar is specifically trying to eliminate them.</div></div>
+    <div class="ch-cell"><div class="ch-label">Unique insight</div><div class="ch-val">They read the zodiac as <strong>negative space</strong> — not what the forces are, but what they displace. The Hollow Serpent, which has no divine light of its own, appears to them not as darkness but as a <em>hole in the darkness</em> — an absence of even the Aetheric void. They are the only culture in the world that can see Aethar's movements.</div></div>
+  </div>
+</div>
+
+<p class="section-head">The Ngārara-kore — The Twelve Dark Signs</p>
+<p class="detail-text">Every Te Kapo practitioner reads the dark space adjacent to a zodiac sign rather than the sign itself. This gives them access to aspects of each sign's power that positive-space traditions cannot reach — specifically, the <em>boundaries</em> and <em>limits</em> of each force. Where a Western Aries practitioner accesses the force of initiative, a Te Kapo dark-Aries reader perceives the precise moment when initiative becomes overreach. Where a Western Virgo practitioner accesses purification, a Te Kapo dark-Virgo reader perceives the exact nature of what was removed by the purification and why it was there.</p>
+
+<div style="display:grid;gap:6px;margin-bottom:12px">
+  <div class="sign-row" onclick="this.classList.toggle('expanded')">
+    <div class="sr-glyph" style="background:#1a1a2a;border-color:#44444466">♈</div>
+    <div><div class="sr-local">The Shadow of the Ram — Kore-ahi</div><div class="sr-domain">The dark space where Aries energy ends: the moment of overextension, the cost of the charge</div></div>
+    <div class="sr-access">Perceive when any action has gone too far; the exact threshold of unsustainable momentum</div>
+    <div class="sr-body">The Te Kapo reader of Kore-ahi (Void-Fire) perceives not the Ram's charge but the silence that follows it — the exhaustion, the exposed flank, the territory that cannot be held after the advance. They can read any aggressive action's aftermath before it happens. <strong>In combat, they always know when an enemy's attack is the last one they can sustain.</strong> They can also detect the precise moment when their allies have pushed too far and need to consolidate rather than advance.</div>
+  </div>
+  <div class="sign-row" onclick="this.classList.toggle('expanded')">
+    <div class="sr-glyph" style="background:#1a1a2a;border-color:#44444466">♊</div>
+    <div><div class="sr-local">The Shadow of the Twins — Kore-kōrero</div><div class="sr-domain">The dark space of Gemini: the silence between the two truths, where neither side has spoken yet</div></div>
+    <div class="sr-access">Perceive the unsaid — what a person knows but has not yet decided to reveal</div>
+    <div class="sr-body">Where positive-space Gemini practitioners access the space between two truths, Te Kapo dark-Gemini readers access <strong>the moment before either truth is spoken</strong>. They perceive the decision process — not thoughts, but the quality of what a person is holding back. They cannot read minds but can tell, with precision, whether someone is about to tell the truth, a lie, or something they don't yet know is either. This makes them the most reliable interrogators in the world — not through force, but through knowing exactly when to wait.</div>
+  </div>
+  <div class="sign-row" onclick="this.classList.toggle('expanded')">
+    <div class="sr-glyph" style="background:#1a1a2a;border-color:#44444466">♏</div>
+    <div><div class="sr-local">The Shadow of the Scorpion — Kore-roto</div><div class="sr-domain">The dark space of Scorpio: not the secret itself but the shape of the concealment</div></div>
+    <div class="sr-access">Perceive the shape of what is hidden without perceiving its content — know that something is concealed and roughly what kind of thing it is</div>
+    <div class="sr-body">This is the Te Kapo's most distinctive Scorpio ability and the one that most directly counters the Hollow Serpent's strategy. The dark space around Scorpio energy reveals the <strong>architecture of concealment</strong> — not what is hidden, but how it is hidden, how long it has been hidden, and what kind of thing requires that specific shape of concealment. A lie and a secret and a trauma each have different concealment signatures. Aethar's entropic movements have a specific void-signature that Te Kapo Kore-roto readers can detect from a significant distance — which is why the Fang of the Whisper considers eliminating the Veil-Readers a priority mission.</div>
+  </div>
+  <div class="sign-row" onclick="this.classList.toggle('expanded')">
+    <div class="sr-glyph" style="background:#1a1a2a;border-color:#44444466">⛎</div>
+    <div><div class="sr-local">The Hollow Dark — Kore-kore</div><div class="sr-domain">The dark space of Ophiuchus — the void within the void, the absence of even darkness</div></div>
+    <div class="sr-access">The most terrible perception in the Te Kapo tradition: directly sensing the Hollow Serpent's presence and movements</div>
+    <div class="sr-body">Every Te Kapo practitioner is trained from childhood to recognize Kore-kore — the void within the void. Where all twelve dark signs are perceived as a kind of spatial depth (the absence of Aetheric light), Kore-kore is perceived as an absence of even that depth. It is not darkness — it is the removal of the capacity to perceive darkness. <strong>This is how the Te Kapo perceive the Hollow Serpent: not as a presence but as a hole in their perception.</strong> Experienced Kore-kore readers can determine the size of the Serpent's influence, its direction of movement, and how recently it passed through an area. They are the only beings in Sideros for whom the Serpent is not invisible. This is also why they live in hiding — knowing where the Serpent moves means knowing when it is looking for you.</div>
+  </div>
+</div>
+
+<p class="section-head">Key Locations — The Obsidian Deep</p>
+<div class="location-grid">
+  <div class="location expanded" onclick="this.classList.toggle('expanded')">
+    <div class="loc-head"><div><div class="loc-name">Te Ao-kore — The Lightless Sanctum</div><div class="loc-sub">The Te Kapo's sacred center — absolute darkness, no bioluminescence permitted</div></div><span class="loc-type" style="color:#8888cc;border-color:#44444644;background:#0a0a14">Capital</span></div>
+    <div class="loc-body">A cave chamber of extraordinary dimensions — large enough that the walls are not detectable by the Te Kapo's echolocation-adjacent sense when standing at the center. <strong>Perfect darkness. No light source of any kind has ever been brought inside.</strong> Navigation within is through touch, memory, and a form of spatial awareness that Te Kapo develop from birth through training with the Ngārara-kore framework. The chamber's ceiling is covered in a mineral formation that absorbs Aetheric energy — making it the inverse of the Resonant Geodes in Argent Spire. Where the Geodes store divine energy, the ceiling of Te Ao-kore absorbs it, creating a zone of such complete Aetheric absence that the dark zodiac signs are perceptible at extraordinary depth. The Te Kapo's most advanced practitioners spend weeks here, learning to perceive the Hollow Serpent's movements from the inside of absence itself.</div>
+  </div>
+  <div class="location" onclick="this.classList.toggle('expanded')">
+    <div class="loc-head"><div><div class="loc-name">The Singing Passage</div><div class="loc-sub">An underwater passage connecting the Obsidian Deep to the ocean floor — where the Kelp-Weaver's presence is felt most strongly</div></div><span class="loc-type" style="color:#c9a84c;border-color:#c9a84c44;background:#1a1408">Major Location</span></div>
+    <div class="loc-body">The Te Kapo's one connection to the outer ocean — a series of submerged passages that require controlled breath-holding and knowledge of the current patterns to navigate. The passage walls emit a low harmonic resonance caused by the Kelp-Weaver Leviathan's psychic weaving activity above. The Te Kapo have learned to read this resonance as a secondary Aetheric signal — the Kelp-Weaver is the one Legendary Beast whose presence they perceive positively (as light) rather than as shadow. <strong>They consider the Kelp-Weaver an ancestor being</strong> — the one force that welcomed them into the deep rather than driving them there. Regent Hydroos (♒ Kelp-Weaver Council, Abyssal Sea) has been aware of the Te Kapo's existence for sixty years and has maintained quiet diplomatic contact through the Singing Passage, trading Resonant Geodes for dark-zodiac readings that tell the Regency where the Hollow Serpent's influence is spreading in the ocean floor.</div>
+  </div>
+  <div class="location" onclick="this.classList.toggle('expanded')">
+    <div class="loc-head"><div><div class="loc-name">The Fracture — Where the Kore-kore Is Loudest</div><div class="loc-sub">A section of the cave system directly above the Serpent Coil Current — the closest surface approach to the Maw</div></div><span class="loc-type" style="color:#cc4444;border-color:#cc444444;background:#1e0a0a">Dungeon</span></div>
+    <div class="loc-body">A section of the cave network that Te Kapo practitioners approach only in pairs and never alone — a zone where the Hollow-within-Hollow (Kore-kore) perception is so intense it induces disorientation, temporal distortion, and in extreme cases, permanent loss of the dark-zodiac sense itself. The Serpent Coil Current passes directly beneath this section of the cave floor. The Te Kapo have been monitoring it for centuries — they have the most detailed records of the Current's behavior over time of any culture. Their records show the Current has changed character in the last decade: it now carries a secondary Kore-kore signature that it did not have before. <strong>The Abyssal Leviathan is dreaming more actively. The dream is changing the Current.</strong> The Te Kapo's records of this change, if delivered to the right people, would confirm Arch-Oracle Lyra's timeline estimates for when the seals will fail.</div>
+  </div>
+</div>
+
+<p class="section-head">Key NPCs</p>
+<div class="npc-block">
+  <div class="npc-name">Matuā-kore — The Void Elder</div>
+  <div class="npc-role">Most experienced Kore-kore reader · Omega · Fate Number: 66 — Void-Touched · Leader of the Te Kapo</div>
+  <div class="trait-row"><span class="trait">Has perceived the Hollow Serpent directly</span><span class="trait">Cannot describe what it felt like</span><span class="trait">Knows the Fang of the Whisper is hunting them</span><span class="trait">Has sent three messengers to the surface</span><span class="trait">None returned</span></div>
+  <div class="npc-text">Matuā-kore is the oldest living Kore-kore reader — eighty years of practice perceiving the Hollow Serpent's movements through its void-within-void signature. She has watched the Serpent's influence grow for forty years. She has seen it accelerate. She has three times attempted to send emissaries to the surface cultures with her records of the Current's changes and the Kore-kore's expansion. All three emissaries disappeared in the Singing Passage — which means the Fang of the Whisper knows about the Te Kapo and has been eliminating their communication attempts.<br><br>Her Fate Number of 66 — Void-Touched — means her dark-zodiac perception includes a secondary channel that most Te Kapo do not have: she can perceive not just the Hollow Serpent's movements but <strong>its intention</strong>. Not thoughts. Directional will. She knows Aethar's plan is in stage three. She knows stage four begins when something in the ocean floor changes — something she cannot yet identify. She is waiting for it to become perceptible. She is afraid it will become perceptible very soon.</div>
+</div>
+
+<div class="warning-block">
+  <div class="wb-title">Aethar's Awareness</div>
+  <div class="wb-text">The Fang of the Whisper knows the Te Kapo exist and knows what they can perceive. Drava Nullsong's original Loom of Fate intelligence network contained a file on the Obsidian Deep that she transferred to the Coil. <strong>Eliminating the Te Kapo is priority mission three</strong> for the Fang — behind acquiring the Heart-Sting Toxin and identifying the Lunar Queen. They have not yet succeeded because the Te Kapo's home is genuinely inaccessible to anyone without the Waiora (Aquarius navigational) sense or the dark-zodiac spatial awareness to navigate the underwater passages. Heroes who reach the Te Kapo before the Fang does will find the only culture in the world that can tell them exactly where Aethar is moving — and exactly how much time remains.</div>
+</div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- III. ANDEAN / CEQUE — ELETHORN / KALLOS -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-andean">
+
+<div class="culture-hero" style="border-color:#cc884444;background:#140e0a">
+  <div class="ch-eyebrow" style="color:#cc8844">The Third Tradition — Terrestrial Zodiac</div>
+  <div class="ch-title">The Ceque-Keepers of Elethorn</div>
+  <div class="ch-subtitle">The survivors of the Night of Kallos never rebuilt toward the sky. They rebuilt into the land — mapping the zodiac forces onto the earth itself through sacred lines (ceques) radiating from the world's center. They don't look up at the zodiac. They walk it. The ruins of the Precursor civilization's global magical grid, which every other culture sees as wreckage, the Ceque-Keepers see as the world's most detailed zodiac map ever constructed.</div>
+  <div class="ch-grid">
+    <div class="ch-cell"><div class="ch-label">Location</div><div class="ch-val"><strong>Elethorn</strong> — the Lost Continent, ruins of the Precursor civilization Kallos. Post-apocalyptic landscape of collapsed magical infrastructure, overgrown grid-nodes, and three surviving communities.</div></div>
+    <div class="ch-cell"><div class="ch-label">People</div><div class="ch-val"><strong>The Ceque-Keepers</strong> — descendants of Precursor civilization survivors who mapped the collapsed grid as a zodiac system. Andean cultural inspiration. Organized around twelve Ceque Lines radiating from Kylar's Keep.</div></div>
+    <div class="ch-cell"><div class="ch-label">Zodiac framework</div><div class="ch-val"><strong>The Ceque Zodiac</strong> — twelve sacred lines running through Elethorn's landscape, each resonating with one zodiac force where the collapsed grid once channeled it. Walking a Ceque Line is the primary magical practice.</div></div>
+    <div class="ch-cell"><div class="ch-label">Relationship to gods</div><div class="ch-val">The Legendary Beasts are perceived as <strong>the forces that destroyed the world and became the world</strong>. Every overgrown ruin, every collapsed grid-node, every scarred landscape feature is read as evidence of a specific zodiac force's passage. Reverence and terror in equal measure.</div></div>
+    <div class="ch-cell"><div class="ch-label">Magic type</div><div class="ch-val"><strong>Terrestrial zodiac magic</strong> — spells that work through physical landscape connection, walking-based ritual, and the reactivation of dormant grid-nodes. The most geographically specific magic in Sideros — devastating in Elethorn, significantly weakened elsewhere.</div></div>
+    <div class="ch-cell"><div class="ch-label">Unique insight</div><div class="ch-val">They understand that the Precursor global grid was <strong>a terrestrial zodiac system</strong> — not a technology but a spiritual infrastructure that made the same mistake as every mono-cultural tradition: it tried to systematize all twelve forces under one framework. The Night of Kallos was the zodiac's rejection of systematization.</div></div>
+  </div>
+</div>
+
+<p class="section-head">The Ceque Lines — Twelve Sacred Paths Through Elethorn</p>
+<p class="detail-text">From Kylar's Keep — built on the ruins of the Precursor capital — twelve Ceque Lines radiate outward through Elethorn's landscape, each following the path of one of the twelve zodiac forces as they flowed through the original grid. Walking a full Ceque Line (a journey of days or weeks) is the equivalent of deep meditation in other traditions — the practitioner absorbs that sign's power through direct landscape contact. Partial walks produce partial absorption. Key nodes along each line, where grid-infrastructure still partially functions, produce concentrated bursts of that sign's energy.</p>
+
+<div style="display:grid;gap:6px;margin-bottom:12px">
+  <div class="sign-row" onclick="this.classList.toggle('expanded')">
+    <div class="sr-glyph" style="background:#2a1208;border-color:#e8854c44">♈</div>
+    <div><div class="sr-local">The Burn Line — First Ceque</div><div class="sr-domain">Follows the path of the original fire-grid collapse — scorched earth, volcanic glass formations, still-warm ground after four thousand years</div></div>
+    <div class="sr-access">Walking the Burn Line grants fire resistance and primal charge energy proportional to distance walked</div>
+    <div class="sr-body">The First Ceque runs northeast from Kylar's Keep through a landscape of ancient volcanic glass and cracked, still-warm earth. The grid's fire channels collapsed here so completely that the land itself was permanently altered — the soil conducts heat, plants grow with fire-adapted properties, and animals in the region have heat-resistant scales or pelts. <strong>Walking the full Burn Line (9 days) permanently grants the Mesha Feat to any practitioner</strong>, regardless of their zodiac sign. Partial walks grant proportional resistance to fire and the ability to read volcanic activity as Aries-energy expression. The Ceque-Keepers use this line to initiate new practitioners who need to understand primal initiative — they send them on the walk alone and read what state they return in.</div>
+  </div>
+  <div class="sign-row" onclick="this.classList.toggle('expanded')">
+    <div class="sr-glyph" style="background:#0a1228;border-color:#5aabe844">♎</div>
+    <div><div class="sr-local">The Balance Line — Seventh Ceque</div><div class="sr-domain">Follows the path of the law-grid — the infrastructure that regulated the flow of energy between all other lines</div></div>
+    <div class="sr-access">Walking the Balance Line reveals the structural relationships between all twelve lines — the only way to understand the grid as a whole system</div>
+    <div class="sr-body">The seventh Ceque is the most strategically important in the entire system — it was the grid's regulatory line, ensuring no single zodiac force dominated the others. Along its path are the most intact grid-nodes remaining on Elethorn, each one a junction point where the Libra-energy of the original system was strongest. <strong>Walking the full Balance Line reveals the complete grid map</strong> — including where the other eleven lines' most powerful nodes are, what condition each node is in, and crucially, where the grid could theoretically be repaired. The Ceque-Keepers walk this line once a generation to assess the grid's current state. They have been finding more active nodes each time — the grid is slowly reactivating as Aethar's pressure on the Maw increases. This is deeply alarming to their elders, who know what a fully active grid can do when improperly managed.</div>
+  </div>
+  <div class="sign-row" onclick="this.classList.toggle('expanded')">
+    <div class="sr-glyph" style="background:#180a28;border-color:#a87ee844">♏</div>
+    <div><div class="sr-local">The Scar Line — Eighth Ceque</div><div class="sr-domain">Follows the path of the catastrophic severance — the line that failed first when the Quad Bond was broken</div></div>
+    <div class="sr-access">Walking any section of the Scar Line reveals hidden truths about the location — specifically, what was concealed or destroyed here and why</div>
+    <div class="sr-body">The Scorpio Ceque was the grid's information line — where knowledge was stored and transmitted. When the Quad Bond broke and the grid collapsed, this line carried the collapse's full informational load and fragmented into thousands of disconnected nodes, each containing a fragment of what the Precursor civilization knew. <strong>The Scar Line is the most dangerous Ceque to walk</strong> — each node fragment contains partial information from the Night of Kallos that, in isolation, is traumatic and disorienting. Experienced practitioners can extract specific knowledge from nodes without absorbing the trauma. Inexperienced practitioners walk in looking for answers and come out speaking in fragments of dead languages. The Deep Anthos scriptoriums' Kallos-era records were partially reconstructed from Scar Line node fragments by a Ceque-Keeper who spent fifteen years in the process and emerged permanently changed.</div>
+  </div>
+</div>
+
+<p class="section-head">Key Locations — Elethorn</p>
+<div class="location-grid">
+  <div class="location expanded" onclick="this.classList.toggle('expanded')">
+    <div class="loc-head"><div><div class="loc-name">Kylar's Keep</div><div class="loc-sub">The Ceque-Keepers' capital — built on the ruins of Kallos's central node</div></div><span class="loc-type" style="color:#cc8844;border-color:#cc884444;background:#140e0a">Capital</span></div>
+    <div class="loc-body">Kylar's Keep is built directly atop what was once the Precursor civilization's central grid hub — the point from which all twelve zodiac energy channels radiated outward. The hub is not destroyed; it is dormant. The Keep was built over it deliberately by the civilization's founder, Kylar, who was the Beta member of the Four Architects' Triad of survivors and understood that the hub needed to be inhabited rather than sealed — <strong>a dormant system that is watched is safer than a dormant system that is forgotten.</strong><br><br>The Keep's architecture incorporates the original hub's geometry — twelve corridors radiating from a central chamber, each corridor aligned with its corresponding Ceque Line. The central chamber's floor contains a mosaic of the complete grid map, inlaid in materials that conduct Aetheric energy. The mosaic is accurate as of the Night of Kallos. Nodes that have since reactivated glow faintly. Nodes that have degraded further are dark. <strong>Three nodes that were dark on the original mosaic are now faintly glowing</strong> — nodes that should not be reactivating. The current Keeper of the Keep has not yet told anyone what this means.</div>
+  </div>
+  <div class="location" onclick="this.classList.toggle('expanded')">
+    <div class="loc-head"><div><div class="loc-name">The Tomb of the Architects</div><div class="loc-sub">Where the three Quad Bond survivors were interred — and where their bond resonance persists</div></div><span class="loc-type" style="color:#c9a84c;border-color:#c9a84c44;background:#1a1408">Major Location</span></div>
+    <div class="loc-body">The three surviving members of the Four Architects — the Alpha pair and the Omega, their Beta bond-mate having been the one killed — were interred together in a single tomb built at the intersection of the Balance Line and the Scar Line. Their remains still carry residual Quad Bond resonance after four thousand years. <strong>A Stellar Cartographer within the tomb can hear fragments of the conversation the three had the night the grid collapsed</strong> — the bond's memory preserved in the resonance field. The fragments are not complete enough to reconstruct what happened. They are complete enough to confirm that the Architects knew the Bond had been severed and not by accident. The name of the person who severed it — who killed the fourth Architect — is in the fragments. It has never been recovered. The Ceque-Keepers consider the recovery of this name a sacred obligation that has not yet been fulfilled in four thousand years.</div>
+  </div>
+  <div class="location" onclick="this.classList.toggle('expanded')">
+    <div class="loc-head"><div><div class="loc-name">The Reactivating Node — Grid-Point Seven</div><div class="loc-sub">The first node to show unexplained reactivation — on the Libra Balance Line, in a location that should have no power source</div></div><span class="loc-type" style="color:#cc4444;border-color:#cc444444;background:#1e0a0a">Dungeon</span></div>
+    <div class="loc-body">Grid-Point Seven is a Libra-line node located approximately four days walk northeast of Kylar's Keep — a dormant hub that managed the energy distribution between the fire lines and the water lines of the original grid. It should have no power. It has been without power for four thousand years. <strong>Six months ago it began glowing.</strong><br><br>The Ceque-Keepers sent an assessment team of three. Two returned. The one who did not return was the team's Kore-kore practitioner — they had darkness-zodiac training from time spent with the Te Kapo. The two who returned report that the node is drawing power from somewhere beneath Elethorn — a source that does not correspond to any of the twelve Ceque Lines. It is drawing power from the thirteenth. The Hollow Serpent's pressure on the Maw is now strong enough that it is beginning to push Ophiuchus energy up through Elethorn's geology — and the old grid is a perfect channel for it. If the grid fully reactivates on Ophiuchus energy instead of the twelve-fold zodiac energy it was designed for, the Night of Kallos will look like a preview.</div>
+  </div>
+</div>
+
+<p class="section-head">Key NPCs</p>
+<div class="npc-block">
+  <div class="npc-name">Inti-kora — The Keeper of Kylar's Keep</div>
+  <div class="npc-role">Current steward of the central grid hub · Beta-Omega hybrid · Fate Number: 55 — the Quint Bond cluster's most likely anchor point</div>
+  <div class="trait-row"><span class="trait">Has watched the grid for forty years</span><span class="trait">Has never seen nodes reactivate unprompted</span><span class="trait">Knows what Grid-Point Seven means</span><span class="trait">Is deciding whether to tell anyone</span><span class="trait">Fate Number: 55</span></div>
+  <div class="npc-text">Inti-kora is the forty-third Keeper of Kylar's Keep — a position that has been held by a direct descendant of the original Beta Architect since the Keep was established. The bloodline carries a faint residual Quad Bond resonance that manifests as unusually accurate grid-reading: Inti-kora can read the mosaic floor's current state without touching it, perceiving which nodes are active, which are degrading, and — most critically — which are drawing from an unexpected source.<br><br>His Fate Number of 55 places him at the center of the theoretical Quint Bond cluster. Serath of the Closed Circle has identified him by name. The Fang of the Whisper has a standing order to prevent him from leaving Elethorn. <strong>He does not know he is being contained</strong> — he has simply found that every messenger he sends off-continent fails to arrive, and every visitor to Elethorn in the last two years has been someone with no obvious connection to any institution he knows. He has begun to suspect the isolation is deliberate. He has not yet determined by whom.</npc-text>
+  </div>
+</div>
+
+<div class="gold-block">
+  <div class="gb-title">The Precursor Grid as Terrestrial Zodiac — The Critical Insight</div>
+  <div class="gb-text">The Ceque-Keepers' most important contribution to the World Bible: <strong>the global magical grid of Kallos was always a terrestrial zodiac system.</strong> The Precursors were not doing technology — they were doing what the Ceque-Keepers still do, at global scale: mapping zodiac forces onto the land and walking them. The difference was that the Precursors tried to manage all twelve forces simultaneously through a single unified system — the same error as the Order of Pure Reason, the same error as every mono-cultural tradition, but at civilization scale.<br><br>The Eldren Siddha mantras are degraded equations. The equations were the Ceque-Keeper walking instructions — the precise path, timing, and posture required to walk a Ceque Line correctly. The spiritual practice the Siddha inherited is the procedural knowledge for operating a terrestrial zodiac grid stripped of the grid itself. <strong>If the Siddha and the Ceque-Keepers were brought together, they would recognize each other's practices as two halves of the same lost system.</strong> A Siddha master reading the Ceque-Keeper walking instructions would experience them as the most powerful mantra she had ever heard. A Ceque-Keeper walking a path guided by Siddha mantras would experience it as walking a Ceque Line on ground that had forgotten it was sacred.</div>
+</div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- WORLD INTEGRATION -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-integration">
+
+<p class="detail-text">The three new cultures are not isolated additions — they each provide critical missing pieces to the world's most urgent problems.</p>
+
+<div class="integration-box">
+  <div class="ib-title">The Te Kapo and the Moana-kin — The Ocean Intelligence Network</div>
+  <div class="ib-text">Regent Hydroos (♒, Kelp-Weaver Council) has maintained quiet contact with the Te Kapo through the Singing Passage for sixty years. The Te Kapo's Kore-kore readings of the Serpent Coil Current, combined with Hinerangi the Waka-tōhora's navigational records of the Mirror Sea's expansion and the deep swell changes she reads as the Leviathan's increasing dream-activity, produce a picture of the Maw's failing seals that <strong>is more detailed and accurate than anything Argent Spire possesses.</strong> Neither the Moana-kin nor the Te Kapo know the other exists — they are separated by the Mirror Sea, which neither can cross. Heroes who connect these two cultures and bring their combined intelligence to Arch-Oracle Lyra will give her the specific timeline data her Resonant Binding counter-plan requires.</div>
+</div>
+
+<div class="integration-box">
+  <div class="ib-title">The Ceque-Keepers and the Siddha — The Lost System</div>
+  <div class="ib-text">The reunion of the Ceque-Keeper walking tradition with the Siddha mantra tradition would reconstitute the Precursor zodiac system in its correct form — not as a global grid managed by one institution, but as a distributed practice where each tradition contributes its specific facet. A Ceque-Keeper walking the Burn Line while reciting the Mesha mantra would produce fire-sign energy of a purity and depth neither tradition can achieve alone. <strong>This reunion is also the only way to safely deactivate the reactivating nodes on Elethorn</strong> — the grid needs the correct activation sequence (mantras) to be properly shut down, not just physically disabled. Disabling nodes without the mantras produces localized grid collapse events. The Siddha have the mantras and don't know what they're for. The Ceque-Keepers know what they're for and don't have the mantras.</div>
+</div>
+
+<div class="integration-box">
+  <div class="ib-title">The Quint Bond and All Three New Cultures</div>
+  <div class="ib-text">Three of the five theoretical Quint Bond members are now placed in the new cultures:<br><br>
+  <strong>Hinerangi of the Long Horizon (Moana-kin) — Fate Number 58</strong><br>
+  <strong>Matuā-kore of the Te Kapo — Fate Number 66 (Void-Touched, amplifying the bond to Quad-level power)</strong><br>
+  <strong>Inti-kora of the Ceque-Keepers — Fate Number 55</strong><br><br>
+  The remaining two Quint Bond members (Numbers approximately 56 and 57) are unplaced — one is almost certainly in the party or will be encountered through party action. The fifth may be in an existing culture that hasn't been examined for bond potential: Regent Ichthyes (Number 99, Void-Touched — wrong range but worth noting), or a character in the Ashélands, the Tuathan Archipelago, or the Viridian Principalities.<br><br>
+  Matuā-kore's Void-Touched Number (66) means that if all five gather, the bond functions at Quad-Bond power minimum — possibly higher given the dark-zodiac amplification effect. <strong>Serath of the Closed Circle has identified all three new-culture members by Number but not by name or location.</strong> He has the approximate ranges. He has not reported this. The window in which Aethar doesn't know the Quint Bond is forming is closing.</div>
+</div>
+
+<div class="integration-box">
+  <div class="ib-title">The Grid Reactivation — The Hidden Stage Four</div>
+  <div class="ib-text">Aethar's stage four (break the Maw's seals) has a mechanism that none of the surface cultures understand yet. The Ceque-Keepers are the only culture positioned to see it: <strong>the global grid is reactivating on Ophiuchus energy from below.</strong> When the grid fully activates on the Hollow Serpent's frequency rather than the twelve-sign zodiac frequency it was designed for, it will not simply power up — it will broadcast entropic energy through every Ceque Line simultaneously, converting the entire planetary surface's zodiac-energy infrastructure into a dissolution engine. This is the Night of Kallos in reverse: instead of the grid collapsing and releasing energy catastrophically, the grid activating releases energy catastrophically.<br><br>The heroes need to know about Grid-Point Seven's reactivation. Inti-kora needs to tell them. The Fang of the Whisper needs to not prevent the message from arriving. And the Siddha mantras need to reach Elethorn before the grid reaches critical activation threshold. Arch-Oracle Lyra's Resonant Binding counter-plan was designed to seal the Maw. <strong>It also needs to include a grid deactivation component she doesn't know the grid needs</strong> — because no one has told her about Elethorn's reactivating nodes yet.</div>
+</div>
+
+<p class="section-head">New World Map Additions</p>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+  <div class="info-block"><div class="info-label">Te Moana-nui Archipelago</div><div class="info-text">Deep ocean island chain between Terra Firma, Arcadia Major, Ashélands, and K'uh-la'an. Previously unnamed on the world map. Capital: <strong>Hōkūle'a Atoll</strong>. The Mirror Sea (expanding void zone) sits in its southern waters.</div></div>
+  <div class="info-block"><div class="info-label">The Obsidian Deep</div><div class="info-text">Submarine cave network beneath a mid-ocean volcanic ridge. Accessible from ocean floor. Between the Abyssal Sea and Te Moana-nui. No surface presence. Capital: <strong>Te Ao-kore</strong> (underground). Connected to surface via Singing Passage.</div></div>
+  <div class="info-block"><div class="info-label">Elethorn (expanded)</div><div class="info-text">The Lost Continent of Kallos ruins — now fully developed with the Ceque-Keeper civilization, Kylar's Keep as capital, twelve Ceque Lines mapped across the landscape, and the reactivating Grid-Point Seven as the campaign's most urgent undiscovered threat.</div></div>
+</div>
+
+</div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).style.display='block';
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+document.querySelectorAll('.panel').forEach(p=>{p.style.display='none'});
+document.getElementById('panel-polynesian').style.display='block';
+</script>
+</body>
+</html>

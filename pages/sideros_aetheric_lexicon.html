@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — The Aetheric Lexicon</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Cinzel+Decorative:wght@400&family=Cinzel:wght@400;500&display=swap');
+
+:root {
+  --gold: #c9a84c;
+  --gold-dim: #7a6028;
+  --gold-bright: #e8c870;
+  --parchment: #f2e8cf;
+  --parchment-mid: #ddd0aa;
+  --ink: #1c1508;
+  --void: #0c0a12;
+  --void-mid: #16121f;
+  --void-light: #221d30;
+  --alpha: #d4724a;
+  --beta: #4a8ec4;
+  --omega: #9066c8;
+  --red: #c04040;
+  --green: #4a8a56;
+  --border: rgba(201,168,76,0.2);
+  --border-mid: rgba(201,168,76,0.4);
+  --border-bright: rgba(201,168,76,0.7);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  background: var(--void);
+  color: var(--parchment);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+.header {
+  padding: 3.5rem 1.5rem 2.5rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.07) 0%, transparent 65%);
+  position: relative;
+}
+.header::after {
+  content: '✦ ✦ ✦';
+  display: block;
+  color: var(--gold-dim);
+  font-size: 11px;
+  letter-spacing: .5em;
+  margin-top: 1.5rem;
+}
+.header-eyebrow {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 1rem;
+}
+.header-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(20px, 4vw, 32px);
+  color: var(--gold);
+  margin-bottom: .75rem;
+  line-height: 1.3;
+}
+.header-sub {
+  font-size: 16px;
+  font-style: italic;
+  color: rgba(242,232,207,0.6);
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* ── NAV ── */
+.nav-strip {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--void-mid);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.nav-btn {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 5px 11px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: transparent;
+  color: rgba(242,232,207,0.5);
+  cursor: pointer;
+  transition: all .15s;
+}
+.nav-btn:hover, .nav-btn.active {
+  background: rgba(201,168,76,0.08);
+  color: var(--gold);
+  border-color: var(--border-mid);
+}
+
+/* ── SHELL ── */
+.shell {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 0 1.25rem 4rem;
+}
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* ── SECTION HEADINGS ── */
+.section-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 0 1rem;
+}
+.sb-line { flex: 1; height: 1px; background: var(--border); }
+.sb-text {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  white-space: nowrap;
+}
+
+/* ── CONVERSION ROWS ── */
+.conversion-grid { display: grid; gap: 6px; margin-bottom: 1.5rem; }
+
+.crow {
+  display: grid;
+  grid-template-columns: 1fr 30px 1fr;
+  gap: 0;
+  align-items: stretch;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color .15s;
+  cursor: pointer;
+}
+.crow:hover, .crow.open { border-color: var(--border-mid); }
+
+.crow-old {
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.02);
+  border-right: 1px solid var(--border);
+}
+.crow-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(201,168,76,0.04);
+  color: var(--gold-dim);
+  font-size: 14px;
+  border-right: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.crow-new {
+  padding: 10px 14px;
+  background: rgba(201,168,76,0.04);
+}
+
+.crow-label {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+.crow-old .crow-label { color: rgba(242,232,207,0.3); }
+.crow-new .crow-label { color: var(--gold-dim); }
+
+.crow-term {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.crow-old .crow-term { color: rgba(242,232,207,0.5); text-decoration: line-through; text-decoration-color: rgba(242,232,207,0.2); }
+.crow-new .crow-term { color: var(--gold-bright); }
+
+.crow-body {
+  display: none;
+  grid-column: 1 / -1;
+  padding: 10px 14px 12px;
+  border-top: 1px solid var(--border);
+  background: rgba(201,168,76,0.03);
+}
+.crow.open .crow-body { display: block; }
+.crow-etymology {
+  font-size: 13px;
+  font-style: italic;
+  color: var(--gold-dim);
+  margin-bottom: 5px;
+}
+.crow-rationale {
+  font-size: 13px;
+  color: rgba(242,232,207,0.7);
+  line-height: 1.65;
+}
+.crow-rationale strong { color: var(--parchment); font-weight: 500; font-style: normal; }
+.crow-example {
+  margin-top: 7px;
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.03);
+  border-left: 2px solid var(--border-mid);
+  font-size: 12px;
+  color: rgba(242,232,207,0.6);
+  line-height: 1.6;
+}
+.crow-example em { color: var(--gold); font-style: normal; }
+
+/* ── RESOLUTION FRAMEWORK ── */
+.res-block {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 10px;
+}
+.res-title {
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  letter-spacing: .05em;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.res-text {
+  font-size: 14px;
+  color: rgba(242,232,207,0.75);
+  line-height: 1.75;
+}
+.res-text strong { color: var(--parchment); font-weight: 500; }
+.res-text em { color: var(--gold-dim); }
+
+.formula-block {
+  background: rgba(201,168,76,0.06);
+  border: 1px solid var(--border-mid);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin: 10px 0;
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  color: var(--gold-bright);
+  letter-spacing: .05em;
+  line-height: 1.8;
+}
+
+.three-track {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin: 12px 0;
+}
+.track-card {
+  border-radius: 8px;
+  padding: 13px 14px;
+  border: 1px solid;
+}
+.tc-label {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.tc-name {
+  font-size: 17px;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+.tc-desc {
+  font-size: 12px;
+  line-height: 1.6;
+  opacity: .75;
+}
+.tc-loss {
+  margin-top: 7px;
+  padding-top: 7px;
+  border-top: 1px solid;
+  font-size: 11px;
+  opacity: .6;
+  font-style: italic;
+}
+
+/* ── QUICK REFERENCE ── */
+.qref-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-bottom: 1.5rem;
+}
+.qref-table th {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-mid);
+}
+.qref-table td {
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.5;
+}
+.qref-table td:first-child {
+  color: rgba(242,232,207,0.4);
+  font-style: italic;
+  text-decoration: line-through;
+  text-decoration-color: rgba(242,232,207,0.15);
+  white-space: nowrap;
+}
+.qref-table td:nth-child(2) {
+  color: var(--gold-bright);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.qref-table td:nth-child(3) {
+  color: rgba(242,232,207,0.55);
+  font-size: 12px;
+}
+.qref-table tr:last-child td { border-bottom: none; }
+.qref-table tr:hover td { background: rgba(255,255,255,0.015); }
+
+/* ── SAMPLE TEXT ── */
+.sample-block {
+  border-radius: 10px;
+  padding: 20px 22px;
+  margin-bottom: 14px;
+  border: 1px solid;
+}
+.sample-label {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.sample-text {
+  font-size: 14px;
+  line-height: 1.85;
+}
+.sample-text del { opacity: .35; }
+.sample-text em { font-style: normal; font-weight: 500; }
+
+/* ── PHILOSOPHY BLOCK ── */
+.philosophy {
+  background: rgba(201,168,76,0.04);
+  border: 1px solid var(--border-mid);
+  border-radius: 10px;
+  padding: 20px 22px;
+  margin: 1.5rem 0;
+}
+.phil-title {
+  font-family: 'Cinzel', serif;
+  font-size: 14px;
+  color: var(--gold);
+  margin-bottom: 10px;
+  letter-spacing: .03em;
+}
+.phil-text {
+  font-size: 14px;
+  color: rgba(242,232,207,0.75);
+  line-height: 1.8;
+}
+.phil-text strong { color: var(--parchment); font-weight: 500; }
+
+.divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--border-mid), transparent);
+  margin: 1.75rem 0;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-eyebrow">Sideros / Astrolan — Original Game Terminology</div>
+  <h1 class="header-title">The Aetheric Lexicon</h1>
+  <p class="header-sub">Every mechanical term replaced with language native to the world. The rules and the fiction are now the same thing.</p>
+</div>
+
+<div class="nav-strip">
+  <button class="nav-btn active" onclick="show('philosophy',this)">Design Philosophy</button>
+  <button class="nav-btn" onclick="show('core',this)">Core Resolution</button>
+  <button class="nav-btn" onclick="show('character',this)">Character Terms</button>
+  <button class="nav-btn" onclick="show('action',this)">Action & Combat</button>
+  <button class="nav-btn" onclick="show('magic',this)">Magic Terms</button>
+  <button class="nav-btn" onclick="show('conditions',this)">Conditions</button>
+  <button class="nav-btn" onclick="show('simplified',this)">Simplified Mode</button>
+  <button class="nav-btn" onclick="show('quickref',this)">Quick Reference</button>
+  <button class="nav-btn" onclick="show('samples',this)">Sample Text</button>
+</div>
+
+<div class="shell">
+
+<!-- ══════════════════════════════════════ -->
+<!-- DESIGN PHILOSOPHY -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel active" id="panel-philosophy">
+  <div class="section-banner"><div class="sb-line"></div><div class="sb-text">The Governing Principle</div><div class="sb-line"></div></div>
+
+  <div class="philosophy">
+    <div class="phil-title">Every term should teach the world</div>
+    <div class="phil-text">
+      In Sideros, magic is not an abstract resource — it is Aetheric resonance with cosmic forces. A character does not "roll an Active Resonance" — they <strong>test their Resonance</strong> against the difficulty of aligning with or overcoming a cosmic force. When that test succeeds narrowly, the Loom held the thread. When it fails, the thread slipped.<br><br>
+      This is not cosmetic renaming. The terminology determines how players think about what they're doing. A player who rolls a "Warding Resonance" is passively reacting. A player who makes a <strong>Warding Resonance</strong> is actively aligning their soul-frequency against a threatening force. Same mechanic. Completely different relationship to the fiction.<br><br>
+      The principle throughout: <strong>terms derived from Sideros lore take precedence over neutral descriptors.</strong> Where a D&D term is purely functional ("Instinct"), the Sideros replacement reflects what that action actually is in-world ("swift strike," "reflex," "instinct"). Where a D&D term carries embedded assumptions ("Aetheric Channel" implies a container), the replacement carries Sideros assumptions ("Aetheric channel" implies flow and resonance).
+    </div>
+  </div>
+
+  <div class="philosophy" style="background:rgba(168,126,232,0.04);border-color:rgba(168,126,232,0.3)">
+    <div class="phil-title" style="color:var(--omega)">The Three-Layer System</div>
+    <div class="phil-text">
+      Sideros runs in three mechanical modes, all using the same terminology:<br><br>
+      <strong>Full Resonance Mode</strong> — the complete system for dedicated TTRPG campaigns. All terms below apply. Six Resonance Attributes, full Aetheric Channel system, three Character Tracks, complete Condition suite.<br><br>
+      <strong>Condensed Resonance Mode</strong> — for one-shots, new players, or faster play. Three Character Tracks (Body, Mind, Soul) replace the full HP/resource economy. Simplified Resonance Tests with fixed difficulties.<br><br>
+      <strong>Loom Narrative Mode</strong> — pure fiction-forward play. Resonance Tests only for pivotal moments. No tracking. The Concordance (GM) drives pacing entirely by the world's logic.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- CORE RESOLUTION -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-core">
+  <div class="section-banner"><div class="sb-line"></div><div class="sb-text">How the Game Resolves Anything</div><div class="sb-line"></div></div>
+
+  <div class="res-block">
+    <div class="res-title">The Resonance Test — replacing "Active Resonance" and "Warding Resonance"</div>
+    <div class="res-text">
+      Every test in Sideros is a <strong>Resonance Test</strong> — the character aligns their soul-frequency with a cosmic force and discovers whether the alignment holds. The d20 represents the Loom's thread: how well fate is cooperating in this moment.<br><br>
+      There are two kinds of Resonance Test:<br><br>
+      <strong>Active Resonance</strong> — the character initiates. They are attempting to align with a cosmic force to achieve something. Replaces Active Resonance.<br><br>
+      <strong>Warding Resonance</strong> — the character responds. A force moves against them and they must align against it. Replaces Warding Resonance. The difference matters in fiction: a Warding Resonance is not passive failure — it is the active assertion of one's soul-frequency against something that would displace it.
+    </div>
+    <div class="formula-block">
+      RESONANCE TEST = d20 + Attribute Resonance + Mastery Bonus<br>
+      vs. RESONANCE THRESHOLD set by the Concordance<br><br>
+      WARDING RESONANCE = d20 + Warding Attribute + Mastery Bonus<br>
+      vs. WARDING THRESHOLD set by the source of the threat
+    </div>
+    <div class="res-text">
+      <strong>Resonant Fortune</strong> (replaces Resonant Fortune) — the character rolls two d20s and takes the higher. Occurs when cosmic forces align behind the character's intent — a Fated Bond member nearby, a Zodiac Feat active, the right cultural tradition being applied.<br><br>
+      <strong>Resonant Discord</strong> (replaces Resonant Discord) — the character rolls two d20s and takes the lower. Occurs when cosmic forces work against the character — wrong zodiac season, Void-Touched Exposure accumulated, acting against the Loom's evident intent.
+    </div>
+  </div>
+
+  <div class="res-block">
+    <div class="res-title">The Six Resonance Attributes — replacing Ability Scores</div>
+    <div class="res-text">Every character has six Resonance Attributes, each measuring a different dimension of how their soul aligns with cosmic forces. Each has a modifier (called <strong>Resonance Modifier</strong>) equal to (score − 10) ÷ 2, rounded down — identical math, original framing.</div>
+    <div class="three-track" style="grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
+      <div class="track-card" style="border-color:rgba(212,114,74,0.4);background:rgba(212,114,74,0.05)">
+        <div class="tc-label" style="color:var(--alpha)">Replaces Strength</div>
+        <div class="tc-name" style="color:var(--alpha)">Forcefulness</div>
+        <div class="tc-desc" style="color:var(--parchment)">Raw physical power and Alpha-aspected momentum. The force with which you move through the world. Used for lifting, breaking, striking with power, grappling, overcoming physical resistance. The Primal Jarl's primary Attribute.</div>
+      </div>
+      <div class="track-card" style="border-color:rgba(74,142,196,0.4);background:rgba(74,142,196,0.05)">
+        <div class="tc-label" style="color:var(--beta)">Replaces Dexterity</div>
+        <div class="tc-name" style="color:var(--beta)">Swiftness</div>
+        <div class="tc-desc" style="color:var(--parchment)">Speed, precision, and the Beta-aspected grace of function. How fluidly you move through space and execute complex physical sequences. Used for ranged attacks, stealth, sleight of hand, avoiding danger.</div>
+      </div>
+      <div class="track-card" style="border-color:rgba(201,168,76,0.4);background:rgba(201,168,76,0.05)">
+        <div class="tc-label" style="color:var(--gold)">Replaces Constitution</div>
+        <div class="tc-name" style="color:var(--gold)">Endurance</div>
+        <div class="tc-desc" style="color:var(--parchment)">Physical resilience and the body's capacity to sustain cosmic force. How much the mortal form can bear before it breaks. Determines Vitality pool size. The Khalkotauros's gift to those born under Taurus.</div>
+      </div>
+      <div class="track-card" style="border-color:rgba(74,138,86,0.4);background:rgba(74,138,86,0.05)">
+        <div class="tc-label" style="color:var(--green)">Replaces Intelligence</div>
+        <div class="tc-name" style="color:var(--green)">Acuity</div>
+        <div class="tc-desc" style="color:var(--parchment)">The analytical mind's capacity to read patterns and apply knowledge. How precisely you perceive and reason. Used for arcane tests, history, nature, investigation. The Comet-Mage's primary Attribute.</div>
+      </div>
+      <div class="track-card" style="border-color:rgba(168,126,232,0.4);background:rgba(168,126,232,0.05)">
+        <div class="tc-label" style="color:var(--omega)">Replaces Wisdom</div>
+        <div class="tc-name" style="color:var(--omega)">Attunement</div>
+        <div class="tc-desc" style="color:var(--parchment)">Omega-aspected cosmic perception — the soul's sensitivity to the Aether and to other people. How clearly you feel what is true beneath what appears. Used for healing, insight, perception, warding resonances vs. mental forces. The Rāśi-Siddha's primary Attribute.</div>
+      </div>
+      <div class="track-card" style="border-color:rgba(212,114,74,0.4);background:rgba(212,114,74,0.05)">
+        <div class="tc-label" style="color:var(--alpha)">Replaces Charisma</div>
+        <div class="tc-name" style="color:var(--alpha)">Resonance</div>
+        <div class="tc-desc" style="color:var(--parchment)">The soul's magnetic frequency — how powerfully your presence affects others. The Alpha-aspected force of personality. Used for persuasion, performance, deception, intimidation, and all Fated Bond Active Resonances. The Stellar Cartographer's primary Attribute.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="res-block">
+    <div class="res-title">Mastery Bonus — replacing Mastery Bonus</div>
+    <div class="res-text">
+      The <strong>Mastery Bonus</strong> reflects how deeply a character has attuned to their path — not their raw experience, but the depth of their cosmic alignment. It increases at the same progression as D&D Mastery Bonus (starts at +2, increases at levels 5, 9, 13, 17).<br><br>
+      Skills, weapons, and abilities are described as <strong>Mastered</strong> (full Mastery Bonus), <strong>Half-Mastered</strong> (half Mastery Bonus), or <strong>Unmastered</strong> (no bonus). Replaces Mastery, Half-Mastery, and no Mastery.
+    </div>
+  </div>
+
+  <div class="res-block">
+    <div class="res-title">Resonance Thresholds — replacing Difficulty Classes (DC)</div>
+    <div class="res-text">
+      The <strong>Resonance Threshold</strong> is the cosmic resistance a character must overcome. It is set by the Concordance based on how aligned or opposed the task is to the character's Aetheric nature.<br><br>
+      Standard thresholds: <strong>Simple (8) · Moderate (12) · Demanding (16) · Formidable (20) · Legendary (25) · Void-Touched (30)</strong>. The names reflect what the task demands of the soul, not just the difficulty.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- CHARACTER TERMS -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-character">
+  <div class="section-banner"><div class="sb-line"></div><div class="sb-text">What a Character Is and Has</div><div class="sb-line"></div></div>
+
+  <div class="conversion-grid">
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Vitalitys</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Vitality</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">From Latin vita — life. The body's finite reservoir of physical integrity.</div>
+        <div class="crow-rationale">Vitality is not abstract "health" — it is the literal vitality that flows through a mortal form. When it depletes, the body is failing, not "taking damage." Recovering Vitality is not healing damage — it is <strong>restoring the flow of life-force</strong> to damaged tissue. Maximum Vitality = (Endurance modifier × character level) + Endurance score. Identical math to D&D Vitality calculation.</div>
+        <div class="crow-example">Old: <del>"You take 8 Vitalitys of damage."</del><br>New: <em>"Your Vitality drops by 8 — the blow found something real."</em></div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Temporary Vitalitys</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Aetheric Buffer</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">A shell of Aetheric energy that absorbs damage before it reaches Vitality — not life itself, but a resonant shield borrowed from the cosmic field.</div>
+        <div class="crow-rationale">Aetheric Buffers don't stack. The highest applies. They don't restore Vitality — they simply delay its loss. When the Buffer is gone, all subsequent damage strikes Vitality directly. <strong>Bond abilities, zodiac feats, and Tapas expenditures can generate Aetheric Buffers.</strong> The Nemean Lion's feat generates a Buffer for all nearby allies when a creature is reduced to 0 Vitality.</div>
+        <div class="crow-example">Old: <del>"You gain 8 temporary Vitalitys."</del><br>New: <em>"An Aetheric Buffer of 8 surrounds you — it won't last, but it will hold for now."</em></div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Guard Rating</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Guard Rating</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">The threshold an attacker must overcome to land a meaningful strike. A combination of physical armor, Aetheric deflection, and trained reflexes.</div>
+        <div class="crow-rationale">Guard Rating reflects the total difficulty of landing a meaningful blow — not just armor, but positioning, awareness, and cosmic attunement. An Omega Rāśi-Siddha without armor has a high Guard Rating because their Attunement allows them to shift out of harm's way before it arrives. <strong>Guard Rating = 10 + armor value + Swiftness modifier (light armor), Endurance modifier (heavy armor), or Attunement modifier (unarmored Siddha).</strong></div>
+        <div class="crow-example">Old: <del>"What's your AC?"</del><br>New: <em>"What's your Guard Rating?"</em></div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Level</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Resonance Depth</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">How deeply the character has attuned to their cosmic path. Not experience accumulated but resonance achieved.</div>
+        <div class="crow-rationale">Resonance Depth 1 is a novice whose soul-frequency has barely begun to align. Resonance Depth 20 is a mortal who has achieved near-Avatar-tier cosmic attunement. <strong>Epic Tier begins at Resonance Depth 21</strong> — the point where the character's alignment becomes recognizable to the Legendary Beasts and the Loom itself. "Gaining a level" is "deepening your Resonance."</div>
+        <div class="crow-example">Old: <del>"I just hit Level 5."</del><br>New: <em>"My Resonance Depth reached 5 — the Bond abilities are changing."</em></div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Class</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Path</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">The cosmic road a character walks — not a profession, but a fundamental orientation of the soul toward a type of cosmic force.</div>
+        <div class="crow-rationale">A character doesn't "choose a class" — they find, or are found by, their Path. The Rāśi-Siddha Path finds those whose souls resonate with internal discipline. The Comet-Mage Path finds those whose minds naturally systematize cosmic knowledge. The Path is not a job. It is recognition. "Path features" replaces "class features." "Path ability" replaces "class ability."</div>
+        <div class="crow-example">Old: <del>"What class are you?"</del><br>New: <em>"Which Path have you been called to?"</em></div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Subclass</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Calling</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">The specific expression of a Path — the more particular cosmic force the character has been called to serve within their broader alignment.</div>
+        <div class="crow-rationale">A Comet-Mage has a Calling to one of the Three Conclaves. A Rāśi-Siddha has a Calling to one of the twelve Scattered Temples. A Primal Jarl has a Calling to a specific ancestral tradition (Pine Shadow, Deep Earth, Norse Hearth, etc.). The Calling is the narrowing of the Path into a specific relationship with the Aether.</div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Feat</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Attunement</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">A permanent deepening of the character's cosmic alignment — not a skill learned, but a resonance recognized and integrated.</div>
+        <div class="crow-rationale">The twelve Zodiac Attunements are the primary Attunements in Sideros. Cultural Variant Attunements are advanced versions. Other Attunements exist for weapon mastery, bond deepening, and Path-specific cosmic alignment. The word "feat" implies achievement through effort. "Attunement" implies the character has become able to receive something the cosmos was already offering.</div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Skill</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Discipline</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">A specific area of trained Aetheric alignment — the narrowing of an Attribute into a particular domain of application.</div>
+        <div class="crow-rationale">Disciplines are grouped under their governing Attribute. Forcefulness governs: Athletics, Intimidation. Swiftness governs: Acrobatics, Stealth, Sleight of Hand. Attunement governs: Perception, Insight, Medicine, Animal Handling, Survival. Acuity governs: History, Arcana (now: Aetheric Lore), Investigation, Nature. Resonance governs: Persuasion, Deception, Performance. Endurance has no Disciplines — it is expressed through Vitality and Warding Resonances.</div>
+        <div class="crow-example">Old: <del>"I'm Proficient in Arcana and Perception."</del><br>New: <em>"I've Mastered Aetheric Lore and Perception."</em></div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Background</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Origin</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">The thread of the character's life before the Path found them — where they came from, what shaped them, and what the Loom was doing with them before they knew to look.</div>
+        <div class="crow-rationale">The five Origin categories from the Player's Guide become: Celestial/Academic → Scholarly Origin; Silk Road/Trade → Merchant Origin; Urban/Intrigue → Shadow Origin; Wilderness/Frontier → Wanderer Origin; Branded/Haunted → Marked Origin. Each Origin grants two Mastered Disciplines, one tool or language, and a starting Origin Ability.</div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Race / Species</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Kindred</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">The cosmic lineage a character was born into — the specific Aetheric frequency their people carry through blood, culture, and ancestral resonance.</div>
+        <div class="crow-rationale">"Race" carries real-world baggage. "Species" is clinical. "Kindred" captures that these are not biological classifications but cosmic lineages — the Eldren Kindred carry Kallos-era resonance, the Dunmarim Kindred carry the deep-earth frequency, the Wolf-Shifter Kindred carry the Omote-Ura dual nature. The Celestial Synergy system becomes the <strong>Kindred-Zodiac Resonance</strong> table — specific combinations of Kindred and zodiac sign that produce unique Attunements unavailable through any other combination.</div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Mastery (in weapons/tools)</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Mastery</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">The depth of alignment between the character and a specific instrument of cosmic force. A weapon Mastered by a character resonates with their Aetheric frequency — it becomes an extension of their will.</div>
+        <div class="crow-rationale">Characters have Mastery in weapon categories (bladed, blunt, ranged, etc.), tools, vehicles, and instruments. Full Mastery adds Mastery Bonus to attack and damage. Half-Mastery adds half. Unmastered weapons are used with Resonant Discord on attack rolls.</div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Passive Perception</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Ambient Attunement</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">The constant low-level cosmic awareness a character maintains without effort — the background hum of their soul reading the Aether.</div>
+        <div class="crow-rationale">Ambient Attunement = 10 + Attunement modifier + Mastery Bonus (if Perception is Mastered). It represents what a character notices without trying — not a test, but a threshold the world must meet to sneak something past them. An Omega character with high Attunement has a naturally high Ambient Attunement — they are simply more sensitive to the cosmic field.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- ACTION & COMBAT -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-action">
+  <div class="section-banner"><div class="sb-line"></div><div class="sb-text">What a Character Does in a Moment</div><div class="sb-line"></div></div>
+
+  <div class="conversion-grid">
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Action</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Act</div></div>
+      <div class="crow-body">
+        <div class="crow-rationale">Kept simple and direct. "Your Act" is the primary thing you do in a Moment. It frames agency without jargon. "Take an action" becomes "use your Act." "Action economy" becomes "Act economy." Clean enough that it requires no explanation to a new player.</div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Instinct</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Instinct</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">Something done without deliberation — the body or the Aether moving before the mind decides.</div>
+        <div class="crow-rationale">"Instinct" implies something extra. "Instinct" implies something that happens because the character is attuned enough to do two things simultaneously. Wolf-Shifters shifting form is an Instinct — not a bonus, but a reflex of their nature. A Rāśi-Siddha spending Tapas on a quick purification uses their Instinct. This reframes the resource as cosmic attunement rather than an action budget surplus.</div>
+        <div class="crow-example">Old: <del>"I use my Instinct to..."</del><br>New: <em>"As an Instinct, I..."</em></div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Reaction</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Reflex</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">The soul responding to an external event before conscious decision intervenes.</div>
+        <div class="crow-rationale">A Reflex is the Aether moving through the character in response to a trigger. The Cancer Zodiac Attunement's protective ability is a Reflex. Opportunity attacks become <strong>Reflex Strikes</strong>. Shield spells and similar abilities become <strong>Warding Reflexes</strong>. One Reflex per round, refreshed at the start of each Moment.</div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Turn / Round</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Moment / Pulse</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">A Moment is one character's slice of a Pulse — the full cycle of action and response that constitutes one beat of combat.</div>
+        <div class="crow-rationale">A <strong>Pulse</strong> is one full round of combat — every character acts once. A character's <strong>Moment</strong> is their portion of the Pulse. Initiative order becomes <strong>Pulse Order</strong>. "At the start of your turn" becomes "at the start of your Moment." "End of turn" becomes "end of your Moment." The Pulse/Moment distinction mirrors the Bond system — a Pulse is the world breathing; a Moment is one soul's contribution to that breath.</div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Initiative</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Pulse Order</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">The sequence in which the Loom's threads pull each participant through the Pulse — determined by cosmic attunement, not just reflexes.</div>
+        <div class="crow-rationale">Pulse Order = d20 + Swiftness modifier. Ties broken by Attunement modifier (the more cosmically attuned character senses the Pulse first). The Aries Zodiac Attunement guarantees first position in the first Pulse of any encounter — a mechanical expression of Aries as the force of initiative.</div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Attack Roll</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Strike Resonance</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">The test of whether the character's force-intent aligns with the cosmic opening to land a meaningful blow.</div>
+        <div class="crow-rationale">A Strike Resonance is not "did I hit" — it is "did the Aether allow this strike to find its mark." Against a skilled opponent, even a perfectly aimed blow can fail if their Guard Rating exceeds your Strike Resonance. Ranged Strike Resonance uses Swiftness. Melee Strike Resonance uses Forcefulness or Swiftness (character's choice based on fighting style). Spell Strike Resonance uses the casting Attribute.</div>
+        <div class="crow-example">Old: <del>"I roll to attack. That's a 17."</del><br>New: <em>"Strike Resonance — 17. Does that break their Guard?"</em></div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Critical Hit</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Resonant Strike</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">A moment when the Aether fully aligned with the character's intent — the strike found not just the body but the cosmic vulnerability behind it.</div>
+        <div class="crow-rationale">A Resonant Strike occurs on a natural 20. Double all damage dice. Additionally: the Concordance describes a meaningful narrative consequence beyond the mechanical damage — a weapon finding a weak point in armor, a strike that disrupts the target's Sustained Resonance on a ritual, a blow that sends the target stumbling into a more dangerous position. A Resonant Strike is never just numbers.</div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Death Warding Resonance</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Loom Test</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">When Vitality reaches zero, the character is at the Loom's mercy — each Moment, the Loom decides whether their thread holds or cuts.</div>
+        <div class="crow-rationale">A Loom Test is a d20 roll with no modifiers — the character's personal attributes mean nothing at this threshold. The Loom decides. Three successes (10 or higher) before three failures stabilizes the character. Three failures cuts the thread. A natural 20 restores 1 Vitality and the character regains consciousness. A natural 1 counts as two failures. <strong>A Bonded partner within range converts one Loom Test failure to a success per Pulse — the bond's weight on the Loom.</strong></div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Brief Attunement / Deep Attunement</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Brief Attunement / Deep Attunement</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">Resting in Sideros is not passive recovery — it is active re-attunement to the Aether. The body heals faster when the soul is properly resonating.</div>
+        <div class="crow-rationale">A <strong>Brief Attunement</strong> (1 hour, no combat) allows spending Vitality Dice to restore Vitality, and restores resources marked "Brief Attunement" (Tapas Points if meditation is maintained, certain Instinct abilities). A <strong>Deep Attunement</strong> (8 hours, includes sleep) fully restores Vitality, all Aetheric Channels, all Tapas Points, and resets the Omote-Ura Gauge to clan default. Siddha who spend their Brief Attunement in genuine meditation (not just resting) restore Tapas at the meditative rate.</div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Legendary Resistance</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Cosmic Resilience</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">The capacity of a being of sufficient cosmic weight to simply refuse a Warding Resonance failure — the thread is too thick to cut by ordinary means.</div>
+        <div class="crow-rationale">Legendary Beasts have 3–5 uses of Cosmic Resilience per Pulse cycle (resets at start of each Pulse). When a Legendary Beast fails a Warding Resonance, it may expend one use to treat the failure as a success. This does not feel like magic to observers — it feels like the creature being fundamentally unwilling to be affected by that force. The Concordance describes it in narrative terms, never mechanically.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- MAGIC TERMS -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-magic">
+  <div class="section-banner"><div class="sb-line"></div><div class="sb-text">How the Aether Moves Through a Character</div><div class="sb-line"></div></div>
+
+  <div class="conversion-grid">
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Aetheric Channel</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Aetheric Channel</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">A conduit through which the character draws cosmic force and directs it. Not a container that holds power — a channel that opens and closes.</div>
+        <div class="crow-rationale">"Aetheric Channel" implies a storage unit. An <strong>Aetheric Channel</strong> implies a conduit — when you open a Channel, the Aether flows through you in a structured way. Channels close after use and reopen after Deep Attunement. Higher-tier Channels require deeper attunement with the cosmic force — they're not "bigger containers" but "wider conduits" that let more of the Aether through at once. Channel tiers are numbered identically to Aetheric Channels (1st through 9th, then 10th–12th for Epic Tier Zodiac Priests).</div>
+        <div class="crow-example">Old: <del>"I expend a 3rd-level Aetheric Channel."</del><br>New: <em>"I open a third-tier Aetheric Channel."</em></div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Spell</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Working (varies by tradition)</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">Each tradition has its own term for what it does when it channels the Aether — because they understand the act differently.</div>
+        <div class="crow-rationale">
+          <strong>Comet-Mage:</strong> Formulation (a precise calculation of cosmic forces)<br>
+          <strong>Rāśi-Siddha:</strong> Mantra (a vibrational alignment with a zodiac domain)<br>
+          <strong>Orisha Ashé-Medium:</strong> Invocation (calling the Orisha's aspect forward)<br>
+          <strong>Tuathan Fade-Guardian:</strong> Rite (a seasonal act of Otherworld bargaining)<br>
+          <strong>Zodiac Priest:</strong> Benediction (a cosmic law being expressed through a mortal vessel)<br>
+          <strong>Scion-Pledged:</strong> Blight (a corruption of Aetheric flow into entropic force)<br>
+          <strong>Star-Born:</strong> Surge (an involuntary expression of the character's cosmic nature)<br><br>
+          When speaking across traditions, the neutral term is simply <strong>Working</strong>. "Cast a spell" becomes "enact a Working."
+        </div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Spellcasting Ability</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Weaving Attribute</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">The Resonance Attribute through which a character's tradition directs Aetheric force.</div>
+        <div class="crow-rationale">Each Path has a designated Weaving Attribute: Comet-Mage uses Acuity; Rāśi-Siddha uses Attunement; Ashé-Medium uses Resonance; Zodiac Priest uses Attunement; Star-Born uses Resonance; Scion-Pledged uses Resonance (or Acuity — chosen at Path selection). Working Resonance Threshold = 8 + Mastery Bonus + Weaving Attribute modifier. Working Strike Resonance = d20 + Mastery Bonus + Weaving Attribute modifier. <strong>The naming is intentional:</strong> the Loom weaves fate; practitioners weave the Aether. Both are acts of giving structure to raw cosmic force. Aethar wants to unweave both. The Resonant Binding is the Kallos-Sworn's attempt to re-weave what is fraying.</div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Concentration</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Sustained Resonance</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">A Working that requires the character to maintain their Aetheric Channel open — actively holding the cosmic force in shape rather than releasing it in a burst.</div>
+        <div class="crow-rationale">Sustained Resonance Workings are marked (Sustained). Taking damage while Sustaining requires a Warding Resonance (Endurance) — Resonance Threshold 10 or half the damage taken, whichever is higher. Failure collapses the Sustained Working. Only one Sustained Resonance at a time, unless a Zodiac Attunement or Epic Tier ability states otherwise. "Break Sustained Resonance" becomes "collapse the Sustained Resonance."</div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Ambient Working</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Ambient Working</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">A Working so aligned with the character's natural Aetheric frequency that it requires no Channel to enact — the Aether simply responds to the intent.</div>
+        <div class="crow-rationale">Ambient Workings are free — no Aetheric Channel required, unlimited uses. They represent the character's deepest alignment with their Path's cosmic domain. A Comet-Mage who has studied fire formulations for a decade can produce a minor fire Ambient Working without effort. "Ambient Working" implies trivial magic. "Ambient Working" implies magic so deeply integrated it is simply how that character relates to the world.</div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Attunement (to magic items)</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Resonance Binding (to an artifact)</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">When a character and an Aetheric artifact align their frequencies — the artifact becomes an extension of the character's cosmic alignment rather than an external tool.</div>
+        <div class="crow-rationale">Resonance Binding to an artifact requires a Brief Attunement spent in contact with the item. Maximum 3 Resonance Bindings at once — more than 3 means the character's Aetheric field is fragmented across too many objects to maintain coherence. "Attuning to a magic item" becomes "establishing Resonance Binding with an artifact." Note: this term now has double meaning — heroes should note the distinction between Resonance Binding to an artifact vs. Arch-Oracle Lyra's Resonant Binding ritual.</div>
+      </div>
+    </div>
+
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Magic Item (rarity tiers)</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Aetheric Artifact (resonance tiers)</div></div>
+      <div class="crow-body">
+        <div class="crow-etymology">Objects that carry a permanent Aetheric alignment — imbued with cosmic force either through crafting, history, or proximity to a Legendary Beast or divine event.</div>
+        <div class="crow-rationale">
+          Common → <strong>Resonant</strong> (minor Aetheric alignment, no Resonance Binding required)<br>
+          Uncommon → <strong>Attuned</strong> (requires Resonance Binding)<br>
+          Rare → <strong>Zodiac-Touched</strong> (carries a sign's domain strongly)<br>
+          Very Rare → <strong>Beast-Marked</strong> (derived from or blessed by a Legendary Beast)<br>
+          Legendary → <strong>Era-Fragment</strong> (artifact from before the Pantheonic Fall — Precursor technology or divine remnant)<br>
+          Artifact → <strong>Primordial</strong> (cosmic object whose origin precedes recorded history)
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- CONDITIONS -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-conditions">
+  <div class="section-banner"><div class="sb-line"></div><div class="sb-text">States of Cosmic Disruption</div><div class="sb-line"></div></div>
+
+  <div class="conversion-grid">
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Frightened</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Dread-Struck</div></div>
+      <div class="crow-body"><div class="crow-rationale">The Aetheric frequency of terror — the soul vibrating in a pattern incompatible with forward movement. Mechanically identical to Frightened: Resonant Discord on Active Resonances and Strike Resonances while the source is visible; cannot willingly move closer to the source.</div></div>
+    </div>
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Charmed</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Soul-Swayed</div></div>
+      <div class="crow-body"><div class="crow-rationale">The soul's frequency has been temporarily overwritten by another's Resonance — the character cannot act against the source and the source has Resonant Fortune on Resonance-based Disciplines against the character.</div></div>
+    </div>
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Poisoned</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Corrupted</div></div>
+      <div class="crow-body"><div class="crow-rationale">A toxic substance or Void-energy disrupting the character's Aetheric alignment — Resonant Discord on all Strike Resonances and Active Resonances. The Heart-Sting Toxin inflicts Corrupted. Weep-Stone instability inflicts Corrupted. Low-level Ashen Coil blight-rot inflicts Corrupted as a first stage.</div></div>
+    </div>
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Stunned</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Resonance-Shattered</div></div>
+      <div class="crow-body"><div class="crow-rationale">The soul's frequency has been so disrupted that it cannot organize itself into coherent action. Cannot Act, use Instinct, or move. Warding Resonances automatically fail. Strike Resonances against the character have Resonant Fortune. Ends at the start of the character's next Moment.</div></div>
+    </div>
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Exhaustion (levels)</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Aetheric Depletion (stages)</div></div>
+      <div class="crow-body"><div class="crow-rationale">Six stages, identical mechanically to Exhaustion. Renamed to reflect that in Sideros, exhaustion is not just physical tiredness — it is the Aetheric field thinning from overuse. Stage 6 is not death from fatigue but the soul's resonance becoming too weak to sustain the body. Deep Attunement removes one stage. Tapas Depletion is a specific minor form of Stage 1 Aetheric Depletion affecting only Tapas-based abilities.</div></div>
+    </div>
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Unconscious</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Loom-Suspended</div></div>
+      <div class="crow-body"><div class="crow-rationale">The character's soul-thread has been pulled back from active expression — they are not dead, but the Loom is holding their thread tightly while the body decides whether to continue. Drop prone, lose Act and Instinct, auto-fail Forcefulness and Swiftness Warding Resonances, Strike Resonances against them have Resonant Fortune, Resonant Strikes occur within 5 feet automatically.</div></div>
+    </div>
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Incapacitated</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Resonance-Locked</div></div>
+      <div class="crow-body"><div class="crow-rationale">The character cannot Act or use Instinct. Their soul is still present but cannot direct the body into action. This is the foundation condition — Loom-Suspended includes Resonance-Locked.</div></div>
+    </div>
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">D&D Term</div><div class="crow-term">Invisible</div></div>
+      <div class="crow-arrow">→</div>
+      <div class="crow-new"><div class="crow-label">Sideros Term</div><div class="crow-term">Aether-Veiled</div></div>
+      <div class="crow-body"><div class="crow-rationale">The character's Aetheric signature has been withdrawn from the visible spectrum — they cannot be seen by ordinary perception. Resonant Fortune on Strike Resonances, enemies have Resonant Discord on Strike Resonances against them. A character with active Kore-kore perception can sense an Aether-Veiled Coil operative by the void-signature they leave rather than their presence.</div></div>
+    </div>
+  </div>
+
+  <div class="section-banner" style="margin-top:1rem"><div class="sb-line"></div><div class="sb-text">Sideros-Unique Conditions (no D&D equivalent)</div><div class="sb-line"></div></div>
+  <div class="conversion-grid">
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">Unique Condition</div><div class="crow-term">Void-Touched Exposure</div></div>
+      <div class="crow-arrow">✦</div>
+      <div class="crow-new"><div class="crow-label">Effect</div><div class="crow-term">Creeping Ophiuchus resonance</div></div>
+      <div class="crow-body"><div class="crow-rationale">Accumulated from reactivating grid nodes, proximity to the Maw, and certain Kore-kore readings. Each Exposure imposes Resonant Discord on Insight Discipline checks and causes faint directional awareness of the Hollow Serpent's location. At 3 Exposures: begin to hear the Core's signal (Attunement Warding Resonance Threshold 14 each Deep Attunement or gain another Exposure). At 6 Exposures: Concordance begins making secret Loom Tests each session to determine if the character's Fate Number begins to shift toward Void-Touched territory. Exposures reduce by 1 per Deep Attunement in Aether-clean locations.</div></div>
+    </div>
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">Unique Condition</div><div class="crow-term">Bond-Severed</div></div>
+      <div class="crow-arrow">✦</div>
+      <div class="crow-new"><div class="crow-label">Effect</div><div class="crow-term">Fated Bond lost through death or corruption</div></div>
+      <div class="crow-body"><div class="crow-rationale">When a Fated Bond member dies or becomes a Void-Husk, the survivor(s) gain the Bond-Severed condition: −2 to all Active Resonances for 1d6 months as the Aether recalibrates around the missing frequency. The world becomes subtly less real — colors less vivid, sounds less present. This condition cannot be removed early by any Working. Only time, or the formation of a new bond, resolves it.</div></div>
+    </div>
+    <div class="crow" onclick="this.classList.toggle('open')">
+      <div class="crow-old"><div class="crow-label">Unique Condition</div><div class="crow-term">Loom-Recognized</div></div>
+      <div class="crow-arrow">✦</div>
+      <div class="crow-new"><div class="crow-label">Effect</div><div class="crow-term">The Loom has noticed this character</div></div>
+      <div class="crow-body"><div class="crow-rationale">Gained when a character's actions have significantly altered a historical thread — a bond formed that wouldn't have existed, a Legendary Beast changed by the encounter, a cultural tradition founded. Loom-Recognized characters gain: Concordance must warn them (in-fiction, through omens) before their thread is cut. They are also visible to Stellar Cartographers world-wide — anyone with Fate Number reading ability knows something significant has been woven in this character's direction. Aethar tracks Loom-Recognized characters as priority targets.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SIMPLIFIED MODE -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-simplified">
+  <div class="section-banner"><div class="sb-line"></div><div class="sb-text">Condensed Resonance Mode — Three Character Tracks</div><div class="sb-line"></div></div>
+
+  <div class="res-block">
+    <div class="res-title">Replacing the HeroQuest Body/Mind Point System</div>
+    <div class="res-text">For streamlined play, each character tracks three pools instead of the full Vitality system. This is not a lesser mode — it is a different focus. The three tracks reflect what Sideros believes a mortal is: a body that acts, a mind that perceives, and a soul-thread that holds them together.</div>
+  </div>
+
+  <div class="three-track">
+    <div class="track-card" style="border-color:var(--alpha);background:rgba(212,114,74,0.05)">
+      <div class="tc-label" style="color:var(--alpha)">First Track</div>
+      <div class="tc-name" style="color:var(--alpha)">Body</div>
+      <div class="tc-desc">Physical integrity. Reduced by weapon strikes, environmental hazards, and physical harm. Equal to 8 + Endurance modifier per character depth level (simplified). Restored by Kanya-tradition healing, Vitality Dice spent during Brief Attunement, or magical restoration.</div>
+      <div class="tc-loss" style="border-color:rgba(212,114,74,0.3);color:rgba(212,114,74,0.6)">At 0: Loom-Suspended. Loom Tests each Pulse until stabilized or thread cuts.</div>
+    </div>
+    <div class="track-card" style="border-color:var(--omega);background:rgba(168,126,232,0.05)">
+      <div class="tc-label" style="color:var(--omega)">Second Track</div>
+      <div class="tc-name" style="color:var(--omega)">Mind</div>
+      <div class="tc-desc">Mental integrity and Aetheric clarity. Reduced by psychic attacks, Mycelian Resonance exposure, Void-Touched Exposure accumulation, and witnessing certain cosmic horrors. Equal to 6 + Attunement modifier per depth level. Restored by Deep Attunement and certain Oshun-tradition workings.</div>
+      <div class="tc-loss" style="border-color:rgba(168,126,232,0.3);color:rgba(168,126,232,0.6)">At 0: Resonance-Shattered for 1 hour, then gain a Madness (Concordance designs specific to the source).</div>
+    </div>
+    <div class="track-card" style="border-color:var(--gold);background:rgba(201,168,76,0.05)">
+      <div class="tc-label" style="color:var(--gold)">Third Track</div>
+      <div class="tc-name" style="color:var(--gold)">Soul</div>
+      <div class="tc-desc">Aetheric integrity — the thread's strength in the Loom. Reduced by Lead-Scale Corruption accumulation, Bond-Severed events, direct Void-energy exposure, and certain Ashen Coil rituals. Equal to Fate Number ÷ 10 (rounded up) per depth level. Restored only by significant narrative acts of Aetheric alignment.</div>
+      <div class="tc-loss" style="border-color:rgba(201,168,76,0.3);color:rgba(201,168,76,0.6)">At 0: Fate Number begins dissolving toward Void-Husk. The character is not dead — they are becoming something else.</div>
+    </div>
+  </div>
+
+  <div class="res-block" style="margin-top:10px">
+    <div class="res-title">Simplified Resonance Thresholds</div>
+    <div class="res-text">In Condensed Resonance Mode, all Active Resonances use three thresholds instead of the full Discipline system:</div>
+    <div class="formula-block" style="margin-top:10px">
+      BODY RESONANCE: d20 + Forcefulness or Swiftness modifier<br>
+      MIND RESONANCE: d20 + Acuity or Attunement modifier<br>
+      SOUL RESONANCE: d20 + Resonance modifier + Fate Number bonus*<br><br>
+      * Fate Number bonus = (Fate Number ÷ 20), rounded down, maximum +5<br><br>
+      RESONANCE THRESHOLD: Simple 8 · Moderate 12 · Demanding 16 · Formidable 20
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- QUICK REFERENCE -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-quickref">
+  <div class="section-banner"><div class="sb-line"></div><div class="sb-text">Complete Conversion at a Glance</div><div class="sb-line"></div></div>
+
+  <table class="qref-table">
+    <tr><th>D&D 5e Term</th><th>Sideros Term</th><th>Notes</th></tr>
+    <tr><td>Ability Score</td><td>Resonance Attribute</td><td>Six attributes, same math</td></tr>
+    <tr><td>Strength</td><td>Forcefulness</td><td>Alpha-aspected physical power</td></tr>
+    <tr><td>Dexterity</td><td>Swiftness</td><td>Beta-aspected precision and speed</td></tr>
+    <tr><td>Constitution</td><td>Endurance</td><td>Physical resilience, governs Vitality</td></tr>
+    <tr><td>Intelligence</td><td>Acuity</td><td>Pattern recognition and knowledge</td></tr>
+    <tr><td>Wisdom</td><td>Attunement</td><td>Omega-aspected cosmic sensitivity</td></tr>
+    <tr><td>Charisma</td><td>Resonance</td><td>Alpha-aspected magnetic presence</td></tr>
+    <tr><td>Active Resonance</td><td>Active Resonance</td><td>Character initiates</td></tr>
+    <tr><td>Warding Resonance</td><td>Warding Resonance</td><td>Character responds to a threat</td></tr>
+    <tr><td>Difficulty Class (DC)</td><td>Resonance Threshold</td><td>Simple/Moderate/Demanding/Formidable/Legendary/Void-Touched</td></tr>
+    <tr><td>Resonant Fortune</td><td>Resonant Fortune</td><td>Cosmic forces aligned behind intent</td></tr>
+    <tr><td>Resonant Discord</td><td>Resonant Discord</td><td>Cosmic forces working against intent</td></tr>
+    <tr><td>Mastery Bonus</td><td>Mastery Bonus</td><td>Identical progression</td></tr>
+    <tr><td>Proficient</td><td>Mastered</td><td>Full Mastery Bonus applies</td></tr>
+    <tr><td>Half Mastery</td><td>Half-Mastered</td><td>Half Mastery Bonus applies</td></tr>
+    <tr><td>Vitalitys</td><td>Vitality</td><td>Physical life-force</td></tr>
+    <tr><td>Temporary Vitalitys</td><td>Aetheric Buffer</td><td>Absorbed before Vitality</td></tr>
+    <tr><td>Guard Rating</td><td>Guard Rating</td><td>Total defensive threshold</td></tr>
+    <tr><td>Level</td><td>Resonance Depth</td><td>Depth of cosmic attunement</td></tr>
+    <tr><td>Class</td><td>Path</td><td>The cosmic road walked</td></tr>
+    <tr><td>Subclass</td><td>Calling</td><td>Specific expression of a Path</td></tr>
+    <tr><td>Feat</td><td>Attunement</td><td>Permanent resonance deepening</td></tr>
+    <tr><td>Skill</td><td>Discipline</td><td>Specific area of trained alignment</td></tr>
+    <tr><td>Background</td><td>Origin</td><td>Life before the Path found you</td></tr>
+    <tr><td>Race / Species</td><td>Kindred</td><td>Cosmic lineage</td></tr>
+    <tr><td>Action</td><td>Act</td><td>Primary action in a Moment</td></tr>
+    <tr><td>Instinct</td><td>Instinct</td><td>Reflex of attunement</td></tr>
+    <tr><td>Reaction</td><td>Reflex</td><td>Soul responding before mind decides</td></tr>
+    <tr><td>Turn</td><td>Moment</td><td>One character's slice of a Pulse</td></tr>
+    <tr><td>Round</td><td>Pulse</td><td>Full cycle of action and response</td></tr>
+    <tr><td>Initiative</td><td>Pulse Order</td><td>Loom-sequence of participation</td></tr>
+    <tr><td>Attack Roll</td><td>Strike Resonance</td><td>Test of force-intent vs. Guard Rating</td></tr>
+    <tr><td>Critical Hit</td><td>Resonant Strike</td><td>Aether fully aligned with intent</td></tr>
+    <tr><td>Death Warding Resonance</td><td>Loom Test</td><td>The Loom deciding whether thread holds</td></tr>
+    <tr><td>Opportunity Attack</td><td>Reflex Strike</td><td>Triggered by opponent leaving reach</td></tr>
+    <tr><td>Brief Attunement</td><td>Brief Attunement</td><td>1 hour, partial restoration</td></tr>
+    <tr><td>Deep Attunement</td><td>Deep Attunement</td><td>8 hours, full restoration</td></tr>
+    <tr><td>Legendary Resistance</td><td>Cosmic Resilience</td><td>Thread too thick to cut by ordinary means</td></tr>
+    <tr><td>Legendary Action</td><td>Cosmic Act</td><td>Actions beyond mortal Act economy</td></tr>
+    <tr><td>Aetheric Channel</td><td>Aetheric Channel</td><td>Conduit, not container</td></tr>
+    <tr><td>Spell</td><td>Working (tradition-specific)</td><td>Formulation/Mantra/Invocation/Rite/etc.</td></tr>
+    <tr><td>Ambient Working</td><td>Ambient Working</td><td>No Channel required</td></tr>
+    <tr><td>Spellcasting Ability</td><td>Weaving Attribute</td><td>Attribute through which a practitioner weaves Workings</td></tr>
+    <tr><td>Cast a spell (verb)</td><td>Weave a Working</td><td>The Loom weaves fate; practitioners weave the Aether</td></tr>
+    <tr><td>Spellcaster / magic user</td><td>Weave-capable · Weaver</td><td>One who can open Aetheric Channels and weave Workings</td></tr>
+    <tr><td>Concentration</td><td>Sustained Resonance</td><td>Channel held open continuously</td></tr>
+    <tr><td>Spell Attack Roll</td><td>Working Strike Resonance</td><td>d20 + Mastery Bonus + Weaving Attribute</td></tr>
+    <tr><td>Spell Save DC</td><td>Working Threshold</td><td>8 + Mastery Bonus + Weaving Attribute</td></tr>
+    <tr><td>Passive Perception</td><td>Ambient Attunement</td><td>Background cosmic awareness</td></tr>
+    <tr><td>Magic Item</td><td>Aetheric Artifact</td><td>Object with permanent Aetheric alignment</td></tr>
+    <tr><td>Attunement (magic item)</td><td>Resonance Binding</td><td>Artifact becoming extension of soul</td></tr>
+    <tr><td>Common/Uncommon/Rare/Very Rare/Legendary/Artifact</td><td>Resonant/Attuned/Zodiac-Touched/Beast-Marked/Era-Fragment/Primordial</td><td>Reflects Sideros origin rather than scarcity</td></tr>
+    <tr><td>Frightened</td><td>Dread-Struck</td><td>Terror disrupting forward resonance</td></tr>
+    <tr><td>Charmed</td><td>Soul-Swayed</td><td>Frequency overwritten by another's Resonance</td></tr>
+    <tr><td>Poisoned</td><td>Corrupted</td><td>Toxic disruption of Aetheric alignment</td></tr>
+    <tr><td>Stunned</td><td>Resonance-Shattered</td><td>Frequency too disrupted to act</td></tr>
+    <tr><td>Exhaustion (levels)</td><td>Aetheric Depletion (stages)</td><td>Aetheric field thinning from overuse</td></tr>
+    <tr><td>Unconscious</td><td>Loom-Suspended</td><td>Thread pulled back from active expression</td></tr>
+    <tr><td>Incapacitated</td><td>Resonance-Locked</td><td>Soul present but cannot direct body</td></tr>
+    <tr><td>Invisible</td><td>Aether-Veiled</td><td>Aetheric signature withdrawn</td></tr>
+    <tr><td>Prone</td><td>Grounded</td><td>Knocked to the earth — unchanged in mechanic</td></tr>
+    <tr><td>Grappled</td><td>Seized</td><td>Held against movement — unchanged in mechanic</td></tr>
+    <tr><td>Restrained</td><td>Bound</td><td>Movement prevented entirely</td></tr>
+    <tr><td>Blinded</td><td>Sight-Severed</td><td>Visual Ambient Attunement cut off</td></tr>
+    <tr><td>Deafened</td><td>Sound-Severed</td><td>Auditory Ambient Attunement cut off</td></tr>
+    <tr><td>Petrified</td><td>Stone-Locked</td><td>Transformed to inert matter — unchanged</td></tr>
+    <tr><td>Paralyzed</td><td>Will-Severed</td><td>Body cannot respond to soul's direction</td></tr>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SAMPLE TEXT -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-samples">
+  <div class="section-banner"><div class="sb-line"></div><div class="sb-text">The Language in Use — Before and After</div><div class="sb-line"></div></div>
+
+  <div class="sample-block" style="border-color:rgba(192,64,64,0.3);background:rgba(192,64,64,0.04)">
+    <div class="sample-label" style="color:var(--red)">Before — D&D 5e Language</div>
+    <div class="sample-text" style="color:rgba(242,232,207,0.5)">
+      The rogue uses her Instinct to dash behind the pillar. She has Resonant Fortune on her attack roll since the target can't see her — a 19, which beats the guard's AC of 14. She deals 2d6+4 piercing damage and the target must make a DC 14 Endurance Warding Resonance or be stunned until the end of its next turn. The guard fails with a 9. Meanwhile, the wizard expends a 3rd-level Aetheric Channel to cast Fireball, targeting the Sustained Resonance on his Hold Person spell.
+    </div>
+  </div>
+
+  <div class="sample-block" style="border-color:var(--border-mid);background:rgba(201,168,76,0.04)">
+    <div class="sample-label" style="color:var(--gold)">After — Sideros Aetheric Lexicon</div>
+    <div class="sample-text">
+      The Fate-Breaker uses her <em>Instinct</em> to slip behind the pillar. She has <em>Resonant Fortune</em> on her <em>Strike Resonance</em> since the sentry cannot perceive her — a 19, which breaks the sentry's <em>Guard Rating</em> of 14. She deals 2d6+4 piercing damage and the target must make a <em>Warding Resonance</em> (Endurance, Threshold 14) or be <em>Resonance-Shattered</em> until the end of its next <em>Moment</em>. The sentry fails with a 9. Meanwhile, the Comet-Mage opens a third-tier <em>Aetheric Channel</em> to enact a fire <em>Formulation</em>, careful to maintain his <em>Sustained Resonance</em> on the binding Working he currently holds.
+    </div>
+  </div>
+
+  <div class="sample-block" style="border-color:var(--border-mid);background:rgba(201,168,76,0.04)">
+    <div class="sample-label" style="color:var(--gold)">Character Creation — Sideros Language</div>
+    <div class="sample-text">
+      Choose your <em>Kindred</em> — the cosmic lineage you were born into. Then select your <em>Path</em> — the cosmic road the Aether has called you toward. Your <em>Resonance Depth</em> begins at 1. Assign your six <em>Resonance Attributes</em>: <em>Forcefulness, Swiftness, Endurance, Acuity, Attunement</em>, and <em>Resonance</em>. Your <em>Mastery Bonus</em> begins at +2. Choose your <em>Origin</em> — the life before the Path found you — and receive two <em>Mastered Disciplines</em>. Finally, roll your <em>Fate's Mate Number</em> (1d100) and your <em>Primal Essence</em> (1d6: 1 = Alpha, 2–5 = Beta, 6 = Omega). Record your zodiac sign. At Resonance Depth 4, you may take the <em>Zodiac Attunement</em> corresponding to your sign — provided you have encountered your sign's Legendary Beast at least once.
+    </div>
+  </div>
+
+  <div class="sample-block" style="border-color:rgba(168,126,232,0.3);background:rgba(168,126,232,0.04)">
+    <div class="sample-label" style="color:var(--omega)">Concordance (GM) Guidance Text</div>
+    <div class="sample-text">
+      When a character fails a <em>Loom Test</em>, do not describe it neutrally. The Loom is deciding. Each failed test is the thread thinning. Each success is the thread holding against something that wants to cut it. At three failures, the thread does not break violently — it simply releases. The character's soul-frequency withdraws from the body the way a tide withdraws from sand. There is no drama in it. The drama is in the <em>Bonded</em> party members who felt the moment their partner's <em>Resonant Awareness</em> went still.
+    </div>
+  </div>
+</div>
+
+</div><!-- end shell -->
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => { p.style.display = 'none'; p.classList.remove('active'); });
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).style.display = 'block';
+  document.getElementById('panel-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+document.querySelectorAll('.panel').forEach(p => { p.style.display = 'none'; });
+document.getElementById('panel-philosophy').style.display = 'block';
+</script>
+</body>
+</html>

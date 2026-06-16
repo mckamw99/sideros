@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — Primal Jarl · All Callings</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;500;600&display=swap');
+:root{
+  --void:#0a0a08;--void-mid:#131310;
+  --gold:#c9a84c;--gold-dim:#7a6028;--gold-bright:#e8c870;
+  --parchment:#f0e6cc;--parchment-dim:rgba(240,230,204,0.55);
+  --jarl:#b06030;--jarl-dim:#6a3010;--jarl-bright:#d08050;
+  --alpha:#d4724a;--beta:#4a8ec4;--omega:#9066c8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--parchment);line-height:1.7;min-height:100vh}
+.hero{text-align:center;padding:3rem 1.5rem 2.5rem;background:radial-gradient(ellipse at 50% 0%,rgba(176,96,48,0.1) 0%,transparent 60%);border-bottom:1px solid rgba(176,96,48,0.2)}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--jarl-dim);margin-bottom:.8rem}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(20px,3.5vw,30px);font-weight:500;color:var(--jarl-bright);letter-spacing:.06em;margin-bottom:.4rem}
+.hero-sub{font-size:14px;font-style:italic;color:var(--parchment-dim);max-width:500px;margin:0 auto}
+.nav-strip{display:flex;gap:4px;flex-wrap:wrap;padding:.65rem .9rem;border-bottom:1px solid rgba(176,96,48,0.12);background:var(--void-mid);position:sticky;top:0;z-index:20}
+.nav-btn{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border:1px solid rgba(176,96,48,0.2);border-radius:3px;background:transparent;color:var(--parchment-dim);cursor:pointer;transition:all .15s;white-space:nowrap}
+.nav-btn:hover{background:rgba(176,96,48,0.06)}
+.nav-btn.active{background:rgba(176,96,48,0.1);color:var(--jarl-bright);border-color:rgba(176,96,48,0.4)}
+.panel{display:none}.panel.active{display:block}
+.wrap{max-width:860px;margin:0 auto;padding:2rem 1.25rem 4rem}
+.calling-header{margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:1px solid rgba(176,96,48,0.15)}
+.ch-badge{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--jarl-dim);margin-bottom:.6rem;display:block}
+.ch-name{font-family:'Cinzel',serif;font-size:22px;font-weight:500;color:var(--jarl-bright);letter-spacing:.04em;margin-bottom:.3rem}
+.ch-origin{font-size:13px;font-style:italic;color:var(--parchment-dim);margin-bottom:.6rem}
+.ch-essence{display:inline-block;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:3px;border:1px solid}
+.lore{font-size:14px;color:rgba(240,230,204,0.8);line-height:1.85;margin-bottom:.9rem}
+.lore strong{color:var(--parchment);font-weight:500}
+.sec{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--jarl-dim);margin:1.5rem 0 .65rem;display:flex;align-items:center;gap:.6rem}
+.sec::after{content:'';flex:1;height:1px;background:rgba(176,96,48,0.12)}
+.feat-grid{display:grid;gap:7px}
+.feat{background:rgba(255,255,255,0.022);border:1px solid rgba(176,96,48,0.14);border-radius:8px;padding:11px 13px;cursor:pointer;overflow:hidden;transition:border-color .15s}
+.feat:hover,.feat.open{border-color:rgba(176,96,48,0.38)}
+.feat-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.feat-name{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.04em;color:var(--jarl-bright)}
+.feat-depth{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;padding:2px 6px;border-radius:3px;border:1px solid rgba(176,96,48,0.3);color:var(--jarl-dim);white-space:nowrap;flex-shrink:0}
+.feat-body{display:none;margin-top:8px;padding-top:8px;border-top:1px solid rgba(176,96,48,0.1);font-size:13px;color:rgba(240,230,204,0.75);line-height:1.7}
+.feat.open .feat-body{display:block}
+.feat-body strong{color:var(--parchment);font-weight:500}
+.feat-body em{color:var(--jarl-dim)}
+.already-built{background:rgba(90,154,72,0.05);border:1px solid rgba(90,154,72,0.2);border-radius:8px;padding:10px 12px;margin-bottom:1rem;font-size:13px;color:rgba(240,230,204,0.7);line-height:1.6}
+.already-built strong{color:rgba(122,186,96,0.9);font-weight:500}
+.note{background:rgba(176,96,48,0.05);border:1px solid rgba(176,96,48,0.22);border-radius:8px;padding:10px 12px;margin:.75rem 0;font-size:13px;color:rgba(240,230,204,0.75);line-height:1.65}
+.note strong{color:var(--parchment);font-weight:500}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Sideros · Path Compendium · Primal Jarl</div>
+  <h1 class="hero-title">Primal Jarl — All Callings</h1>
+  <p class="hero-sub">Eight expressions of the threshold between civilization and the force that existed before it.</p>
+</div>
+
+<div class="nav-strip">
+  <button class="nav-btn active" onclick="show('berserker',this)">Berserker</button>
+  <button class="nav-btn" onclick="show('steppe',this)">Steppe Sovereign</button>
+  <button class="nav-btn" onclick="show('beastsoul',this)">Beast-Soul</button>
+  <button class="nav-btn" onclick="show('totem',this)">Totem-Walker</button>
+  <button class="nav-btn" onclick="show('ancestor',this)">Ancestor-Bound</button>
+  <button class="nav-btn" onclick="show('storm',this)">Storm-Jarl</button>
+  <button class="nav-btn" onclick="show('wildwrath',this)">Wild-Wrath</button>
+  <button class="nav-btn" onclick="show('zealot',this)">The Undying</button>
+</div>
+
+<!-- ALREADY BUILT -->
+<div class="panel active" id="panel-berserker">
+<div class="wrap">
+  <div class="already-built"><strong>Path of the Berserker</strong> — previously built. Features: Frenzied Strike (Depth 3), Mindless Wrath (Depth 6), Retaliation Strike (Depth 10). Norse tradition — pure violent offense that burns the body's reserves.</div>
+</div>
+</div>
+
+<div class="panel" id="panel-steppe">
+<div class="wrap">
+  <div class="already-built"><strong>Path of the Steppe Sovereign</strong> — previously built. Features: Battle Cry (Depth 3), Pack Wrath (Depth 6), Sovereign's Challenge (Depth 10). Centaur-Kin tradition — the surge that pulls the whole pack with it.</div>
+</div>
+</div>
+
+<div class="panel" id="panel-beastsoul">
+<div class="wrap">
+  <div class="already-built"><strong>Path of the Beast-Soul</strong> — previously built. Features: Beast Aspect (Depth 3), Bestial Soul (Depth 6), Legendary Beast Empathy (Depth 10). Arcadian tradition — physical transformation expressing primal cosmic force during Wrath.</div>
+</div>
+</div>
+
+<!-- TOTEM-WALKER -->
+<div class="panel" id="panel-totem">
+<div class="wrap">
+  <div class="calling-header">
+    <span class="ch-badge">Primal Jarl · Calling IV</span>
+    <div class="ch-name">The Totem-Walker</div>
+    <div class="ch-origin">Replacing: Path of the Totem Warrior · Cultural home: Arcadian shamanic tradition, Steppe clan-bonding ceremonies</div>
+    <span class="ch-essence" style="color:var(--beta);border-color:rgba(74,142,196,0.3);background:rgba(74,142,196,0.05)">Beta-aspected</span>
+  </div>
+  <p class="lore">Where the Beast-Soul Jarl embodies a single creature's aspect during Wrath, the Totem-Walker maintains an ongoing spiritual relationship with multiple animal totems — each one offering a different gift when invoked. The Totem-Walker's Wrath is not pure aggression; it is a focused channel to a specific animal consciousness, shifting as the situation demands. <strong>They are not one thing. They are whichever thing the moment requires.</strong></p>
+  <div class="sec">Calling Features</div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Totem Spirit</div><span class="feat-depth">Depth 3</span></div>
+      <div class="feat-body">Choose a primary Totem Spirit — its benefit applies while in Wrath State. Additional totems may be chosen at Depths 6 and 10 (for movement and attack respectively).<br><br>
+      <strong>Bear:</strong> Resistance to all damage except psychic while in Wrath. The Bear's endurance becomes yours.<br>
+      <strong>Eagle:</strong> No Resonant Discord from moving through hostile spaces during Wrath. Enemies provoke no Reflex Strikes from you while moving. The Eagle threads through opposition.<br>
+      <strong>Wolf:</strong> Allies attacking the same creature as you have Resonant Fortune on their Strike Resonances. The Wolf hunts with the pack.<br>
+      <strong>Elk:</strong> Movement speed increases by 15 ft during Wrath. The Elk's ground-eating stride.<br>
+      <strong>Tiger:</strong> Add 10 ft to all jumps. While in Wrath, may move up to 10 ft toward a creature as a free action when it enters your reach — the Tiger closes the gap before the prey can register it has moved.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Aspect of the Beast</div><span class="feat-depth">Depth 6</span></div>
+      <div class="feat-body">Choose a second totem for its passive benefit — active outside Wrath State, always on:<br>
+      <strong>Bear:</strong> Carry capacity doubles. Can drag, push, or lift twice as much as Forcefulness would normally allow.<br>
+      <strong>Eagle:</strong> Darkvision 60 ft. Resonant Fortune on Perception Active Resonances relying on sight.<br>
+      <strong>Wolf:</strong> Track any creature that has passed through an area in the last day automatically — no roll required.<br>
+      <strong>Elk:</strong> Travel pace increases — the party moves at one travel speed category faster while the Totem-Walker leads.<br>
+      <strong>Tiger:</strong> Unarmored stealth. No Resonant Discord on Stealth Active Resonances from movement while unarmored or in light armor.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Walk the Totem's Path</div><span class="feat-depth">Depth 10</span></div>
+      <div class="feat-body">Choose a third totem for a benefit that enhances strikes during Wrath:<br>
+      <strong>Bear:</strong> Strikes during Wrath deal an additional 1d8 damage to creatures below half Vitality — the Bear finishes what it starts.<br>
+      <strong>Eagle:</strong> Once per Wrath, a strike deals radiant damage and blinds the target until the start of its next Moment (DC 14 Endurance Warding Resonance to resist).<br>
+      <strong>Wolf:</strong> When you knock a creature prone, all allies within 5 ft of that creature may make a Strike Resonance against it as a Reflex — the pack responds to the fallen prey.<br>
+      <strong>Elk:</strong> After a charge (moving 20+ ft before striking), the strike deals an additional 2d6 and the target must make a Forcefulness Warding Resonance (DC 16) or be knocked 15 ft back.<br>
+      <strong>Tiger:</strong> On a hit after moving at least 10 ft toward the target, deal +1d10 and the target must make a Swiftness Warding Resonance (DC 14) or be Seized (speed 0) until the end of their next Moment.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ANCESTOR-BOUND -->
+<div class="panel" id="panel-ancestor">
+<div class="wrap">
+  <div class="calling-header">
+    <span class="ch-badge">Primal Jarl · Calling V</span>
+    <div class="ch-name">The Ancestor-Bound</div>
+    <div class="ch-origin">Replacing: Path of the Ancestral Guardian · Cultural home: Eldren ancestral resonance tradition, Norse clan-spirit practice</div>
+    <span class="ch-essence" style="color:var(--beta);border-color:rgba(74,142,196,0.3);background:rgba(74,142,196,0.05)">Beta-aspected</span>
+  </div>
+  <p class="lore">The Ancestor-Bound does not enter Wrath alone. When the filter drops, it drops in both directions — the Aether floods outward through the Jarl, but the ancestral frequency floods inward, and those who came before manifest alongside the living warrior. They are not ghosts. They are Aetheric impressions of those whose frequency left enough of a mark that it persists, waiting for a descendant to open wide enough to carry them. <strong>The Ancestor-Bound fights surrounded by everyone who ever bore their bloodline into battle.</strong></p>
+  <div class="sec">Calling Features</div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Ancestral Protectors</div><span class="feat-depth">Depth 3</span></div>
+      <div class="feat-body">When entering Wrath State, spectral ancestor-figures manifest around the Ancestor-Bound. The first creature the Jarl strikes each Wrath State becomes marked by the ancestors — while marked, that creature has Resonant Discord on all Strike Resonances against anyone except the Ancestor-Bound (the ancestors redirect the threat), and all Strike Resonances against the marked creature by anyone other than the Ancestor-Bound have Resonant Fortune (the ancestors show the vulnerabilities). The mark persists until the Wrath ends or the creature is reduced to 0 Vitality.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Spirit Shield</div><span class="feat-depth">Depth 6</span></div>
+      <div class="feat-body">While in Wrath State, when another creature the Ancestor-Bound can see within 30 ft takes damage, use your Reflex to have the ancestral spirits intercede — reduce that damage by 2d6 + the Ancestor-Bound's Resonance modifier. The ancestors protect those their descendant protects. Usable up to twice per Pulse.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Consult the Ancestors</div><span class="feat-depth">Depth 10</span></div>
+      <div class="feat-body">When not in Wrath State, the Ancestor-Bound may spend 10 minutes in meditation to consult their ancestral line. Ask the Concordance one question — the ancestors know what happened in their lifetimes, which may extend back through multiple generations of significant individuals. Answers come as vision-impressions rather than words, interpreted through the Ancestor-Bound's cultural framework. Once per Deep Attunement.<br><br>
+      Additionally: Spirit Shield's damage reduction increases to 2d8 + Resonance modifier, and the Ancestor-Bound may use it three times per Pulse.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- STORM-JARL -->
+<div class="panel" id="panel-storm">
+<div class="wrap">
+  <div class="calling-header">
+    <span class="ch-badge">Primal Jarl · Calling VI</span>
+    <div class="ch-name">The Storm-Jarl</div>
+    <div class="ch-origin">Replacing: Path of the Storm Herald · Cultural home: Boreal Expanse Norse tradition, Sagittarian Steppe weather-warriors, Moana-kin oceanic fighters</div>
+    <span class="ch-essence" style="color:var(--alpha);border-color:rgba(212,114,74,0.3);background:rgba(212,114,74,0.05)">Alpha-aspected</span>
+  </div>
+  <p class="lore">The Storm-Jarl's Wrath does not stay inside their body. It radiates outward as environmental force — the specific environment depending on where the Jarl's primal frequency is most deeply aligned. A Boreal Jarl carries the tundra's killing cold. A Steppe Jarl carries lightning and open-sky force. A Moana-kin Jarl carries the deep ocean's pressure and violence. <strong>The Storm-Jarl does not fight in the environment. They become it.</strong></p>
+  <div class="sec">Calling Features</div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Storm Aura</div><span class="feat-depth">Depth 3</span></div>
+      <div class="feat-body">When entering Wrath State, choose an aura type — this may change between Wrath States but not during one. The aura extends 10 ft from the Storm-Jarl and activates at the start of each of the Jarl's Moments while in Wrath.<br><br>
+      <strong>Desert (Aries/Leo):</strong> Each hostile creature in the aura takes 2 fire damage (increasing to 3 at Depth 10). The heat is constant and inescapable.<br>
+      <strong>Sea (Cancer/Aquarius/Pisces):</strong> Each hostile creature in the aura must make a Swiftness Warding Resonance (DC = 8 + Mastery + Endurance mod) or have their speed halved until the start of the Jarl's next Moment — they move through invisible resistance.<br>
+      <strong>Tundra (Capricorn):</strong> Each hostile creature in the aura takes 2 cold damage. Ground in the aura becomes difficult terrain for enemies (the Jarl is unaffected).</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Storm Soul</div><span class="feat-depth">Depth 6</span></div>
+      <div class="feat-body">The Storm-Jarl gains resistance to the damage type of their chosen aura (fire, cold, or lightning). Additionally: they can survive extreme environmental conditions associated with their aura type without Warding Resonances — a Desert Jarl can walk through open flame; a Tundra Jarl is immune to natural cold; a Sea Jarl can breathe water and withstand crushing ocean pressure. The storm has become part of their biology.<br><br>
+      Storm Aura damage increases to 3 (or 4 at Depth 10).</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Raging Storm</div><span class="feat-depth">Depth 10</span></div>
+      <div class="feat-body">The Storm Aura's secondary effects escalate:<br>
+      <strong>Desert:</strong> When a creature in the aura hits the Storm-Jarl, that creature takes 4 fire damage — the touch of the desert burns back.<br>
+      <strong>Sea:</strong> Once per Pulse when a creature in the aura fails the Swiftness Warding Resonance, the Jarl may push that creature 15 ft in any horizontal direction — the current takes them.<br>
+      <strong>Tundra:</strong> When a creature in the aura fails a Warding Resonance against the cold damage, it is Seized (speed 0) until the start of the Jarl's next Moment — the ground has frozen around them.<br><br>
+      Additionally: Storm Aura radius increases to 15 ft.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- WILD-WRATH -->
+<div class="panel" id="panel-wildwrath">
+<div class="wrap">
+  <div class="calling-header">
+    <span class="ch-badge">Primal Jarl · Calling VII</span>
+    <div class="ch-name">The Wild-Wrath</div>
+    <div class="ch-origin">Replacing: Path of Wild Magic Barbarian · Cultural home: Void-edge regions, Fae-Blooded Jarl tradition, Otherworld border-zones</div>
+    <span class="ch-essence" style="color:var(--omega);border-color:rgba(144,102,200,0.3);background:rgba(144,102,200,0.05)">Omega-aspected</span>
+  </div>
+  <p class="lore">The Wild-Wrath did not choose their power's volatility. The Aetheric field in the region where they grew up, or in their bloodline, or in the specific circumstances of their first Wrath — something introduced an element of cosmic unpredictability that has never fully resolved. When they rage, the Aether responds to the emotional force of the release rather than to any trained direction. <strong>The results are dramatic. They are not always the results anyone intended.</strong> The Wild-Wrath has learned to be comfortable with this.</p>
+  <div class="sec">Calling Features</div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Wild Surge</div><span class="feat-depth">Depth 3</span></div>
+      <div class="feat-body">When entering Wrath State, and at the start of each of the Wild-Wrath's Moments while Wrathing, roll d6 — a random Surge manifests:<br><br>
+      <strong>1 — Aetheric Burst:</strong> All creatures within 30 ft make a Resonance Warding Resonance (DC 14) or take 2d6 force damage and are pushed 10 ft.<br>
+      <strong>2 — Teleport:</strong> The Wild-Wrath teleports up to 30 ft to an unoccupied space they can see.<br>
+      <strong>3 — Summoned Ally:</strong> A spectral creature of the Concordance's choice (CR equal to half the Jarl's Resonance Depth) appears in an adjacent space and acts on the Wild-Wrath's side for 1 Pulse before dissolving.<br>
+      <strong>4 — Retributive Shroud:</strong> Until the start of next Moment, any creature that hits the Wild-Wrath takes 1d6 force damage.<br>
+      <strong>5 — Healing Surge:</strong> The Wild-Wrath or one ally within 30 ft immediately restores 2d6 Vitality.<br>
+      <strong>6 — Aetheric Aura:</strong> Until the start of next Moment, the Wild-Wrath's strikes deal +1d6 of a randomly determined elemental type (d4: 1 fire, 2 cold, 3 lightning, 4 acid).</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Bolster the Chaos</div><span class="feat-depth">Depth 6</span></div>
+      <div class="feat-body">Once per Wrath State, when a Wild Surge would produce a result the Wild-Wrath dislikes, they may reroll — accepting the new result. The chaos is not fully controlled, but the Wild-Wrath has developed an instinct for when to let it run and when to shake it up again. Additionally: when a Wild Surge produces a result of 1 (Aetheric Burst), the Wild-Wrath is immune to the damage and push effect — they are the center of the burst, not a victim of it.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Unstable Backlash</div><span class="feat-depth">Depth 10</span></div>
+      <div class="feat-body">When a creature critically hits the Wild-Wrath (natural 20 on the Strike Resonance) while the Jarl is in Wrath State, a Wild Surge immediately triggers as a Reflex — the trauma to the Jarl's Aetheric field releases its accumulated volatility. The attacker is within the Surge's effect radius regardless of which Surge rolls.<br><br>
+      Additionally: the Wild-Wrath may now choose to trigger a Wild Surge deliberately once per Pulse by spending 2 Wrath uses — useful for forcing a healing surge when the party is desperate or clearing an area when surrounded.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- THE UNDYING (Zealot) -->
+<div class="panel" id="panel-zealot">
+<div class="wrap">
+  <div class="calling-header">
+    <span class="ch-badge">Primal Jarl · Calling VIII</span>
+    <div class="ch-name">The Undying</div>
+    <div class="ch-origin">Replacing: Path of the Zealot · Cultural home: Zodiac Priest warrior-devotees, Solar Compact oath-warriors, Oya-Ashé battle tradition</div>
+    <span class="ch-essence" style="color:var(--alpha);border-color:rgba(212,114,74,0.3);background:rgba(212,114,74,0.05)">Alpha-aspected</span>
+  </div>
+  <p class="lore">The Undying has received something the Loom does not give easily: a stay of execution. Their zodiac sign's domain force has decided they are not finished yet — that the work they are doing in the world is not complete enough to allow their thread to end. This is not invincibility. The Undying can be hurt, defeated, and worn down. <strong>They simply cannot be stopped by death the way other people can.</strong> The Loom holds the thread open. The domain's force sustains it. The Undying fights as if they know the Loom is watching, because they have had direct evidence that it is.</p>
+  <div class="sec">Calling Features</div>
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Domain-Touched Fury</div><span class="feat-depth">Depth 3</span></div>
+      <div class="feat-body">When entering Wrath State, the Undying's strikes carry their zodiac domain's energy — all damage dealt in Wrath becomes the domain's type (fire for Aries, radiant for Leo, necrotic for Scorpio, etc.) in addition to the weapon's base type. Choose which type applies on each hit — the domain and the blade together. Additionally: while in Wrath, the Undying cannot be made to stop fighting by any fear effect — Dread-Struck, Soul-Swayed, and similar conditions have no mechanical effect on the Undying while Wrathing. The domain's conviction overrides the body's fear response.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Loom's Mercy</div><span class="feat-depth">Depth 6</span></div>
+      <div class="feat-body">If the Undying starts their Moment with 0 Vitality and is Loom-Testing (making Loom Tests), they may enter Wrath State — the domain force sustains the body beyond its normal limits. While Wrathing at 0 Vitality: the Undying acts normally on their Moment; they do not make Loom Tests while Wrathing; the Wrath ends if they take damage (at which point normal Loom Test rules resume) or if they choose to end it.<br><br>
+      Additionally: reviving the Undying from 0 Vitality costs no material components — healing Workings restore them to 1 Vitality automatically. The domain does not allow bureaucratic death to interfere with the work.</div>
+    </div>
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Rage Beyond Death</div><span class="feat-depth">Depth 10</span></div>
+      <div class="feat-body">Once per campaign — a one-time event, not a renewable resource — if the Undying would be killed (three Loom Test failures, instant death effect, or equivalent), the domain force refuses. The Undying remains at 1 Vitality. All conditions and negative effects are cleared. They immediately enter Wrath State at full uses regardless of previous depletion. For the duration of this Wrath, all damage they deal is maximized without rolling. When this Wrath ends, the Undying falls to 0 Vitality and must complete normal Loom Tests — the domain bought time, not permanence.<br><br>
+      <div class="note"><strong>Campaign note:</strong> This ability should feel like a narrative event, not a mechanical resource. When it triggers, the Concordance should make it a moment — describe what the domain's intervention looks like (the Nemean Lion's radiance restoring a Leo Undying; the Stygian Scorpion's necrotic energy sustaining a Scorpio Undying). The Loom intervened. That has implications the rest of the campaign should acknowledge.</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).style.display='block';
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+document.querySelectorAll('.panel').forEach(p=>{p.style.display='none'});
+document.getElementById('panel-berserker').style.display='block';
+</script>
+</body>
+</html>

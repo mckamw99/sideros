@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — Concordance Tools</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;500;600&display=swap');
+:root{
+  --void:#07080a;--void-mid:#0f1214;--parchment:#f0e6cc;--parchment-dim:rgba(240,230,204,0.55);
+  --gold:#c9a84c;--gold-dim:#7a6028;--gold-bright:#e8c870;
+  --red:#b84040;--amber:#b87040;--green:#407048;--blue:#406098;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--parchment);line-height:1.75;min-height:100vh}
+.hero{text-align:center;padding:3.5rem 1.5rem 3rem;border-bottom:1px solid rgba(201,168,76,0.15)}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:.8rem}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(20px,3.5vw,28px);font-weight:500;color:var(--gold-bright);letter-spacing:.05em;margin-bottom:.4rem}
+.hero-sub{font-size:14px;font-style:italic;color:var(--parchment-dim);max-width:520px;margin:0 auto}
+.nav-strip{display:flex;gap:4px;flex-wrap:wrap;padding:.65rem .9rem;border-bottom:1px solid rgba(201,168,76,0.1);background:var(--void-mid);position:sticky;top:0;z-index:20}
+.nav-btn{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border:1px solid rgba(201,168,76,0.18);border-radius:3px;background:transparent;color:var(--parchment-dim);cursor:pointer;transition:all .15s;white-space:nowrap}
+.nav-btn.active{background:rgba(201,168,76,0.08);color:var(--gold-bright);border-color:rgba(201,168,76,0.4)}
+.panel{display:none}.panel.active{display:block}
+.wrap{max-width:900px;margin:0 auto;padding:2rem 1.25rem 4rem}
+.lore{font-size:14px;color:rgba(240,230,204,0.8);line-height:1.85;margin-bottom:.9rem}
+.lore strong{color:var(--parchment);font-weight:500}
+.lore em{color:var(--gold-dim)}
+.sec{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:1.5rem 0 .65rem;display:flex;align-items:center;gap:.6rem}
+.sec::after{content:'';flex:1;height:1px;background:rgba(201,168,76,0.1)}
+.tool{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.13);border-radius:9px;padding:13px 15px;margin-bottom:.9rem;cursor:pointer;overflow:hidden;transition:border-color .15s}
+.tool:hover,.tool.open{border-color:rgba(201,168,76,0.35)}
+.th{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.tn{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.04em;color:var(--gold-bright)}
+.ttag{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:3px;border:1px solid rgba(201,168,76,0.22);color:var(--gold-dim);white-space:nowrap;flex-shrink:0}
+.tb{display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(201,168,76,0.08);font-size:13px;color:rgba(240,230,204,0.78);line-height:1.72}
+.tool.open .tb{display:block}
+.tb strong{color:var(--parchment);font-weight:500}
+.tb em{color:var(--gold-dim)}
+.step-list{margin:.5rem 0 .75rem .8rem}
+.step-list li{margin-bottom:.35rem;font-size:13px;color:rgba(240,230,204,0.78);line-height:1.6;list-style:decimal}
+.step-list li strong{color:var(--parchment);font-weight:500}
+.data-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:.75rem}
+.data-table th{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);padding:6px 10px;text-align:left;border-bottom:1px solid rgba(201,168,76,0.18)}
+.data-table td{padding:6px 10px;border-bottom:1px solid rgba(201,168,76,0.06);color:rgba(240,230,204,0.75);vertical-align:top;font-size:12px;line-height:1.5}
+.data-table td:first-child{color:var(--parchment);font-weight:500}
+.data-table tr:last-child td{border-bottom:none}
+.note{background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.18);border-radius:7px;padding:10px 12px;margin:.75rem 0;font-size:12px;color:rgba(240,230,204,0.75);line-height:1.65}
+.note strong{color:var(--parchment);font-weight:500}
+.site-block{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.12);border-radius:8px;padding:12px 14px;margin-bottom:.8rem}
+.sb-name{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.04em;color:var(--gold-bright);margin-bottom:.3rem}
+.sb-loc{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:.5rem;display:block}
+.sb-text{font-size:13px;color:rgba(240,230,204,0.78);line-height:1.68}
+.sb-text strong{color:var(--parchment);font-weight:500}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-eyebrow">Sideros / Astrolan — For the Concordance</div>
+  <h1 class="hero-title">Concordance Tools</h1>
+  <p class="hero-sub">Frameworks for running sessions, resolving large-scale conflicts, tactical creature behavior, adventure site dossiers, and house rules.</p>
+</div>
+<div class="nav-strip">
+  <button class="nav-btn active" onclick="show('macro',this)">Macro-Resolution</button>
+  <button class="nav-btn" onclick="show('tactical',this)">Tactical Engine</button>
+  <button class="nav-btn" onclick="show('pacing',this)">Session Pacing</button>
+  <button class="nav-btn" onclick="show('sites',this)">Adventure Sites</button>
+  <button class="nav-btn" onclick="show('houserules',this)">House Rules</button>
+  <button class="nav-btn" onclick="show('bonds',this)">Bonds at the Table</button>
+</div>
+
+<!-- MACRO-RESOLUTION -->
+<div class="panel active" id="panel-macro"><div class="wrap">
+  <p class="lore">Some conflicts in Sideros are too large for standard Pulse-by-Pulse resolution — continent-spanning invasions, multi-front raids, sieges, political collapses. Resolving these event-by-event would bog down play. The Macro-Resolution Framework handles them as a single decisive contest that produces a result with predefined narrative weight.</p>
+
+  <div class="sec">The Group Simple Contest</div>
+  <div class="tool open" onclick="this.classList.toggle('open')">
+    <div class="th"><div class="tn">Core Mechanic — Group Simple Contest</div><span class="ttag">Macro Scale</span></div>
+    <div class="tb">
+      When a large-scale conflict needs resolution without full tactical play:<br><br>
+      <ol class="step-list">
+        <li><strong>Define the conflict clearly.</strong> What are both sides trying to achieve? What is the exact question being decided? ("Can the Ashen-Sworn invasion be repelled before it reaches Aurelia?" not just "invasion happens.")</li>
+        <li><strong>Establish the stakes before rolling.</strong> Define what a success, costly success, and failure each look like specifically — material consequences, not vague outcomes. Write them down before any dice touch the table.</li>
+        <li><strong>Each PC makes one relevant Active Resonance.</strong> The party's relevant Disciplines, Path features, and resources all apply. The Concordance sets the DC based on the opposing force's strength.</li>
+        <li><strong>Count successes vs. failures.</strong> Majority determines the result tier (below).</li>
+        <li><strong>Apply the predefined consequence.</strong> No negotiation after the roll — the consequence was agreed before play began.</li>
+      </ol>
+      <br>
+      <table class="data-table">
+        <tr><th>Result</th><th>Narrative Outcome</th></tr>
+        <tr><td>Clean Success (all or most succeed)</td><td>The party's side achieves its objective. Minor costs acceptable — no major loss.</td></tr>
+        <tr><td>Costly Success (roughly even)</td><td>The party's side achieves its objective <em>but</em> one predefined material consequence occurs — a resource depleted, an ally lost, a location destroyed, a secret exposed. Story moves forward.</td></tr>
+        <tr><td>Failure (most or all fail)</td><td>The party's side does not achieve its objective. A different predefined consequence occurs. The situation worsens in a specific, actionable way — not a dead end, but a harder path.</td></tr>
+      </table>
+      <div class="note"><strong>The Costly Success is the most valuable result.</strong> It keeps momentum, produces meaningful consequence, and generates the next problem organically. Design your pre-defined consequences so that the Costly Success is narratively interesting, not merely punishing.</div>
+    </div>
+  </div>
+
+  <div class="sec">Worked Examples</div>
+  <div class="tool" onclick="this.classList.toggle('open')">
+    <div class="th"><div class="tn">Example — Ashen-Sworn Invasion of the Aries March</div><span class="ttag">Military Scale</span></div>
+    <div class="tb">
+      <strong>The question:</strong> Can Lord Aries's forces hold the line at First Spear while the party deals with the Caldera of Deneb Kaitos threat?<br><br>
+      <strong>Pre-defined consequences:</strong><br>
+      • Clean Success: The March holds. Ashen-Sworn pushed back to the frontier. Caldera mission proceeds with full military support available.<br>
+      • Costly Success: The March holds, but First Spear's outer district is occupied. The Mesha Siddha's Forge of the First Spark is now in contested territory. Caldera mission proceeds but with reduced military support and a secondary objective (rescue Siddha artisans).<br>
+      • Failure: First Spear falls. Lord Aries retreats to a secondary position. The Caldera ritual has more time to complete — the deadline tightens significantly. A named Siddha is captured by Ashen-Sworn forces.<br><br>
+      <strong>Rolls:</strong> Each PC makes an Active Resonance relevant to their contribution — Forcefulness (combat leadership), Resonance (inspiring allied forces), Attunement (coordinating Siddha defenders), etc. DC 15 given Ashen-Sworn numerical superiority.
+    </div>
+  </div>
+
+  <div class="tool" onclick="this.classList.toggle('open')">
+    <div class="th"><div class="tn">Example — Kuri Port Sabotage Campaign (Western Sea Lanes)</div><span class="ttag">Political/Economic Scale</span></div>
+    <div class="tb">
+      <strong>The question:</strong> Do the Kuri saboteurs succeed in disrupting the Western Sea Lanes grain shipments before the Leonine Empire can respond?<br><br>
+      <strong>Pre-defined consequences:</strong><br>
+      • Clean Success (for Leonine Empire / party): Sabotage campaign is disrupted. Grain shipments flow normally. Solar Crown value stabilizes. The sponsoring faction behind the Kuri (unknown) is exposed and put on the defensive.<br>
+      • Costly Success: Campaign partially disrupted. Grain shipments resume but 30% reduced for one season — prices rise, civil unrest increases in Aurelia. One port hub is permanently compromised with Kuri infrastructure embedded too deep to remove quickly.<br>
+      • Failure: Sabotage succeeds. The Western Sea Lanes grain route is disrupted for a full season. Solar Crown value collapses further. Lord Leo is forced to declare martial law in three port cities, which accelerates the Solar Chivalry recruitment crisis.<br><br>
+      <strong>Rolls:</strong> Investigation (tracing the network), Stealth (counter-infiltration), Persuasion (flipping a Kuri operative). DC 14 — the Kuri's Infrastructure Knowledge makes them well-established.
+    </div>
+  </div>
+
+</div></div>
+
+<!-- TACTICAL ENGINE -->
+<div class="panel" id="panel-tactical"><div class="wrap">
+  <p class="lore">How an enemy fights is as important as what it can do. The Tactical Engine of Opposition provides behavioral frameworks for creature types — the Concordance doesn't need to plan every move, just internalize the creature's decision-making logic and let it play out.</p>
+
+  <div class="sec">Creature Type Tactical Profiles</div>
+
+  <div class="tool open" onclick="this.classList.toggle('open')">
+    <div class="th"><div class="tn">Mindless / Primitive Undead (Void-Husks, Animated Corpses)</div><span class="ttag">Predictable</span></div>
+    <div class="tb">
+      <strong>Priority:</strong> Nearest living target. Always. No exceptions unless directed by a controlling intelligence.<br>
+      <strong>No flanking, no ambush, no retreat.</strong> Mindless undead do not disengage, do not respond to fear, do not recognize advantage. They walk toward the closest creature and attack until destroyed or directed otherwise.<br>
+      <strong>Tactical tell:</strong> This predictability is an exploit the party should discover and use. A mindless undead that the party can keep circling (never being the nearest target) is a mindless undead the party can control the engagement of. Void-Husks specifically lose their coordination mechanic if Weep-Stone disruption is in play — they revert to pure nearest-target behavior even if they were previously operating in directed formation.<br>
+      <strong>Concordance note:</strong> Void-Husks directed by a living Coil operative are NOT mindless. The controlling operative has tactical intelligence. Kill the controller, and the Void-Husks revert to mindless behavior.
+    </div>
+  </div>
+
+  <div class="tool" onclick="this.classList.toggle('open')">
+    <div class="th"><div class="tn">Ashen-Sworn Warbands (Organized Tribal Forces)</div><span class="ttag">Coordinated</span></div>
+    <div class="tb">
+      <strong>Priority:</strong> Isolation, then elimination. They identify the least-protected target and cut them off from the group before engaging the main force.<br>
+      <strong>Standard deployment:</strong> Ranged harassers from concealment first (1–2 Pulses) to identify party reaction patterns and draw mobile characters out of position. Then flanking elements close from two directions simultaneously. Melee shock troops advance center only after flanks are committed.<br>
+      <strong>Retreat behavior:</strong> Ashen-Sworn warbands retreat when they've lost numerical superiority (below 50% of starting numbers). They retreat in good order — covering fire, staggered withdrawal — not route. They will re-engage from a stronger position if the party pursues without reorganizing.<br>
+      <strong>Tactical vulnerabilities:</strong> They require a clear chain of command. Eliminate or incapacitate the warband's Forcefulness-primary leader in the first two Pulses and the coordination collapses — they continue fighting but lose the isolation/flanking pattern and devolve into nearest-target behavior.<br>
+      <strong>Concordance note:</strong> Ashen-Sworn fighting for the Coil fight smarter than Ashen-Sworn fighting for territory. Coil-directed warbands have been specifically trained by Drava Nullsong's operational network. They don't just flank — they have specific target priority lists (eliminate Weavers first, then support characters, then martial characters last).
+    </div>
+  </div>
+
+  <div class="tool" onclick="this.classList.toggle('open')">
+    <div class="th"><div class="tn">Mycelian Brood Manifestations</div><span class="ttag">Hive Logic</span></div>
+    <div class="tb">
+      <strong>Priority:</strong> Network defense. The Brood does not think in terms of individual combat. Every Brood entity is acting to protect the mycelial network's territorial integrity — not to kill the party specifically.<br>
+      <strong>Behavior:</strong> Brood entities do not pursue beyond the network's territory boundary. They do not retaliate against non-territorial actions. They disengage if the party moves away from contested territory. They re-engage if the party moves toward a node or network concentration.<br>
+      <strong>Communication:</strong> Every Brood entity knows everything every other entity knows, instantly. An ambush does not give the party the element of surprise against the next group of Brood — the entire network is already aware and has repositioned.<br>
+      <strong>Countering hive logic:</strong> The Brood cannot process actions that have no territorial implication. A party that walks through Brood territory without approaching any nodes, making no hostile moves, will not be engaged — the Brood assesses them as non-threatening passage. The moment they interact with a node, that assessment changes and never reverts.
+    </div>
+  </div>
+
+  <div class="tool" onclick="this.classList.toggle('open')">
+    <div class="th"><div class="tn">Coil Operatives (Scion Pledged, Coil-Stalkers, Fang Agents)</div><span class="ttag">Intelligent · Adaptive</span></div>
+    <div class="tb">
+      <strong>Priority:</strong> Mission objective first, survival second, combat engagement last. A Coil operative who engages in direct combat has already failed their operational parameters.<br>
+      <strong>Approach:</strong> Coil operatives gather intelligence before acting. They will observe the party for 1–3 sessions before making a move if the timeline allows it. They exploit Fated Bond vulnerabilities specifically — targeting bonded party members to create emotional leverage, to corrupt bonds, or to use the bond as a tracking mechanism.<br>
+      <strong>Retreat and resource management:</strong> Operatives retreat when the tactical situation is unfavorable and disengage cleanly — they leave no trail they haven't prepared for. They have fallback identities, pre-positioned resources, and extraction routes planned before every operation.<br>
+      <strong>Coil-Stalker specific:</strong> A Coil-Stalker in Burning or Searing stage (Lead-Scale 11+) has reduced tactical control — their Attunement Warding Resonances are compromised by Coil compulsions. Experienced Coil operatives know this and remove Coil-Stalkers from subtle operations at Burning stage, deploying them only for direct action where their combat power is the point.<br>
+      <strong>Escalation pattern:</strong> Coil operations escalate in precisely defined stages. If the party disrupts Stage 1, Stage 2 begins immediately — the Coil does not pause to assess. Drava Nullsong's network has contingency plans for partial disruption built into every operation.
+    </div>
+  </div>
+
+  <div class="tool" onclick="this.classList.toggle('open')">
+    <div class="th"><div class="tn">Legendary Beasts</div><span class="ttag">Not an Encounter</span></div>
+    <div class="tb">
+      <strong>Principle:</strong> Do not run Legendary Beast encounters as combat. There are no combat statistics to reference. A Legendary Beast does not "fight" — it <em>is present</em>. The Concordance describes what happens when something of incalculable Aetheric weight occupies a space, not how many attacks it makes per Pulse.<br><br>
+      <strong>How to run them:</strong> Describe sensory experience first (the pressure in the chest, the Aetheric resonance overwhelming perception). Describe the Beast's behavior as motivated (what is it doing? what does it want from this space?). Let the party respond. The Beast responds to the party's response — not to their attack rolls.<br><br>
+      <strong>If a player attacks:</strong> The attack simply does not land in any meaningful way. The Beast is not immune — it is not engaged. A sword swing at the Nemean Lion is not a combat action; it is a social action with potentially catastrophic social consequences. The Lion looked at this person. It remembers. Whether it decides the person is worthy or foolish depends entirely on the context the Concordance has established for this Beast in this session.<br><br>
+      <strong>Resolution:</strong> Beast encounters end when the Beast chooses to leave, or when the party successfully communicates something the Beast finds meaningful. The Concordance decides what each Beast finds meaningful based on its character established in the Zodiac Attunement document.
+    </div>
+  </div>
+
+</div></div>
+
+<!-- SESSION PACING -->
+<div class="panel" id="panel-pacing"><div class="wrap">
+  <p class="lore">A session that feels right has a rhythm — pressure, release, discovery, consequence. The Concordance doesn't control pace through encounters alone; they control it through information management, faction activity, and when to let the party breathe.</p>
+
+  <div class="sec">The Three-Beat Session</div>
+  <div class="tool open" onclick="this.classList.toggle('open')">
+    <div class="th"><div class="tn">Standard Session Structure</div><span class="ttag">Default Template</span></div>
+    <div class="tb">
+      Most sessions work well with three distinct beats:<br><br>
+      <strong>Beat 1 — The Complication:</strong> Something the party thought they understood is revealed to be more complex, or a new pressure arrives from an unexpected direction. This doesn't need to be an encounter — it can be a conversation that reveals new information, a faction move that changes the landscape, or a Fate Number reading that changes the party's understanding of their situation.<br><br>
+      <strong>Beat 2 — The Engagement:</strong> The party acts on their current understanding. This is where the session's primary conflict (combat, social, exploration) occurs. The engagement should have a clear stakes established before it begins — what happens if this goes well? what happens if it doesn't?<br><br>
+      <strong>Beat 3 — The Consequence:</strong> The engagement produces a result. Something has changed. The Concordance reveals one new piece of the larger picture — a faction's response, a Fated Bond development, a world-level event that has occurred while the party was engaged. End here. Let the players carry the consequence into the next session.<br><br>
+      <div class="note"><strong>The cliff-hanger is a Beat 3 tool.</strong> End the session at the moment of consequence revelation, not after the party has processed it. "You open the chest and find..." is a Beat 3 ending. "You open the chest, find an Eldren crown, and Aethar's agents emerge from the shadows" is two sessions compressed into one — split it.</div>
+    </div>
+  </div>
+
+  <div class="sec">Pulse Count Pacing</div>
+  <div class="tool" onclick="this.classList.toggle('open')">
+    <div class="th"><div class="tn">Combat Length Guidelines</div><span class="ttag">Encounter Design</span></div>
+    <div class="tb">
+      <table class="data-table">
+        <tr><th>Encounter Type</th><th>Target Pulse Count</th><th>Notes</th></tr>
+        <tr><td>Minor skirmish (patrol, ambush)</td><td>3–5 Pulses</td><td>Resolved quickly. Should feel fast and decisive. Party should not feel at serious risk.</td></tr>
+        <tr><td>Standard combat (Coil operatives, organized resistance)</td><td>5–8 Pulses</td><td>Long enough for meaningful tactical decisions, short enough to not dominate the session.</td></tr>
+        <tr><td>Major combat (named NPC, large force)</td><td>8–12 Pulses</td><td>Use only for sessions where the combat is the point. Build in a clear objective beyond "defeat all enemies."</td></tr>
+        <tr><td>Boss encounter (Scion, Triad member)</td><td>10–15 Pulses + phase change</td><td>Structure in two or three phases — each phase change reveals new information about the enemy or the wider situation.</td></tr>
+      </table>
+      <div class="note"><strong>If a combat is going longer than its target range</strong> — something has gone wrong. Either the encounter is too hard (consider a soft pivot: reinforcements arrive for the party, an NPC intervenes, an environmental change alters the situation), or the party has found an unexpected solution (let them — don't extend the combat to justify prep).</div>
+    </div>
+  </div>
+
+  <div class="sec">Faction Activity Between Sessions</div>
+  <div class="tool" onclick="this.classList.toggle('open')">
+    <div class="th"><div class="tn">The World Moves Without the Party</div><span class="ttag">Campaign Management</span></div>
+    <div class="tb">
+      The world of Sideros has ongoing faction activity that doesn't pause for the party's schedule. Between each session, consider which factions have had time to act:<br><br>
+      <strong>Ashen Coil:</strong> Aethar's four-stage plan is progressing. If the party isn't actively disrupting a specific stage, assume progress on that stage continues. The Concordance should track which stages have been disrupted vs. which are advancing, and escalate the active stages' visible consequences appropriately.<br><br>
+      <strong>The Loom of Fate:</strong> Serath has identified three of the Quint Bond cluster members. He has been sitting on this information for six weeks. Each session that passes, the Concordance should consider whether something has prompted him to act or share — or whether his silence is itself a signal the party might eventually detect.<br><br>
+      <strong>The Order of Pure Reason:</strong> The Spica Monoliths operation is in planning. The Fallen Star study is ongoing. Every session without party intervention is a session closer to deployment.<br><br>
+      <strong>Lord Leo:</strong> The Solar Chivalry recruitment crisis and Simha Temple political claim are both active. Without intervention, the empire continues its decay arc. With intervention, new complications arise.<br><br>
+      <div class="note"><strong>Simple tracking:</strong> At the end of each session, write one sentence about what each active faction did while the party was occupied elsewhere. This creates the lived-in world texture that makes Sideros feel real rather than staged.</div>
+    </div>
+  </div>
+
+</div></div>
+
+<!-- ADVENTURE SITES -->
+<div class="panel" id="panel-sites"><div class="wrap">
+  <p class="lore">Specific adventure locations with known active threats, faction interests, and current status. These are the boots-on-the-ground sites where the world's macro-conflicts become immediate and personal.</p>
+
+  <div class="sec">Active Sites — Current Threats</div>
+
+  <div class="site-block">
+    <div class="sb-name">The Tomb of the First King</div>
+    <span class="sb-loc">Leonine Empire · Aurelia Outskirts · Succession Crisis</span>
+    <div class="sb-text">
+      <strong>The secret:</strong> The crown is not a human artifact. It is an Eldren Empire relic — a piece of the civilization that preceded the Leonine kings by centuries. The Eldren who crafted it designed it to recognise genuine cosmic authority via Fate Number resonance, not blood lineage. This means it could theoretically recognise someone outside the Solar or Lunar lines entirely — including a Quint Bond cluster member.<br><br>
+      <strong>Current status:</strong> Multiple rival factions descending simultaneously — the Order of Pure Reason (wants to identify the Lunar Queen before anyone else), a Leonine noble house (wants it for legitimacy), and an Eldren Siddha faction (knows what it actually is and wants it returned to Eldren custody). They are not coordinating. The Tomb's defenses predate all of them.<br><br>
+      <strong>Key question for the Concordance:</strong> Who reaches the crown first — and what happens when they put it on?
+    </div>
+  </div>
+
+  <div class="site-block">
+    <div class="sb-name">The Caldera of Deneb Kaitos</div>
+    <span class="sb-loc">Aries March · First Spear region · Active Coil Operation</span>
+    <div class="sb-text">
+      <strong>The threat:</strong> An Ashen Coil sorcerer (Scion-ranked, Void-energy attuned) is conducting a ritual inside the active volcano to weaponize the magma into a blight-spewing fluid capable of devastating all of Terra Firma's agricultural zones — specifically targeting the Taurian breadbasket that Lady Taurus's hidden Siddha mantras are already struggling to protect.<br><br>
+      <strong>Current status:</strong> Lord Aries knows something is wrong but his soldiers do not return from the Caldera's approaches. The Mesha Siddha at the Forge of the First Spark know what is happening but are not speaking to Lord Aries. The ritual is approximately 60% complete. <strong>Timeline: 3–4 sessions of in-world time before the ritual completes.</strong><br><br>
+      <strong>Access route:</strong> The Caldera's interior is accessible through a series of Precursor-era vent shafts the Mesha Siddha know exist and will share if the Aries/Siddha conflict is bridged. Without this information, the party faces a direct assault through an active volcano against Coil defenders.<br><br>
+      <strong>Connections:</strong> Disrupting this site is directly connected to Stage 1 of Aethar's plan (breaking defensive bulwarks). If the party stops the Caldera ritual, they have disrupted a named Coil operation — Drava Nullsong will take note.
+    </div>
+  </div>
+
+  <div class="site-block">
+    <div class="sb-name">The Sunken Observatory</div>
+    <span class="sb-loc">Sagittarian Steppes · Buried Precursor Ruin · Active Race</span>
+    <div class="sb-text">
+      <strong>The purpose:</strong> A Precursor-era astronomical installation whose instruments, if recovered and restored, could calculate a counter-strategy to the dark prophecy Lord Sagittarius received from the Spire of the Higher Truth — a prophecy foretelling absolute Ashen Coil victory. The Observatory's data is the only thing that could either confirm or refute this prophecy with enough specificity to act on.<br><br>
+      <strong>Current status:</strong> Three nomadic factions are racing to uncover it simultaneously, each believing their interpretation of the stellar data will be authoritative. Lord Sagittarius is observing the race rather than joining it. The Ashen Coil has become aware that something important is being uncovered — their agents are now the fourth faction, with the goal of reaching the Observatory's primary instruments before anyone else and destroying them.<br><br>
+      <strong>Key complication:</strong> The Observatory's instruments are still partially functional — but they require an Attunement Warding Resonance DC 16 to operate without triggering a Ceque Line feedback cascade. Only a character with Aetheric Lore Mastery or better can attempt this safely. A Ceque Line Born character or Stellar Cartographer has Resonant Fortune on the check.
+    </div>
+  </div>
+
+  <div class="site-block">
+    <div class="sb-name">The Spica Monoliths</div>
+    <span class="sb-loc">Republic of Argentum · Ancient Precursor Site · Faction Contest</span>
+    <div class="sb-text">
+      <strong>What it is:</strong> A standing-stone complex aligned with Virgo's zodiac domain — Spica being the brightest star of Virgo. Contains an ancient purification ritual that the Kanya Siddha believe predates the Scattered Temples themselves. The ritual requires willing participants and a trained Siddha to conduct; forced application corrupts the monolith resonance.<br><br>
+      <strong>Current status:</strong> The Order of Pure Reason is planning a forced deployment of the ritual against a captured Ashen-Sworn population. The Kanya Siddha have issued a formal warning that this will corrupt the Monoliths permanently. The Order has filed the warning. Operation planning continues.<br><br>
+      <strong>Faction interests:</strong> The Order wants military neutralization of Ashen-Sworn threat. The Kanya want the Monoliths preserved and properly used for voluntary blight-rot curing — they are the only known cure for blight-rot outside Moon-Petal Lotus. The Ashen-Sworn prisoners want survival. Lord Aries wants the Ashen-Sworn threat neutralized by any means. An Accord-Walker character might recognize that the Monolith ritual, properly conducted, would produce genuine purification and potential Ashen-Sworn alignment with the Duchy Compact rather than forced neutralization.<br><br>
+      <strong>The window:</strong> The Order's operation is 2–3 weeks from execution. The party has that window to intervene, broker a compromise, or allow it to proceed and deal with the permanent loss of the Monoliths.
+    </div>
+  </div>
+
+  <div class="site-block">
+    <div class="sb-name">The Earthly Crown</div>
+    <span class="sb-loc">Stone Kingdom of Dunmar · Deep Restricted Territory · Cursed Relic</span>
+    <div class="sb-text">
+      <strong>What it is:</strong> The final resting place of a legendary Dunmarim king. The crown is believed to confer absolute legal authority over all disputed Dunmarim succession claims — making it enormously politically valuable to a Dunmarim establishment currently managing three competing dynastic lines.<br><br>
+      <strong>The curse:</strong> The crown corrupts the holder's judgment in ways that manifest slowly and can be rationalized as wisdom. The holder becomes increasingly certain of their rightness, increasingly intolerant of opposition, and increasingly willing to use the crown's authority to remove anything that contradicts their judgment. The Karmic Mountain Monastery has documented three previous holders across history. None ended well. The Monastery guards the Tomb entrance precisely to prevent a fourth attempt.<br><br>
+      <strong>Current status:</strong> The Dunmarim political establishment is applying pressure on Lady Capricorn to authorize an expedition. Lady Capricorn is stalling using treaty clauses. The Monastery is holding the entrance with both physical presence and a standing Attunement Warding Resonance field (DC 18) that makes it impossible to enter the Tomb without their awareness.<br><br>
+      <strong>Concordance note:</strong> The crown is genuinely cursed — if a player character claims it, implement the corruption slowly. The character becomes more decisive, more certain, more Alpha — which feels like growth for a Pulse or two before it becomes something else entirely. The Monastery can remove the curse if the character chooses to give up the crown.
+    </div>
+  </div>
+
+  <div class="site-block">
+    <div class="sb-name">The Fallen Star Zone (Argentum Fade-Bleed)</div>
+    <span class="sb-loc">Republic of Argentum · Cordoned Urban Sector · Active Fade-Bleed</span>
+    <div class="sb-text">
+      <strong>What it is:</strong> A sector of Argentum surrounding a crashed celestial body (the Fallen Star the Order is weaponizing). The veil between the physical world and the spirit realm has worn completely thin in the immediate vicinity. Permanent Full Overlap in the innermost zone; Torn condition in the surrounding district.<br><br>
+      <strong>Current status:</strong> Order of Pure Reason has cordoned the area — entry requires authorization. Spirits manifest continuously and are attempting to communicate something to anyone who can perceive them (Ashé-Medium, Zodiac Priest, Fade-Guardian characters can receive these communications). What they're trying to say: the Fallen Star is not a natural celestial body. It is a fragment of a destroyed Precursor weapon — something the Four Architects of Kallos built and then tried to destroy in the years before the Night of Kallos.<br><br>
+      <strong>Access:</strong> Order authorization, Order of Pure Reason Researcher Origin (legitimate credentials), or infiltration (Fate-Breaker, City Depths Survivor Origin). A Fade-Guardian can enter the Torn zone without authorization by using their Veil Walk ability — they are partially Otherworldly already and the boundary doesn't register them as an intruder.
+    </div>
+  </div>
+
+</div></div>
+
+<!-- HOUSE RULES -->
+<div class="panel" id="panel-houserules"><div class="wrap">
+  <p class="lore">System refinements that smooth play, remove friction, and keep the fiction moving. These are not optional rules — they are integrated into how Sideros runs.</p>
+
+  <div class="sec">Core Adjustments</div>
+
+  <div class="tool open" onclick="this.classList.toggle('open')">
+    <div class="th"><div class="tn">Search Action — Consolidated</div><span class="ttag">Exploration</span></div>
+    <div class="tb">
+      Searching for traps and searching for secret doors or hidden objects are <strong>one action</strong> — the Search Act. A character who uses their Act to Search checks against the Concordance's hidden DC for all hidden elements in the area simultaneously. There is no separate "check for traps" and "check for secret passages" — both are covered by a single Search roll.<br><br>
+      <strong>The DC:</strong> Set by how well-hidden the element is, not by its danger. A well-concealed trap (DC 18) is hard to find regardless of whether it kills you or merely inconveniences you. A poorly constructed secret door (DC 10) is easy to find regardless of what's behind it.<br><br>
+      <strong>What Search covers:</strong> Traps, triggers, secret passages, hidden objects, concealed creatures within 30 ft, coded markings, recent disturbance of dust or debris. One roll, complete result.
+    </div>
+  </div>
+
+  <div class="tool" onclick="this.classList.toggle('open')">
+    <div class="th"><div class="tn">Discovery Principle — No Empty Chests</div><span class="ttag">Exploration</span></div>
+    <div class="tb">
+      Every container, cache, or location the party investigates with effort contains <em>something</em> of value — though not necessarily monetary value. Value can be:<br><br>
+      • Material (gold, equipment, crafting material)<br>
+      • Informational (a document, a map, a coded message, an Aetheric impression readable by certain Paths)<br>
+      • Narrative (evidence of who was here and what they were doing, which advances a faction plot)<br>
+      • Environmental (a safe rest point, a usable Working component, a Ceque node that hasn't been mapped)<br><br>
+      <strong>The principle:</strong> If the party went to the effort of searching a specific location, the Concordance owes them a return on that investment. An empty chest is a game design failure, not a narrative beat. If you hadn't planned anything for this location, improvise something small — a personal letter, a single Copper Coin with an unusual mark, a faint Aetheric residue — and let the party make it meaningful.
+    </div>
+  </div>
+
+  <div class="tool" onclick="this.classList.toggle('open')">
+    <div class="th"><div class="tn">Vitality Restoration — Brief Attunement Clarity</div><span class="ttag">Rest</span></div>
+    <div class="tb">
+      During a Brief Attunement (1 hour minimum), a character may spend any number of Vitality Dice. Each die rolled restores Vitality equal to the result + the character's Endurance modifier. <strong>You don't have to decide how many Vitality Dice to spend before rolling</strong> — roll one, see the result, decide whether to spend another. Stop when you're satisfied or out of dice.<br><br>
+      The Stabilising Presence bonus (Fated Bond) adds one additional die if the bond-mate is within 10 ft. This die is rolled in addition to whatever the character chooses to spend — it is not part of the "spend any number" pool and cannot be saved.
+    </div>
+  </div>
+
+  <div class="tool" onclick="this.classList.toggle('open')">
+    <div class="th"><div class="tn">Resonant Fortune / Discord — Stacking Rule</div><span class="ttag">Dice</span></div>
+    <div class="tb">
+      Multiple sources of Resonant Fortune do not stack — if you have Fortune from two separate sources, you still roll 2d20 and take the higher. Multiple sources of Discord similarly don't stack. <strong>Fortune and Discord cancel each other out</strong> one-for-one regardless of how many sources produced each — if you have 3 Fortune sources and 2 Discord sources, you have net Fortune (1 advantage) and roll 2d20 take higher.<br><br>
+      <strong>Exception:</strong> The Stellar Cartographer's Fate-Knot redistribution can grant Fortune that stacks with existing Fortune for one specific roll — this is explicitly called out in the Stellar Cartographer's Path features as the exception.
+    </div>
+  </div>
+
+  <div class="tool" onclick="this.classList.toggle('open')">
+    <div class="th"><div class="tn">Working Threshold vs. Sustained Resonance — Damage Rule</div><span class="ttag">Magic</span></div>
+    <div class="tb">
+      When a Weave-capable character takes damage while maintaining a Sustained Resonance Working, they make an Endurance Warding Resonance against DC = max(10, half the damage taken). <strong>This roll is made once per damage event</strong> — not once per source in a multi-attack sequence. If an enemy makes three Strike Resonances in one Act and all three hit, the Weaver makes one Sustained Resonance check using the total damage from all three hits combined.<br><br>
+      <strong>Rationale:</strong> Per-hit Sustained Resonance checks create too many rolls for a common situation. The single check per damage event keeps play moving while still creating meaningful risk for Weavers under fire.
+    </div>
+  </div>
+
+</div></div>
+
+<!-- BONDS AT THE TABLE -->
+<div class="panel" id="panel-bonds"><div class="wrap">
+  <p class="lore">Fated Bonds are one of Sideros's most distinctive mechanical systems — and one of the most demanding to run at the table. These guidelines help the Concordance handle bond discovery, acknowledgment, and the complications that make bonds narratively interesting rather than just mechanical bonuses.</p>
+
+  <div class="sec">Session Zero — Bond Setup</div>
+  <div class="tool open" onclick="this.classList.toggle('open')">
+    <div class="th"><div class="tn">Assigning and Comparing Fate Numbers</div><span class="ttag">Session Zero</span></div>
+    <div class="tb">
+      <ol class="step-list">
+        <li><strong>All players roll 1d100 privately.</strong> Do not share numbers yet. Record them.</li>
+        <li><strong>Concordance collects all numbers</strong> and checks for: natural Paired Bonds (within 10), potential Triads (within 7), Void-Touched Numbers (13, 66, 99), and Quint Bond potential (within 3).</li>
+        <li><strong>Void-Touched Numbers:</strong> Tell the player privately. Their character knows something is unusual about their cosmic frequency — they may have been told by a Stellar Cartographer at some point, or they may have noticed that Aetheric effects near them behave differently.</li>
+        <li><strong>Natural Bonds:</strong> Reveal these to the relevant players privately — not to the full table. The characters don't know yet; the players do. This creates the specific tension of knowing what the recognition will feel like when it happens, and choosing when to name it at the table.</li>
+        <li><strong>Quint Bond potential:</strong> If five numbers fall within 3 points — consider seriously whether to run this as the central campaign arc. It is extraordinarily rare and changes the scale of the narrative significantly.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="sec">Running Bond Recognition</div>
+  <div class="tool" onclick="this.classList.toggle('open')">
+    <div class="th"><div class="tn">The Recognition Moment — How to Run It</div><span class="ttag">In Play</span></div>
+    <div class="tb">
+      Bond recognition happens the first time two bonded characters are within 30 feet of each other. The Concordance describes the sensation to both players simultaneously — privately, as a note or whisper — and lets each player decide independently whether their character acknowledges it or pushes it away.<br><br>
+      <strong>The physical sensation description:</strong> "The world becomes slightly more real than it was a moment before. A warmth from the chest outward. The feeling of remembering someone you have never met." Adjust per Essence: Alpha feels suddenly seen; Beta feels like they finally understand what they were maintaining; Omega feels the pattern complete.<br><br>
+      <strong>The Concordance does not say "you have a Fated Bond."</strong> The Concordance describes the experience. What the characters call it — if anything — is their choice. The bond is real whether named or not. An unacknowledged bond produces the Denied Bond instability over time (see Fated Bond document).<br><br>
+      <strong>Timing:</strong> Don't rush the recognition scene. If it happens mid-combat, describe it as a flash during the chaos — something processed later. Give the players a quiet moment afterward to actually sit with what happened.
+    </div>
+  </div>
+
+  <div class="tool" onclick="this.classList.toggle('open')">
+    <div class="th"><div class="tn">Bond Complications — When to Push</div><span class="ttag">Ongoing Play</span></div>
+    <div class="tb">
+      Bonds are not a permanent buff. They are a relationship with mechanical expression. Push on them when:<br><br>
+      <strong>A bonded character is in danger</strong> — the other bonded character feels it through Resonant Awareness. Do they act on it immediately? Do they delay because the mission requires it? The tension between bond impulse and tactical situation is the most productive bond complication.<br><br>
+      <strong>A faction targets the bond specifically</strong> — the Coil's Void-Husk corruption of a bonded member, the Loom's separation of inconvenient bonds, Aethar's Stage 5 (prevent the Quint Bond). These are not random encounters; they're targeted attacks on the party's most significant relationships.<br><br>
+      <strong>The bond deepens naturally</strong> — after three major encounters fought together, Synchronized Combat develops. After six months of close bonding, Resonant Knowledge Transfer. Don't announce these mechanically; describe them narratively first and let the players recognize what's happening.<br><br>
+      <strong>A bonded character makes a choice the other fundamentally disagrees with</strong> — the bond amplifies emotional intensity. Resonant Discord within a bond is not the same as breaking the bond; it is the bond insisting that both parties are real people with real disagreements. The most interesting bond stories are the ones where the bond survives disagreement.
+    </div>
+  </div>
+
+  <div class="sec">The Quint Bond Arc</div>
+  <div class="tool" onclick="this.classList.toggle('open')">
+    <div class="th"><div class="tn">Running the Five Who Remember</div><span class="ttag">Campaign Scale</span></div>
+    <div class="tb">
+      If the Quint Bond is in play, Serath has identified three of the five members. He has been withholding this from Aethar for six weeks. The Concordance's job is to let this information find its way to the party through play — not exposition, but discovery.<br><br>
+      <strong>Signals to plant:</strong> A Stellar Cartographer NPC who reads a party member's Number and reacts with uncharacteristic alarm. A Kallos-Sworn Field Agent who seems unusually interested in the party's composition. Serath himself appearing in a scene where he shouldn't be, observing and then withdrawing without engaging.<br><br>
+      <strong>Aethar's Stage 5:</strong> Once the Coil becomes aware the Quint Bond is forming, they do not attack the party directly — direct attack risks triggering the bond formation (the five need only be in the same room once for the bond to establish). They attempt <em>separation</em> — manufactured crises that keep party members in different locations, missions that require the party to split, social pressure designed to cause individual members to withdraw from the group.<br><br>
+      <strong>The formation scene:</strong> When all five are finally in the same room — run it. Describe the air pressure dropping. Candles extinguishing. The specific quality of recognition. Every Stellar Cartographer within 300 miles feels something happen. The Loom of Fate's sensors trigger an alert. Aethar's Stage 5 has failed. Now the campaign's final arc begins.
+    </div>
+  </div>
+
+</div></div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).style.display='block';
+  document.getElementById('panel-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
+}
+document.querySelectorAll('.panel').forEach(p=>{p.style.display='none'});
+document.getElementById('panel-macro').style.display='block';
+document.getElementById('panel-macro').classList.add('active');
+document.querySelectorAll('.nav-btn')[0].classList.add('active');
+</script>
+</body>
+</html>

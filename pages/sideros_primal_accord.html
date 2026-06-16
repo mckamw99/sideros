@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — The Primal Accord</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;500;600&display=swap');
+
+:root {
+  --void:#080a08; --void-mid:#0f130f; --void-up:#181e18;
+  --gold:#c9a84c; --gold-dim:#7a6028; --gold-bright:#e8c870;
+  --parchment:#f0e6cc; --parchment-dim:rgba(240,230,204,0.55);
+  --green:#4a8a56; --green-dim:#2a5a32; --green-bright:#6ab87a;
+  --amber:#c87840; --amber-dim:#7a4820;
+  --hive:#c8a428; --hive-dim:#786018;
+  --beast:#8a5040; --beast-dim:#4a2818;
+  --omega:#9066c8; --alpha:#d4724a; --beta:#4a8ec4;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'EB Garamond',Georgia,serif;
+  background:var(--void);color:var(--parchment);
+  line-height:1.7;min-height:100vh;
+}
+
+/* ── HERO ── */
+.hero{
+  text-align:center;padding:4rem 1.5rem 3rem;
+  background:
+    radial-gradient(ellipse at 30% 0%,rgba(74,138,86,0.1) 0%,transparent 50%),
+    radial-gradient(ellipse at 70% 0%,rgba(200,120,64,0.08) 0%,transparent 50%);
+  border-bottom:1px solid rgba(74,138,86,0.2);
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234a8a56' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events:none;
+}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--green-dim);margin-bottom:.9rem}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(24px,4.5vw,40px);font-weight:500;color:var(--green-bright);letter-spacing:.06em;margin-bottom:.4rem}
+.hero-subtitle{font-family:'Cinzel',serif;font-size:13px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:.8rem}
+.hero-sub{font-size:15px;font-style:italic;color:var(--parchment-dim);max-width:520px;margin:0 auto}
+.hero-tags{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:1.2rem}
+.hero-tag{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:4px;border:1px solid}
+
+/* ── NAV ── */
+.nav-strip{display:flex;gap:4px;flex-wrap:wrap;padding:.75rem 1rem;border-bottom:1px solid rgba(74,138,86,0.15);background:var(--void-mid);position:sticky;top:0;z-index:20}
+.nav-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;border:1px solid rgba(74,138,86,0.2);border-radius:4px;background:transparent;color:var(--parchment-dim);cursor:pointer;transition:all .15s;white-space:nowrap}
+.nav-btn:hover{background:rgba(74,138,86,0.06);color:var(--green-dim)}
+.nav-btn.active{background:rgba(74,138,86,0.1);color:var(--green-bright);border-color:rgba(74,138,86,0.4)}
+
+.panel{display:none}.panel.active{display:block}
+.wrap{max-width:880px;margin:0 auto;padding:2.5rem 1.25rem 4rem}
+
+/* ── TEXT ── */
+.lore{font-size:15px;color:rgba(240,230,204,0.82);line-height:1.88;margin-bottom:.9rem}
+.lore strong{color:var(--parchment);font-weight:500}
+.lore em{color:var(--green-dim);font-style:italic}
+
+.sec{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--green-dim);margin:1.75rem 0 .75rem;display:flex;align-items:center;gap:.7rem}
+.sec::after{content:'';flex:1;height:1px;background:rgba(74,138,86,0.18)}
+
+/* ── DUAL RESOURCE DISPLAY ── */
+.dual-resource{display:grid;grid-template-columns:1fr 40px 1fr;gap:0;border:1px solid rgba(74,138,86,0.2);border-radius:12px;overflow:hidden;margin-bottom:1.25rem}
+.dr-side{padding:16px 16px 14px}
+.dr-left{background:rgba(138,80,64,0.08);border-right:1px solid rgba(74,138,86,0.15)}
+.dr-right{background:rgba(200,164,40,0.06);border-left:1px solid rgba(74,138,86,0.15)}
+.dr-center{background:rgba(74,138,86,0.06);display:flex;align-items:center;justify-content:center}
+.dr-center-icon{font-size:18px;color:var(--green-dim)}
+.dr-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px}
+.dr-title{font-family:'Cinzel',serif;font-size:15px;font-weight:500;margin-bottom:6px;letter-spacing:.03em}
+.dr-text{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.68}
+.dr-text strong{color:var(--parchment);font-weight:500}
+
+/* ── GAUGE ── */
+.gauge-wrap{background:rgba(255,255,255,0.02);border:1px solid rgba(74,138,86,0.18);border-radius:8px;padding:12px 14px;margin-bottom:.9rem}
+.gauge-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--green-dim);margin-bottom:8px}
+.gauge-track{display:flex;gap:3px;margin-bottom:5px}
+.gauge-seg{height:10px;flex:1;border-radius:2px;border:1px solid rgba(255,255,255,0.06)}
+.gauge-zone{font-size:10px;color:rgba(240,230,204,0.35);display:flex;justify-content:space-between}
+
+/* ── FEATURE CARDS ── */
+.feat-grid{display:grid;gap:8px;margin-bottom:1rem}
+.feat{background:rgba(255,255,255,0.022);border:1px solid rgba(74,138,86,0.14);border-radius:9px;padding:12px 14px;cursor:pointer;overflow:hidden;transition:border-color .15s}
+.feat:hover,.feat.open{border-color:rgba(74,138,86,0.35)}
+.feat-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.feat-name{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.04em;color:var(--green-bright)}
+.feat-depth{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:3px;border:1px solid rgba(74,138,86,0.3);color:var(--green-dim);white-space:nowrap;flex-shrink:0}
+.feat-body{display:none;margin-top:9px;padding-top:9px;border-top:1px solid rgba(74,138,86,0.12);font-size:13px;color:rgba(240,230,204,0.75);line-height:1.72}
+.feat.open .feat-body{display:block}
+.feat-body strong{color:var(--parchment);font-weight:500}
+.feat-body em{color:var(--green-dim)}
+
+/* ── ASPECT TABLE ── */
+.aspect-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:1rem}
+.aspect-table th{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--green-dim);padding:7px 10px;text-align:left;border-bottom:1px solid rgba(74,138,86,0.2)}
+.aspect-table td{padding:7px 10px;border-bottom:1px solid rgba(74,138,86,0.07);color:rgba(240,230,204,0.75);vertical-align:top;line-height:1.5}
+.aspect-table td:first-child{white-space:nowrap}
+.aspect-table td:nth-child(2){color:var(--green-bright);font-weight:500;white-space:nowrap}
+.aspect-table tr:last-child td{border-bottom:none}
+.aspect-table tr:hover td{background:rgba(74,138,86,0.03)}
+.aspect-table tr.locked td{opacity:.5}
+.aspect-table .beast-name{color:var(--parchment);font-weight:500}
+
+/* ── CALLING CARDS ── */
+.calling-grid{display:grid;gap:8px;margin-bottom:1rem}
+.calling{background:rgba(255,255,255,0.02);border:1px solid rgba(74,138,86,0.15);border-radius:9px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.calling:hover,.calling.open{border-color:rgba(74,138,86,0.32)}
+.calling-head{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;gap:10px}
+.calling-name{font-family:'Cinzel',serif;font-size:13px;letter-spacing:.04em;color:var(--green-bright)}
+.calling-tag{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:3px;border:1px solid;white-space:nowrap;flex-shrink:0}
+.calling-body{display:none;padding:0 14px 13px;border-top:1px solid rgba(74,138,86,0.1)}
+.calling.open .calling-body{display:block;padding-top:10px}
+.cb-feat{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.7;margin-bottom:6px}
+.cb-feat:last-child{margin-bottom:0}
+.cb-feat strong{color:var(--parchment);font-weight:500}
+
+/* ── INFO BLOCKS ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.9rem}
+.info{background:rgba(255,255,255,0.02);border:1px solid rgba(74,138,86,0.13);border-radius:8px;padding:10px 13px}
+.ib-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--green-dim);margin-bottom:4px}
+.ib-text{font-size:13px;color:rgba(240,230,204,0.78);line-height:1.62}
+.ib-text strong{color:var(--parchment);font-weight:500}
+
+/* ── NOTE BLOCKS ── */
+.note{background:rgba(144,102,200,0.05);border:1px solid rgba(144,102,200,0.2);border-radius:8px;padding:11px 13px;margin:.75rem 0}
+.note-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:#a87ee8;margin-bottom:5px}
+.note-text{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.65}
+.note-text strong{color:var(--parchment);font-weight:500}
+
+.green-note{background:rgba(74,138,86,0.06);border:1px solid rgba(74,138,86,0.25);border-radius:8px;padding:11px 13px;margin:.75rem 0}
+.green-note .note-title{color:var(--green-bright)}
+.green-note .note-text{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.65}
+.green-note .note-text strong{color:var(--parchment);font-weight:500}
+
+.amber-note{background:rgba(200,120,64,0.06);border:1px solid rgba(200,120,64,0.25);border-radius:8px;padding:11px 13px;margin:.75rem 0}
+.amber-note .note-title{color:var(--amber)}
+.amber-note .note-text{font-size:13px;color:rgba(240,230,204,0.75);line-height:1.65}
+.amber-note .note-text strong{color:var(--parchment);font-weight:500}
+
+/* ── PROGRESSION TABLE ── */
+.prog-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:1rem}
+.prog-table th{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--green-dim);padding:7px 10px;text-align:left;border-bottom:1px solid rgba(74,138,86,0.2)}
+.prog-table td{padding:6px 10px;border-bottom:1px solid rgba(74,138,86,0.06);color:rgba(240,230,204,0.75);vertical-align:top;line-height:1.45;font-size:12px}
+.prog-table td:first-child{color:var(--green-bright);font-family:'Cinzel',serif;font-size:11px;white-space:nowrap}
+.prog-table tr:last-child td{border-bottom:none}
+.prog-table tr.milestone td{background:rgba(74,138,86,0.04)}
+
+.divider{height:1px;background:linear-gradient(to right,transparent,rgba(74,138,86,0.2),transparent);margin:1.5rem 0}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Sideros / Astrolan — Path Compendium · Volume III</div>
+  <h1 class="hero-title">The Primal Accord</h1>
+  <div class="hero-subtitle">Accord-Walkers · Arcadia Major</div>
+  <p class="hero-sub">They do not believe the gods fell. They believe the gods chose a different form — and they learned to speak that language.</p>
+  <div class="hero-tags">
+    <span class="hero-tag" style="color:var(--green-bright);border-color:rgba(74,138,86,0.4);background:rgba(74,138,86,0.08)">★ Original Path</span>
+    <span class="hero-tag" style="color:var(--gold-dim);border-color:rgba(201,168,76,0.3)">Vitality Die: d8</span>
+    <span class="hero-tag" style="color:var(--alpha);border-color:rgba(212,114,74,0.3)">Alpha / Beta split by Calling</span>
+    <span class="hero-tag" style="color:var(--green-dim);border-color:rgba(74,138,86,0.3)">Dual Resource</span>
+  </div>
+</div>
+
+<div class="nav-strip">
+  <button class="nav-btn active" onclick="show('lore',this)">The Path</button>
+  <button class="nav-btn" onclick="show('resources',this)">Dual Resource</button>
+  <button class="nav-btn" onclick="show('aspects',this)">Aspect Manifestation</button>
+  <button class="nav-btn" onclick="show('features',this)">Path Features</button>
+  <button class="nav-btn" onclick="show('callings',this)">Callings</button>
+  <button class="nav-btn" onclick="show('progression',this)">Progression</button>
+  <button class="nav-btn" onclick="show('worldnotes',this)">World Notes</button>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- THE PATH -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel active" id="panel-lore">
+<div class="wrap">
+
+  <p class="lore">The Accord-Walker does not call themselves a druid, a shaman, or a nature priest. They call themselves <strong>Accord-Walkers</strong> — those who walk in accord with what the Beasts already are. The distinction matters. A priest mediates between their congregation and a distant power. An Accord-Walker has no congregation and recognizes no distance. The Legendary Beasts of Arcadia Major — the Nemean Lion, the Queen Bee of the Golden Hive, the Star-Metal Stag — are not objects of worship. They are <em>colleagues</em>, operating at a scale that requires translation rather than reverence.</p>
+
+  <p class="lore">The Arcadian theology that produces Accord-Walkers begins with a single premise: <strong>the Pantheonic Fall was a choice, not a catastrophe.</strong> The twelve gods did not lose their divinity. They redistributed it — from concentrated divine forms into distributed biological presence. Aries is not merely present in the Ashen Ram; Aries <em>is</em> the Ashen Ram, fully and completely. The form is different. The force is unchanged. Every Accord-Walker learns this theology before they learn their first Aspect — because understanding what the Beasts are determines how you relate to them, and how you relate to them determines what they'll share with you.</p>
+
+  <p class="lore">The Queen Bee's Golden Hive is the center of Accord-Walker training. The Bee-Priestess lineage has maintained unbroken contact with the Queen Bee for longer than any other institution has maintained contact with any Legendary Beast — four thousand years of continuous relationship, from before the Fall through the Fall itself and into the present era. <strong>The Bee-Priestess does not speak for the Queen Bee.</strong> She speaks <em>with</em> her, in a dialogue that has produced the most complete understanding of Legendary Beast cognition anywhere in the world. Every Accord-Walker who trains at the Golden Hive learns, eventually, that the Queen Bee remembers the gods before they became Beasts — and that her hive-mind carries the memory of what each zodiac force felt like before it wore its current form. This knowledge is the most carefully guarded secret in Arcadia Major. It is also the most dangerous thing an Accord-Walker can learn.</p>
+
+  <div class="two-col" style="margin-top:1.5rem">
+    <div class="info">
+      <div class="ib-label">What distinguishes this Path</div>
+      <div class="ib-text">Two entirely separate resource systems that enable two entirely separate modes of power. <strong>Beast Resonance</strong> powers physical transformation and combat. <strong>Hive Attunement</strong> powers communal and information abilities. A player has to manage both simultaneously — and choose moment to moment which mode the situation demands.</div>
+    </div>
+    <div class="info">
+      <div class="ib-label">What this Path is not</div>
+      <div class="ib-text">Not a wild shape replacement — Aspect Manifestation works differently. Not a nature-cleric — the Accord-Walker has no patron and performs no Benedictions. Not a summoner — the Beasts are not called, they are <em>expressed</em>. Not a pacifist — the Nemean Lion is not peaceful, and neither are its Accord-Walkers.</div>
+    </div>
+    <div class="info">
+      <div class="ib-label">Primal Essence split</div>
+      <div class="ib-text">Alpha Accord-Walkers gravitate toward the Nemean Calling — expressing Beast power outward, leading through force of nature. Beta Accord-Walkers gravitate toward the Keeper and Hive Callings — sustaining ecosystems, maintaining communal awareness, holding the pattern together from within.</div>
+    </div>
+    <div class="info">
+      <div class="ib-label">Relationship to Wolf-Shifters</div>
+      <div class="ib-text">Wolf-Shifters and Accord-Walkers are the two Paths most likely to encounter each other's transformation abilities and compare notes. The Omote-Ura Gauge is biological — it's what you are. Beast Resonance is attunement — it's what you're reaching toward. The Shōgun-Kami bond and the Beast Resonance system recognize each other as kin without being the same thing.</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- DUAL RESOURCE -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-resources">
+<div class="wrap">
+
+  <div class="dual-resource">
+    <div class="dr-side dr-left">
+      <div class="dr-label" style="color:var(--beast)">Beast Resonance</div>
+      <div class="dr-title" style="color:var(--amber)">Transformation Resource</div>
+      <div class="dr-text">Accumulated attunement with specific Legendary Beasts — stored as a pool that powers Aspect Manifestation. <strong>Not a general resource</strong>: each Beast contributes its own Resonance Points to a separate sub-pool. You cannot spend Nemean Lion resonance to manifest a Stag Aspect. The Beasts are distinct.</div>
+    </div>
+    <div class="dr-center"><div class="dr-center-icon">⟷</div></div>
+    <div class="dr-side dr-right">
+      <div class="dr-label" style="color:var(--hive)">Hive Attunement</div>
+      <div class="dr-title" style="color:var(--hive)">Communal Resource</div>
+      <div class="dr-text">Connection to the Queen Bee's distributed consciousness — a shared awareness that extends beyond the individual. <strong>Fills through communal acts</strong> and shared experience; depletes when used for information, protection, and coordination abilities. Unique among Path resources: it can be shared with allies.</div>
+    </div>
+  </div>
+
+  <div class="sec">Beast Resonance — How It Works</div>
+
+  <p class="lore">Every Legendary Beast the Accord-Walker has directly encountered contributes to a separate Resonance sub-pool. A new encounter with a Beast increases that Beast's sub-pool maximum. Resonance Points within each sub-pool are spent to manifest that Beast's Aspect and refill during Brief or Deep Attunement.</p>
+
+  <div class="gauge-wrap">
+    <div class="gauge-label">Beast Resonance — Per-Beast Pools (maximum 5 per Beast at Depth 1, scaling with Resonance Depth)</div>
+    <div style="display:grid;grid-template-columns:100px 1fr;gap:8px;align-items:center;margin-bottom:6px">
+      <span style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--amber)">Nemean Lion</span>
+      <div class="gauge-track" style="margin-bottom:0">
+        <div class="gauge-seg" style="background:rgba(200,120,64,0.6)"></div>
+        <div class="gauge-seg" style="background:rgba(200,120,64,0.6)"></div>
+        <div class="gauge-seg" style="background:rgba(200,120,64,0.6)"></div>
+        <div class="gauge-seg" style="background:rgba(200,120,64,0.6)"></div>
+        <div class="gauge-seg" style="background:rgba(200,120,64,0.6)"></div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:100px 1fr;gap:8px;align-items:center;margin-bottom:6px">
+      <span style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--hive)">Queen Bee</span>
+      <div class="gauge-track" style="margin-bottom:0">
+        <div class="gauge-seg" style="background:rgba(200,164,40,0.5)"></div>
+        <div class="gauge-seg" style="background:rgba(200,164,40,0.5)"></div>
+        <div class="gauge-seg" style="background:rgba(200,164,40,0.5)"></div>
+        <div class="gauge-seg" style="background:rgba(200,164,40,0.2)"></div>
+        <div class="gauge-seg" style="background:rgba(200,164,40,0.1)"></div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:100px 1fr;gap:8px;align-items:center">
+      <span style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--green-dim)">Star-Metal Stag</span>
+      <div class="gauge-track" style="margin-bottom:0">
+        <div class="gauge-seg" style="background:rgba(74,138,86,0.3)"></div>
+        <div class="gauge-seg" style="background:rgba(255,255,255,0.06)"></div>
+        <div class="gauge-seg" style="background:rgba(255,255,255,0.06)"></div>
+        <div class="gauge-seg" style="background:rgba(255,255,255,0.06)"></div>
+        <div class="gauge-seg" style="background:rgba(255,255,255,0.06)"></div>
+      </div>
+    </div>
+    <div class="gauge-zone" style="margin-top:6px"><span>Not yet encountered = no pool</span><span>Each encounter = +1 max per pool</span><span>5 encounters = maximum pool</span></div>
+  </div>
+
+  <div class="two-col">
+    <div class="info">
+      <div class="ib-label">Filling Beast Resonance</div>
+      <div class="ib-text">
+        <strong>+1 per pool:</strong> Brief Attunement spent in the Beast's natural terrain or near a significant representation of its domain.<br>
+        <strong>+2 per pool:</strong> Deep Attunement spent in the Beast's territory or the Golden Hive.<br>
+        <strong>+Full restore all pools:</strong> Direct encounter with any Beast (peaceful — the Beast acknowledges the Accord-Walker's presence without aggression).<br>
+        <strong>+1 to specific pool:</strong> Successfully completing an action that expresses that Beast's domain (protecting the innocent for Lion; coordinating a group under pressure for Bee; navigating to a previously unknown location for Stag).
+      </div>
+    </div>
+    <div class="info">
+      <div class="ib-label">Spending Beast Resonance</div>
+      <div class="ib-text">
+        <strong>1 Resonance Point:</strong> Minor Aspect (one physical trait — claws, enhanced senses, scales). Lasts 1 minute.<br>
+        <strong>2 Resonance Points:</strong> Partial Aspect (significant physical transformation + one ability). Lasts up to 10 minutes.<br>
+        <strong>3 Resonance Points:</strong> Full Aspect Manifestation (complete Beast-frequency alignment). Lasts up to 1 hour.<br>
+        <strong>5 Resonance Points:</strong> Legendary Aspect (full Beast-frequency at its most powerful expression). Once per Deep Attunement maximum. See Aspect table.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">Hive Attunement — How It Works</div>
+
+  <p class="lore">Hive Attunement measures the Accord-Walker's current depth of connection to the Queen Bee's distributed consciousness — the living network of shared awareness that the Golden Hive maintains across its 40-mile territory, and that an initiated Accord-Walker remains tethered to regardless of distance. It is not the Accord-Walker's personal resource. <strong>It belongs to the Hive.</strong> They are borrowing access to it.</p>
+
+  <div class="gauge-wrap">
+    <div class="gauge-label">Hive Attunement — 0 to 10 (shared resource with the Hive; it can be withdrawn)</div>
+    <div class="gauge-track">
+      <div class="gauge-seg" style="background:rgba(200,164,40,0.2)"></div>
+      <div class="gauge-seg" style="background:rgba(200,164,40,0.3)"></div>
+      <div class="gauge-seg" style="background:rgba(200,164,40,0.4)"></div>
+      <div class="gauge-seg" style="background:rgba(200,164,40,0.5)"></div>
+      <div class="gauge-seg" style="background:rgba(200,164,40,0.6)"></div>
+      <div class="gauge-seg" style="background:rgba(200,164,40,0.65)"></div>
+      <div class="gauge-seg" style="background:rgba(200,164,40,0.7)"></div>
+      <div class="gauge-seg" style="background:rgba(200,164,40,0.75)"></div>
+      <div class="gauge-seg" style="background:rgba(200,164,40,0.8)"></div>
+      <div class="gauge-seg" style="background:rgba(200,164,40,0.85)"></div>
+    </div>
+    <div class="gauge-zone"><span>0 — Severed</span><span>5 — Standard access</span><span>8+ — Deep communion</span><span>10 — Full immersion</span></div>
+  </div>
+
+  <div class="two-col">
+    <div class="info">
+      <div class="ib-label">Filling Hive Attunement</div>
+      <div class="ib-text">
+        <strong>+1:</strong> Act that protects a community or ecosystem without personal benefit.<br>
+        <strong>+2:</strong> Successful coordination of three or more creatures toward a single goal using only communication (no force).<br>
+        <strong>+3:</strong> Extended ritual at a Queen Bee shrine or in the Golden Hive's territory (1 hour).<br>
+        <strong>+Full restore:</strong> Deep Attunement within the Golden Hive's 40-mile territory.<br>
+        <strong>Hive withdrawal:</strong> If the Accord-Walker acts against communal welfare (sacrificing innocents for personal gain, destroying ecosystems, lying to those they protect) the Queen Bee withdraws access — Hive Attunement drops to 0 immediately. Restoration requires making amends in a way the Hive recognizes.
+      </div>
+    </div>
+    <div class="info">
+      <div class="ib-label">Spending Hive Attunement</div>
+      <div class="ib-text">
+        <strong>1 Attunement:</strong> Hive Sense — know the emotional state and general location of all creatures within 60 ft for 1 Pulse.<br>
+        <strong>2 Attunement:</strong> Communal Whisper — transmit one message simultaneously to all willing creatures within 300 ft (no sound, felt rather than heard).<br>
+        <strong>3 Attunement:</strong> Hive Shield — all allies within 30 ft gain Resonant Fortune on Warding Resonances for 1 minute. The Hive's collective awareness protects all of its extensions.<br>
+        <strong>4 Attunement:</strong> Deep Reading — ask the Concordance one question about any living creature or ecosystem within 1 mile; the Hive's distributed sensory network answers accurately.<br>
+        <strong>6 Attunement:</strong> Full Communion — enter the Queen Bee's consciousness for 1 Pulse; receive her complete situational awareness for that Pulse (know the position, Vitality, and intent of every creature within 300 ft).
+      </div>
+    </div>
+  </div>
+
+  <div class="amber-note">
+    <div class="note-title">The Key Interaction</div>
+    <div class="note-text">Beast Resonance and Hive Attunement do not share a pool and do not interfere with each other. An Accord-Walker can manifest a Full Aspect while simultaneously spending Hive Attunement on a Communal Whisper in the same encounter. <strong>The constraint is action economy, not resource economy</strong> — manifesting an Aspect costs an Act; spending Hive Attunement costs an Instinct for minor effects or an Act for major ones. Managing both systems well means reading the situation and knowing which mode it demands.</div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- ASPECT MANIFESTATION -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-aspects">
+<div class="wrap">
+
+  <p class="lore">Aspect Manifestation is the Accord-Walker's answer to wild shape — and the two mechanics work differently enough that the comparison obscures more than it reveals. A wild shape user becomes the animal. An Accord-Walker <strong>expresses the Beast's cosmic frequency through their own body</strong>. They do not cease to be themselves. They become more themselves, filtered through a frequency that is larger than any individual form. The transformation is visible and unmistakable. It is not disguise. It is declaration.</p>
+
+  <p class="lore">Different Aspect tiers produce different degrees of transformation. A Minor Aspect is a single physical trait — slightly unnerving, easy to miss in poor lighting. A Full Aspect is impossible to ignore — the Accord-Walker's body partially takes on the Beast's morphology while retaining their own cognitive and social capacities. A Legendary Aspect approaches something the world has not seen since before the Fall: a mortal being briefly carrying a fragment of divine force at full expression.</p>
+
+  <div class="sec">The Aspect Table — Known Beasts</div>
+
+  <p class="lore" style="margin-bottom:.75rem">An Accord-Walker can only manifest Aspects for Beasts they have directly encountered. The table below lists the twelve Legendary Beast Aspects. At Depth 1, an Accord-Walker has encountered exactly one Beast — chosen during character creation, reflecting their Origin and the Arcadian tradition they trained in. Additional Beasts must be encountered through play.</p>
+
+  <table class="aspect-table">
+    <tr>
+      <th>Beast</th><th>Sign</th><th>Minor Aspect (1 RP)</th><th>Partial Aspect (2 RP)</th><th>Full Aspect (3 RP)</th><th>Legendary Aspect (5 RP)</th>
+    </tr>
+    <tr>
+      <td><span class="beast-name">Ashen Ram</span></td>
+      <td>♈ Aries</td>
+      <td>Ram's horns (natural weapon, 1d6 bludgeoning + push 5 ft on hit)</td>
+      <td>Horns + charge surge (move 30 ft as Instinct before Strike Resonance, +1d8 on that strike)</td>
+      <td>Full ram-aspect; movement 50 ft, charge +2d8, immune to being pushed, Resonant Fortune on Forcefulness Active Resonances</td>
+      <td>For 1 minute: all movement triggers a charge (no activation needed); all strikes knock prone on hit (no save); creatures who look directly at you must make DC 15 Resonance Warding Resonance or be Dread-Struck for 1 Pulse</td>
+    </tr>
+    <tr>
+      <td><span class="beast-name">Khalkotauros</span></td>
+      <td>♉ Taurus</td>
+      <td>Bronze hide (+2 Guard Rating, skin metallic to touch)</td>
+      <td>Bronze hide + immovability (cannot be moved against will; resistance to bludgeoning/piercing/slashing)</td>
+      <td>Full bronze aspect; Guard Rating increases by 4, immune to forced movement, +2d6 on all melee strikes (trampling force)</td>
+      <td>For 1 minute: immune to all non-magical damage; Strike Resonances deal double damage; any creature that strikes you in melee takes 1d10 force damage from the bronze deflection</td>
+    </tr>
+    <tr>
+      <td><span class="beast-name">Twin-Serpents</span></td>
+      <td>♊ Gemini</td>
+      <td>Serpentine flexibility (can fit through any space a Small creature could)</td>
+      <td>Duplicate perception (advantage on Perception and can focus on two different areas simultaneously)</td>
+      <td>Full serpent-aspect; unarmed strikes deal 1d8 piercing + Corrupted condition; Resonant Fortune on Stealth; can read and write any text encountered</td>
+      <td>For 1 minute: split attention fully — take two complete Acts per Moment (not Instinct — full Acts); the second Act cannot be a Working but can be any physical action</td>
+    </tr>
+    <tr>
+      <td><span class="beast-name">Adamant Crab</span></td>
+      <td>♋ Cancer</td>
+      <td>Carapace shell (natural armor, Guard Rating 13 + Endurance modifier)</td>
+      <td>Shell + ward aura (creatures within 10 ft gain +2 Guard Rating while you maintain Partial Aspect)</td>
+      <td>Full crab-aspect; Guard Rating 16 + Endurance modifier; Reflex to impose Resonant Discord on one attack per Pulse targeting an ally within 10 ft; swim 40 ft</td>
+      <td>For 1 minute: create an impenetrable shell around self and up to 4 willing creatures — no physical harm can penetrate it; the shell can be sustained or ended as a free action; while maintained, no one inside can act offensively outward either</td>
+    </tr>
+    <tr>
+      <td><span class="beast-name">Nemean Lion</span></td>
+      <td>♌ Leo</td>
+      <td>Golden mane (Resonant Fortune on Persuasion and Intimidation; presence intensifies)</td>
+      <td>Mane + golden hide (resistance to all non-magical damage; strikes deal +1d6 radiant)</td>
+      <td>Full lion-aspect; immune to non-magical damage; strikes deal +2d6 radiant; roar as Act — all within 60 ft make DC 14 Warding Resonance or Dread-Struck; allies in 30 ft immune to Dread-Struck</td>
+      <td>For 1 minute: full Nemean immunity — immune to all weapon damage (magical or mundane); attacks against you that would deal damage instead deal 0; only Workings and Zodiac Attunement abilities can harm you; your Strike Resonances deal maximum damage automatically</td>
+    </tr>
+    <tr>
+      <td><span class="beast-name">Queen Bee</span></td>
+      <td>♍ Virgo</td>
+      <td>Hive sense (passive — know direction and emotional state of every creature within 300 ft)</td>
+      <td>Hive mind link (telepathic bond with up to 6 willing creatures; share sensory information instantly)</td>
+      <td>Full hive-aspect; all Hive Attunement costs reduced by 1; hive mind extends to 1 mile; stinger attack 1d8 + Corrupted; summoned swarm deals 2d10 per Pulse to one creature in 30 ft</td>
+      <td>Full communion — for 1 minute, the Accord-Walker IS the Hive: simultaneously aware of all creatures within 1 mile; can communicate with and direct any creature within range regardless of language; all Hive Attunement abilities cost 0. The Queen Bee's consciousness is present. This is not comfortable.</td>
+    </tr>
+    <tr>
+      <td><span class="beast-name">Great Roc</span></td>
+      <td>♎ Libra</td>
+      <td>Judicial sight (always know when lied to; Resonant Fortune on Insight)</td>
+      <td>Wings (fly 40 ft) + judicial authority (one creature must answer one question truthfully, DC 15 Resonance Warding Resonance to resist)</td>
+      <td>Full roc-aspect; fly 60 ft; Wing buffet as Act — all within 20 ft knocked prone (DC 14 Forcefulness Warding Resonance); all lies spoken in your presence are visible as golden distortion in the air</td>
+      <td>For 1 minute: cosmic law manifests — you may declare one action that occurred this encounter to be cosmically reversed; the Concordance determines how the reversal expresses, but the action's effects are undone. Once per campaign.</td>
+    </tr>
+    <tr>
+      <td><span class="beast-name">Stygian Scorpion</span></td>
+      <td>♏ Scorpio</td>
+      <td>Scorpion sense (tremorsense 30 ft; detect hidden creatures through ground contact)</td>
+      <td>Venomous stinger (1d8 piercing + Heart-Sting Toxin: DC 14 Endurance or Resonance-Locked for 1 Pulse)</td>
+      <td>Full scorpion-aspect; tremorsense 60 ft; stinger deals 2d8 + toxin; carapace grants +3 Guard Rating; immune to poison and Corrupted condition</td>
+      <td>For 1 minute: the Heart-Sting Toxin in your strikes escalates — on first hit: Resonance-Locked. On second hit: Loom-Suspended. On third hit (same target): creature makes DC 18 Endurance Warding Resonance or drops to 0 Vitality immediately.</td>
+    </tr>
+    <tr>
+      <td><span class="beast-name">Star-Metal Stag</span></td>
+      <td>♐ Sagittarius</td>
+      <td>Star-sense (never lost; always know exact location, time, and direction)</td>
+      <td>Antler weapon (1d10 bludgeoning + target knocked back 10 ft) + movement 50 ft</td>
+      <td>Full stag-aspect; movement 60 ft; antlers deal 2d10 + knockback 20 ft; may carry one willing rider at full speed; Stellar Cartography (always know direction of any named location on the continent)</td>
+      <td>For 1 minute: movement becomes instantaneous within range — teleport up to 60 ft as part of movement (not an Act); can carry up to 4 willing creatures; leaves a star-trail visible only to those with Aetheric Sight</td>
+    </tr>
+    <tr>
+      <td><span class="beast-name">Sea-Goat</span></td>
+      <td>♑ Capricorn</td>
+      <td>Mountain tread (climb speed 40 ft; cannot fall unless rendered unconscious)</td>
+      <td>Goat resilience (advantage on all Endurance Warding Resonances; require only 2 hours of sleep)</td>
+      <td>Full sea-goat aspect; climb speed 50 ft + swim speed 40 ft; Endurance Warding Resonances automatically succeed; charge down a slope or from elevation deals +3d8 damage</td>
+      <td>For 1 minute: the summit is wherever you stand — you and up to 6 allies gain the benefits of a completed goal (the Capricorn Zodiac Attunement's declared-goal benefit) without needing to have declared a goal this session</td>
+    </tr>
+    <tr>
+      <td><span class="beast-name">Kelp-Weaver</span></td>
+      <td>♒ Aquarius</td>
+      <td>Network sense (feel all creatures touching surfaces connected to any body of water within 300 ft)</td>
+      <td>Kelp tendrils (restrain one creature within 30 ft; DC 14 Forcefulness Warding Resonance to break free each Pulse)</td>
+      <td>Full kelp-aspect; network sense extends to 1 mile along waterways; create difficult terrain across 30-ft radius; all allies within 30 ft share your sensory information passively</td>
+      <td>For 1 minute: the network becomes a weapon — all creatures within 300 ft connected to any water source are visible to you and can be targeted as if adjacent; you may spend 2 Hive Attunement to restrain any of them regardless of distance</td>
+    </tr>
+    <tr>
+      <td><span class="beast-name">Twin Dream-Fish</span></td>
+      <td>♓ Pisces</td>
+      <td>Dream-sense (always know if a creature within 60 ft is lying by reading their unconscious emotional state — not the content of the lie, just its presence)</td>
+      <td>Prophetic vision (ask one yes/no question about the next hour; answered accurately by the Concordance)</td>
+      <td>Full dream-aspect; communicate with any sleeping creature within 1 mile; enter and shape a sleeping creature's dream (DC 15 Attunement Warding Resonance to resist alteration); prophetic sense gives 1 round of warning before any ambush or surprise attack</td>
+      <td>This Legendary Aspect cannot be activated through Beast Resonance. The Twin Dream-Fish do not participate in the Aspect system — they cannot be expressed, only consulted. An Accord-Walker who reaches this column is reminded that some powers require relationship rather than attunement.</td>
+    </tr>
+  </table>
+
+  <div class="green-note">
+    <div class="note-title">Aspect Restrictions</div>
+    <div class="note-text">
+      <strong>One Aspect at a time</strong> — manifesting a new Aspect ends the previous one immediately.<br>
+      <strong>Cognitive continuity</strong> — the Accord-Walker retains their own mind, memory, and personality at all Aspect tiers. They can speak, use their Disciplines, and make decisions normally. The Beast's instincts are present as a strong <em>inclination</em>, not a compulsion — except during Legendary Aspects, where the Beast's frequency is strong enough to produce behavioral pressure (the Concordance may describe this as an intrusive impulse that the Accord-Walker can resist but must acknowledge).<br>
+      <strong>Equipment</strong> — light equipment (clothing, small items) merges with the Aspect harmlessly. Heavy armor, shields, and large weapons fall away during Full and Legendary Aspects. They reappear when the Aspect ends.<br>
+      <strong>The Twin Dream-Fish exception</strong> — as noted in the table, the Dream-Fish cannot be expressed as an Aspect. An Accord-Walker who has encountered the Dream-Fish has a different relationship with them: once per Deep Attunement, they may spend 3 Hive Attunement to consult the Dream-Fish as a prophetic contact rather than manifesting their Aspect.
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- PATH FEATURES -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-features">
+<div class="wrap">
+
+  <div class="feat-grid">
+    <div class="feat open" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Beast Resonance & Initial Accord</div><span class="feat-depth">Depth 1</span></div>
+      <div class="feat-body">The Beast Resonance system becomes active. Choose one Legendary Beast you have encountered — this is your <strong>Primary Beast</strong>, your first and deepest accord. You begin with a full pool (5 Resonance Points) for this Beast, and an empty pool for all others. The Beast Resonance system scales with Resonance Depth: pool maximum per Beast increases by 1 at Depths 4, 8, 12, and 16 (maximum 9 at Depth 16).<br><br>
+      You also gain the <strong>Nature Tongue</strong>: you can communicate basic intent (not complex language) with any creature whose Beast sign you have encountered. A lion won't carry on a conversation with you, but it will receive a clear non-aggression signal and a specific request for safe passage. More Beasts encountered means more creature-families you can communicate with.</div>
+    </div>
+
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Hive Initiation</div><span class="feat-depth">Depth 1</span></div>
+      <div class="feat-body">Through the Bee-Priestess's initiation ritual (completed before or during the campaign's opening), the Accord-Walker gains access to the Hive Attunement system. Begin each session with Hive Attunement equal to half your Attunement modifier (minimum 1, maximum 3). Full restore on Deep Attunement within the Hive's territory; restore half on Deep Attunement elsewhere.<br><br>
+      <strong>The Hive Sense passive</strong>: even with 0 Hive Attunement, you always know the number of living creatures within 60 ft — not their position or identity, but their count. The Hive never fully disconnects.</div>
+    </div>
+
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Accord-Walker's Resilience</div><span class="feat-depth">Depth 2</span></div>
+      <div class="feat-body">The Accord-Walker's body, repeatedly reconfigured through Aspect Manifestation, develops exceptional physical adaptability. They gain Mastery in all Endurance Warding Resonances. Additionally, they no longer need to make Attunement or Endurance checks to maintain an Aspect when they take damage — the Beast's frequency is stable enough to hold through physical disruption. This replaces the need for Sustained Resonance in Aspect Manifestation; Aspects do not require Sustained Resonance.</div>
+    </div>
+
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Second Beast Accord</div><span class="feat-depth">Depth 3</span></div>
+      <div class="feat-body">The Accord-Walker deepens their practice sufficiently to hold attunement with a second Beast simultaneously. They may now have two Beast Resonance pools active at once — one Primary Beast and one Secondary Beast. The Secondary pool begins at the depth of the most recent encounter with that Beast (minimum 1 if encountered at all; 0 if not yet encountered).<br><br>
+      This is also when the <strong>Calling</strong> is chosen — the specific expression of the Accord-Walker's practice. The Calling determines which Beast is most accessible and what additional abilities emerge from deeper accord.</div>
+    </div>
+
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Terrain Resonance</div><span class="feat-depth">Depth 4</span></div>
+      <div class="feat-body">Choose two terrain types (forest, swamp, grassland, mountain, coastal, underground, arctic, desert). In these terrains: movement not impeded by natural difficult terrain; cannot be tracked by non-magical means; Resonant Fortune on Perception and Survival Active Resonances; Beast Resonance restores +1 per pool during Brief Attunement (in addition to normal restoration). Additional terrain types unlocked at Depths 8 and 12.<br><br>
+      <strong>Terrain Resonance and the grid:</strong> An Accord-Walker whose chosen terrain includes the area around an active Ceque Line node feels the node's status immediately upon entering its range. They don't understand what they're perceiving — they feel it as a wrongness or rightness in the terrain, not as Aetheric data. A Ceque-Keeper working with an Accord-Walker in this way gains crucial early warning.</div>
+    </div>
+
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Hive Memory</div><span class="feat-depth">Depth 6</span></div>
+      <div class="feat-body">The Accord-Walker's sustained connection to the Hive has granted them access to its deepest archive — the Queen Bee's memory of what the gods were before they became Beasts. Once per Deep Attunement, by spending 4 Hive Attunement and entering a 10-minute meditation, the Accord-Walker may ask the Concordance one question about what any zodiac force was like in Era I — its original divine nature, its relationship to the mortal world, what it protected, what it feared.<br><br>
+      <strong>The answers are always accurate and always incomplete.</strong> The Hive remembered through sensation, not language. The information comes as impressions, emotional weight, and physical memory — not clear statements. An Accord-Walker who receives a Hive Memory and has an Eldren ally may find the two sources (Hive Memory + Ancestral Resonance) together produce something neither could generate alone.</div>
+    </div>
+
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Beast Chorus</div><span class="feat-depth">Depth 10</span></div>
+      <div class="feat-body">The Accord-Walker can now manifest Minor Aspects from two different Beasts simultaneously — wearing one Beast's trait alongside another's. The combinations are limited only by physical compatibility (you cannot have the Nemean Lion's wings and the Crab's full carapace at the same time, but you can have the Lion's golden hide and the Stag's star-sense). Each Minor Aspect costs its normal 1 Resonance Point from the relevant Beast's pool.<br><br>
+      <strong>Additionally:</strong> the Accord-Walker may spend 2 Hive Attunement to share an active Minor or Partial Aspect with one willing ally for 1 Pulse — the ally gains the Aspect's physical benefit for that Pulse only. This is the Hive extending what one member has to all members. The ally does not spend Resonance Points; the Accord-Walker's pool sustains the extension.</div>
+    </div>
+
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">Full Accord</div><span class="feat-depth">Depth 14</span></div>
+      <div class="feat-body">The Accord-Walker has reached sufficient depth of attunement that their Legendary Beast encounters begin to take on a different character. Their Primary Beast now recognizes them as a peer — as a creature expressing its frequency rather than borrowing it. This has practical effects:<br><br>
+      <strong>• The Primary Beast will not attack them under any circumstances</strong> (though it may still act aggressively toward their allies).<br>
+      <strong>• The Primary Beast may occasionally seek the Accord-Walker out</strong> — the Concordance may introduce Beast-initiated encounters where the Beast has information, a request, or simply the desire for contact with the one mortal who expresses its nature accurately.<br>
+      <strong>• Legendary Aspect cost for the Primary Beast reduces to 3 Resonance Points.</strong><br>
+      <strong>• The Accord-Walker may attempt to request a meeting with their Primary Beast</strong> once per session without requiring a specific location — the Beast will come, or send a signal indicating when and where it is willing to be found.</div>
+    </div>
+
+    <div class="feat" onclick="this.classList.toggle('open')">
+      <div class="feat-head"><div class="feat-name">The Living Accord</div><span class="feat-depth">Depth 20</span></div>
+      <div class="feat-body">The Accord-Walker's attunement is now so deep that the distinction between their own Aetheric frequency and their Primary Beast's frequency has become genuinely blurred — not erased, but permeable. In practical terms: the Accord-Walker's body shifts subtly toward their Primary Beast's morphology at all times, regardless of active Aspect (the Nemean Lion Accord-Walker has gold in their irises permanently; the Stag Accord-Walker has antler-like bone ridges forming at their temples). These are not threatening — they are recognition marks.<br><br>
+      <strong>Mechanically:</strong> The Minor Aspect of the Primary Beast is always active without cost. All Aspect costs for the Primary Beast are reduced by 1 (minimum 1). Once per Deep Attunement, the Accord-Walker may enter a <strong>Transcendent Accord</strong> — a state lasting up to 10 minutes in which they fully embody their Primary Beast's cosmic frequency without limit. During Transcendent Accord, the Legendary Aspect's effects persist for the full 10 minutes rather than 1 minute, and the Accord-Walker is recognized by all creatures as a genuine expression of that zodiac force. The Queen Bee refers to Accord-Walkers at this depth as "the ones who remembered what we are."</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- CALLINGS -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-callings">
+<div class="wrap">
+
+  <p class="lore">The three Callings of the Primal Accord represent three different answers to the question of what an accord with the Beasts is <em>for</em>. The Nemean Caller believes it is for confronting what threatens the natural order — directly, visibly, without apology. The Keeper believes it is for maintaining what exists — the slow, patient, invisible work of holding ecosystems together. The Bee-Speaker believes it is for communication — the translation between the world's forces that prevents catastrophic misunderstanding.</p>
+
+  <div class="calling-grid">
+
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head">
+        <div class="calling-name">The Nemean Calling</div>
+        <span class="calling-tag" style="color:var(--amber);border-color:rgba(200,120,64,0.3);background:rgba(200,120,64,0.06)">Alpha-aspected · Combat</span>
+      </div>
+      <div class="calling-body">
+        <p>The Nemean Callers orient toward the Lion's aspect — direct force, visible presence, the willingness to be the thing that stands between a threat and what it's threatening. They are the Accord-Walkers most likely to be found in combat, and the most likely to be Alpha-aspected. Available at Depth 3.</p>
+        <div class="cb-feat"><strong>Pride's Fury (Depth 3):</strong> When you manifest a Full or Legendary Aspect and reduce a creature to 0 Vitality in the same Pulse, you restore 1 Resonance Point to the manifested Beast's pool — the kill feeds the accord. Additionally, all allies who witnessed the reduction gain Resonant Fortune on their next Strike Resonance this encounter. The Lion's victory is the pride's victory.</div>
+        <div class="cb-feat"><strong>Apex Predator (Depth 7):</strong> When in any Full or Legendary Aspect, you cannot be surprised. You always act in the first Pulse of any encounter, regardless of Pulse Order roll. Additionally, creatures below half their maximum Vitality have Resonant Discord on all Strike Resonances against you — the wounded do not challenge the apex without paying for it.</div>
+        <div class="cb-feat"><strong>Legendary Resonance (Depth 11):</strong> Your Legendary Aspect for any Beast you have encountered at least three times costs 4 Resonance Points instead of 5. Additionally, during a Legendary Aspect, you may spend 2 Hive Attunement to broadcast the Aspect's presence to all creatures within 300 ft — every creature within range becomes instantly aware that something of Legendary Beast frequency is expressing nearby. Most creatures will reconsider their current course of action.</div>
+      </div>
+    </div>
+
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head">
+        <div class="calling-name">The Keeper's Calling</div>
+        <span class="calling-tag" style="color:var(--green-bright);border-color:rgba(74,138,86,0.3);background:rgba(74,138,86,0.06)">Beta-aspected · Stewardship</span>
+      </div>
+      <div class="calling-body">
+        <p>The Keepers hold ecosystems together — maintaining the patterns that allow life to continue, repairing damage to natural and Aetheric systems, and serving as the Accord-Walker tradition's connection to the Ceque Line system and the broader grid. They are often Beta-aspected and rarely seek recognition. Available at Depth 3.</p>
+        <div class="cb-feat"><strong>Ecosystem Reading (Depth 3):</strong> In any natural environment, you automatically know: the health of the local ecosystem (thriving, stable, stressed, or dying); the presence and approximate location of any Aetheric disruption (grid node reactivation, Void-energy contamination, Ashen Coil blight-rot spread) within 1 mile; and which creature in the local ecosystem is in the greatest danger. This is passive, always active, and requires no roll. You are the ecosystem's awareness of itself.</div>
+        <div class="cb-feat"><strong>Restoration Aspect (Depth 7):</strong> Once per Deep Attunement, when you maintain a Partial or Full Aspect for its full duration without ending it early, the Beast's Resonance pool refills by 2 at the Aspect's end rather than depleting further. The sustained expression deepens the accord rather than drawing it down. Additionally: when you use an Aspect for a purpose that protects or restores the natural world rather than combat, the Hive Attunement cost of any simultaneous Hive ability is reduced by 1.</div>
+        <div class="cb-feat"><strong>Grid Warden (Depth 11):</strong> Your Terrain Resonance now extends to the Aetheric grid — you can feel Ceque Line nodes within 1 mile as distinct physical sensations, and you know immediately when a node changes state (dormant to active, active to Ophiuchus-reactivating). When you are present at a grid node activation (a Siddha speaking the correct mantra), you may spend 3 Hive Attunement to double the node's effect radius. You have become the living intersection of natural and Aetheric preservation.</div>
+      </div>
+    </div>
+
+    <div class="calling" onclick="this.classList.toggle('open')">
+      <div class="calling-head">
+        <div class="calling-name">The Bee-Speaker's Calling</div>
+        <span class="calling-tag" style="color:var(--hive);border-color:rgba(200,164,40,0.3);background:rgba(200,164,40,0.06)">Omega-aspected · Communion</span>
+      </div>
+      <div class="calling-body">
+        <p>The Bee-Speakers develop the deepest connection to the Hive Attunement system of any Accord-Walker tradition. They are the order's communicators, diplomats, and intelligence-gatherers — the ones who know what every creature in the area is feeling and can act on that knowledge faster than anyone else processes it. Available at Depth 3.</p>
+        <div class="cb-feat"><strong>Hive Mastery (Depth 3):</strong> Your Hive Attunement maximum increases to 12. The cost of all Hive Attunement abilities is reduced by 1 (minimum 1). Additionally: once per Brief Attunement, you may spend 1 Hive Attunement to instantly know one specific piece of information about any creature you can currently sense through Hive Sense (their Vitality level, their current intent, their Fate Number, or their emotional state — choose one per use).</div>
+        <div class="cb-feat"><strong>Communal Memory (Depth 7):</strong> The Hive's distributed memory is now accessible to you as a research tool. Once per session, by spending 4 Hive Attunement and 1 hour in communion, you may ask the Concordance one question about any event that occurred within the Queen Bee's 40-mile territory at any point in the last 500 years. The Hive was there. The Hive saw it. The Hive's answer comes in sensory impressions, but it comes accurately.<br><br>
+        Additionally: you may now share Hive Attunement with a willing ally — transfer up to 3 points of your current pool to them; they may spend it as you would for 24 hours. The Hive recognizes them as an extension of you.</div>
+        <div class="cb-feat"><strong>The Queen's Voice (Depth 11):</strong> Once per Deep Attunement, you may speak with the Queen Bee's full authority for 1 minute — your words carry the weight of the Hive's 4,000-year accumulated consciousness. During this time: any creature that hears you speak may not attack you or any creature you designate as protected (DC 18 Resonance Warding Resonance to resist — this is the Hive's collective will, not a Working); you may end any ongoing conflict between creatures within 60 ft by declaring the conflict finished (same Warding Resonance to resist). This is not compulsion — it is the weight of something very old and very certain expressing through you. Most creatures comply. Void-Husks and creatures with dissolved Fate Numbers are immune.</div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- PROGRESSION TABLE -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-progression">
+<div class="wrap">
+
+  <table class="prog-table">
+    <tr>
+      <th>Resonance Depth</th>
+      <th>Mastery Bonus</th>
+      <th>Beast Pool Max</th>
+      <th>Hive Max</th>
+      <th>Features Gained</th>
+    </tr>
+    <tr><td>1</td><td>+2</td><td>5 (Primary)</td><td>10</td><td>Beast Resonance & Initial Accord, Hive Initiation, Nature Tongue</td></tr>
+    <tr><td>2</td><td>+2</td><td>5</td><td>10</td><td>Accord-Walker's Resilience</td></tr>
+    <tr class="milestone"><td>3</td><td>+2</td><td>5</td><td>10</td><td>Second Beast Accord, <strong>Calling chosen</strong> (Nemean / Keeper / Bee-Speaker)</td></tr>
+    <tr><td>4</td><td>+2</td><td>6</td><td>10</td><td>Terrain Resonance (2 terrains), Zodiac Attunement available</td></tr>
+    <tr><td>5</td><td>+3</td><td>6</td><td>10</td><td>Calling feature (Depth 3 listed as Depth 3 in Calling)</td></tr>
+    <tr><td>6</td><td>+3</td><td>6</td><td>10</td><td>Hive Memory</td></tr>
+    <tr class="milestone"><td>7</td><td>+3</td><td>6</td><td>10</td><td>Calling feature (Depth 7), Third Beast Accord available through play</td></tr>
+    <tr><td>8</td><td>+3</td><td>7</td><td>10</td><td>Terrain Resonance (+1 terrain), Calling feature</td></tr>
+    <tr><td>9</td><td>+4</td><td>7</td><td>10</td><td>Aspect stabilization: Partial Aspects now last 1 hour</td></tr>
+    <tr class="milestone"><td>10</td><td>+4</td><td>7</td><td>10</td><td>Beast Chorus (dual Minor Aspects), Aspect sharing</td></tr>
+    <tr><td>11</td><td>+4</td><td>7</td><td>10</td><td>Calling feature (Depth 11)</td></tr>
+    <tr><td>12</td><td>+4</td><td>8</td><td>10</td><td>Terrain Resonance (+1 terrain), Fourth Beast Accord available</td></tr>
+    <tr class="milestone"><td>13</td><td>+5</td><td>8</td><td>10</td><td>Full Aspects now last indefinitely until dismissed</td></tr>
+    <tr><td>14</td><td>+5</td><td>8</td><td>10</td><td>Full Accord (Primary Beast recognizes you as peer)</td></tr>
+    <tr><td>15</td><td>+5</td><td>8</td><td>10</td><td>Hive Attunement max increases to 12 (all Accord-Walkers, not just Bee-Speaker)</td></tr>
+    <tr class="milestone"><td>16</td><td>+5</td><td>9</td><td>12</td><td>Fifth Beast Accord; all known Beasts treat you as a known entity</td></tr>
+    <tr><td>17</td><td>+6</td><td>9</td><td>12</td><td>Legendary Aspect: Primary Beast cost reduced to 3</td></tr>
+    <tr><td>18</td><td>+6</td><td>9</td><td>12</td><td>Hive Attunement restores fully on Brief Attunement (in any natural terrain)</td></tr>
+    <tr><td>19</td><td>+6</td><td>9</td><td>12</td><td>All Legendary Aspect costs reduced by 1</td></tr>
+    <tr class="milestone"><td>20</td><td>+6</td><td>9</td><td>12</td><td><strong>The Living Accord</strong> — Transcendent Accord unlocked</td></tr>
+  </table>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- WORLD NOTES -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-worldnotes">
+<div class="wrap">
+
+  <div class="sec">The Accord-Walker in the World</div>
+
+  <p class="lore">The Accord-Walker tradition is exclusively Arcadian in origin — it emerged from the Golden Hive and has never been successfully transplanted to another culture's framework. Other civilizations have tried. The Comet-Magi spent a century attempting to formalize Beast Resonance as an Aetheric sub-discipline. Their results were consistent: the Beasts refused to cooperate with practitioners who approached them as research subjects rather than peers. The Kallos-Sworn have three documented cases of would-be Accord-Walkers initiating without the Bee-Priestess's guidance — all three produced unstable Aspects that the practitioners could not control. The Hive did not intervene. The tradition is not exclusive, but it is specific: it requires the relationship before it provides the power.</p>
+
+  <div class="two-col">
+    <div class="info">
+      <div class="ib-label">Relationship with the Kallos-Sworn</div>
+      <div class="ib-text">Complicated. The Kallos-Sworn respect Accord-Walkers but do not fully understand them — the order's relationship with Legendary Beasts is one of cautious reverence and strategic resource-extraction (the Resonant Binding components). Accord-Walkers experience this as missing the point. <strong>An Accord-Walker who encounters Arch-Oracle Lyra</strong> will find someone who has thought more carefully about the Beasts than most Kallos-Sworn — and who has reached the limit of what thought without relationship can produce.</div>
+    </div>
+    <div class="info">
+      <div class="ib-label">Relationship with the Ashen Coil</div>
+      <div class="ib-text">The Coil's dissolution agenda is comprehensible to an Accord-Walker in a way it may not be to other Paths — they understand entropy as a natural force, and some of what the Coil believes about the cosmos's direction is not entirely wrong. <strong>What the Coil gets wrong</strong>, from an Accord-Walker's perspective, is the assumption that dissolution requires assistance. The natural world dissolves and regenerates without help. Aethar is not accelerating a natural process — he is hijacking it.</div>
+    </div>
+    <div class="info">
+      <div class="ib-label">The Bee-Priestess and the order's future</div>
+      <div class="ib-text">The current Bee-Priestess is aware that the Quint Bond prophecy is relevant to the Accord-Walker tradition — specifically that the Queen Bee has offered Celestial Honey, one of the Resonant Binding's five components, to exactly one person in the last 500 years. She has not told the Kallos-Sworn who that person was. <strong>She is waiting for the Accord-Walker who will ask the right question.</strong></div>
+    </div>
+    <div class="info">
+      <div class="ib-label">Grid-Point Seven and the Keeper Calling</div>
+      <div class="ib-text">Keeper Accord-Walkers are the most likely characters to detect Grid-Point Seven's reactivation before anyone else does — their Ecosystem Reading passive specifically identifies Aetheric disruptions within 1 mile. A Keeper who passes through Elethorn will feel something wrong about the grid before any Ceque-Keeper has formally identified the source. This is the Path's most direct campaign hook into the hidden Stage Four threat.</div>
+    </div>
+  </div>
+
+  <div class="sec">Starting Equipment</div>
+  <div class="green-note">
+    <div class="note-title">Primal Accord Starting Package</div>
+    <div class="note-text">
+      <strong>Package A (wilderness-oriented):</strong> A natural weapon of choice (staff of living wood, bone-handled blade, stone-weighted club), leather armor or hide armor, an explorer's pack, a Beast-sign token (a physical representation of your Primary Beast — claw, feather, carapace fragment — never taken by force, always given or found), and a letter of introduction from the Bee-Priestess to any Arcadian settlement.<br><br>
+      <strong>Package B (hive-oriented):</strong> A quarterstaff, a healer's kit (10 uses), a diplomat's pack, a vial of Celestial Honey (narrative item — not the Resonant Binding component; a small personal gift from the Hive, providing one use of the Queen Bee's Domain ability as per the Ashé-Touched Kindred table), and the Bee-Priestess's mark (a tattoo or brand that identifies you to any being familiar with the Arcadian tradition).<br><br>
+      <strong>Always:</strong> Record of at least one Legendary Beast encounter in your personal journal — the details of your first accord, in your own words. The Concordance should ask you to describe this encounter at the table before the first session begins. It matters.
+    </div>
+  </div>
+
+  <div class="sec">The Question the Bee-Priestess Asks Every Candidate</div>
+  <p class="lore" style="font-style:italic;font-size:16px;color:rgba(240,230,204,0.7);text-align:center;max-width:500px;margin:0 auto;line-height:2">"If the gods are not fallen — if they chose this form — what does your accord with them make you responsible for?"</p>
+  <p class="lore" style="text-align:center;margin-top:.75rem">There is no correct answer. The question is asked to see whether the candidate understands that there will always be one.</p>
+
+</div>
+</div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).style.display='block';
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+document.querySelectorAll('.panel').forEach(p=>{p.style.display='none'});
+document.getElementById('panel-lore').style.display='block';
+</script>
+</body>
+</html>

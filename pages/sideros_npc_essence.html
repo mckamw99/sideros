@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — Primal Essence & NPC Dynamics</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f0f0f;color:#e8e4dc;padding:2rem 1rem;max-width:820px;margin:0 auto;line-height:1.6}
+h1{font-size:20px;font-weight:500;margin-bottom:4px;color:#f0ead8}
+.intro{font-size:13px;color:#888;margin-bottom:1.5rem;line-height:1.7}
+.nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem}
+.nav-btn{padding:6px 12px;font-size:12px;border:1px solid #333;border-radius:6px;background:transparent;color:#888;cursor:pointer;transition:all .15s}
+.nav-btn:hover,.nav-btn.active{background:#1e1e1e;color:#e8e4dc;border-color:#555;font-weight:500}
+.panel{display:none}.panel.active{display:block}
+
+/* Essence pips */
+.pip{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font-size:11px;font-weight:700;border:1px solid;margin-right:3px;vertical-align:middle}
+.pip-a{background:#3a1a08;color:#e8854c;border-color:#e8854c55}
+.pip-b{background:#0a1a2a;color:#5aabe8;border-color:#5aabe855}
+.pip-w{background:#1a0a2a;color:#a87ee8;border-color:#a87ee855}
+
+/* NPC cards */
+.npc-grid{display:grid;gap:8px}
+.npc{background:#141414;border:1px solid #222;border-radius:10px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.npc:hover,.npc.expanded{border-color:#333}
+.npc-head{display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;padding:12px 14px}
+.npc-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;border:1px solid;flex-shrink:0}
+.npc-name{font-size:14px;font-weight:500;color:#f0ead8}
+.npc-role{font-size:11px;color:#666;margin-top:2px}
+.npc-essence{font-size:13px;font-weight:700;padding:4px 10px;border-radius:6px;border:1px solid;flex-shrink:0;white-space:nowrap}
+.npc-body{display:none;padding:0 14px 14px;border-top:1px solid #1e1e1e}
+.npc.expanded .npc-body{display:block;padding-top:12px}
+
+.trait-row{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0 10px}
+.trait{font-size:11px;padding:2px 8px;border-radius:100px;background:#1a1a1a;border:1px solid #2a2a2a;color:#999}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}
+.info-block{background:#1a1a1a;border-radius:8px;padding:9px 11px;border:1px solid #252525}
+.info-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#555;margin-bottom:4px}
+.info-text{font-size:12px;color:#bbb;line-height:1.55}
+.info-text strong{color:#e8e4dc;font-weight:500}
+
+.tension-block{border-radius:8px;padding:10px 12px;margin-bottom:8px;border:1px solid}
+.tension-title{font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
+.tension-text{font-size:12px;color:#aaa;line-height:1.65}
+.tension-text strong{color:#e8e4dc;font-weight:500}
+
+.rp-block{background:#141e14;border:1px solid #1e3a1e;border-radius:8px;padding:10px 12px;margin-top:8px}
+.rp-title{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#5a9e5a;margin-bottom:5px}
+.rp-text{font-size:12px;color:#aaa;line-height:1.65}
+.rp-text strong{color:#e8e4dc;font-weight:500}
+
+/* Dynamics overview */
+.essence-overview{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:1.5rem}
+.eo-card{border-radius:10px;padding:14px;border:1px solid}
+.eo-label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+.eo-name{font-size:16px;font-weight:500;margin-bottom:8px}
+.eo-text{font-size:12px;color:#aaa;line-height:1.6}
+.eo-text strong{font-weight:500}
+
+.clash-table{width:100%;border-collapse:collapse;margin-bottom:1.5rem}
+.clash-table th{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#555;padding:8px 10px;text-align:left;border-bottom:1px solid #1e1e1e}
+.clash-table td{font-size:12px;color:#aaa;padding:8px 10px;border-bottom:1px solid #141414;vertical-align:top}
+.clash-table td:first-child{font-weight:500;color:#e8e4dc;white-space:nowrap}
+.clash-table tr:last-child td{border-bottom:none}
+.clash-table tr:hover td{background:#141414}
+
+.section-head{font-size:12px;font-weight:500;color:#e8e4dc;margin:1.2rem 0 0.5rem;text-transform:uppercase;letter-spacing:.08em}
+</style>
+</head>
+<body>
+<h1>Primal Essence & NPC Dynamics</h1>
+<p class="intro">Every soul in Sideros vibrates at one of three frequencies. This is not merely a character creation mechanic — it describes how power actually flows between people, how factions organize themselves, and where friction inevitably ignites. Alpha commands. Beta builds. Omega transforms. None is superior. All three are necessary — and each resents the others at specific pressure points.</p>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="show('overview',this)">The Three Essences</button>
+  <button class="nav-btn" onclick="show('rulers',this)">Rulers & Lords</button>
+  <button class="nav-btn" onclick="show('villains',this)">Villains & Shadow</button>
+  <button class="nav-btn" onclick="show('support',this)">Advisors & Hidden Powers</button>
+  <button class="nav-btn" onclick="show('factions',this)">Faction Dynamics</button>
+</div>
+
+<!-- OVERVIEW -->
+<div class="panel active" id="panel-overview">
+
+<div class="essence-overview">
+  <div class="eo-card" style="border-color:#e8854c33;background:#1a0a0208">
+    <div class="eo-label" style="color:#e8854c">Alpha — Roll 1</div>
+    <div class="eo-name" style="color:#e8854c">The Vanguard</div>
+    <div class="eo-text">Natural leaders and initiators. They move first and ask questions after. <strong>Strength:</strong> decisive, inspiring, magnetic in crisis. <strong>Shadow:</strong> reckless, dismissive of nuance, can't stop once started. Bonuses to Intimidation and Persuasion. <br><br>In Sideros society: Alphas hold the visible seats of power — thrones, military commands, arena champions. They are the face of every institution. They are also the first to burn out, the first to be manipulated by patient Betas, and the last to notice an Omega has quietly rewritten the rules beneath them.</div>
+  </div>
+  <div class="eo-card" style="border-color:#5aabe833;background:#0a101a08">
+    <div class="eo-label" style="color:#5aabe8">Beta — Roll 2–5</div>
+    <div class="eo-name" style="color:#5aabe8">The Weaver</div>
+    <div class="eo-text">The backbone of every civilization. Betas build, maintain, negotiate, and remember. <strong>Strength:</strong> adaptable, socially intelligent, excellent at reading rooms. <strong>Shadow:</strong> can become passive-aggressive, prone to resentment when unrecognized, tendency toward factionalism. Bonuses to Insight and History.<br><br>In Sideros society: Betas outnumber all others 2:1. They run the guilds, staff the temples, crew the ships, and keep records. Every Alpha sits atop a Beta infrastructure. The Loom of Fate is a Beta organization — patient, networked, invisible.</div>
+  </div>
+  <div class="eo-card" style="border-color:#a87ee833;background:#100a1a08">
+    <div class="eo-label" style="color:#a87ee8">Omega — Roll 6</div>
+    <div class="eo-name" style="color:#a87ee8">The Catalyst</div>
+    <div class="eo-text">The introspective agents of transformation. Omegas see systems, not individuals — and they quietly change the systems. <strong>Strength:</strong> perceptive, spiritually attuned, able to operate alone indefinitely. <strong>Shadow:</strong> can become detached from human cost, sometimes paralyzed by seeing too many options. Bonuses to Arcana and Medicine.<br><br>In Sideros society: Omegas are rare and disproportionately powerful. They populate the Siddha orders, the Comet-Magi conclaves, and the Zodiac Priest caste. Omega healers ignore the Stillness — their magic functions where others' fails. They are the quiet architects of civilizations that Alphas are credited for building.</div>
+  </div>
+</div>
+
+<p class="section-head">Core Friction Points Between Essences</p>
+<table class="clash-table">
+  <tr><th>Pairing</th><th>The Natural Tension</th><th>In Play</th></tr>
+  <tr><td><span class="pip pip-a">α</span> vs <span class="pip pip-b">β</span></td><td>Alpha commands; Beta complies — until Beta quietly stops complying and the Alpha doesn't notice until it's too late.</td><td>Lord Leo (α) and his castellans (β): the Steward of the Royal Decree is running the Empire. Lord Leo thinks he still is.</td></tr>
+  <tr><td><span class="pip pip-a">α</span> vs <span class="pip pip-w">Ω</span></td><td>Alpha needs visible results now; Omega is playing a game measured in decades. Alpha finds Omega cold and useless. Omega finds Alpha exhausting and short-sighted.</td><td>Lord Aries (α) vs the Fire Temple Siddha (Ω): Aries wants weapons. The Siddha wants to understand fire. Aries can't see the difference.</td></tr>
+  <tr><td><span class="pip pip-b">β</span> vs <span class="pip pip-w">Ω</span></td><td>Beta maintains the machine; Omega wants to redesign it. Beta finds Omega destabilizing and arrogant. Omega finds Beta's attachment to "how things work" to be the core problem.</td><td>The Order of Pure Reason (β institution) vs the Siddha (Ω tradition): the Order wants to systematize and control what the Siddha consider sacred and irreducible.</td></tr>
+  <tr><td><span class="pip pip-a">α</span> + <span class="pip pip-b">β</span></td><td>The natural partnership — Alpha leads the charge, Beta sustains the campaign. Works until Beta realizes they're doing all the work.</td><td>The Solar Chivalry: Lord Leo (α) is the symbol. The Solar Guard officer class (β) actually trains the recruits, files the reports, and keeps the institution alive.</td></tr>
+  <tr><td><span class="pip pip-b">β</span> + <span class="pip pip-w">Ω</span></td><td>The quiet engine of civilization. Beta implements what Omega designs. Can last centuries without an Alpha in sight — until external shock requires a decision-maker.</td><td>Argent Spire: the Comet-Magi (Ω) design the sealing protocols. The Sisters of the Spire (β) enforce them daily. No Alpha leads Argent Spire — and that is a structural vulnerability.</td></tr>
+</table>
+
+<p class="section-head">What Each Essence Wants From Heroes</p>
+<table class="clash-table">
+  <tr><th>Essence</th><th>What They Want</th><th>How They Respond to Hero Approaches</th></tr>
+  <tr><td><span class="pip pip-a">α</span> Alpha</td><td>Proof of worth. Demonstration of capability. A rival or an ally — nothing in between.</td><td>Respond to direct challenge, displays of strength, and bold declarations. Ignore hedged language and committee thinking. Win them by doing something they couldn't or wouldn't do themselves.</td></tr>
+  <tr><td><span class="pip pip-b">β</span> Beta</td><td>Recognition of their labor. Reliability. Someone who will still be there after the crisis is over.</td><td>Respond to patience, follow-through, and remembering small details. Deeply suspicious of heroes who promise everything. Win them with consistency and by acknowledging what they carry.</td></tr>
+  <tr><td><span class="pip pip-w">Ω</span> Omega</td><td>Someone who can see the pattern they see. A question they haven't been asked before. Genuine curiosity.</td><td>Respond to unusual questions, non-obvious connections, and willingness to sit with uncertainty. Disengaged by heroes who want simple answers. Win them by surprising them intellectually.</td></tr>
+</table>
+</div>
+
+<!-- RULERS -->
+<div class="panel" id="panel-rulers">
+<p style="font-size:13px;color:#888;margin-bottom:1rem;line-height:1.7">Every Lord and Lady of Sideros rules differently — and their Essence determines <em>how</em> they hold power, where they are vulnerable, and what kind of help they actually need versus what they'll admit to needing.</p>
+
+<div class="npc-grid">
+
+  <!-- LORD LEO -->
+  <div class="npc expanded" onclick="this.classList.toggle('expanded')">
+    <div class="npc-head">
+      <div class="npc-avatar" style="background:#2a1a08;border-color:#e8854c44">♌</div>
+      <div><div class="npc-name">Lord Leo — Solar King</div><div class="npc-role">Leonine Empire · Duchy of Fire · Capital: Aurelia (the Sunken City)</div></div>
+      <div class="npc-essence" style="background:#2a1a0888;color:#e8854c;border-color:#e8854c44"><span class="pip pip-a">α</span> Alpha</div>
+    </div>
+    <div class="npc-body">
+      <div class="trait-row"><span class="trait">Magnanimous</span><span class="trait">Publicly unshakeable</span><span class="trait">Privately terrified</span><span class="trait">Still believes in heroism</span></div>
+      <div class="two-col">
+        <div class="info-block"><div class="info-label">Alpha expression</div><div class="info-text">Lord Leo leads from the front — or used to. His Alpha nature means he needs to be <strong>seen to command</strong>, even as command slips from his hands. He holds grand tournaments not out of vanity but because he genuinely believes heroism can save the Age.</div></div>
+        <div class="info-block"><div class="info-label">The Beta underneath</div><div class="info-text">The Steward of the Royal Decree (β) is the true administrator of the Empire. Lord Leo knows this and permits it because managing logistics bores him. He does not know how completely he has delegated himself into irrelevance.</div></div>
+      </div>
+      <div class="tension-block" style="border-color:#e8854c33;background:#1a0a0208">
+        <div class="tension-title" style="color:#e8854c">Alpha Blind Spot</div>
+        <div class="tension-text">Lord Leo interprets every problem as a problem of will or courage. Lady Virgo's Order of Pure Reason is growing because people are <em>afraid</em> — and fear is a Beta emotion Leo cannot fully model. He keeps staging tournaments when the people need grain assurances.</div>
+      </div>
+      <div class="rp-block">
+        <div class="rp-title">The Simha Temple Problem</div>
+        <div class="rp-text">The Eldren Siddha of the <strong>Throne of the Radiant Self</strong> — the Simha Temple at the heart of Aurelia — have begun publicly claiming that the Empire's decline is a direct spiritual failing of human bloodlines. Their argument: the Mantra of Divine Right is growing quieter not because Lord Leo lacks personal legitimacy, but because <em>humans</em> lack the Aetheric depth to carry the divine mandate the Precursor-era Solar Kingship requires. The implication — that a non-human ruler, possibly an Eldren Siddha, would restore the Mantra's resonance — is politically explosive. Lord Leo has not publicly responded. The Simha Temple reads this as tacit acknowledgment. He cannot afford to deny it without proof, and proof requires finding the Lunar Queen and confirming the Omega line of succession, which the Order of Pure Reason is actively suppressing.</div>
+      </div>
+      <div class="rp-block">
+        <div class="rp-title">The Solar Chivalry Collapse</div>
+        <div class="rp-text">The Solar Chivalry is experiencing a generational recruitment crisis. Younger candidates are abandoning traditional knighthood for two alternatives: <strong>Dunmarim pragmatism</strong> (the Stone Kingdom's craft tradition and Black Iron economy offer certainty the Empire no longer provides) and the <strong>radical Fire Temple teachings</strong> of Lord Aries's March (the Mesha Siddha's militant interpretation of Astra-craft attracts those who want power without the Chivalry's codes of conduct). Lord Leo stages more tournaments to demonstrate the Chivalry's vitality. The tournaments are increasingly well-attended by spectators and increasingly poorly attended by candidates.</div>
+      </div>
+      <div class="rp-block">
+        <div class="rp-title">Playing Lord Leo</div>
+        <div class="rp-text">He <strong>responds immediately</strong> to heroes who demonstrate competence in front of him. He is warm, generous, and genuinely wants to help — but his help looks like sponsorship and glory, not resources and logistics. To get actual resources from him, a hero needs to make him feel like <em>he</em> is choosing to be generous, not that he is being managed.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LORD ARIES -->
+  <div class="npc" onclick="this.classList.toggle('expanded')">
+    <div class="npc-head">
+      <div class="npc-avatar" style="background:#2a1a08;border-color:#e8854c44">♈</div>
+      <div><div class="npc-name">Lord Aries — Lord of the First Spear</div><div class="npc-role">Aries March · Duchy of Fire · Capital: First Spear</div></div>
+      <div class="npc-essence" style="background:#2a1a0888;color:#e8854c;border-color:#e8854c44"><span class="pip pip-a">α</span> Alpha (Extreme)</div>
+    </div>
+    <div class="npc-body">
+      <div class="trait-row"><span class="trait">Relentlessly aggressive</span><span class="trait">Genuinely brave</span><span class="trait">Cannot stop campaigning</span><span class="trait">Mistakes motion for progress</span></div>
+      <div class="two-col">
+        <div class="info-block"><div class="info-label">Alpha expression</div><div class="info-text">Where Leo's Alpha manifests as <em>presence</em>, Aries' manifests as <em>momentum</em>. He is perpetually launching campaigns — against monsters, against the Fire Temple's pacifism, against advisors who counsel patience. Stopping feels like dying.</div></div>
+        <div class="info-block"><div class="info-label">The problem</div><div class="info-text">Lord Aries has no Omega counsel and distrusts his Beta administrators as "paper-pushers." His March is militarily strong and strategically blind. The Ashen Coil's Ashen Reavers have been raiding his supply lines for months and he keeps responding with frontal assaults.</div></div>
+      </div>
+      <div class="tension-block" style="border-color:#e8854c33;background:#1a0a0208">
+        <div class="tension-title" style="color:#e8854c">The Fire Temple Conflict</div>
+        <div class="tension-text">The Mesha Siddha (Ω) at the Forge of the First Spark refuse to craft weapons for his campaigns — they say their Astra are spiritual tools, not military hardware. Lord Aries sees this as a Beta-style bureaucratic obstruction. It is actually an Omega refusing to be instrumentalized. The conflict will escalate until one of them reframes what they're actually disagreeing about.</div>
+      </div>
+      <div class="rp-block">
+        <div class="rp-title">The Caldera of Deneb Kaitos</div>
+        <div class="rp-text">The Aries March contains an active volcano — the <strong>Caldera of Deneb Kaitos</strong> — that the Mesha Siddha consider a sacred forge-site of the highest order. An Ashen Coil sorcerer is currently operating inside the Caldera conducting a ritual designed to weaponize the magma into a blight-spewing fluid capable of devastating all of Terra Firma. Lord Aries knows something is wrong with the Caldera — his scouts report unusual activity — but his approach has been to send soldiers in, who do not come back. The Mesha Siddha could tell him why, but they and Lord Aries are not currently speaking. A party that bridges the Aries/Mesha divide gets access to the intelligence that would allow an informed assault on the Caldera. Without that bridge, Lord Aries will keep sending soldiers until the ritual completes.</div>
+      </div>
+      <div class="rp-block">
+        <div class="rp-title">Playing Lord Aries</div>
+        <div class="rp-text">He <strong>respects action above all</strong>. Don't explain a plan to Lord Aries — show him a result, then reveal the plan retrospectively. He responds poorly to Omega-style nuanced analysis ("but consider the long-term...") and will dismiss it as weakness. To sway him, frame everything as the bold choice vs. the coward's choice.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LADY VIRGO -->
+  <div class="npc" onclick="this.classList.toggle('expanded')">
+    <div class="npc-head">
+      <div class="npc-avatar" style="background:#0a1a0a;border-color:#5aabe844">♍</div>
+      <div><div class="npc-name">Lady Virgo — Master of the Flawless System</div><div class="npc-role">Republic of Argentum · Duchy of Earth · Capital: City of Spires</div></div>
+      <div class="npc-essence" style="background:#0a101a88;color:#5aabe8;border-color:#5aabe844"><span class="pip pip-b">β</span> Beta (Institutional)</div>
+    </div>
+    <div class="npc-body">
+      <div class="trait-row"><span class="trait">Precise</span><span class="trait">Genuinely visionary</span><span class="trait">Believes in the system above the person</span><span class="trait">Terrifying at scale</span></div>
+      <div class="two-col">
+        <div class="info-block"><div class="info-label">Beta expression</div><div class="info-text">Lady Virgo is the purest Beta ruler in Sideros — she does not want power for its own sake but <strong>because the current system is inefficient and she can fix it</strong>. The Order of Pure Reason is her Beta institution made manifest: methodical, networked, patient, and absolutely convinced of its own correctness.</div></div>
+        <div class="info-block"><div class="info-label">The Omega she suppresses</div><div class="info-text">There is an Omega dimension to Lady Virgo — she <em>does</em> see the larger pattern, and the pattern she sees genuinely frightens her. Magic is chaotic. The gods fell. The world needs structure or it will collapse. Her anti-magic agenda is not cruelty — it is a Beta's answer to an Omega's terror.</div></div>
+      </div>
+      <div class="tension-block" style="border-color:#5aabe833;background:#0a101a08">
+        <div class="tension-title" style="color:#5aabe8">Beta vs. Omega in Her Own Court</div>
+        <div class="tension-text">The Master of the Flawless Ledger (β) runs her administration with perfect institutional loyalty. The Great Orrery's chief astronomer (borderline Ω) keeps finding anomalies that don't fit the system. Lady Virgo promotes the Ledger-Master and quietly sidelines the astronomer every time — she cannot tolerate data that undermines the model.</div>
+      </div>
+      <div class="rp-block">
+        <div class="rp-title">Playing Lady Virgo</div>
+        <div class="rp-text">She responds to <strong>evidence and procedure</strong>. An Alpha who blusters at her loses immediately. An Omega who comes with a beautiful theory but no implementation plan also loses. Win her by bringing a documented problem, a proposed solution, and a realistic implementation timeline. She will respect this even if she ultimately disagrees. She is the hardest ruler in Sideros to manipulate because she has already thought of your angle.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LADY TAURUS -->
+  <div class="npc" onclick="this.classList.toggle('expanded')">
+    <div class="npc-head">
+      <div class="npc-avatar" style="background:#0a1a0a;border-color:#5aabe844">♉</div>
+      <div><div class="npc-name">Lady Taurus — Keeper of the Verdant Fields</div><div class="npc-role">Taurian Plains · Duchy of Earth · Capital: Veridia</div></div>
+      <div class="npc-essence" style="background:#0a101a88;color:#5aabe8;border-color:#5aabe844"><span class="pip pip-b">β</span> Beta (Protective)</div>
+    </div>
+    <div class="npc-body">
+      <div class="trait-row"><span class="trait">Patient</span><span class="trait">Immovable when pushed</span><span class="trait">Deeply loyal</span><span class="trait">Slow to anger, devastating when arrived</span></div>
+      <div class="two-col">
+        <div class="info-block"><div class="info-label">Beta expression</div><div class="info-text">Lady Taurus embodies Beta in its most constructive form — she sustains. The breadbasket of the continent runs because she has spent decades building relationships with every farmer, miller, and river-warden in the Taurian Plains. She holds power through <strong>genuine service</strong>, not performance.</div></div>
+        <div class="info-block"><div class="info-label">The hidden Omega</div><div class="info-text">Lady Taurus secretly funds the Vrishabha Siddha's geomantic research. No one in her court knows. She has an Omega's patience for long-term pattern work — she's been cultivating this relationship for 30 years and won't see results for another 20. This is Beta-Omega synthesis at its best.</div></div>
+      </div>
+      <div class="tension-block" style="border-color:#5aabe833;background:#0a101a08">
+        <div class="tension-title" style="color:#5aabe8">The Double Crisis</div>
+        <div class="tension-text">The Mycelian Brood and the Ashen Coil are both threatening the Taurian Plains simultaneously. A pure Beta response — defend what exists, call for allies, maintain the system — is insufficient because the threats are novel and systemic. Lady Taurus knows this and is quietly desperate for an Omega mind who can see the pattern, but she doesn't know how to ask for one without admitting the system she built isn't enough.</div>
+      </div>
+      <div class="rp-block">
+        <div class="rp-title">Playing Lady Taurus</div>
+        <div class="rp-text">She responds to <strong>demonstrated commitment over time</strong>. A single dramatic gesture impresses her briefly. Three small reliable actions earn her genuine trust. To access her real network — which is vast — heroes need to prove they will still be there after the crisis. She is the best logistical ally in the Western Realms if earned, and impossible to move by pressure alone.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LADY CAPRICORN -->
+  <div class="npc" onclick="this.classList.toggle('expanded')">
+    <div class="npc-head">
+      <div class="npc-avatar" style="background:#0a1a0a;border-color:#5aabe844">♑</div>
+      <div><div class="npc-name">Lady Capricorn — Warden of the Ancient Laws</div><div class="npc-role">Stone Kingdom of Dunmar · Duchy of Earth · Capital: Ironhearth</div></div>
+      <div class="npc-essence" style="background:#0a101a88;color:#5aabe8;border-color:#5aabe844"><span class="pip pip-b">β</span> Beta-Omega Hybrid</div>
+    </div>
+    <div class="npc-body">
+      <div class="trait-row"><span class="trait">Isolationist</span><span class="trait">Contractual thinker</span><span class="trait">Sees systems as sacred</span><span class="trait">Occasionally glimpses the void</span></div>
+      <div class="two-col">
+        <div class="info-block"><div class="info-label">Beta-Omega expression</div><div class="info-text">Lady Capricorn is a rare hybrid — she maintains ancient systems (Beta) but understands why they exist at a philosophical level that most Betas don't reach (Omega). She is an isolationist not from fear but because she has <strong>read the treaties</strong> and understands what happens when they break.</div></div>
+        <div class="info-block"><div class="info-label">The Aether-Dampening problem</div><div class="info-text">Dunmar's monopoly on Aether-Dampening Ore is a Beta institutional advantage that protects a genuine Omega insight: unrestricted magic is destabilizing. The Order of Pure Reason (β) wants the ore to extend that control globally. Lady Capricorn knows this is a category error — the ore is a specific tool, not a philosophy. She won't say this publicly.</div></div>
+      </div>
+      <div class="tension-block" style="border-color:#5aabe833;background:#0a101a08">
+        <div class="tension-title" style="color:#5aabe8">Diplomatic Pressure from All Sides</div>
+        <div class="tension-text">The Karmic Mountain Monastery (Ω) presses her to open Dunmar's borders on spiritual grounds. The Order of Pure Reason (β) pressures her for ore access on practical grounds. Lord Leo (α) pressures her for military alliance on loyalty grounds. She is handling all three simultaneously using the same tool: the letter of the law. It is exhausting and she is running out of treaty clauses.</div>
+      </div>
+      <div class="rp-block">
+        <div class="rp-title">The Earthly Crown</div>
+        <div class="rp-text">Deep within Dunmar's most restricted underground territory lies the <strong>Earthly Crown</strong> — the final resting place of a legendary Dunmarim king whose crown is believed to confer absolute legal authority over all disputed Dunmarim succession claims. The Dunmarim political establishment wants it. Lady Capricorn does not pursue it herself — she has read the relevant texts and knows the artifact is deeply cursed, which the Dunmarim political establishment either hasn't read or is choosing to ignore. The <strong>Karmic Mountain Monastery</strong> guards the entrance fiercely, warning all outsiders (and insiders) that the crown's curse corrupts the holder's judgment in ways that manifest slowly enough to be rationalized as wisdom. They are not wrong. Lady Capricorn's position: the crown should stay where it is. She will not say this publicly, because the political establishment would interpret it as her protecting her own authority. She is, in fact, protecting the political establishment from itself. This is the most exhausting kind of correct to be.</div>
+      </div>
+      <div class="rp-block">
+        <div class="rp-title">Playing Lady Capricorn</div>
+        <div class="rp-text">She responds to <strong>legal and contractual frameworks</strong>. Offer her a treaty, not a favor. Frame every request as something she is owed or something that fulfills an existing obligation. She has a dry, precise humor that emerges when she respects someone. Getting her to make a joke at her own expense means you've won her trust.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LORD SAGITTARIUS -->
+  <div class="npc" onclick="this.classList.toggle('expanded')">
+    <div class="npc-head">
+      <div class="npc-avatar" style="background:#2a1a08;border-color:#e8854c44">♐</div>
+      <div><div class="npc-name">Lord Sagittarius — The Open-Sky Cartographer</div><div class="npc-role">Sagittarian Steppes · Duchy of Fire · Capital: Open Sky</div></div>
+      <div class="npc-essence" style="background:#2a1a0888;color:#e8854c;border-color:#e8854c44"><span class="pip pip-a">α</span> Alpha-Beta Hybrid</div>
+    </div>
+    <div class="npc-body">
+      <div class="trait-row"><span class="trait">Restless</span><span class="trait">Intellectually voracious</span><span class="trait">Leads from curiosity not ego</span><span class="trait">Haunted by prophecy</span></div>
+      <div class="two-col">
+        <div class="info-block"><div class="info-label">Alpha-Beta expression</div><div class="info-text">Lord Sagittarius is an Alpha who has learned to listen — which makes him the most dangerous and useful ruler in Terra Firma. He leads from the front (Alpha) but actually remembers what his scouts report (Beta). He has the impulse of a vanguard and the patience of a navigator.</div></div>
+        <div class="info-block"><div class="info-label">The dark prophecy</div><div class="info-text">He received a dark prophecy from the Spire of the Higher Truth — and has told no one its content. His nomadic lifestyle means he is always moving, which is partly philosophical and partly because moving targets are harder to act against. He is running from something he doesn't fully believe in and half-expects to find at every horizon.</div></div>
+      </div>
+      <div class="rp-block">
+        <div class="rp-title">The Sunken Observatory</div>
+        <div class="rp-text">Buried beneath the Sagittarian Steppes lies the <strong>Sunken Observatory</strong> — a Precursor-era astronomical installation whose instruments, if recovered and restored, could potentially calculate a counter-strategy to the dark prophecy Lord Sagittarius received from the Spire of the Higher Truth. Multiple nomadic factions are currently racing to uncover it, each believing their interpretation of the stellar data will be the authoritative one. Lord Sagittarius knows the Observatory exists. He has not joined the race publicly. He is watching to see who reaches it first, which tells him something about who understands what they're looking for — and who is merely desperate. The prophecy the Observatory is meant to counter is the one he's never told anyone: that the Ashen Coil achieves absolute victory. If the Observatory's data confirms this, he doesn't know what he does next.</div>
+      </div>
+      <div class="rp-block">
+        <div class="rp-title">The Avian First Contact</div>
+        <div class="rp-text">The Sagittarian Steppes border the Avian trade routes along the southern sky-lanes. Lord Sagittarius is personally managing what the Avian Judicial Authority calls "first contact" — a series of tense philosophical exchanges between nomadic Steppe clans and Avian truth-seers who find the Steppe's oral tradition of stargazing both intriguing and infuriating (its claims are not provably false, which the Avian find deeply uncomfortable). Lord Sagittarius finds this the most interesting diplomatic challenge of his career. He is making it worse in productive ways — asking both sides questions they cannot answer, which forces them to sit with each other in shared uncertainty rather than mutual dismissal.</div>
+      </div>
+      <div class="rp-block">
+        <div class="rp-title">Playing Lord Sagittarius</div>
+        <div class="rp-text">He responds to <strong>people who are genuinely curious</strong> — about the world, about him, about ideas he hasn't considered. He will talk for hours to someone who asks good questions. The way to his confidence is a question, not a request. Once he trusts, he is an extraordinary ally — his network spans every nomadic route on the continent.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LORD LIBRA -->
+  <div class="npc" onclick="this.classList.toggle('expanded')">
+    <div class="npc-head">
+      <div class="npc-avatar" style="background:#100a1a;border-color:#a87ee844">♎</div>
+      <div><div class="npc-name">Lord Libra — High Arbiter of Equilibrium</div><div class="npc-role">Sereignate of Libra · Aetheria · Capital: Equilibrium</div></div>
+      <div class="npc-essence" style="background:#100a1a88;color:#a87ee8;border-color:#a87ee844"><span class="pip pip-w">Ω</span> Omega (Paralyzed)</div>
+    </div>
+    <div class="npc-body">
+      <div class="trait-row"><span class="trait">Sees every side</span><span class="trait">Emotionally detached</span><span class="trait">Existentially tired</span><span class="trait">Knows the right answer</span><span class="trait">Cannot execute it</span></div>
+      <div class="two-col">
+        <div class="info-block"><div class="info-label">Omega expression</div><div class="info-text">Lord Libra is an Omega ruler — a deep systems-thinker who took a position that requires Alpha decisiveness. He has held the world's most complex diplomatic position for centuries using <strong>analysis instead of action</strong>. It has worked until now because the system held. The system is no longer holding.</div></div>
+        <div class="info-block"><div class="info-label">The non-interference law</div><div class="info-text">His non-interference law is an Omega creation — it is elegant, internally consistent, and genuinely wise as a peacetime principle. It is catastrophically wrong for wartime. Lord Libra knows this. He has known this for two decades. He still hasn't changed it because he cannot find a version that doesn't create worse downstream consequences.</div></div>
+      </div>
+      <div class="tension-block" style="border-color:#a87ee833;background:#100a1a08">
+        <div class="tension-title" style="color:#a87ee8">The Omega Trap</div>
+        <div class="tension-text">Lord Libra is caught in the worst Omega failure mode: seeing too many options simultaneously, which makes choosing any of them feel irresponsible. He needs an Alpha to make the decision <em>for</em> him — or a Beta to build the coalition that makes the decision unavoidable. He will never ask for this directly. He will create situations where it becomes necessary.</div>
+      </div>
+      <div class="rp-block">
+        <div class="rp-title">Playing Lord Libra</div>
+        <div class="rp-text">He responds to <strong>structured dilemmas with forced choices</strong>. Don't ask him what he thinks — show him two options and explain why waiting isn't a third option. He is deeply grateful when someone makes a decision feel smaller and safer than it is. He will be loyal for life to the person who gave him permission to act.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LORD GEMINI -->
+  <div class="npc" onclick="this.classList.toggle('expanded')">
+    <div class="npc-head">
+      <div class="npc-avatar" style="background:#100a1a;border-color:#a87ee844">♊</div>
+      <div><div class="npc-name">Lord Gemini — The Dual Monarchs</div><div class="npc-role">Twin Republics · Aetheria · Capital: Betel & Geuse</div></div>
+      <div class="npc-essence" style="background:#100a1a88;color:#a87ee8;border-color:#a87ee844"><span class="pip pip-w">Ω</span> / <span class="pip pip-a">α</span> Split (Internally contested)</div>
+    </div>
+    <div class="npc-body">
+      <div class="trait-row"><span class="trait">Erratic</span><span class="trait">Intensely brilliant</span><span class="trait">Two voices, one crown</span><span class="trait">Chaos as a management style</span></div>
+      <div class="two-col">
+        <div class="info-block"><div class="info-label">The split</div><div class="info-text">Lord Gemini is literally two essences in ongoing contest. The <strong>Alpha voice</strong> wants to act, expose the Loom of Fate infiltration, and make an example. The <strong>Omega voice</strong> wants to study the infiltration, learn from it, and use it. They finish each other's sentences and arrive at opposite conclusions.</div></div>
+        <div class="info-block"><div class="info-label">The gravity-vein crisis</div><div class="info-text">The counter-espionage operation the Alpha voice launched is destabilizing the floating island's physical infrastructure. The Omega voice sees this and is horrified. The Alpha voice says it's a necessary risk. They are right simultaneously. The islands are slowly falling.</div></div>
+      </div>
+      <div class="rp-block">
+        <div class="rp-title">Playing Lord Gemini</div>
+        <div class="rp-text">You are always talking to <strong>both of them at once</strong>. Make an Alpha argument and the Alpha voice agrees immediately — then the Omega voice asks the question that invalidates it. Make an Omega argument and the reverse happens. The only things both voices agree on: the islands cannot fall, and the Loom cannot win. Build your appeal around those two constants.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- VILLAINS -->
+<div class="panel" id="panel-villains">
+<p style="font-size:13px;color:#888;margin-bottom:1rem;line-height:1.7">The villains of Sideros are not simply evil — they are Essences taken to their darkest logical conclusion, or Essences that have been hollowed out and replaced.</p>
+
+<div class="npc-grid">
+
+  <!-- AETHAR -->
+  <div class="npc expanded" onclick="this.classList.toggle('expanded')">
+    <div class="npc-head">
+      <div class="npc-avatar" style="background:#1e0a0a;border-color:#cc444444">⛎</div>
+      <div><div class="npc-name">Aethar / The Serpent Bearer</div><div class="npc-role">Primary Villain · Fractured consciousness of Ophiuchus · Commands from the Maw</div></div>
+      <div class="npc-essence" style="background:#1e0a0a88;color:#cc4444;border-color:#cc444444"><span class="pip pip-w">Ω</span> Omega (Corrupted)</div>
+    </div>
+    <div class="npc-body">
+      <div class="trait-row"><span class="trait">Patient across centuries</span><span class="trait">Sees all three Essences as temporary</span><span class="trait">Does not want power — wants dissolution</span><span class="trait">Cold divine intelligence</span></div>
+      <div class="two-col">
+        <div class="info-block"><div class="info-label">Omega expression</div><div class="info-text">Aethar is a pure Omega taken to its ultimate shadow. He sees the pattern of all existence — and has concluded that the pattern itself is the problem. He does not want to rule. He wants to <strong>unmake the framework</strong> that makes ruling meaningful. His four-stage plan is an Omega's plan: patient, systemic, invisible until it's too late.</div></div>
+        <div class="info-block"><div class="info-label">His relationship to other essences</div><div class="info-text">Aethar uses Alphas as battering rams (the 13 Scions who command his forces), Betas as infrastructure (the Ashen Reavers, the Fang of the Whisper), and corrupts Omegas into Void-Husks — because corrupted Omegas are the most dangerous weapons: they understand systems deeply enough to destroy them from within.</div></div>
+      </div>
+      <div class="tension-block" style="border-color:#cc444433;background:#1e0a0a08">
+        <div class="tension-title" style="color:#cc4444">Why Heroes Cannot Simply Defeat Him</div>
+        <div class="tension-text">Aethar cannot be defeated through Alpha confrontation alone — he has planned for that. Beta coalition-building slows him but doesn't stop him. <strong>Only an Omega who can see his pattern and design a counter-pattern has any chance.</strong> This is why Arch-Oracle Lyra of the Closed Eye (Shifting Horizons Conclave) is the most important NPC in the world — she is the only one actively trying to design that counter-pattern.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE SCORPION-INQUISITOR -->
+  <div class="npc" onclick="this.classList.toggle('expanded')">
+    <div class="npc-head">
+      <div class="npc-avatar" style="background:#100a1a;border-color:#a87ee844">♏</div>
+      <div><div class="npc-name">The Scorpion-Inquisitor</div><div class="npc-role">Loom of Fate · Great Kurgan Bog · Apex Operative</div></div>
+      <div class="npc-essence" style="background:#100a1a88;color:#a87ee8;border-color:#a87ee844"><span class="pip pip-w">Ω</span> Omega (Weaponized)</div>
+    </div>
+    <div class="npc-body">
+      <div class="trait-row"><span class="trait">Cold</span><span class="trait">Patient as geology</span><span class="trait">Sees through every performance</span><span class="trait">Not cruel — surgical</span></div>
+      <div class="two-col">
+        <div class="info-block"><div class="info-label">Omega expression</div><div class="info-text">The Scorpion-Inquisitor is an Omega who has been fully weaponized by a Beta institution (the Loom of Fate). He sees patterns of guilt, loyalty, and betrayal the way others see weather. His interrogations aren't violent — they're <strong>structurally inevitable</strong>. He asks questions in the order that makes lying impossible.</div></div>
+        <div class="info-block"><div class="info-label">The stalled hunt</div><div class="info-text">His hunt for the Order of Pure Reason defector has stalled because the Leviathan's entropic mutations don't respond to pattern analysis — they are genuinely chaotic. For the first time in his career, the Inquisitor is in an environment his Omega mind cannot model. He is deeply, silently afraid.</div></div>
+      </div>
+      <div class="rp-block">
+        <div class="rp-title">Playing the Scorpion-Inquisitor</div>
+        <div class="rp-text">He already knows why you're lying. He's waiting to see if you know he knows. <strong>The only winning move is absolute honesty</strong>, which he finds so rare it actually commands his respect. Heroes who tell him the truth immediately — including uncomfortable truths about themselves — are the only ones he treats as equals. He is not the enemy unless you make him one.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGENT OPHIOMORPH -->
+  <div class="npc" onclick="this.classList.toggle('expanded')">
+    <div class="npc-head">
+      <div class="npc-avatar" style="background:#1e0a0a;border-color:#cc444444">⛎</div>
+      <div><div class="npc-name">Regent Ophiomorph</div><div class="npc-role">Warden of the Maw · Trench Keepers · Regency of The Tails</div></div>
+      <div class="npc-essence" style="background:#0a101a88;color:#5aabe8;border-color:#5aabe844"><span class="pip pip-b">β</span> Beta (Breaking Down)</div>
+    </div>
+    <div class="npc-body">
+      <div class="trait-row"><span class="trait">Institutional loyalty — fading</span><span class="trait">Genuinely trying to hold the line</span><span class="trait">Desperate</span><span class="trait">Already compromised</span></div>
+      <div class="two-col">
+        <div class="info-block"><div class="info-label">Beta expression</div><div class="info-text">Ophiomorph is a Beta who built his entire identity around institutional duty — warden of the Maw, guardian of the seal. That institution is collapsing around him. A Beta without an institution to maintain is a Beta without a self. His bartering with Ashen Coil cults is not betrayal — it is <strong>a Beta trying to maintain his function by any means necessary</strong>.</div></div>
+        <div class="info-block"><div class="info-label">The tragedy</div><div class="info-text">He is not evil. He is a middle manager whose organization is being destroyed by forces beyond his pay grade, making impossible decisions alone in the dark. Every deal he makes to stabilize his trench makes the Maw's seals fractionally weaker. He knows this and cannot stop because the alternative is watching his garrison die for nothing.</div></div>
+      </div>
+      <div class="rp-block">
+        <div class="rp-title">Playing Regent Ophiomorph</div>
+        <div class="rp-text">He responds to <strong>being given an institutional framework to work within</strong>. Don't offer him heroism — offer him a job. A clear mission, a chain of command, resources, and a way to do his duty. If heroes can give him something that looks like official sanction, he will switch sides instantly and with complete sincerity. He doesn't want to be a villain. He wants to be a warden.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- SUPPORT -->
+<div class="panel" id="panel-support">
+<p style="font-size:13px;color:#888;margin-bottom:1rem;line-height:1.7">The advisors and hidden powers of Sideros are often more important than the rulers they serve — and their Essence determines what they actually want from the relationship.</p>
+
+<div class="npc-grid">
+
+  <!-- BEE-PRIESTESS -->
+  <div class="npc expanded" onclick="this.classList.toggle('expanded')">
+    <div class="npc-head">
+      <div class="npc-avatar" style="background:#1a1a08;border-color:#c9a84c44">🐝</div>
+      <div><div class="npc-name">The Bee-Priestess</div><div class="npc-role">Grand Matriarch · Golden Hive · Arcadia Major</div></div>
+      <div class="npc-essence" style="background:#0a101a88;color:#5aabe8;border-color:#5aabe844"><span class="pip pip-b">β</span> Beta (Hive-mind)</div>
+    </div>
+    <div class="npc-body">
+      <div class="trait-row"><span class="trait">Collective-minded</span><span class="trait">Possessive of assets</span><span class="trait">Incapable of thinking individually</span><span class="trait">Terrifying at scale</span></div>
+      <div class="two-col">
+        <div class="info-block"><div class="info-label">Beta expression</div><div class="info-text">The Bee-Priestess is Beta taken to its literal extreme — she doesn't just manage an institution, she <em>is</em> one. Her connection to the Queen Bee gives her distributed awareness across the entire hive city. She thinks in systems, resources, and collective welfare. Individual requests confuse her — she always translates them into collective implications first.</div></div>
+        <div class="info-block"><div class="info-label">The dual crisis</div><div class="info-text">The Mycelian Brood (which is also a hive-mind) is trying to subsume her network. The Celestial Honey raiders are attacking her resource base. A pure Beta under attack on two fronts simultaneously — and she cannot get Alpha help because her pride prevents her from framing it as weakness.</div></div>
+      </div>
+      <div class="rp-block">
+        <div class="rp-title">Playing the Bee-Priestess</div>
+        <div class="rp-text">Frame <strong>every request as a contribution to the hive</strong>. She does not do favors — she does resource exchanges. Tell her exactly what you need, what you offer in return, and how the hive benefits from the arrangement. If you can demonstrate that helping you makes the collective stronger, she will mobilize resources most Alpha rulers couldn't dream of.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARCH-ORACLE LYRA -->
+  <div class="npc" onclick="this.classList.toggle('expanded')">
+    <div class="npc-head">
+      <div class="npc-avatar" style="background:#100a1a;border-color:#a87ee844">☄</div>
+      <div><div class="npc-name">Arch-Oracle Lyra of the Closed Eye</div><div class="npc-role">Shifting Horizons Conclave · Argent Spire · Antarctos</div></div>
+      <div class="npc-essence" style="background:#100a1a88;color:#a87ee8;border-color:#a87ee844"><span class="pip pip-w">Ω</span> Omega (Pure)</div>
+    </div>
+    <div class="npc-body">
+      <div class="trait-row"><span class="trait">Permanently blindfolded</span><span class="trait">Sees only probability futures</span><span class="trait">Speaks in questions</span><span class="trait">The most dangerous mind in Sideros</span></div>
+      <div class="two-col">
+        <div class="info-block"><div class="info-label">Omega expression</div><div class="info-text">Lyra is the purest Omega in the world — she has literally blinded herself to the present so she can see futures more clearly. She experiences the world as probability distributions, not events. <strong>She has been trying to reach outside heroes for years.</strong> The other two Conclaves have been quietly preventing her messages from arriving.</div></div>
+        <div class="info-block"><div class="info-label">What she knows</div><div class="info-text">Lyra has identified the counter-pattern to Aethar's plan. She cannot execute it alone — it requires components scattered across the world that no single institution controls. She needs Alphas for the retrieval, Betas for the logistics, and at least one other Omega to verify her reasoning. She has been assembling this without anyone's knowledge for a decade.</div></div>
+      </div>
+      <div class="rp-block">
+        <div class="rp-title">Playing Arch-Oracle Lyra</div>
+        <div class="rp-text">She already knows you're coming. She <strong>asks questions instead of giving information</strong> — each question is designed to make you arrive at the truth yourself, because Omegas who tell Alphas what to think create compliance, not understanding. The heroes who earn her full trust are those who ask her a question she hasn't considered. It has happened twice in her life. She remembers both times perfectly.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JARL SKADI -->
+  <div class="npc" onclick="this.classList.toggle('expanded')">
+    <div class="npc-head">
+      <div class="npc-avatar" style="background:#0a0a1a;border-color:#5aabe844">❄</div>
+      <div><div class="npc-name">Jarl Skadi</div><div class="npc-role">Hearth of Jötunheim · Boreal Expanse · Thrymheimr</div></div>
+      <div class="npc-essence" style="background:#2a1a0888;color:#e8854c;border-color:#e8854c44"><span class="pip pip-a">α</span> Alpha (Primordial)</div>
+    </div>
+    <div class="npc-body">
+      <div class="trait-row"><span class="trait">Ancient</span><span class="trait">Does not negotiate</span><span class="trait">Her domain is absolute</span><span class="trait">Suppresses what she cannot understand</span></div>
+      <div class="two-col">
+        <div class="info-block"><div class="info-label">Alpha expression</div><div class="info-text">Skadi is what Alpha looks like when it has held total dominance for so long it has forgotten what challenge feels like. She doesn't suppress the Aurorans out of strategy — she suppresses them because <strong>they exist in her domain without her permission</strong>, and that is categorically intolerable to a pure Alpha.</div></div>
+        <div class="info-block"><div class="info-label">The power source mystery</div><div class="info-text">Skadi's Wrath (the permanent blizzard) draws on something that violates cosmic law — which is why the Aurorans (made of cosmic law energy) dissolve within it. What dark pact or elemental source sustains it? This is the critical unanswered question. Whatever it is, it is almost certainly a compromise Skadi made long ago that she has never admitted to anyone.<br><br><strong>What Skadi's Wrath actually is:</strong> The blizzard is not a weather phenomenon. It is a <em>sentient magical construct</em> — composed of razor-sharp ice shards that move with directed intelligence, responding to Skadi's will at a distance. She does not need to be present in a location for the Wrath to respond to a threat there. This makes her mountain fortress of Thrymheimr at the North Pole <strong>completely impregnable to conventional assault</strong> — any approach across open ground is contested by a blizzard that adjusts its behaviour to the specific vulnerability profile of the attackers. Skadi has never lost a siege of Thrymheimr. She has never needed to fight one past the outer approaches.</div></div>
+      </div>
+      <div class="rp-block">
+        <div class="rp-title">Playing Jarl Skadi</div>
+        <div class="rp-text">She does not speak to those who come to her — she waits for those worthy to reach her. Getting an audience requires surviving Thrymheimr's outer approaches alone. If heroes manage this, she respects the achievement and speaks plainly. She will not offer help. She will not refuse a worthy challenge. <strong>Frame everything as a contest, never a request.</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGENT ICHTHYES -->
+  <div class="npc" onclick="this.classList.toggle('expanded')">
+    <div class="npc-head">
+      <div class="npc-avatar" style="background:#100a1a;border-color:#a87ee844">♓</div>
+      <div><div class="npc-name">Regent Ichthyes</div><div class="npc-role">Trench Keepers · Regency of The Tails · Ship's Graveyard</div></div>
+      <div class="npc-essence" style="background:#100a1a88;color:#a87ee8;border-color:#a87ee844"><span class="pip pip-w">Ω</span> Omega (Fractured)</div>
+    </div>
+    <div class="npc-body">
+      <div class="trait-row"><span class="trait">Haunted</span><span class="trait">Prophetic</span><span class="trait">Permanently paranoid</span><span class="trait">Probably right</span></div>
+      <div class="two-col">
+        <div class="info-block"><div class="info-label">Omega expression</div><div class="info-text">Ichthyes is an Omega who has received too much input — constant subconscious visions bleeding up from the Twin Dream-Fish cenote and the Hollow Serpent's pulsing energy below. His Omega pattern-recognition is flooded with signal and cannot separate prophecy from noise. He is not mad — he is <strong>overwhelmed with truth</strong>.</div></div>
+        <div class="info-block"><div class="info-label">What he actually knows</div><div class="info-text">Buried in his visions is accurate information about the Maw's sealing status, Ophiomorph's bartering, and the timeline of the Leviathan's awakening. He cannot organize it coherently. A Stellar Cartographer (who can read Fate Numbers) or an Ashé-Medium (who can filter spiritual signal) might be able to help him sort it.</div></div>
+      </div>
+      <div class="rp-block">
+        <div class="rp-title">Playing Regent Ichthyes</div>
+        <div class="rp-text">He speaks in fragments that individually sound like madness and together form a coherent picture — if the heroes are paying attention. <strong>Write down everything he says.</strong> None of it is random. The GM should seed his dialogue with partial truths about the actual state of the Maw that become retroactively accurate. He is one of the best early-warning systems in the world if anyone can bear to listen to him.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- FACTIONS -->
+<div class="panel" id="panel-factions">
+<p style="font-size:13px;color:#888;margin-bottom:1rem;line-height:1.7">Every major faction in Sideros has an Essence character — and understanding it tells you how the faction makes decisions, where it breaks down, and how heroes can work with or against it.</p>
+
+<table class="clash-table">
+  <tr><th>Faction</th><th>Dominant Essence</th><th>Faction Behavior</th><th>Structural Weakness</th></tr>
+  <tr>
+    <td>Solar Chivalry</td>
+    <td><span class="pip pip-a">α</span> Alpha</td>
+    <td>Heroic action, visible sacrifice, ceremony and symbol. Recruits Alphas and inspires Betas to aspire. Organizes around tournaments and quests.</td>
+    <td>No long-term planning. The institution is entirely dependent on Lord Leo's personal Alpha magnetism — which is fading. When he goes, there's nothing structural left.</td>
+  </tr>
+  <tr>
+    <td>Order of Pure Reason</td>
+    <td><span class="pip pip-b">β</span> Beta</td>
+    <td>Documentation, systematization, institutional expansion. Spreads through bureaucratic capture — they don't conquer, they audit. Extremely patient. <strong>Current endgame:</strong> The Order is weaponizing a <strong>Fallen Star</strong> located within Argentum's borders — a crashed celestial body whose anti-Aetheric resonance they intend to amplify into a <em>global</em> anti-magic field. Their specific targets are faiths they deem "unpredictable" — beginning with the Tuathan Archipelago's fae-bonded Fade-Guardian tradition. If successful, this would make the Stillness of Dunmar look minor by comparison. The Order does not consider this a weapon — they consider it a <em>public health measure.</em> <strong>The Spica Monoliths:</strong> Within Argentum's territory stands an ancient standing-stone complex called the <strong>Spica Monoliths</strong> (named for the brightest star of Virgo — appropriate for Argentum's alignment). The Monoliths contain an ancient purification ritual predating the Duchy Compact. The Order intends to seize and use this ritual to forcibly "cure" the Ashen-Sworn, neutralizing their martial threat through magical intervention. The Kanya Siddha have formally warned that forcing the purification ritual on unwilling subjects will corrupt the Monoliths' resonance entirely — destroying the ritual permanently and backlashing the casters. The Order has filed the warning. It is continuing to plan the operation. <strong>The Fade-Bleed Zone:</strong> The sector surrounding the Fallen Star has developed a severe localized Fade-Bleed — the veil between the physical world and the spirit realm has worn completely thin in the immediate vicinity of the crashed celestial body. Within this zone, all Working is wildly amplified and fundamentally unstable; spirits continuously manifest and cross over into the mortal plane. The Order has cordoned the zone and is studying it, framing the uncontrolled spirit manifestations as evidence that the Fallen Star's anti-Aetheric potential exceeds initial assessments.</em></td>
+    <td>Cannot respond to anything genuinely novel. When the Mycelian Brood or Aethar presents a truly chaotic threat, they will try to file a report about it. They need an Omega they refuse to admit exists.</td>
+  </tr>
+  <tr>
+    <td>The Loom of Fate</td>
+    <td><span class="pip pip-b">β</span> Beta (shadow)</td>
+    <td>Information brokering, network maintenance, long-term positioning. Never confronts directly. Controls by controlling what people know. <strong>Origin:</strong> Founded by the mage-princes of the <strong>Viridian Principalities</strong> (the isolationist swamp territories of the southern Mare Occultum) as a tool to ensure no northern empire ever grew powerful enough to invade. The Loom's founding purpose was defensive self-preservation. Its current scope has long since exceeded that mandate — the mage-princes no longer control what they created, though they maintain the fiction that they do.</td> people know.</td>
+    <td>Fundamentally reactive — they respond to events rather than shape them. A genuine Omega actor (like Aethar) who operates beyond their information network makes them blind.</td>
+  </tr>
+  <tr>
+    <td>Siddha Orders</td>
+    <td><span class="pip pip-w">Ω</span> Omega</td>
+    <td>Individual cultivation, long-term pattern work, institutional independence. Each temple is essentially autonomous. They coordinate through shared cosmology, not hierarchy.</td>
+    <td>No Alpha capacity. When a threat requires decisive action now, the Siddha hold a contemplative debate. The Fire Temple's conflict with Lord Aries is the perfect example.</td>
+  </tr>
+  <tr>
+    <td>Comet-Magi (Argent Spire)</td>
+    <td><span class="pip pip-w">Ω</span> Omega + <span class="pip pip-b">β</span> Beta</td>
+    <td>Academic precision (Ω) sustained by institutional discipline (β). The three Conclaves ensure no single Omega perspective dominates. Extraordinary at holding a position indefinitely.</td>
+    <td>No Alpha at all. If the seals fail catastrophically, Argent Spire has no one who can make a fast irreversible decision and execute it. This is their existential vulnerability.</td>
+  </tr>
+  <tr>
+    <td>The Ashen Coil</td>
+    <td><span class="pip pip-w">Ω</span> Omega (corrupted) leading <span class="pip pip-a">α</span> Alpha shock troops via <span class="pip pip-b">β</span> Beta infrastructure</td>
+    <td>The perfect dark triad. Aethar (Ω) designs the plan. The 13 Scions (α) execute spectacularly. The Ashen Reavers and Fang cells (β) maintain operations. Efficient, redundant, and deeply patient.</td>
+    <td>The Omega at the top has become so abstract that the Alphas below are starting to act for themselves. Three Scions are pursuing independent agendas. This is not known to Aethar — or if it is, he finds it useful for now.</td>
+  </tr>
+  <tr>
+    <td>Three Conclaves of Argent Spire</td>
+    <td>Ethereal Dawn: <span class="pip pip-a">α</span> / Earthly Core: <span class="pip pip-b">β</span> / Shifting Horizons: <span class="pip pip-w">Ω</span></td>
+    <td>The three Conclaves map exactly onto the three Essences — which is why they cannot agree. Each is arguing from a completely different relationship to time, action, and consequence.</td>
+    <td>The balance that keeps Argent Spire stable also makes it incapable of responding to a new situation unanimously. Any crisis that requires unanimous action will find them deadlocked.</td>
+  </tr>
+  <tr>
+    <td>Court of the Sunken Stars</td>
+    <td><span class="pip pip-b">β</span> Beta (maritime)</td>
+    <td>Trade regulation, territorial maintenance, bureaucratic negotiation between Regencies. Twelve Tidal Regents = twelve Beta administrators managing a shared resource.</td>
+    <td>No mechanism for existential decisions. When Ophiomorph's bartering becomes public knowledge, the Court will deliberate while the Maw falls. They need an Alpha voice to force a decision.</td>
+  </tr>
+  <tr>
+    <td>Mycelian Brood</td>
+    <td><span class="pip pip-b">β</span> Beta (hive, no individuals)</td>
+    <td>Pure Beta in its most alien form — total collective, no individual will, absolute resource optimization. Spreads through the path of least resistance. Doesn't attack; absorbs.</td>
+    <td>Cannot respond to Alpha disruption of its network nodes. Destroying a node creates confusion in the hive-mind that takes time to route around. Its weakness is exactly what Lord Aries is best at — but he's fighting it wrong because he doesn't know what it is.</td>
+  </tr>
+</table>
+</div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).style.display='block';
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+document.querySelectorAll('.panel').forEach(p=>{p.style.display='none'});
+document.getElementById('panel-overview').style.display='block';
+</script>
+</body>
+</html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — Conditions Reference</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;500;600&display=swap');
+:root{
+  --void:#08090a;--void-mid:#10121a;--parchment:#f0e6cc;--parchment-dim:rgba(240,230,204,0.55);
+  --gold:#c9a84c;--gold-dim:#7a6028;--gold-bright:#e8c870;
+  --red:#c04040;--amber:#c87840;--purple:#7060a0;--blue:#4060a0;--green:#406040;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--parchment);line-height:1.75;min-height:100vh}
+.hero{text-align:center;padding:3.5rem 1.5rem 3rem;border-bottom:1px solid rgba(201,168,76,0.15)}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:.8rem}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(20px,3.5vw,28px);font-weight:500;color:var(--gold-bright);letter-spacing:.05em;margin-bottom:.4rem}
+.hero-sub{font-size:14px;font-style:italic;color:var(--parchment-dim);max-width:500px;margin:0 auto}
+.nav-strip{display:flex;gap:4px;flex-wrap:wrap;padding:.65rem .9rem;border-bottom:1px solid rgba(201,168,76,0.1);background:var(--void-mid);position:sticky;top:0;z-index:20}
+.nav-btn{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border:1px solid rgba(201,168,76,0.18);border-radius:3px;background:transparent;color:var(--parchment-dim);cursor:pointer;transition:all .15s;white-space:nowrap}
+.nav-btn.active{background:rgba(201,168,76,0.08);color:var(--gold-bright);border-color:rgba(201,168,76,0.4)}
+.panel{display:none}.panel.active{display:block}
+.wrap{max-width:860px;margin:0 auto;padding:2rem 1.25rem 4rem}
+.lore{font-size:14px;color:rgba(240,230,204,0.8);line-height:1.85;margin-bottom:.9rem}
+.lore strong{color:var(--parchment);font-weight:500}
+.sec{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:1.5rem 0 .65rem;display:flex;align-items:center;gap:.6rem}
+.sec::after{content:'';flex:1;height:1px;background:rgba(201,168,76,0.1)}
+.cond-grid{display:grid;gap:8px}
+.cond{border-radius:9px;border:1px solid;padding:13px 15px;cursor:pointer;overflow:hidden;transition:border-color .15s}
+.cond-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.cond-name{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.05em}
+.cond-category{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:2px;border:1px solid;white-space:nowrap;flex-shrink:0}
+.cond-body{display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(201,168,76,0.08);font-size:13px;color:rgba(240,230,204,0.75);line-height:1.72}
+.cond.open .cond-body{display:block}
+.cond-body strong{color:var(--parchment);font-weight:500}
+.cond-body em{color:var(--gold-dim)}
+.dnd-map{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-dim);margin-top:.4rem;display:block}
+.qref{width:100%;border-collapse:collapse;font-size:12px}
+.qref th{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);padding:6px 10px;text-align:left;border-bottom:1px solid rgba(201,168,76,0.18)}
+.qref td{padding:6px 10px;border-bottom:1px solid rgba(201,168,76,0.06);color:rgba(240,230,204,0.75);vertical-align:top;font-size:12px;line-height:1.5}
+.qref td:first-child{font-family:'Cinzel',serif;font-size:10px;color:var(--parchment);white-space:nowrap}
+.qref td:nth-child(2){color:var(--parchment-dim);font-style:italic;white-space:nowrap}
+.qref tr:last-child td{border-bottom:none}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-eyebrow">Sideros / Astrolan — Player Reference</div>
+  <h1 class="hero-title">Conditions Reference</h1>
+  <p class="hero-sub">Every condition in Sideros — what it does, how it ends, and what D&D equivalent it replaces.</p>
+</div>
+<div class="nav-strip">
+  <button class="nav-btn active" onclick="show('physical',this)">Physical</button>
+  <button class="nav-btn" onclick="show('mental',this)">Mental & Social</button>
+  <button class="nav-btn" onclick="show('aetheric',this)">Aetheric</button>
+  <button class="nav-btn" onclick="show('void',this)">Void & Death</button>
+  <button class="nav-btn" onclick="show('quickref',this)">Quick Reference</button>
+</div>
+
+<!-- PHYSICAL CONDITIONS -->
+<div class="panel active" id="panel-physical"><div class="wrap">
+<div class="cond-grid">
+
+<div class="cond open" style="border-color:rgba(192,64,64,0.3);background:rgba(192,64,64,0.04)" onclick="this.classList.toggle('open')">
+  <div class="cond-head">
+    <div class="cond-name" style="color:#e07070">Corrupted</div>
+    <span class="cond-category" style="color:#c04040;border-color:rgba(192,64,64,0.3)">Physical · Ongoing Damage</span>
+  </div>
+  <div class="cond-body">
+    A creature that is Corrupted is suffering the effects of venom, Void-energy contamination, or Ashen Coil blight-rot entering their body. The specific flavor depends on the source.<br><br>
+    <strong>Effect:</strong> At the start of each of the creature's Moments, they take 1d6 poison damage (or necrotic damage if from Void-energy sources). This stacks — a creature can be Corrupted multiple times, taking damage for each stack.<br><br>
+    <strong>Ending it:</strong> Endurance Warding Resonance at the end of each Moment (DC set by the source). On success: one stack of Corrupted removed. Purification Touch (Kanya Siddha, 1 Tapas), the Antidote item, or the Purification Working also remove it.<br><br>
+    <em>Replaces: Poisoned condition. Also covers some aspects of Diseased.</em>
+    <span class="dnd-map">D&D equivalent: Poisoned</span>
+  </div>
+</div>
+
+<div class="cond" style="border-color:rgba(192,128,64,0.3);background:rgba(192,128,64,0.04)" onclick="this.classList.toggle('open')">
+  <div class="cond-head">
+    <div class="cond-name" style="color:#e0a870">Seized</div>
+    <span class="cond-category" style="color:var(--amber);border-color:rgba(192,128,64,0.3)">Physical · Movement</span>
+  </div>
+  <div class="cond-body">
+    A Seized creature cannot move — their movement speed becomes 0 and cannot be increased by any means while the condition persists.<br><br>
+    <strong>What it doesn't do:</strong> Seized does not impose Resonant Discord on Strike Resonances and does not grant Resonant Fortune to attackers (unlike Grappled, which does impose Discord on attacks against others). Seized is pure immobility, not vulnerability.<br><br>
+    <strong>Ending it:</strong> Specified by the source — typically an Endurance Warding Resonance each Moment, or the source ends (kelp tendrils released, ice melts, etc.).<br><br>
+    <em>Replaces: Restrained (partial — Restrained also imposes Resonant Discord on attacks, which Sideros splits into the separate Resonant Discord condition).</em>
+    <span class="dnd-map">D&D equivalent: Restrained (movement only)</span>
+  </div>
+</div>
+
+<div class="cond" style="border-color:rgba(128,128,128,0.3);background:rgba(128,128,128,0.03)" onclick="this.classList.toggle('open')">
+  <div class="cond-head">
+    <div class="cond-name" style="color:#b0b0b0">Prone</div>
+    <span class="cond-category" style="color:#909090;border-color:rgba(128,128,128,0.3)">Physical · Position</span>
+  </div>
+  <div class="cond-body">
+    A prone creature is lying on the ground. Melee Strike Resonances against them have Resonant Fortune. Ranged Strike Resonances against them have Resonant Discord.<br><br>
+    <strong>Movement while prone:</strong> Can only crawl (costs 2 ft per 1 ft). Standing up costs half speed.<br><br>
+    <strong>Voluntary prone:</strong> A creature can drop prone as a free action. This may be tactically useful to gain cover from ranged attacks while remaining able to fight in melee.<br><br>
+    <strong>Ending it:</strong> Stand up by spending half your movement speed on your Moment.
+    <span class="dnd-map">D&D equivalent: Prone (unchanged)</span>
+  </div>
+</div>
+
+<div class="cond" style="border-color:rgba(96,96,192,0.3);background:rgba(96,96,192,0.04)" onclick="this.classList.toggle('open')">
+  <div class="cond-head">
+    <div class="cond-name" style="color:#9090d0">Sight-Severed</div>
+    <span class="cond-category" style="color:var(--blue);border-color:rgba(96,96,192,0.3)">Physical · Perception</span>
+  </div>
+  <div class="cond-body">
+    A Sight-Severed creature cannot see. This applies to all light-based sight — it does not affect blindsight, tremorsense, or other non-visual perception.<br><br>
+    <strong>Effect:</strong> Strike Resonances made by the creature have Resonant Discord; all Strike Resonances against the creature have Resonant Fortune; the creature cannot make sight-based Perception Active Resonances; cannot see through illusions; cannot read.<br><br>
+    <strong>Blinded vs. Sight-Severed:</strong> Sight-Severed refers only to the visual sense. A creature can be Sight-Severed but navigate perfectly by blindsight or tremorsense — the condition does not make them combat-incompetent if they have non-visual senses.<br><br>
+    <strong>Ending it:</strong> Specified by source. Radiant flash effects typically last 1 Pulse; magical blindness lasts until dispelled.
+    <span class="dnd-map">D&D equivalent: Blinded</span>
+  </div>
+</div>
+
+<div class="cond" style="border-color:rgba(64,96,64,0.3);background:rgba(64,96,64,0.04)" onclick="this.classList.toggle('open')">
+  <div class="cond-head">
+    <div class="cond-name" style="color:#70a070">Deafened</div>
+    <span class="cond-category" style="color:var(--green);border-color:rgba(64,96,64,0.3)">Physical · Perception</span>
+  </div>
+  <div class="cond-body">
+    A Deafened creature cannot hear. They automatically fail any Active Resonance that requires hearing. They cannot be affected by Workings or abilities that require the target to hear the caster (unless the Working specifies otherwise).<br><br>
+    <strong>Secondary effects:</strong> Resonant Seekers cannot benefit a Deafened creature with abilities that require hearing their performance. Whisper Bond (Fated Bond ability) does not require sound and is not blocked by Deafened.<br><br>
+    <strong>Ending it:</strong> Specified by source — typically 1 Pulse (thunder burst), 1 minute (concussion), or until dispelled (magical deafness).
+    <span class="dnd-map">D&D equivalent: Deafened (unchanged)</span>
+  </div>
+</div>
+
+<div class="cond" style="border-color:rgba(128,96,64,0.3);background:rgba(128,96,64,0.04)" onclick="this.classList.toggle('open')">
+  <div class="cond-head">
+    <div class="cond-name" style="color:#c0a080">Grappled</div>
+    <span class="cond-category" style="color:var(--amber);border-color:rgba(128,96,64,0.3)">Physical · Movement</span>
+  </div>
+  <div class="cond-body">
+    A Grappled creature has been seized by another creature and cannot move under their own power.<br><br>
+    <strong>Effect:</strong> Speed becomes 0; cannot be increased. The grappling creature can drag the Grappled creature by moving at half speed. Resonant Discord on Strike Resonances against creatures other than the one grappling them.<br><br>
+    <strong>Breaking free:</strong> Use your Act to make a Forcefulness or Swiftness Active Resonance against the grappler's Forcefulness Active Resonance. On success: condition ends.<br><br>
+    <strong>Ending it:</strong> Grappler releases (free action); grappler is incapacitated; grappler moves more than 5 ft away without dragging; Grappled creature breaks free.
+    <span class="dnd-map">D&D equivalent: Grappled (unchanged)</span>
+  </div>
+</div>
+
+<div class="cond" style="border-color:rgba(128,128,64,0.3);background:rgba(128,128,64,0.04)" onclick="this.classList.toggle('open')">
+  <div class="cond-head">
+    <div class="cond-name" style="color:#c0c080">Exhausted</div>
+    <span class="cond-category" style="color:#909040;border-color:rgba(128,128,64,0.3)">Physical · Depletion</span>
+  </div>
+  <div class="cond-body">
+    Exhaustion has six levels. Each level stacks. Reaching level 6 is lethal.<br><br>
+    <strong>Level 1:</strong> Resonant Discord on all Active Resonances<br>
+    <strong>Level 2:</strong> Speed halved<br>
+    <strong>Level 3:</strong> Resonant Discord on Strike Resonances and Warding Resonances<br>
+    <strong>Level 4:</strong> Maximum Vitality halved<br>
+    <strong>Level 5:</strong> Speed reduced to 0<br>
+    <strong>Level 6:</strong> Thread ends (death)<br><br>
+    <strong>Gaining Exhaustion:</strong> Going without Deep Attunement for 24 hours, extreme environmental stress, certain Tamasic Tapas expenditures, specific Coil Working effects.<br><br>
+    <strong>Ending it:</strong> Each Deep Attunement removes one level of Exhaustion, provided the character has food and water.
+    <span class="dnd-map">D&D equivalent: Exhaustion (unchanged)</span>
+  </div>
+</div>
+
+</div></div></div>
+
+<!-- MENTAL & SOCIAL CONDITIONS -->
+<div class="panel" id="panel-mental"><div class="wrap">
+<div class="cond-grid">
+
+<div class="cond open" style="border-color:rgba(160,64,64,0.3);background:rgba(160,64,64,0.04)" onclick="this.classList.toggle('open')">
+  <div class="cond-head">
+    <div class="cond-name" style="color:#d08080">Dread-Struck</div>
+    <span class="cond-category" style="color:var(--red);border-color:rgba(160,64,64,0.3)">Mental · Fear</span>
+  </div>
+  <div class="cond-body">
+    A Dread-Struck creature is overwhelmed by cosmic terror — not ordinary fear, but the recognition that something significantly more powerful, more ancient, or more cosmically significant is in the room with them.<br><br>
+    <strong>Effect:</strong> Resonant Discord on all Active Resonances and Strike Resonances while the source of dread is within sight. Cannot willingly move closer to the source of dread. If the source moves away, the Dread-Struck creature may follow but still cannot approach voluntarily while the condition persists.<br><br>
+    <strong>Dread-Struck is not panic:</strong> A Dread-Struck creature can still fight, still make decisions, still attempt Workings. They are hampered — not helpless.<br><br>
+    <strong>Ending it:</strong> Specified by source. Typically: source leaves sight; specified duration expires; Resonance Warding Resonance at end of each Moment (DC varies by source); or specific abilities (Leo Zodiac Attunement Feat, Pride Aura).
+    <span class="dnd-map">D&D equivalent: Frightened</span>
+  </div>
+</div>
+
+<div class="cond" style="border-color:rgba(96,64,128,0.3);background:rgba(96,64,128,0.04)" onclick="this.classList.toggle('open')">
+  <div class="cond-head">
+    <div class="cond-name" style="color:#a080c0">Soul-Swayed</div>
+    <span class="cond-category" style="color:var(--purple);border-color:rgba(96,64,128,0.3)">Mental · Compulsion</span>
+  </div>
+  <div class="cond-body">
+    A Soul-Swayed creature's alignment of will has been altered — they regard the source of the effect as a trusted ally and will not act against that source's interests while the condition persists.<br><br>
+    <strong>Effect:</strong> Treats the designated creature or source as a trusted ally — will not attack them, will interpret their actions charitably, will follow reasonable requests. <strong>Soul-Swayed does not erase the creature's own personality, goals, or self-preservation.</strong> They will not perform actions that directly harm themselves. They will not violate strongly held beliefs — only the emotional valence toward the source has changed.<br><br>
+    <strong>What breaks it:</strong> The source or their allies dealing damage to the Soul-Swayed creature ends the effect immediately. The creature makes a Resonance Warding Resonance at the end of each of their Moments (DC = source's Working Threshold or 8 + Mastery + Resonance, whichever is higher). On success, the effect ends.<br><br>
+    <strong>Ending it:</strong> Damage from source; successful Warding Resonance; specified duration expires; Dispel Working of sufficient tier.
+    <span class="dnd-map">D&D equivalent: Charmed</span>
+  </div>
+</div>
+
+<div class="cond" style="border-color:rgba(64,64,128,0.3);background:rgba(64,64,128,0.04)" onclick="this.classList.toggle('open')">
+  <div class="cond-head">
+    <div class="cond-name" style="color:#8080c0">Dazed</div>
+    <span class="cond-category" style="color:var(--blue);border-color:rgba(64,64,128,0.3)">Mental · Incapacity (Partial)</span>
+  </div>
+  <div class="cond-body">
+    A Dazed creature's processing has been disrupted — they can act but with impaired focus and coordination.<br><br>
+    <strong>Effect:</strong> Resonant Discord on all Active Resonances and Warding Resonances until the start of their next Moment. A Dazed creature can still move and take their Act and Instinct, but everything they do is slightly slower, less precise, or less effective.<br><br>
+    <strong>Dazed vs. Loom-Suspended:</strong> Dazed creatures are conscious and active but impaired. Loom-Suspended creatures are completely inactive. These are distinct conditions — a creature cannot be both simultaneously.<br><br>
+    <strong>Ending it:</strong> Typically ends at the start of the creature's next Moment. Some sources extend the duration.
+    <span class="dnd-map">D&D equivalent: Stunned (minor) — Sideros Stunned is replaced by Dazed (partial) and Loom-Suspended (full)</span>
+  </div>
+</div>
+
+<div class="cond" style="border-color:rgba(32,64,96,0.3);background:rgba(32,64,96,0.04)" onclick="this.classList.toggle('open')">
+  <div class="cond-head">
+    <div class="cond-name" style="color:#6090b0">Loom-Suspended</div>
+    <span class="cond-category" style="color:var(--blue);border-color:rgba(32,64,96,0.3)">Mental · Full Incapacity</span>
+  </div>
+  <div class="cond-body">
+    A Loom-Suspended creature's thread has been temporarily held still by Aetheric force — they are fully incapacitated but not unconscious in the traditional sense. The Loom holds the thread. The creature simply waits.<br><br>
+    <strong>Effect:</strong> Cannot take any action, Instinct, or Reflex. Cannot move. Cannot speak. All Strike Resonances against the creature have Resonant Fortune. The creature fails all Forcefulness and Swiftness Warding Resonances automatically. The creature is aware of their surroundings but cannot interact with them.<br><br>
+    <strong>This is more severe than Dazed.</strong> A Loom-Suspended creature is effectively a statue — present but inert. Critical hits against Loom-Suspended creatures within 5 ft deal normal damage (not doubled — the creature's Aetheric suspension also protects them from some physical force).<br><br>
+    <strong>Ending it:</strong> Specified by source. Often a Warding Resonance at the start of each Moment; taking damage may also end it (specified by source).
+    <span class="dnd-map">D&D equivalent: Stunned (full)</span>
+  </div>
+</div>
+
+</div></div></div>
+
+<!-- AETHERIC CONDITIONS -->
+<div class="panel" id="panel-aetheric"><div class="wrap">
+<div class="cond-grid">
+
+<div class="cond open" style="border-color:rgba(64,96,160,0.3);background:rgba(64,96,160,0.04)" onclick="this.classList.toggle('open')">
+  <div class="cond-head">
+    <div class="cond-name" style="color:#8090d0">Resonance-Locked</div>
+    <span class="cond-category" style="color:var(--blue);border-color:rgba(64,96,160,0.3)">Aetheric · Working Blocked</span>
+  </div>
+  <div class="cond-body">
+    A Resonance-Locked creature's Aetheric Channels have been disrupted or sealed — they cannot Weave Workings while the condition persists.<br><br>
+    <strong>Effect:</strong> Cannot expend Aetheric Channels or Weave Workings of any tier. Path features that are not Working-based (Strike Resonances, Gambits, physical abilities) are unaffected. Tapas-based abilities are not blocked by Resonance-Lock (Tapas is internal heat, not Aetheric Channel expression) — though the Concordance may rule that extreme Resonance-Lock sources also suppress Tapas.<br><br>
+    <strong>Sustained Resonance Workings:</strong> An active Sustained Resonance Working on a Resonance-Locked creature ends immediately at the start of the condition — they cannot maintain the thread.<br><br>
+    <strong>Ending it:</strong> Specified by source. Aether-Dampening Ore causes Resonance-Lock in its zone; specific Workings that target the Aetheric field; the Stygian Scorpion's Heart-Sting Toxin (Endurance Warding Resonance to resist).
+    <span class="dnd-map">D&D equivalent: No direct equivalent — closest to Silence (prevents verbal components) combined with anti-magic effect</span>
+  </div>
+</div>
+
+<div class="cond" style="border-color:rgba(96,32,128,0.3);background:rgba(96,32,128,0.04)" onclick="this.classList.toggle('open')">
+  <div class="cond-head">
+    <div class="cond-name" style="color:#a060c0">Resonance-Shattered</div>
+    <span class="cond-category" style="color:var(--purple);border-color:rgba(96,32,128,0.3)">Aetheric · Severe</span>
+  </div>
+  <div class="cond-body">
+    Resonance-Shattered is a severe Aetheric condition — the creature's connection to the Loom of Fate has been disrupted at a fundamental level. Their Fate Number reads as fragmented to Stellar Cartographers.<br><br>
+    <strong>Effect:</strong> All effects of Resonance-Locked (cannot Weave). Additionally: Resonant Discord on all Active Resonances and Warding Resonances; cannot use Zodiac Attunement Feat abilities; Fated Bond abilities are suppressed while Resonance-Shattered; the creature's Fate Number cannot be read by Stellar Cartographers for the duration.<br><br>
+    <strong>This is rare and serious.</strong> Resonance-Shattered typically results from direct assault on a creature's Aetheric field by a very high-tier effect — the Thread-Blade's Rend Mind, certain Coil operations, or proximity to a fully reactivating Ceque Line node.<br><br>
+    <strong>Ending it:</strong> Deep Attunement (restores the shattered resonance over rest); Restoration Working of 5th tier or higher; Kanya Siddha purification ritual (3 Tapas expenditure).
+    <span class="dnd-map">D&D equivalent: No direct equivalent</span>
+  </div>
+</div>
+
+<div class="cond" style="border-color:rgba(160,128,32,0.3);background:rgba(160,128,32,0.04)" onclick="this.classList.toggle('open')">
+  <div class="cond-head">
+    <div class="cond-name" style="color:#d0b050">Aetheric Depletion</div>
+    <span class="cond-category" style="color:var(--amber);border-color:rgba(160,128,32,0.3)">Aetheric · Resource</span>
+  </div>
+  <div class="cond-body">
+    Aetheric Depletion occurs when a Weave-capable character has exhausted their Aetheric Channels and continues to draw on the Aether — pushing past the safe limit of their Channel capacity.<br><br>
+    <strong>Effect (per level of Depletion):</strong><br>
+    Level 1: Resonant Discord on all Working Threshold rolls<br>
+    Level 2: All Workings that deal damage deal half damage<br>
+    Level 3: Cannot Weave Workings of 3rd tier or higher<br>
+    Level 4: Cannot Weave Workings of any tier (functionally Resonance-Locked)<br>
+    Level 5: Take 1d10 psychic damage at the start of each Moment until Depletion clears<br><br>
+    <strong>Gaining Depletion:</strong> Primarily from the Wild Surge Master's Wild Surge (certain Surge results impose Depletion); from being forced to Weave in the Stillness; from certain Coil Working effects.<br><br>
+    <strong>Ending it:</strong> One level of Depletion cleared per Brief Attunement; all Depletion cleared on Deep Attunement.
+    <span class="dnd-map">D&D equivalent: No direct equivalent — models Wild Magic Surge exhaustion effects</span>
+  </div>
+</div>
+
+</div></div></div>
+
+<!-- VOID & DEATH CONDITIONS -->
+<div class="panel" id="panel-void"><div class="wrap">
+<div class="cond-grid">
+
+<div class="cond open" style="border-color:rgba(64,32,96,0.3);background:rgba(64,32,96,0.04)" onclick="this.classList.toggle('open')">
+  <div class="cond-head">
+    <div class="cond-name" style="color:#9060b0">Void-Touched Exposure</div>
+    <span class="cond-category" style="color:var(--purple);border-color:rgba(64,32,96,0.3)">Void · Corruption (Mild)</span>
+  </div>
+  <div class="cond-body">
+    Void-Touched Exposure marks a character who has been in sustained contact with the Hollow Serpent's entropic energy. It is not yet corruption — it is contamination. The distinction matters to the Kanya Siddha, who can clear Exposure but cannot easily clear full Void-Husk corruption.<br><br>
+    <strong>Effect (per stack):</strong> Resonant Discord on Insight Active Resonances; faint directional awareness of the Hollow Serpent's general position (felt as an intrusive background sense). At 3+ stacks: the Core's signal begins reaching the character — the Concordance may deliver compelling arguments or intrusive thoughts aligned with the Hollow Serpent's philosophy. At 5 stacks: roll on the Void-Touched Exposure Escalation table (Concordance determines specific effect).<br><br>
+    <strong>Characters with natural Void-Touched Fate Numbers (13, 66, 99)</strong> do not gain Exposure from standard sources — their frequency already contains this element. They gain Exposure only from direct Void-Husk contact or Core proximity.<br><br>
+    <strong>Ending it:</strong> 1 stack cleared per Deep Attunement in a Coil-free environment. Kanya Siddha Purification Touch with Weep-Stone clears 1d4 stacks per treatment. All stacks cleared by the Restoration Working (5th tier).
+    <span class="dnd-map">D&D equivalent: No direct equivalent</span>
+  </div>
+</div>
+
+<div class="cond" style="border-color:rgba(32,16,64,0.3);background:rgba(32,16,64,0.05)" onclick="this.classList.toggle('open')">
+  <div class="cond-head">
+    <div class="cond-name" style="color:#7050a0">Loom-Tested (Dying)</div>
+    <span class="cond-category" style="color:var(--purple);border-color:rgba(32,16,64,0.3)">Void · Death Adjacent</span>
+  </div>
+  <div class="cond-body">
+    A Loom-Tested creature is at 0 Vitality, unconscious, and making Loom Tests — their thread is actively at risk. This is not the same as being dead, but it is the immediate precursor.<br><br>
+    <strong>Effect:</strong> Unconscious. Cannot take any actions. Taking damage counts as an automatic Loom Test failure; a critical hit counts as two failures.<br><br>
+    <strong>The Loom Test:</strong> At the start of each Moment, roll d20. 10+: Success (three successes = stable). 9 or lower: Failure (three failures = death). Natural 20: regain 1 Vitality, wake up. Natural 1: two failures.<br><br>
+    <strong>Ending the Loom-Tested condition:</strong> Receiving any healing (even 1 Vitality); succeeding on three Loom Tests (becomes Loom-Suspended at 0 Vitality, stable); or a Medicine Active Resonance DC 10 from an adjacent creature stabilizes without restoring Vitality.
+    <span class="dnd-map">D&D equivalent: Unconscious / Dying (Loom Tests)</span>
+  </div>
+</div>
+
+<div class="cond" style="border-color:rgba(32,32,32,0.6);background:rgba(0,0,0,0.1)" onclick="this.classList.toggle('open')">
+  <div class="cond-head">
+    <div class="cond-name" style="color:#808080">Loom-Suspended (Unconscious, Stable)</div>
+    <span class="cond-category" style="color:#606060;border-color:rgba(64,64,64,0.3)">Physical · Unconscious</span>
+  </div>
+  <div class="cond-body">
+    A Loom-Suspended creature is unconscious but stable — their thread is no longer at immediate risk. The Loom holds the thread still while the body recovers.<br><br>
+    <strong>Effect:</strong> Unconscious. Cannot take actions. All Strike Resonances against the creature have Resonant Fortune. Creature fails all Forcefulness and Swiftness Warding Resonances. Cannot perceive surroundings.<br><br>
+    <strong>The distinction from Loom-Tested:</strong> A Loom-Tested creature is dying and makes Loom Tests each Moment. A Loom-Suspended creature is stable — no longer dying, not making Loom Tests, just unconscious. Both involve being at 0 Vitality.<br><br>
+    <strong>Ending it:</strong> Any healing (even 1 Vitality) restores consciousness. After 1d4 hours, the creature wakes with 1 Vitality restored naturally.
+    <span class="dnd-map">D&D equivalent: Unconscious (stable)</span>
+  </div>
+</div>
+
+<div class="cond" style="border-color:rgba(32,80,32,0.3);background:rgba(32,80,32,0.04)" onclick="this.classList.toggle('open')">
+  <div class="cond-head">
+    <div class="cond-name" style="color:#70a070">Incapacitated</div>
+    <span class="cond-category" style="color:var(--green);border-color:rgba(32,80,32,0.3)">Physical · Action Loss</span>
+  </div>
+  <div class="cond-body">
+    An Incapacitated creature cannot take Acts or Instincts. They can still move (if conscious) and can still use their Reflex if a specific feature allows it independent of action economy.<br><br>
+    <strong>Secondary effects:</strong> Incapacitated creatures cannot maintain Sustained Resonance Workings. They cannot Weave new Workings. They cannot use Fated Bond abilities that require action.<br><br>
+    <strong>Incapacitated vs. Loom-Suspended:</strong> An Incapacitated creature is conscious and can move; a Loom-Suspended creature is unconscious and cannot move. Incapacitated is less severe.<br><br>
+    <strong>Ending it:</strong> Specified by source.
+    <span class="dnd-map">D&D equivalent: Incapacitated (unchanged)</span>
+  </div>
+</div>
+
+<div class="cond" style="border-color:rgba(64,48,32,0.4);background:rgba(32,16,0,0.08)" onclick="this.classList.toggle('open')">
+  <div class="cond-head">
+    <div class="cond-name" style="color:#906030">Void-Husk</div>
+    <span class="cond-category" style="color:#804020;border-color:rgba(96,48,32,0.4)">Void · Permanent Corruption</span>
+  </div>
+  <div class="cond-body">
+    A Void-Husk is a creature whose Fate Number has been dissolved by the Hollow Serpent's entropy. The soul-frequency is gone. What remains is a body animated by void-energy, following the Coil's will or the Hollow Serpent's instinctive directives.<br><br>
+    <strong>Effect:</strong> The original creature's personality, memories, and Fate Number are gone. The Void-Husk retains the body's physical capabilities. It cannot form new bonds, cannot be charmed or frightened (it has no soul to be affected), and reads as empty to Stellar Cartographers — no Fate Number thread visible.<br><br>
+    <strong>For player characters:</strong> If a player character becomes a Void-Husk (through three Void-Husk Threshold failures on the Lead-Scale Gauge), the character is lost. The Concordance plays them as a Coil asset. Recovery requires the Resonant Binding ritual or equivalent world-scale intervention — not a simple Working.<br><br>
+    <strong>Fated Bond implications:</strong> A Void-Husk still registers to bonded partners through the bond — the thread hasn't been cut, just inverted. This produces the specific horror of Regent Ophiomorph's situation — the bond says the person is still there. The Void-Husk has turned that signal into a leash.
+    <span class="dnd-map">D&D equivalent: No direct equivalent</span>
+  </div>
+</div>
+
+</div></div></div>
+
+<!-- QUICK REFERENCE -->
+<div class="panel" id="panel-quickref"><div class="wrap">
+  <table class="qref">
+    <tr><th>Condition</th><th>D&D Equivalent</th><th>Key Effect</th><th>Ends When</th></tr>
+    <tr><td>Corrupted</td><td>Poisoned</td><td>1d6 damage/Moment; Discord on Atk &amp; Checks</td><td>Successful Endurance Warding; purification</td></tr>
+    <tr><td>Seized</td><td>Restrained (mvt only)</td><td>Speed 0</td><td>Source ends; Endurance Warding</td></tr>
+    <tr><td>Prone</td><td>Prone</td><td>Fortune vs. melee; Discord vs. ranged</td><td>Stand up (half speed)</td></tr>
+    <tr><td>Sight-Severed</td><td>Blinded</td><td>Discord on attacks; Fortune vs. creature</td><td>Source ends; duration expires</td></tr>
+    <tr><td>Deafened</td><td>Deafened</td><td>Fail hearing checks; immune to sonic effects</td><td>Source ends; duration expires</td></tr>
+    <tr><td>Grappled</td><td>Grappled</td><td>Speed 0; Discord vs. others</td><td>Break free (Act + contest); grappler releases</td></tr>
+    <tr><td>Exhausted</td><td>Exhaustion</td><td>6 levels — Discord → death</td><td>Deep Attunement clears 1 level</td></tr>
+    <tr><td>Dread-Struck</td><td>Frightened</td><td>Discord on everything; cannot approach source</td><td>Source out of sight; duration; Warding success</td></tr>
+    <tr><td>Soul-Swayed</td><td>Charmed</td><td>Treats source as ally; won't attack source</td><td>Source damages creature; Warding success</td></tr>
+    <tr><td>Dazed</td><td>Stunned (minor)</td><td>Discord on all Resonances until next Moment</td><td>Start of next Moment</td></tr>
+    <tr><td>Loom-Suspended</td><td>Stunned (full)</td><td>No actions; Fortune vs. attacks; auto-fail</td><td>Warding success; damage (some sources)</td></tr>
+    <tr><td>Resonance-Locked</td><td>Silenced + anti-magic</td><td>Cannot Weave Workings</td><td>Leave Ore zone; duration; Dispel</td></tr>
+    <tr><td>Resonance-Shattered</td><td>None</td><td>Resonance-Locked + Discord all + Bond blocked</td><td>Deep Attunement; 5th-tier Restoration</td></tr>
+    <tr><td>Aetheric Depletion</td><td>None</td><td>Stacking Working penalties (5 levels)</td><td>Brief/Deep Attunement</td></tr>
+    <tr><td>Void-Touched Exposure</td><td>None</td><td>Discord on Insight; Hollow Serpent awareness</td><td>Deep Attunement; Weep-Stone treatment</td></tr>
+    <tr><td>Loom-Tested</td><td>Dying</td><td>0 Vitality; making Loom Tests each Moment</td><td>Healing; 3 successes (stabilize); 3 failures (death)</td></tr>
+    <tr><td>Loom-Suspended</td><td>Unconscious (stable)</td><td>0 Vitality; stable; no actions</td><td>Any healing; 1d4 hours → 1 Vitality</td></tr>
+    <tr><td>Incapacitated</td><td>Incapacitated</td><td>No Acts or Instincts; can still move</td><td>Source ends</td></tr>
+    <tr><td>Void-Husk</td><td>None</td><td>Character lost; Coil asset; no soul-thread</td><td>Resonant Binding or equivalent world event</td></tr>
+  </table>
+</div></div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>{p.style.display='none';p.classList.remove('active')});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).style.display='block';
+  document.getElementById('panel-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
+}
+document.querySelectorAll('.panel').forEach(p=>{p.style.display='none'});
+document.getElementById('panel-physical').style.display='block';
+document.getElementById('panel-physical').classList.add('active');
+document.querySelectorAll('.nav-btn')[0].classList.add('active');
+</script>
+</body>
+</html>

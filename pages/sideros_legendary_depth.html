@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sideros — Legendary Depth System</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Cinzel:wght@400;500;600&family=Cinzel+Decorative:wght@400&display=swap');
+
+:root{
+  --void:#050608; --void-mid:#0a0c10; --void-up:#121620;
+  --parchment:#f2e8d0; --parchment-dim:rgba(242,232,208,0.52);
+  --gold:#c8a84a; --gold-dim:#7a6020; --gold-bright:#eacb6a;
+
+  /* Tier colours */
+  --t1:#b86030;   /* Beast acknowledgment — amber */
+  --t2:#6080c0;   /* Loom Inscription — deep blue */
+  --t3:#70a870;   /* Quint Bond — living green */
+  --t4:#c0a0e0;   /* Ascendant — pale violet */
+  --t4-dim:#604880;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  background:var(--void);color:var(--parchment);
+  line-height:1.78;min-height:100vh;
+  background-image:
+    radial-gradient(ellipse at 15% 0%,rgba(184,96,48,0.07) 0%,transparent 40%),
+    radial-gradient(ellipse at 85% 0%,rgba(192,160,224,0.06) 0%,transparent 40%),
+    radial-gradient(ellipse at 50% 100%,rgba(96,128,192,0.05) 0%,transparent 40%);
+}
+
+/* ── HERO ── */
+.hero{
+  text-align:center;padding:5rem 1.5rem 4rem;
+  border-bottom:1px solid rgba(200,168,74,0.12);
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(circle at 50% 60%,rgba(192,160,224,0.04) 0%,transparent 50%);
+  pointer-events:none;
+}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:1rem}
+.hero-title{font-family:'Cinzel Decorative',serif;font-size:clamp(20px,4vw,36px);font-weight:400;color:var(--gold-bright);letter-spacing:.06em;margin-bottom:.5rem;line-height:1.2}
+.hero-sub{font-size:16px;font-style:italic;color:var(--parchment-dim);max-width:560px;margin:.5rem auto 0}
+.hero-warning{
+  display:inline-block;margin-top:1.5rem;
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;
+  padding:5px 14px;border:1px solid rgba(192,160,224,0.3);border-radius:3px;
+  color:var(--t4);background:rgba(192,160,224,0.05);
+}
+
+/* ── NAV ── */
+.nav-strip{display:flex;gap:4px;flex-wrap:wrap;padding:.7rem 1rem;border-bottom:1px solid rgba(200,168,74,0.1);background:var(--void-mid);position:sticky;top:0;z-index:30}
+.nav-btn{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.09em;text-transform:uppercase;padding:5px 11px;border:1px solid rgba(200,168,74,0.18);border-radius:3px;background:transparent;color:var(--parchment-dim);cursor:pointer;transition:all .15s;white-space:nowrap}
+.nav-btn.active{color:var(--gold-bright);border-color:rgba(200,168,74,0.45);background:rgba(200,168,74,0.08)}
+.panel{display:none}.panel.active{display:block}
+.wrap{max-width:900px;margin:0 auto;padding:2.5rem 1.25rem 5rem}
+
+/* ── TEXT ── */
+.lore{font-size:16px;color:rgba(242,232,208,0.82);line-height:1.9;margin-bottom:1rem}
+.lore strong{color:var(--parchment);font-weight:500}
+.lore em{font-style:italic;color:inherit}
+
+.sec{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin:1.75rem 0 .75rem;display:flex;align-items:center;gap:.6rem}
+.sec::after{content:'';flex:1;height:1px;background:rgba(200,168,74,0.1)}
+
+/* ── TIER HEADER ── */
+.tier-header{
+  border-radius:10px;padding:1.5rem;margin-bottom:1.5rem;
+  position:relative;overflow:hidden;
+}
+.tier-header::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.015) 0%,transparent 60%);
+  pointer-events:none;border-radius:10px;
+}
+.th-eyebrow{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.6rem;display:block;opacity:.7}
+.th-depth{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,3vw,26px);font-weight:400;letter-spacing:.05em;margin-bottom:.3rem}
+.th-trigger-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.12em;text-transform:uppercase;opacity:.6;margin-bottom:.3rem;display:block}
+.th-trigger{font-size:15px;font-style:italic;color:var(--parchment-dim);margin-bottom:.7rem}
+.th-boon-badge{display:inline-block;font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:2px;border:1px solid}
+
+/* ── BOON CARDS ── */
+.boon-card{background:rgba(255,255,255,0.02);border-radius:9px;padding:14px 16px;margin-bottom:.8rem;cursor:pointer;overflow:hidden;transition:border-color .15s;border:1px solid rgba(200,168,74,0.1)}
+.boon-card:hover,.boon-card.open{border-color:rgba(200,168,74,0.28)}
+.bc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.bc-name{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.05em;color:var(--gold-bright)}
+.bc-tag{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:2px;border:1px solid rgba(200,168,74,0.22);color:var(--gold-dim);white-space:nowrap;flex-shrink:0}
+.bc-body{display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(200,168,74,0.08);font-size:14px;color:rgba(242,232,208,0.75);line-height:1.75}
+.boon-card.open .bc-body{display:block}
+.bc-body strong{color:var(--parchment);font-weight:500}
+.bc-body em{color:var(--gold-dim);font-style:italic}
+
+/* ── PATH EXPANSION TABLE ── */
+.path-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:1rem}
+.path-table th{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);padding:7px 10px;text-align:left;border-bottom:1px solid rgba(200,168,74,0.15)}
+.path-table td{padding:7px 10px;border-bottom:1px solid rgba(200,168,74,0.06);color:rgba(242,232,208,0.75);vertical-align:top;line-height:1.55;font-size:13px}
+.path-table td:first-child{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.05em;color:var(--gold-bright);white-space:nowrap}
+.path-table tr:last-child td{border-bottom:none}
+.path-table tr:hover td{background:rgba(200,168,74,0.02)}
+
+/* ── INFO BLOCKS ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
+.info{background:rgba(255,255,255,0.02);border:1px solid rgba(200,168,74,0.1);border-radius:8px;padding:11px 14px}
+.ib-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:5px}
+.ib-text{font-size:13px;color:rgba(242,232,208,0.78);line-height:1.65}
+.ib-text strong{color:var(--parchment);font-weight:500}
+
+/* ── NOTES ── */
+.note{border-radius:8px;padding:12px 15px;margin:.9rem 0;font-size:13px;color:rgba(242,232,208,0.75);line-height:1.68}
+.note-title{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.13em;text-transform:uppercase;margin-bottom:6px}
+.note strong{color:var(--parchment);font-weight:500}
+
+/* ── OVERVIEW TABLE ── */
+.overview-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:1.5rem}
+.overview-table th{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);padding:8px 12px;text-align:left;border-bottom:1px solid rgba(200,168,74,0.18)}
+.overview-table td{padding:9px 12px;border-bottom:1px solid rgba(200,168,74,0.07);vertical-align:top;font-size:13px;line-height:1.55}
+.overview-table tr:last-child td{border-bottom:none}
+.overview-table .depth-col{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.05em;white-space:nowrap}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Sideros / Astrolan — Advanced Progression</div>
+  <h1 class="hero-title">Legendary Depth</h1>
+  <p class="hero-sub">Beyond Depth 20, the Loom stops measuring. Something else keeps track.</p>
+  <div class="hero-warning">Post-Depth 20 · Campaign-Defining Events Required · Maximum 4 Legendary Depths</div>
+</div>
+
+<div class="nav-strip">
+  <button class="nav-btn active" onclick="show('overview',this)">Overview</button>
+  <button class="nav-btn" onclick="show('ld1',this)">LD I — Beast</button>
+  <button class="nav-btn" onclick="show('ld2',this)">LD II — Loom</button>
+  <button class="nav-btn" onclick="show('ld3',this)">LD III — Bond</button>
+  <button class="nav-btn" onclick="show('ld4',this)">LD IV — Ascendant</button>
+  <button class="nav-btn" onclick="show('concordance',this)">Concordance Guide</button>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- OVERVIEW -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel active" id="panel-overview">
+<div class="wrap">
+
+  <p class="lore">Resonance Depth 20 is not the end of growth. It is the end of the system's ability to describe growth in terms it was built for. At Depth 20, a character has mastered their Path, deepened their zodiac bond to its fullest expression, and become something the world's existing vocabulary handles imperfectly. <strong>What happens next cannot be earned through practice. It can only be received — from the Legendary Beasts, from the Loom of Fate itself, from the Quint Bond's cosmic resonance, or from the completion of the Resonant Binding ritual.</strong></p>
+
+  <p class="lore">These are not level-ups. They are acknowledgments. The world has noticed what this character has done and has decided that the existing framework is insufficient to contain them. The Legendary Depth system is the world's response to that insufficiency.</p>
+
+  <p class="lore">Legendary Depths are rare. In the current era of Sideros, fewer than a dozen living beings have achieved even Legendary Depth I. The Grand Prime Forgeman is one. The Bee-Priestess lineage's oldest member is another. <strong>Legendary Depth IV has never been achieved in the current era.</strong> The last documented Ascendant-state being was a Kallos-era practitioner whose name was erased from every record the Ashen Coil could reach. The Loom still carries the thread. The thread is the brightest in the active record.</p>
+
+  <div class="sec">The Four Legendary Depths — Overview</div>
+
+  <table class="overview-table">
+    <tr>
+      <th>Depth</th>
+      <th>Name</th>
+      <th>Trigger</th>
+      <th>Boon Type</th>
+      <th>What It Means</th>
+    </tr>
+    <tr>
+      <td class="depth-col" style="color:var(--t1)">LD I</td>
+      <td style="color:var(--t1);font-family:'Cinzel',serif;font-size:11px">The Acknowledged</td>
+      <td>Legendary Beast of your sign formally recognizes you as more than mortal</td>
+      <td style="color:var(--t1)">Path Expansion</td>
+      <td>The Beast has looked at you and seen something it has not seen since the gods wore mortal form. Your craft deepens beyond its own ceiling.</td>
+    </tr>
+    <tr>
+      <td class="depth-col" style="color:var(--t2)">LD II</td>
+      <td style="color:var(--t2);font-family:'Cinzel',serif;font-size:11px">The Inscribed</td>
+      <td>The Loom of Fate writes your name into its active record — not historical, not prophetic. Present.</td>
+      <td style="color:var(--t2)">Loom Gift</td>
+      <td>The Loom has decided your thread is load-bearing. It gives you something it normally withholds from mortals — direct access to the fabric of fate.</td>
+    </tr>
+    <tr>
+      <td class="depth-col" style="color:var(--t3)">LD III</td>
+      <td style="color:var(--t3);font-family:'Cinzel',serif;font-size:11px">The Resonant</td>
+      <td>The Quint Bond forms — all five members achieve full resonance simultaneously</td>
+      <td style="color:var(--t3)">Kindred Evolution</td>
+      <td>The five-person cosmic chord changes what you are. Not what you can do — what you are. The Kindred evolves.</td>
+    </tr>
+    <tr>
+      <td class="depth-col" style="color:var(--t4)">LD IV</td>
+      <td style="color:var(--t4);font-family:'Cinzel',serif;font-size:11px">The Ascendant</td>
+      <td>Completion of the Resonant Binding ritual — or an equivalent act of world-scale Aetheric commitment</td>
+      <td style="color:var(--t4)">The Ascendant State</td>
+      <td>The world does not have a word for this yet. The last being to reach it named themselves. The name was erased. The Loom kept it.</td>
+    </tr>
+  </table>
+
+  <div class="note" style="background:rgba(200,168,74,0.04);border:1px solid rgba(200,168,74,0.18)">
+    <div class="note-title" style="color:var(--gold)">Critical Design Principle</div>
+    <strong>Legendary Depths cannot be pursued.</strong> A character who sets out to achieve Legendary Depth I by engineering an encounter with their sign's Legendary Beast will fail — the Beast reads intent, and the intent of someone seeking acknowledgment for its own sake is legible and uninteresting. The acknowledgment happens when the character has done something genuinely significant in the world and the Beast encounters them in the course of that significance. The Concordance does not announce that a Legendary Depth is available. The world simply changes around the character in a specific way, and the Concordance describes it, and the player understands what has happened.
+  </div>
+
+  <div class="two-col">
+    <div class="info">
+      <div class="ib-label">Legendary Depths are not cumulative in the standard sense</div>
+      <div class="ib-text">LD I does not require LD II to be achieved in order — the three triggers (Beast, Loom, Bond) can occur in any sequence, and characters in the same party may achieve different Legendary Depths from each other. A party member who achieves LD II (Loom Inscription) before LD I (Beast Acknowledgment) has had their thread made load-bearing before the Beast recognized it — which is an unusual situation the Loom of Fate researchers find professionally significant.</div>
+    </div>
+    <div class="info">
+      <div class="ib-label">LD IV requires LD I, II, and III first</div>
+      <div class="ib-text">The Ascendant state requires all three prior Legendary Depths. The Resonant Binding ritual cannot be completed by a character who has not been Acknowledged, Inscribed, and Resonant — the ritual recognizes and requires all three states simultaneously. A character who has achieved only two of the three will find the ritual's final stage does not respond to them. <strong>The Loom enforces this, not the rulebook.</strong></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- LEGENDARY DEPTH I -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-ld1">
+<div class="wrap">
+
+  <div class="tier-header" style="background:rgba(184,96,48,0.07);border:1px solid rgba(184,96,48,0.25)">
+    <span class="th-eyebrow" style="color:var(--t1)">Legendary Depth I</span>
+    <div class="th-depth" style="color:var(--t1)">The Acknowledged</div>
+    <span class="th-trigger-label">Trigger</span>
+    <div class="th-trigger">The Legendary Beast of your zodiac sign formally recognizes you — not as a worthy opponent, not as an interesting mortal, but as something operating at a frequency it has not encountered in a living being since the Pantheonic Fall.</div>
+    <span class="th-boon-badge" style="color:var(--t1);border-color:rgba(184,96,48,0.4);background:rgba(184,96,48,0.08)">Boon Type: Path Expansion</span>
+  </div>
+
+  <p class="lore">The Legendary Beast's acknowledgment is not a gift. It is a recognition — the Beast has perceived, in this practitioner, a degree of attunement to its cosmic frequency that it considers significant. The Beast does not explain this. It does not congratulate. It looks at the character and the character feels the full weight of what the Beast is — not its physical form, but the divine force distributed through that form — and in that moment the character's Path deepens past the ceiling it previously had. <strong>The craft grows because something very large has confirmed that there is more craft available.</strong></p>
+
+  <p class="lore">What this looks like varies by Beast and by character. The Nemean Lion may simply hold the character's gaze for a moment longer than it holds anyone else's. The Twin Dream-Fish may surface in the character's dreams for three consecutive nights before vanishing. The Stygian Scorpion may leave a mark on the character's skin that fades within hours but is recorded in the Aetheric field permanently. The Concordance determines the specific form. The mechanical result is the same.</p>
+
+  <div class="sec" style="color:var(--t1)">The Path Expansion — What It Provides</div>
+
+  <p class="lore" style="margin-bottom:.75rem">The Path Expansion gives each Path one additional ability beyond its Depth 20 capstone. Choose one from the table below based on your Path. This ability is not a continuation of the Path's existing features — it is a new register entirely, something the Path's training was pointing toward but could not reach without external confirmation.</p>
+
+  <table class="path-table">
+    <tr><th>Path</th><th>Legendary Path Expansion</th></tr>
+    <tr>
+      <td>Solar Guard</td>
+      <td><strong>Legendary Strike:</strong> Once per encounter, declare a Legendary Strike before rolling. If it hits, deal maximum damage on all dice and the target is knocked prone, pushed 30 ft, and cannot stand until the start of their next Moment. If it misses, the Strike still deals half maximum damage — at this level, even a miss carries force.</td>
+    </tr>
+    <tr>
+      <td>Primal Jarl</td>
+      <td><strong>Undying Wrath:</strong> The Wrath State no longer has a use limit — it may be entered any number of times per day. When entering Wrath, restore Vitality equal to twice the Jarl's Endurance modifier. The Beast has confirmed: this one does not stop.</td>
+    </tr>
+    <tr>
+      <td>Resonance Seeker</td>
+      <td><strong>Perfect Frequency:</strong> Resonant Chord dice become d12s. When you grant a Chord to an ally and they use it, you may simultaneously cast one Working of 3rd tier or lower without expending a Channel — the harmony generates its own Aetheric resource.</td>
+    </tr>
+    <tr>
+      <td>Zodiac Priest</td>
+      <td><strong>Domain Ascendant:</strong> Your sign's domain Working list expands — gain access to every Working associated with your sign's Legendary Beast's domain at no Channel cost, three times per Deep Attunement. The Beast has authorized the full library.</td>
+    </tr>
+    <tr>
+      <td>Primal Accord</td>
+      <td><strong>Full Accord Transcendence:</strong> The Transcendent Accord (Depth 20 capstone) now lasts indefinitely while in the Primary Beast's territory — not 10 minutes, but as long as you remain within the Beast's acknowledged range. Outside that territory, the standard 10-minute limit applies.</td>
+    </tr>
+    <tr>
+      <td>Accord-Maker</td>
+      <td><strong>Permanent Agreement:</strong> Choose one Infusion currently active. It becomes permanent — no longer requires an Infusion slot, no longer ends on Deep Attunement. The Aetheric agreement has been notarized at the cosmic level. One Infusion only. Choose carefully.</td>
+    </tr>
+    <tr>
+      <td>Rāśi-Siddha</td>
+      <td><strong>Infinite Tapas:</strong> Tapas Points regenerate at the start of each Pulse in combat — restore 2 Tapas at the start of each of your Moments. The discipline has become the source, not the result.</td>
+    </tr>
+    <tr>
+      <td>Oathed Vanguard</td>
+      <td><strong>Inviolable Oath:</strong> The Vanguard's Aura of Oath radius increases to 60 ft. Creatures within it cannot make Strike Resonances against allies of the Vanguard without first making a Resonance Warding Resonance (DC 20) — the oath's Aetheric weight has become a physical force.</td>
+    </tr>
+    <tr>
+      <td>Void-Hunter</td>
+      <td><strong>Apex Quarry:</strong> Void Quarry designation now applies to all creatures in an encounter simultaneously — not one target, but all of them. All bonus damage, all Resonant Fortune benefits, all tracking. The Hunter has stopped selecting targets. They have simply arrived.</td>
+    </tr>
+    <tr>
+      <td>Fate-Breaker</td>
+      <td><strong>Probability Mastery:</strong> Probability Strike damage increases to 12d6. When dealing Probability Strike damage, the target also loses all Resonant Fortune effects currently active on them — the probability field around them resets to baseline. The Fate-Breaker doesn't just exploit the gaps. They create them.</td>
+    </tr>
+    <tr>
+      <td>Star-Born</td>
+      <td><strong>Surge Transcendence:</strong> Wild Surges no longer roll randomly — the Star-Born chooses the result from the d6 table. The chaotic inheritance has been mastered completely. Additionally: Surge Points maximum increases by 10.</td>
+    </tr>
+    <tr>
+      <td>Scion-Pledged</td>
+      <td><strong>Patron Ascendance:</strong> The Patron's Mark damage increases to 4d10. Once per Deep Attunement, call the Patron directly — they manifest physically for 1 minute, fighting alongside you with their full power (Concordance determines statistics based on Patron type). They are not summoned. They choose to come. The distinction matters.</td>
+    </tr>
+    <tr>
+      <td>Comet-Mage</td>
+      <td><strong>Living Ledger:</strong> The Formulation Ledger no longer has a prepared-Working limit — all known Workings are considered prepared simultaneously. Additionally: 6th and 7th tier Workings become available (Concordance curates options based on Conclave).</td>
+    </tr>
+    <tr>
+      <td>Stellar Cartographer</td>
+      <td><strong>Full Thread Vision:</strong> See all Fate Numbers without Instinct or rolls — every creature's Number is visible as ambient information. Additionally: once per Deep Attunement, read the Loom's full record for any named location — everything that has ever happened there, delivered as a complete vision.</td>
+    </tr>
+    <tr>
+      <td>Ashé-Medium</td>
+      <td><strong>Orisha Presence:</strong> The Ashé Vessel is always full — it no longer depletes. The Orisha is simply present, continuously, rather than channeled in moments. The Medium has become a permanent conduit rather than an occasional one.</td>
+    </tr>
+    <tr>
+      <td>Coil-Stalker</td>
+      <td><strong>Zero Coil:</strong> The Lead-Scale Gauge no longer exists. The Coil-Stalker operates at maximum Void exposure permanently without negative effects — the system that was protecting them from what they were absorbing has been replaced by something that simply tolerates it. The Coil reads them as one of their own. This creates opportunities the Concordance should use.</td>
+    </tr>
+    <tr>
+      <td>Geode-Pilot</td>
+      <td><strong>Full Resonance Frame:</strong> The Resonant Frame's Geode heart operates at Grade-S calibration — beyond the scale the standard grading system uses. All Frame features operate at double their stated values. The Gear-Forged pilot and the Frame have achieved a frequency alignment the Jade Empire's engineers classify as theoretically impossible and document anyway.</td>
+    </tr>
+  </table>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- LEGENDARY DEPTH II -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-ld2">
+<div class="wrap">
+
+  <div class="tier-header" style="background:rgba(96,128,192,0.07);border:1px solid rgba(96,128,192,0.25)">
+    <span class="th-eyebrow" style="color:var(--t2)">Legendary Depth II</span>
+    <div class="th-depth" style="color:var(--t2)">The Inscribed</div>
+    <span class="th-trigger-label">Trigger</span>
+    <div class="th-trigger">The Loom of Fate writes the character's name into its active record — not the historical record of threads completed, not the prophetic record of threads anticipated. The present record. The one that the Loom updates in real time as the world moves.</div>
+    <span class="th-boon-badge" style="color:var(--t2);border-color:rgba(96,128,192,0.4);background:rgba(96,128,192,0.08)">Boon Type: Loom Gift</span>
+  </div>
+
+  <p class="lore">The Loom of Fate maintains three records: the historical (all threads completed), the prophetic (all threads anticipated), and the active (the threads currently load-bearing — the ones whose removal would change the structure). Most mortals appear in the historical and prophetic records. <strong>The active record contains, at any given time, between forty and sixty threads.</strong> Most of those are Legendary Beasts, whose threads are structural by definition. The remainder are mortals whom the Loom has determined are currently necessary to the world's coherence.</p>
+
+  <p class="lore">Being Inscribed does not mean the character is protected from death. The Loom does not protect its active threads — it records them. But it does mean that a Stellar Cartographer who reads the character's Fate Number now sees something different: the Number surrounded by the faint additional notation that indicates active-record status. This is visible to anyone trained to read it. <strong>The Ashen Coil tracks the active record specifically, because removing an active-record thread is the most efficient way to destabilize the world's structure.</strong> Being Inscribed makes the character essential. It also makes them a priority target.</p>
+
+  <div class="sec" style="color:var(--t2)">Loom Gifts — Choose One</div>
+  <p class="lore" style="margin-bottom:.75rem">Upon Inscription, the character receives one Loom Gift — an ability that no Path or Kindred provides, drawn directly from the Loom's active-record access. These are not magical abilities in the traditional sense. They are permissions — things the Loom now allows this character to do with the fabric of fate that it does not allow most mortals to touch.</p>
+
+  <div class="boon-card open" onclick="this.classList.toggle('open')">
+    <div class="bc-head"><div class="bc-name">Thread Reading</div><span class="bc-tag">Loom Gift I</span></div>
+    <div class="bc-body">Once per Pulse as a free action, read the Fate Number and bond-status of any creature within 60 ft — not just the Number, but the full bond record. Who they are Fated to, what tier the bond has reached, whether any bonds are strained or inverted. This information comes instantly and requires no roll. <strong>The Loom considers this information available to its active-record members as a professional courtesy.</strong> Stellar Cartographers who encounter an Inscribed character using this ability and are able to perceive it report seeing the character's eyes briefly hold the same visual texture as the Loom's fabric — not metaphorically. Literally. For approximately one second.</div>
+  </div>
+
+  <div class="boon-card" onclick="this.classList.toggle('open')">
+    <div class="bc-head"><div class="bc-name">Thread Anchoring</div><span class="bc-tag">Loom Gift II</span></div>
+    <div class="bc-body">Once per Deep Attunement, when a creature within 30 ft would die — reaching 0 Vitality and failing their third Loom Test — use your Reflex to anchor their thread. They stabilize at 1 Vitality. The Loom holds the thread open for one additional Moment while the character's intervention is processed. This does not prevent death indefinitely — it provides one Moment's reprieve. <strong>If that Moment does not produce healing or stabilization, the thread closes as it would have.</strong> The Loom permits this intervention exactly once per thread, per Inscribed character. It does not permit the same life to be anchored twice.</div>
+  </div>
+
+  <div class="boon-card" onclick="this.classList.toggle('open')">
+    <div class="bc-head"><div class="bc-name">Probability Sight</div><span class="bc-tag">Loom Gift III</span></div>
+    <div class="bc-body">At the start of each encounter, the Concordance privately informs you of one thing that will definitely happen in this encounter if nothing changes — not might happen, will happen. You may act on this information. Your action may change it. The Loom shows you the thread's current trajectory, not its final position. <strong>This is the most useful and most disturbing Loom Gift.</strong> Inscribed characters who select it report that over time the visions begin arriving outside encounters — brief flashes of what is about to happen in ordinary situations. The Loom does not have an off switch. It is always running. Active-record members receive the broadcast whether or not they are in the relevant moment.</div>
+  </div>
+
+  <div class="boon-card" onclick="this.classList.toggle('open')">
+    <div class="bc-head"><div class="bc-name">Thread Severance</div><span class="bc-tag">Loom Gift IV — The Difficult One</span></div>
+    <div class="bc-body">Once per campaign, deliberately sever a Fated Bond — any Fated Bond, anywhere in the world, at any range. The bond does not weaken. It ends. Both parties experience the severance simultaneously as a physical sensation and then as absence. The Loom records the act in the historical record with a notation that no other act in the current era carries: <em>Deliberate Thread Cutting by Active-Record Member.</em><br><br>
+    <strong>This ability exists because sometimes a bond is the problem.</strong> Aethar's manufactured Starbound bonds in the Kallos-Sworn can be severed with it. A coercive bond used to control someone can be severed with it. A Void-Husk's residual bond to a living person, which the Coil uses as a tracking mechanism, can be severed with it.<br><br>
+    It can also be used to sever genuine Fated Bonds between willing people. The Loom permits this. It does not approve. The distinction is subtle and important. <strong>Concordance guidance: this gift should only be selected by players who have thought about what they would use it for and are prepared for the Loom's notation to be permanent.</strong></div>
+  </div>
+
+  <div class="boon-card" onclick="this.classList.toggle('open')">
+    <div class="bc-head"><div class="bc-name">The Loom's Voice</div><span class="bc-tag">Loom Gift V</span></div>
+    <div class="bc-body">Once per session, ask the Concordance one yes/no question about the current state of the world's Aetheric record — not what will happen, not what has happened, but what is currently true in the Loom's active record. "Is Grid-Point Seven currently reactivating?" "Does Serath of the Closed Circle currently know who the Quint Bond members are?" "Is the Resonant Binding ritual currently achievable?" The Loom answers accurately. It does not elaborate. It does not explain. <strong>Yes. No. The character works out the implications.</strong></div>
+  </div>
+
+  <div class="note" style="background:rgba(96,128,192,0.06);border:1px solid rgba(96,128,192,0.2)">
+    <div class="note-title" style="color:var(--t2)">On Being Inscribed</div>
+    The Loom Inscription is visible to those trained to read it and to all Legendary Beasts. <strong>The Ashen Coil's intelligence apparatus specifically tracks the active record.</strong> Serath of the Closed Circle knows the current active-record members by name. Aethar knows them by Fate Number. Being Inscribed is simultaneously the highest recognition the world's cosmic framework can offer a mortal and a specific kind of danger that most mortals do not face. The Concordance should use both.
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- LEGENDARY DEPTH III -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-ld3">
+<div class="wrap">
+
+  <div class="tier-header" style="background:rgba(112,168,112,0.07);border:1px solid rgba(112,168,112,0.25)">
+    <span class="th-eyebrow" style="color:var(--t3)">Legendary Depth III</span>
+    <div class="th-depth" style="color:var(--t3)">The Resonant</div>
+    <span class="th-trigger-label">Trigger</span>
+    <div class="th-trigger">The Quint Bond forms — all five members achieve full resonance simultaneously, their five Fate Numbers producing the five-point chord that the Loom's prophetic record has been building toward for four thousand years.</div>
+    <span class="th-boon-badge" style="color:var(--t3);border-color:rgba(112,168,112,0.4);background:rgba(112,168,112,0.08)">Boon Type: Kindred Evolution</span>
+  </div>
+
+  <p class="lore">When the Quint Bond forms, something happens to the five people involved that the world's existing biology cannot fully account for. The five Fate Numbers, resonating simultaneously at full depth, produce an Aetheric chord of sufficient power that it expresses itself physically. <strong>The Kindred evolves.</strong> Not into a different Kindred — the Human does not become something other than Human, the Eldren remains Eldren — but the Kindred's expression deepens past its own ceiling.</p>
+
+  <p class="lore">This happens to all five Quint Bond members simultaneously, regardless of whether they were present in the same location when the Bond formed. The evolution is immediate, complete, and permanent. The Stellar Cartographers who have modeled the Quint Bond's formation predict that an observer reading all five Fate Numbers at the moment of formation would see something unprecedented: five Numbers forming a perfect geometric figure in the Aetheric field, each one amplifying the others, the whole pattern briefly as bright as a Legendary Beast's thread.</p>
+
+  <p class="lore">Serath of the Closed Circle has identified three of the five Quint Bond members. She has not reported this to Aethar. She is watching to see what happens when the Bond forms. <strong>She has a theory about what the evolution produces, and she wants to know if she is right.</strong></p>
+
+  <div class="sec" style="color:var(--t3)">Kindred Evolution — By Kindred</div>
+  <p class="lore" style="margin-bottom:.75rem">Each Kindred evolves differently — the Quint Bond's resonance amplifies what the Kindred already is rather than adding something external. The evolution is an intensification, not a transformation.</p>
+
+  <table class="path-table">
+    <tr><th>Kindred</th><th>Evolution</th></tr>
+    <tr><td>Human</td><td><strong>Apex Versatility:</strong> Gain one additional Feat. Mastery Bonus increases by 1 (to maximum +7). All Discipline Active Resonances have Resonant Fortune — the Human's defining trait (adaptability) reaches its absolute expression. The Loom considers this appropriate: the Kindred with no cosmic inheritance is freed from the ceiling that cosmic inheritance imposes.</td></tr>
+    <tr><td>Eldren</td><td><strong>Full Ancestral Access:</strong> The Ancestral Resonance feature activates without requiring a roll — any ancestor can be contacted at will. Additionally: the Eldren's Trance no longer requires time — full rest benefit from 1 minute of stillness. The ancestral line is fully present, not recalled.</td></tr>
+    <tr><td>Dunmarim</td><td><strong>The Exception Resolved:</strong> The Dunmarim's Weaving restriction lifts — they may now Weave normally, if they have a Path that supports it. The Stone Kingdom's theological debate ends for this individual. The Loom has updated the record. The Order of Pure Reason's response to this development is a campaign event.</td></tr>
+    <tr><td>Wolf-Shifter</td><td><strong>Full Shift:</strong> The Omote-Ura Gauge no longer exists — the Wolf-Shifter maintains full Ura-form capabilities at all times without cost or threshold. The two states merge into one continuous expression. The Shōgun-Kami bond deepens: full telepathic communication in both directions, no distance limit on the same plane.</td></tr>
+    <tr><td>Gear-Forged</td><td><strong>Living Resonance:</strong> The Resonant Geode heart achieves permanent Grade-S calibration. The Gear-Forged no longer requires attunement periods — all Geode abilities are continuously active. Additionally: gains biological sensation — temperature, texture, pain — that Gear-Forged do not normally experience. The Grand Prime Forgeman has opinions about whether this is a gift or a burden. He does not share them.</td></tr>
+    <tr><td>Ashé-Touched</td><td><strong>Orisha Embodiment:</strong> The patron Orisha is permanently present rather than invoked — the Ashé-Touched becomes a living temple. All Orisha domain abilities activate at will with no resource cost. The Orisha communicates continuously rather than in moments of invocation.</td></tr>
+    <tr><td>Serpent-Kin</td><td><strong>Full Serpent Nature:</strong> Immunity to all poison and the Corrupted condition. Venom potency doubles (DC increases by 4). The Serpent-Kin may shed their skin once per Deep Attunement — emerging with full Vitality restored and all conditions cleared.</td></tr>
+    <tr><td>Avian</td><td><strong>Truth Absolute:</strong> The Avian's truth-sense now identifies the content of lies in addition to their presence — not just "they are lying" but "they believe X is true and are saying Y." Fly speed increases to 80 ft. The Avian's voice carries the weight of testimony — statements made by them in formal contexts are treated as Aetherically verified.</td></tr>
+    <tr><td>Fae-Blooded</td><td><strong>Full Fae Nature:</strong> Iron weakness immunity — the Quint Bond's resonance has resolved the Fae-Blooded's biological contradiction. Glamour ability activates at will with no limit. The Fae-Blooded may now enter the Otherworld voluntarily at will, spending up to 1 hour per Deep Attunement in the Otherworld and returning to their exit point.</td></tr>
+    <tr><td>Moana-kin</td><td><strong>Ara Moana Mastery:</strong> The Ara Moana navigation system reaches full expression — the Moana-kin knows the position, emotional state, and Fate Number of every creature currently in any ocean within 500 miles. The network has become comprehensive. Swim speed 80 ft. Can breathe in any environment.</td></tr>
+    <tr><td>Te Kapo</td><td><strong>Full Kore-kore:</strong> The Te Kapo's Kore-kore practice reaches its deepest expression — they can read the complete Aetheric history of any object or location by touch (1 minute of contact, no roll). Additionally: the light-vulnerability is resolved — the Quint Bond's resonance has addressed the biological basis. The Te Kapo community will need to be told about this. The conversation will be complicated.</td></tr>
+    <tr><td>Lizard-Folk</td><td><strong>Apex Predator Physiology:</strong> Regeneration increases to 10 Vitality per Pulse (from 1). Natural armor Guard Rating increases by 3. The Lizard-Folk's cold-blooded physiology reaches optimal expression — they no longer suffer movement penalties in cold environments and gain immunity to all temperature extremes.</td></tr>
+    <tr><td>Kuri</td><td><strong>Perfect Luck:</strong> The Kuri's Luck feature activates without limitation — reroll any die result once, unlimited times per day. The cosmic luck that defines the Kindred has stopped being rationed. Additionally: the Kuri is immune to the Probability Strike mechanic — Fate-Breakers find their probability windows simply do not open around a Kuri at full Quint resonance.</td></tr>
+    <tr><td>Centaur-Kin</td><td><strong>Legendary Speed:</strong> Movement speed increases to 100 ft. The Centaur-Kin may carry up to 6 willing riders without movement penalty. Charge damage increases to 4d10. The Steppe recognizes them — any Centaur-Kin community will treat a Resonant Centaur-Kin as a Steppe Elder regardless of age.</td></tr>
+    <tr><td>Beast-Descended</td><td><strong>Full Beast Frequency:</strong> The Lineage Breath ability becomes unlimited — no per-rest restriction. Additionally: the Beast-Descended may now manifest their Legendary Beast's Partial Aspect (as per the Primal Accord system) without Beast Resonance cost — the bloodline provides the frequency directly.</td></tr>
+    <tr><td>Geode-Kin</td><td><strong>Living Resonant:</strong> The Geode Sense expands to 300 ft and now identifies the specific type and grade of any Aetheric Artifact in range. Aetheric Tinkering becomes unlimited. The Geode-Kin can repair a damaged Gear-Forged Geode heart with 10 minutes of contact — no Blueprint required, no materials required. The hands simply know.</td></tr>
+    <tr><td>Beast-Kin</td><td><strong>Legendary Beast Recognition:</strong> All twelve Legendary Beasts recognize this Beast-Kin — not just their sign's Beast. Natural weapon damage increases by one die size. Feral Instinct extends to the party: all allies within 30 ft also cannot be surprised.</td></tr>
+    <tr><td>Orc-Kin</td><td><strong>Relentless Made Permanent:</strong> Relentless Endurance becomes unlimited — no per-rest restriction. Additionally: at 0 Vitality, the Orc-Kin continues functioning normally (making Loom Tests as normal, but not suffering the incapacitated condition) until they reach three Loom Test failures. They fight until the body truly cannot. The world finds this alarming. The Orc-Kin find it unremarkable.</td></tr>
+    <tr><td>Giant-Kin</td><td><strong>Full Giant Expression:</strong> Giant's Might is always active — no activation required, no time limit. Size category increases to Large (with full Large rules applying). Runic Inheritance activates all four runes simultaneously and permanently.</td></tr>
+    <tr><td>Elemental-Kin</td><td><strong>Elemental Embodiment:</strong> The elemental nature reaches full expression — become immune to the sign's element rather than merely resistant. Elemental Touch doubles in damage. The Innate Elemental Working becomes unlimited. The Elemental-Kin's body now visibly radiates their element at all times — a constant, controlled expression of what they contain. The Ceque Line nearest them registers their presence as a minor node activation.</td></tr>
+  </table>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- LEGENDARY DEPTH IV -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-ld4">
+<div class="wrap">
+
+  <div class="tier-header" style="background:rgba(192,160,224,0.06);border:1px solid rgba(192,160,224,0.22)">
+    <span class="th-eyebrow" style="color:var(--t4)">Legendary Depth IV</span>
+    <div class="th-depth" style="color:var(--t4)">The Ascendant</div>
+    <span class="th-trigger-label">Trigger</span>
+    <div class="th-trigger">Completion of the Resonant Binding ritual — or an equivalent act of world-scale Aetheric commitment that the Loom classifies in the same register. The character must have achieved Legendary Depths I, II, and III before this trigger can resolve.</div>
+    <span class="th-boon-badge" style="color:var(--t4);border-color:rgba(192,160,224,0.4);background:rgba(192,160,224,0.07)">Boon Type: The Ascendant State</span>
+  </div>
+
+  <p class="lore">There is no precedent for this in the current era. The Loom's historical record contains two instances of the Ascendant state — one from the Kallos civilization's final years, whose practitioner's name was erased by the Ashen Coil from every written record they could reach, and one from Era II's opening decades, whose practitioner chose to become one of the Legendary Beasts and is therefore no longer technically a mortal. The Loom still carries both threads. They are the brightest entries in the historical record. <strong>The active record has never contained an Ascendant-state thread.</strong> If it did, the Loom's researchers believe the Loom itself would reorganize around it.</p>
+
+  <p class="lore">What the Ascendant state produces is not power in the conventional sense. A Depth 20 character with all three Legendary Depths and the Path Expansion, Loom Gift, and Kindred Evolution is already operating at a level most mortals cannot comprehend. The Ascendant state does not add to that. <strong>It changes the character's relationship to the world's fundamental architecture.</strong> They are no longer subject to it in the way mortals are subject to gravity — they understand it from the inside, and that understanding produces effects that look like power but are actually something more disquieting than power.</p>
+
+  <div class="sec" style="color:var(--t4)">The Ascendant State — What It Provides</div>
+
+  <div class="boon-card open" onclick="this.classList.toggle('open')">
+    <div class="bc-head"><div class="bc-name">Loom Access</div><span class="bc-tag">Ascendant · Permanent</span></div>
+    <div class="bc-body">The Ascendant may read the Loom's active record directly — not one question per session, not one flash of probability sight. Full, continuous access to the Loom's present-moment record. They always know the current state of every active thread, every Fated Bond at every tier, every Legendary Beast's current position and status, and the Aetheric health of the Ceque Line grid. <strong>This is not comfortable.</strong> The Loom processes an extraordinary amount of information simultaneously. The Ascendant's mind adapts — it has to — but the adaptation takes time and the Concordance should describe the early period as genuinely overwhelming. The Grand Prime Forgeman, who has been adjacent to this state for four centuries without reaching it, says he suspects it feels like suddenly being able to hear every conversation in a city simultaneously, then learning to focus.</div>
+  </div>
+
+  <div class="boon-card" onclick="this.classList.toggle('open')">
+    <div class="bc-head"><div class="bc-name">Thread Weaving</div><span class="bc-tag">Ascendant · 1/Session</span></div>
+    <div class="bc-body">Once per session, alter one thread in the Loom's active record — not sever it (that is the Loom Gift), but redirect it. Change one currently-true thing about a living being's Fate: their Fate Number moves by up to 5 points in either direction; an existing Fated Bond moves one tier in either direction (deeper or shallower); a bond that was strained becomes stable, or vice versa. The change is permanent. The Loom records it as an authorized alteration by an Ascendant-record member.<br><br>
+    <strong>This ability changes what is cosmically true about a person.</strong> It is the closest any mortal has come to the Loom's own function. The Ascendant does not use it lightly. The Loom does not permit it to be used lightly — each use is recorded with the same notation as Thread Severance, and the Loom's active record reflects the change in a way that Stellar Cartographers at any distance can eventually perceive.</div>
+  </div>
+
+  <div class="boon-card" onclick="this.classList.toggle('open')">
+    <div class="bc-head"><div class="bc-name">Aetheric Presence</div><span class="bc-tag">Ascendant · Permanent</span></div>
+    <div class="bc-body">The Ascendant's Aetheric field has expanded to a radius of 300 ft — everything within that radius is subtly aware of them in a way that does not translate to conscious thought. Animals become calm or alert depending on the Ascendant's emotional state. Plants grow toward them. Water in containers moves toward the Ascendant-facing side. People within the field make all Warding Resonances against fear and compulsion with Resonant Fortune — the Ascendant's presence is stabilizing, not because they are doing anything, but because the world's fabric is denser near a point of Ascendant-level Aetheric coherence.<br><br>
+    Enemies who attack the Ascendant feel the Aetheric field as physical resistance — all Strike Resonances against the Ascendant have Resonant Discord. This is not a shield. It is the world briefly reconsidering whether attacking this specific point in the fabric is a good idea.</div>
+  </div>
+
+  <div class="boon-card" onclick="this.classList.toggle('open')">
+    <div class="bc-head"><div class="bc-name">The Name</div><span class="bc-tag">Ascendant · Narrative</span></div>
+    <div class="bc-body">The Ascendant names themselves — not a new personal name, but a title that the Loom inscribes alongside their thread in the active record. This name becomes the way the world's Aetheric framework refers to them. Legendary Beasts know it. The Loom of Fate uses it. Stellar Cartographers reading the active record see it glowing next to the thread.<br><br>
+    The last Ascendant to name themselves chose a name that the Ashen Coil subsequently erased from every written record. The Loom kept it. It is still there. <strong>The Concordance knows what it is. The players do not, unless their character has Loom Access and looks.</strong><br><br>
+    The name has no mechanical effect. It is the world's acknowledgment that this thread is no longer merely a mortal's thread. It is something the world will remember — not as history, but as present reality — for as long as the Loom runs.<br><br>
+    <em>The Loom runs forever. The Concordance should let the players sit with this for a moment before moving on.</em></div>
+  </div>
+
+  <div class="note" style="background:rgba(192,160,224,0.06);border:1px solid rgba(192,160,224,0.2)">
+    <div class="note-title" style="color:var(--t4)">What the Ascendant State Is Not</div>
+    <strong>The Ascendant is not a god.</strong> The gods of Sideros lost their concentrated divine form during the Pantheonic Fall — they distributed their power into the Legendary Beasts rather than maintaining individual divine coherence. The Ascendant has done something different: a mortal has accumulated sufficient cosmic acknowledgment that the Loom has reclassified their thread. They are still mortal. They can still be killed. They have families, preferences, opinions, and bad days.<br><br>
+    What they are is the world's most load-bearing mortal thread — the one the Loom's active record considers most necessary to the current structure. This is simultaneously the greatest recognition the world's cosmic framework can offer a living being and a specific kind of loneliness that no other mortal can fully understand.<br><br>
+    <strong>The Grand Prime Forgeman, who has been adjacent to this state without reaching it, says this is probably fine. He has been saying this for four hundred years. The Concordance may decide whether to believe him.</strong>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- CONCORDANCE GUIDE -->
+<!-- ══════════════════════════════════════ -->
+<div class="panel" id="panel-concordance">
+<div class="wrap">
+
+  <p class="lore">The Legendary Depth system requires the Concordance to do something the standard rules do not: <strong>make unilateral decisions about when the world has decided a character is significant enough to acknowledge.</strong> This is a substantial creative responsibility. The following guidance is designed to make that responsibility feel manageable rather than paralyzing.</p>
+
+  <div class="sec">Legendary Depth I — The Beast Acknowledgment</div>
+
+  <div class="two-col">
+    <div class="info">
+      <div class="ib-label">What constitutes Beast Acknowledgment</div>
+      <div class="ib-text">The Beast has encountered the character doing something that expresses the Beast's domain at a level the Beast considers genuine. This is not about combat. A Nemean Lion Acknowledgment might come after the character protected someone genuinely innocent at significant personal cost. A Star-Metal Stag Acknowledgment might come after the character navigated something genuinely unmappable. <strong>The Beast is recognizing craft, not power.</strong></div>
+    </div>
+    <div class="info">
+      <div class="ib-label">What does not constitute Beast Acknowledgment</div>
+      <div class="ib-text">Defeating the Beast in combat. Completing a quest specifically designed to impress the Beast. Seeking out the Beast with acknowledgment as the stated goal. The Beast knows the difference between someone doing their work and someone performing for an audience. It has been a god. <strong>It is not impressed by performance.</strong></div>
+    </div>
+  </div>
+
+  <div class="sec">Legendary Depth II — The Loom Inscription</div>
+  <p class="lore">Loom Inscription happens when the character's actions have made them structurally necessary to the world's current state — when removing them would change the shape of something important. The Concordance does not announce this. The Concordance simply describes, at an appropriate moment, that a Stellar Cartographer nearby has noticed something unusual about the character's Fate Number. The character may or may not understand what this means. The world has already changed.</p>
+
+  <p class="lore"><strong>Typical triggers:</strong> Preventing Grid-Point Seven's full reactivation. Disrupting a Coil operation that the world's Aetheric record considered likely to succeed. Forming a genuine Triad-tier Fated Bond that the Loom's prophetic record had not anticipated. The Loom Inscription is the world's acknowledgment that this character is not moving through history — they are shaping it.</p>
+
+  <div class="sec">Legendary Depth III — The Quint Bond</div>
+  <p class="lore">The Concordance controls when the Quint Bond forms. It forms when all five members have achieved the depth of relationship with each other that the Loom considers sufficient — not when the players have identified all five members, not when the party has been together for a certain number of sessions. <strong>The Bond forms when it is ready.</strong> The Concordance will know when this is — the five-person dynamic will have reached a quality that feels different from ordinary party cohesion. When it does, the Concordance describes the moment, all five players experience the Kindred Evolution simultaneously, and the world changes.</p>
+
+  <div class="sec">Legendary Depth IV — The Ascendant</div>
+  <p class="lore">The Resonant Binding ritual is a campaign-defining event. The Concordance should treat LD IV as the campaign's endpoint — not because the campaign must end there, but because the Ascendant state changes the world significantly enough that the campaign that existed before it cannot continue in the same form. <strong>A party containing one or more Ascendant-state characters is no longer in the same story they started in.</strong> The Concordance should begin planning the post-Ascendant campaign long before the ritual completes.</p>
+
+  <div class="note" style="background:rgba(200,168,74,0.04);border:1px solid rgba(200,168,74,0.15)">
+    <div class="note-title" style="color:var(--gold)">The Fundamental Rule of Legendary Depth</div>
+    <strong>Legendary Depth is never awarded. It is recognized.</strong> The Concordance does not decide that a character deserves LD I and then arrange the Beast Acknowledgment encounter. The Concordance watches the character doing their work in the world, recognizes when that work has reached the threshold, and describes the world's response. The distinction matters: awards can be engineered and anticipated. Recognition arrives when it arrives, and its arrival is meaningful precisely because it was not scheduled.<br><br>
+    When a player asks "how do I get Legendary Depth?" the correct answer is: do the work. The world is watching.
+  </div>
+
+</div>
+</div>
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => { p.style.display='none'; p.classList.remove('active') });
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).style.display = 'block';
+  document.getElementById('panel-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+document.querySelectorAll('.panel').forEach(p => { p.style.display='none'; p.classList.remove('active') });
+document.getElementById('panel-overview').style.display = 'block';
+document.getElementById('panel-overview').classList.add('active');
+document.querySelectorAll('.nav-btn')[0].classList.add('active');
+</script>
+</body>
+</html>
