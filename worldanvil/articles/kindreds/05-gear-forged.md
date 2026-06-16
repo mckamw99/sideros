@@ -31,7 +31,7 @@ The Gear-Forged's Resonant Geode heart is [b]pre-calibrated to a specific zodiac
 
 [b]Constructed Nature[/b] — [i]Passive[/i]
 Gear-Forged do not eat, drink, breathe, or sleep. They are immune to mundane disease, poison, and the Corrupted condition. They do not need to make Warding Resonances against suffocation, starvation, or environmental exposure. [b]During Brief and Deep Attunement[/b], they perform maintenance rather than resting — they must spend this time maintaining their frame or accumulate Wear (see Wear System below). They have Resonant Fortune on Warding Resonances against being Dread-Struck (Frightened) — fear requires biological threat-response, which their architecture modulates. 
-[b]The Wear System[/b]: if a Gear-Forged skips a Deep Attunement maintenance cycle, they accumulate 1 Wear. At 3 Wear: Resonant Discord on Swiftness Active Resonances (joints stiff). At 5 Wear: one appendage malfunctions (Concordance chooses which). At 7 Wear: frame begins to shut down (Aetheric Depletion Stage 3). Wear reduces by 1 per maintenance cycle completed.
+[b]The Wear System[/b]: if a Gear-Forged skips a Deep Attunement maintenance cycle, they accumulate 1 Wear. At 3 Wear: Resonant Discord on Swiftness Active Resonances (joints stiff). At 5 Wear: one appendage malfunctions (Game Master chooses which). At 7 Wear: frame begins to shut down (Aetheric Depletion Stage 3). Wear reduces by 1 per maintenance cycle completed.
 
 [b]Resonant Architecture[/b] — [i]Passive[/i]
 The Gear-Forged's frame can be modified. At character creation and at every even Resonance Depth (2, 4, 6...), choose one [b]Frame Modification[/b]: 

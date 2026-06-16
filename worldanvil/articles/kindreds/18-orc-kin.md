@@ -10,7 +10,6 @@ status: drafted
 source: sideros_kindred_compendium (vols I-III)
 ---
 
-[b]Also called:[/b] Replacing: Orc / Half-Orc · Stateless, dispersed across the Duchy Compact
 [b]Aspects:[/b] Medium, No Fixed Homeland, Alpha-aspected (common)
 
 [h2]Lore[/h2]

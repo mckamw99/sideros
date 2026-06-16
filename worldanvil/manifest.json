@@ -3,17 +3,22 @@
   "api": "worldanvil-boromir-v2",
   "notes": "Staged for import. Run import_to_worldanvil.py on a machine with WA access once the Application Key is approved.",
   "waves": {
-    "1": "World primer + 20 Kindred species articles (player-facing, no secrets)",
-    "2": "The 13 civilizations (Ethnicity/Organization) + zodiac cosmology",
+    "1": "World primer + 20 Kindred species articles (player-facing, no secrets) \u2014 DONE",
+    "2": "Overview hub + 12 civilizations (Ethnicity; Antarctos excluded as secret) \u2014 DONE",
     "3": "Paths & Weaving, Origins, core mechanics",
     "4": "Legendary Beasts, bestiary, locations (incl. Port Damaris)",
-    "5": "GM-only layer (separate private articles): NPCs, Ashen Coil, secrets matrix"
+    "5": "GM-only layer (PRIVATE articles): Antarctos, NPCs, Ashen Coil, secrets matrix"
   },
   "pending_account_config": [
     "Confirm/replace the TTRPG system tag (prior flag: incorrect / IP-problematic)",
-    "Ensure Primer/overview articles are public-safe (this primer is secrets-stripped)",
     "Confirm world public title",
-    "Resolve Concordance -> Game Master sweep before import (affects trait text)"
+    "Ash\u00e9lands naming: using Orsha-Anu (current); sweep any stray 'Orun-Ay\u00e9'"
+  ],
+  "secrets_excluded_from_public_waves": [
+    "Antarctos (secret continent) and the Crystalline Core / Argent Spire",
+    "All Ashen Coil leaders and the 13th-force identities per civilization",
+    "Named Quint Bond members (the Abyssal Sea regent is left unnamed for this reason)",
+    "The Scion Shift system, Night of Kallos, the Resonant Binding"
   ],
   "articles": [
     {
@@ -203,6 +208,123 @@
       "category": "Kindreds",
       "privacy": "public",
       "wave": 1,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/civilizations/00-civilizations-overview.md",
+      "title": "The World of Sideros",
+      "template": "article",
+      "category": "Civilizations",
+      "privacy": "public",
+      "wave": 2,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/civilizations/01-duchy-compact-of-terra-firma.md",
+      "title": "The Duchy Compact of Terra Firma",
+      "template": "ethnicity",
+      "category": "Civilizations",
+      "privacy": "public",
+      "wave": 2,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/civilizations/02-shen-l-the-jade-empire.md",
+      "title": "Shen-l\u00ec, the Jade Empire",
+      "template": "ethnicity",
+      "category": "Civilizations",
+      "privacy": "public",
+      "wave": 2,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/civilizations/03-abyssal-sea-civilisation.md",
+      "title": "The Abyssal Sea Civilisation",
+      "template": "ethnicity",
+      "category": "Civilizations",
+      "privacy": "public",
+      "wave": 2,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/civilizations/04-boreal-expanse.md",
+      "title": "The Boreal Expanse",
+      "template": "ethnicity",
+      "category": "Civilizations",
+      "privacy": "public",
+      "wave": 2,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/civilizations/05-tuathan-archipelago.md",
+      "title": "The Tuathan Archipelago",
+      "template": "ethnicity",
+      "category": "Civilizations",
+      "privacy": "public",
+      "wave": 2,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/civilizations/06-khem-ma-at.md",
+      "title": "Khem-Ma'at",
+      "template": "ethnicity",
+      "category": "Civilizations",
+      "privacy": "public",
+      "wave": 2,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/civilizations/07-k-uh-la-an.md",
+      "title": "K'uh-la'an",
+      "template": "ethnicity",
+      "category": "Civilizations",
+      "privacy": "public",
+      "wave": 2,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/civilizations/08-ash-lands-of-orsha-anu.md",
+      "title": "The Ash\u00e9lands of Orsha-Anu",
+      "template": "ethnicity",
+      "category": "Civilizations",
+      "privacy": "public",
+      "wave": 2,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/civilizations/09-mori-kami.md",
+      "title": "Mori-\u014ckami",
+      "template": "ethnicity",
+      "category": "Civilizations",
+      "privacy": "public",
+      "wave": 2,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/civilizations/10-great-kurgan-bog.md",
+      "title": "The Great Kurgan Bog",
+      "template": "ethnicity",
+      "category": "Civilizations",
+      "privacy": "public",
+      "wave": 2,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/civilizations/11-chinvat.md",
+      "title": "Chinvat",
+      "template": "ethnicity",
+      "category": "Civilizations",
+      "privacy": "public",
+      "wave": 2,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/civilizations/12-scattered-temples.md",
+      "title": "The Scattered Temples",
+      "template": "ethnicity",
+      "category": "Civilizations",
+      "privacy": "public",
+      "wave": 2,
       "status": "drafted"
     }
   ]

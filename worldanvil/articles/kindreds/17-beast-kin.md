@@ -10,7 +10,6 @@ status: drafted
 source: sideros_kindred_compendium (vols I-III)
 ---
 
-[b]Also called:[/b] Replacing: Tabaxi, Leonin, Minotaur, Harengon, Tortle · Twelve zodiac morphologies
 [b]Aspects:[/b] Medium, Zodiac-Aspected Morphology, All Primal Essences
 
 [h2]Lore[/h2]

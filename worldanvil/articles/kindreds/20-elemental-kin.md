@@ -10,7 +10,6 @@ status: drafted
 source: sideros_kindred_compendium (vols I-III)
 ---
 
-[b]Also called:[/b] Replacing: Genasi (Air/Earth/Fire/Water) · Zodiac-aspected elemental expression
 [b]Aspects:[/b] Medium, Zodiac-Aspected, All Primal Essences
 
 [h2]Lore[/h2]

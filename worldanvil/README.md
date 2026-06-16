@@ -12,6 +12,8 @@ The build container that generated these files cannot reach `worldanvil.com`
 | `manifest.json` | Machine-readable index of every staged article (file, template, category, privacy, wave) + the wave plan and account-config to-dos |
 | `articles/world/` | World primer (public-safe overview / campaign description) |
 | `articles/kindreds/` | All 20 Kindreds as **Species** articles (World Anvil BBCode) |
+| `articles/civilizations/` | Overview hub + 12 civilizations as **Ethnicity** articles (Antarctos excluded — secret) |
+| `build_civilizations.py` | Generator for the Wave 2 civilization articles (hand-authored, secrets-stripped) |
 | `convert_kindreds.py` | The converter that generated the Kindred articles from the canon HTML (handles both source schemas; re-runnable) |
 | `import_to_worldanvil.py` | Local push script — Boromir v2 API, dry-run by default |
 
@@ -38,8 +40,8 @@ base are confirmed against the WA docs; the exact article CREATE field names
 
 ## Wave plan
 
-1. **Wave 1 (staged):** world primer + 20 Kindred species articles — player-facing, no secrets.
-2. Wave 2: the 13 civilizations + zodiac cosmology.
+1. **Wave 1 (staged ✓):** world primer + 20 Kindred species articles — player-facing, no secrets.
+2. **Wave 2 (staged ✓):** civilizations overview + 12 civilizations. Antarctos is held back as a secret location for the Wave 5 private layer.
 3. Wave 3: Paths & Weaving, Origins, core mechanics.
 4. Wave 4: Legendary Beasts / bestiary / locations (incl. Port Damaris).
 5. Wave 5: **GM-only** layer as separate private articles (NPCs, Ashen Coil, secrets matrix).

@@ -10,7 +10,6 @@ status: drafted
 source: sideros_kindred_compendium (vols I-III)
 ---
 
-[b]Also called:[/b] Replacing: Gnome (Rock/Forest) + Kobold · Jade Empire biological engineers
 [b]Aspects:[/b] Small, Jade Empire Adjunct, All Primal Essences
 
 [h2]Lore[/h2]

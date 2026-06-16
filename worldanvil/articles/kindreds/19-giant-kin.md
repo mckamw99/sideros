@@ -10,7 +10,6 @@ status: drafted
 source: sideros_kindred_compendium (vols I-III)
 ---
 
-[b]Also called:[/b] Replacing: Goliath · Boreal Expanse, Norse giant-tradition
 [b]Aspects:[/b] Medium (Large-adjacent), Boreal Expanse, Alpha-aspected (predominant)
 
 [h2]Lore[/h2]
@@ -33,7 +32,7 @@ Natural runic marks appear on the Giant-Kin's skin at puberty — shaped like th
  • [i]Rune of Hill (Haug):[/i] Resistance to all non-magical damage (lasts 1 minute, not 24 hours — too costly to sustain)
 
 [b]Large-Adjacent[/b] — [i]Always Active[/i]
-While technically Medium for rules purposes, the Giant-Kin's size produces several Large-equivalent effects at all times: carry capacity equals a Large creature's; reach is 10 ft rather than 5 ft for unarmed strikes and natural weapons; can wield weapons sized for Large creatures with Resonant Discord (rather than being unable to wield them at all). Standard Dungeon Constraint rules still apply — the Giant-Kin cannot navigate tunnels built for Medium creatures without crouching, and some structures require explicit Concordance rulings about access.
+While technically Medium for rules purposes, the Giant-Kin's size produces several Large-equivalent effects at all times: carry capacity equals a Large creature's; reach is 10 ft rather than 5 ft for unarmed strikes and natural weapons; can wield weapons sized for Large creatures with Resonant Discord (rather than being unable to wield them at all). Standard Dungeon Constraint rules still apply — the Giant-Kin cannot navigate tunnels built for Medium creatures without crouching, and some structures require explicit Game Master rulings about access.
 
 [b]Stone's Endurance[/b] — [i]1/Brief Attunement[/i]
 When taking damage, use a Reflex to reduce that damage by 1d12 + Endurance modifier — the Aetheric bone-density absorbs what it can. Usable once per Brief Attunement. This is the trait the Trench Keepers of the Maw recruit Giant-Kin for specifically. Repeated structural damage to a defensive line is survivable when the front-line fighters have bones that behave like partially Aetheric material.

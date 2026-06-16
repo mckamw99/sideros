@@ -10,7 +10,6 @@ status: drafted
 source: sideros_kindred_compendium (vols I-III)
 ---
 
-[b]Also called:[/b] Replacing: Dragonborn · Also covers: Leonin, Minotaur (partial)
 [b]Aspects:[/b] Medium, Sign-Locked Lineage, All Primal Essences
 
 [h2]Lore[/h2]

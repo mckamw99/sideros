@@ -44,6 +44,11 @@ def inline_to_bbcode(node):
                 out.append(inner)
     return re.sub(r"[ \t]+", " ", "".join(out)).strip()
 
+# Current canon (v18): "Concordance" (the GM term) is deprecated in favour of "Game Master".
+# Applied per Matt's confirmation. "Concordances" -> "Game Masters" falls out naturally.
+def sweep_canon(text):
+    return re.sub(r"Concordance", "Game Master", text)
+
 def slug(name):
     s = re.sub(r"^the\s+", "", name.strip(), flags=re.I)
     return re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-")
@@ -60,6 +65,10 @@ def extract_panel(panel):
     also = get_text(panel, ".kh-also")
     if also:
         also = re.sub(r"^Also called:\s*", "", also, flags=re.I).strip()
+        # Vol III "Replacing: Gnome + Kobold ..." is a 5e-conversion design note, not an
+        # in-world alias — drop it from public articles.
+        if re.match(r"^Replacing:", also, flags=re.I):
+            also = None
     home = get_text(panel, ".kh-home")
     essence = get_text(panel, ".kh-essence")
     tags = [t.get_text(strip=True) for t in panel.select(".kh-tag")]
@@ -170,7 +179,7 @@ def main():
             order += 1
             fname = f"{order:02d}-{slug(k['name'])}.md"
             with open(os.path.join(OUT, fname), "w") as f:
-                f.write(front_matter(k) + to_article(k) + "\n")
+                f.write(front_matter(k) + sweep_canon(to_article(k)) + "\n")
             manifest.append(dict(
                 file=f"articles/kindreds/{fname}",
                 title=k["name"], template="species", category="Kindreds",
