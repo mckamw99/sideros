@@ -1,0 +1,209 @@
+{
+  "world": "Sideros",
+  "api": "worldanvil-boromir-v2",
+  "notes": "Staged for import. Run import_to_worldanvil.py on a machine with WA access once the Application Key is approved.",
+  "waves": {
+    "1": "World primer + 20 Kindred species articles (player-facing, no secrets)",
+    "2": "The 13 civilizations (Ethnicity/Organization) + zodiac cosmology",
+    "3": "Paths & Weaving, Origins, core mechanics",
+    "4": "Legendary Beasts, bestiary, locations (incl. Port Damaris)",
+    "5": "GM-only layer (separate private articles): NPCs, Ashen Coil, secrets matrix"
+  },
+  "pending_account_config": [
+    "Confirm/replace the TTRPG system tag (prior flag: incorrect / IP-problematic)",
+    "Ensure Primer/overview articles are public-safe (this primer is secrets-stripped)",
+    "Confirm world public title",
+    "Resolve Concordance -> Game Master sweep before import (affects trait text)"
+  ],
+  "articles": [
+    {
+      "file": "articles/world/world-primer.md",
+      "title": "The World of Sideros",
+      "template": "article",
+      "category": "World Primer",
+      "privacy": "public",
+      "wave": 1,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/kindreds/01-human.md",
+      "title": "Human",
+      "template": "species",
+      "category": "Kindreds",
+      "privacy": "public",
+      "wave": 1,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/kindreds/02-eldren.md",
+      "title": "Eldren",
+      "template": "species",
+      "category": "Kindreds",
+      "privacy": "public",
+      "wave": 1,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/kindreds/03-dunmarim.md",
+      "title": "Dunmarim",
+      "template": "species",
+      "category": "Kindreds",
+      "privacy": "public",
+      "wave": 1,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/kindreds/04-wolf-shifter.md",
+      "title": "Wolf-Shifter",
+      "template": "species",
+      "category": "Kindreds",
+      "privacy": "public",
+      "wave": 1,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/kindreds/05-gear-forged.md",
+      "title": "Gear-Forged",
+      "template": "species",
+      "category": "Kindreds",
+      "privacy": "public",
+      "wave": 1,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/kindreds/06-ash-touched.md",
+      "title": "Ash\u00e9-Touched",
+      "template": "species",
+      "category": "Kindreds",
+      "privacy": "public",
+      "wave": 1,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/kindreds/07-serpent-kin.md",
+      "title": "Serpent-Kin",
+      "template": "species",
+      "category": "Kindreds",
+      "privacy": "public",
+      "wave": 1,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/kindreds/08-avian.md",
+      "title": "Avian",
+      "template": "species",
+      "category": "Kindreds",
+      "privacy": "public",
+      "wave": 1,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/kindreds/09-fae-blooded.md",
+      "title": "Fae-Blooded",
+      "template": "species",
+      "category": "Kindreds",
+      "privacy": "public",
+      "wave": 1,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/kindreds/10-moana-kin.md",
+      "title": "Moana-kin",
+      "template": "species",
+      "category": "Kindreds",
+      "privacy": "public",
+      "wave": 1,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/kindreds/11-te-kapo.md",
+      "title": "Te Kapo",
+      "template": "species",
+      "category": "Kindreds",
+      "privacy": "public",
+      "wave": 1,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/kindreds/12-lizard-folk.md",
+      "title": "Lizard-Folk",
+      "template": "species",
+      "category": "Kindreds",
+      "privacy": "public",
+      "wave": 1,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/kindreds/13-kuri.md",
+      "title": "Kuri",
+      "template": "species",
+      "category": "Kindreds",
+      "privacy": "public",
+      "wave": 1,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/kindreds/14-centaur-kin.md",
+      "title": "Centaur-Kin",
+      "template": "species",
+      "category": "Kindreds",
+      "privacy": "public",
+      "wave": 1,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/kindreds/15-beast-descended.md",
+      "title": "Beast-Descended",
+      "template": "species",
+      "category": "Kindreds",
+      "privacy": "public",
+      "wave": 1,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/kindreds/16-geode-kin.md",
+      "title": "Geode-Kin",
+      "template": "species",
+      "category": "Kindreds",
+      "privacy": "public",
+      "wave": 1,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/kindreds/17-beast-kin.md",
+      "title": "Beast-Kin",
+      "template": "species",
+      "category": "Kindreds",
+      "privacy": "public",
+      "wave": 1,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/kindreds/18-orc-kin.md",
+      "title": "Orc-Kin",
+      "template": "species",
+      "category": "Kindreds",
+      "privacy": "public",
+      "wave": 1,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/kindreds/19-giant-kin.md",
+      "title": "Giant-Kin",
+      "template": "species",
+      "category": "Kindreds",
+      "privacy": "public",
+      "wave": 1,
+      "status": "drafted"
+    },
+    {
+      "file": "articles/kindreds/20-elemental-kin.md",
+      "title": "Elemental-Kin",
+      "template": "species",
+      "category": "Kindreds",
+      "privacy": "public",
+      "wave": 1,
+      "status": "drafted"
+    }
+  ]
+}
