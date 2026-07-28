@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sideros — Concordance Tools</title>
+<title>Sideros — Game Master Tools</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;500;600&display=swap');
 :root{
@@ -55,8 +55,8 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
 </head>
 <body>
 <div class="hero">
-  <div class="hero-eyebrow">Sideros / Astrolan — For the Concordance</div>
-  <h1 class="hero-title">Concordance Tools</h1>
+  <div class="hero-eyebrow">Sideros / Astrolan — For the Game Master</div>
+  <h1 class="hero-title">Game Master Tools</h1>
   <p class="hero-sub">Frameworks for running sessions, resolving large-scale conflicts, tactical creature behavior, adventure site dossiers, and house rules.</p>
 </div>
 <div class="nav-strip">
@@ -80,7 +80,7 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
       <ol class="step-list">
         <li><strong>Define the conflict clearly.</strong> What are both sides trying to achieve? What is the exact question being decided? ("Can the Ashen-Sworn invasion be repelled before it reaches Aurelia?" not just "invasion happens.")</li>
         <li><strong>Establish the stakes before rolling.</strong> Define what a success, costly success, and failure each look like specifically — material consequences, not vague outcomes. Write them down before any dice touch the table.</li>
-        <li><strong>Each PC makes one relevant Active Resonance.</strong> The party's relevant Disciplines, Path features, and resources all apply. The Concordance sets the DC based on the opposing force's strength.</li>
+        <li><strong>Each PC makes one relevant Active Resonance.</strong> The party's relevant Disciplines, Path features, and resources all apply. The Game Master sets the DC based on the opposing force's strength.</li>
         <li><strong>Count successes vs. failures.</strong> Majority determines the result tier (below).</li>
         <li><strong>Apply the predefined consequence.</strong> No negotiation after the roll — the consequence was agreed before play began.</li>
       </ol>
@@ -124,7 +124,7 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
 
 <!-- TACTICAL ENGINE -->
 <div class="panel" id="panel-tactical"><div class="wrap">
-  <p class="lore">How an enemy fights is as important as what it can do. The Tactical Engine of Opposition provides behavioral frameworks for creature types — the Concordance doesn't need to plan every move, just internalize the creature's decision-making logic and let it play out.</p>
+  <p class="lore">How an enemy fights is as important as what it can do. The Tactical Engine of Opposition provides behavioral frameworks for creature types — the Game Master doesn't need to plan every move, just internalize the creature's decision-making logic and let it play out.</p>
 
   <div class="sec">Creature Type Tactical Profiles</div>
 
@@ -134,7 +134,7 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
       <strong>Priority:</strong> Nearest living target. Always. No exceptions unless directed by a controlling intelligence.<br>
       <strong>No flanking, no ambush, no retreat.</strong> Mindless undead do not disengage, do not respond to fear, do not recognize advantage. They walk toward the closest creature and attack until destroyed or directed otherwise.<br>
       <strong>Tactical tell:</strong> This predictability is an exploit the party should discover and use. A mindless undead that the party can keep circling (never being the nearest target) is a mindless undead the party can control the engagement of. Void-Husks specifically lose their coordination mechanic if Weep-Stone disruption is in play — they revert to pure nearest-target behavior even if they were previously operating in directed formation.<br>
-      <strong>Concordance note:</strong> Void-Husks directed by a living Coil operative are NOT mindless. The controlling operative has tactical intelligence. Kill the controller, and the Void-Husks revert to mindless behavior.
+      <strong>Game Master note:</strong> Void-Husks directed by a living Coil operative are NOT mindless. The controlling operative has tactical intelligence. Kill the controller, and the Void-Husks revert to mindless behavior.
     </div>
   </div>
 
@@ -145,7 +145,7 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
       <strong>Standard deployment:</strong> Ranged harassers from concealment first (1–2 Pulses) to identify party reaction patterns and draw mobile characters out of position. Then flanking elements close from two directions simultaneously. Melee shock troops advance center only after flanks are committed.<br>
       <strong>Retreat behavior:</strong> Ashen-Sworn warbands retreat when they've lost numerical superiority (below 50% of starting numbers). They retreat in good order — covering fire, staggered withdrawal — not route. They will re-engage from a stronger position if the party pursues without reorganizing.<br>
       <strong>Tactical vulnerabilities:</strong> They require a clear chain of command. Eliminate or incapacitate the warband's Forcefulness-primary leader in the first two Pulses and the coordination collapses — they continue fighting but lose the isolation/flanking pattern and devolve into nearest-target behavior.<br>
-      <strong>Concordance note:</strong> Ashen-Sworn fighting for the Coil fight smarter than Ashen-Sworn fighting for territory. Coil-directed warbands have been specifically trained by Drava Nullsong's operational network. They don't just flank — they have specific target priority lists (eliminate Weavers first, then support characters, then martial characters last).
+      <strong>Game Master note:</strong> Ashen-Sworn fighting for the Coil fight smarter than Ashen-Sworn fighting for territory. Coil-directed warbands have been specifically trained by Drava Nullsong's operational network. They don't just flank — they have specific target priority lists (eliminate Weavers first, then support characters, then martial characters last).
     </div>
   </div>
 
@@ -173,10 +173,10 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
   <div class="tool" onclick="this.classList.toggle('open')">
     <div class="th"><div class="tn">Legendary Beasts</div><span class="ttag">Not an Encounter</span></div>
     <div class="tb">
-      <strong>Principle:</strong> Do not run Legendary Beast encounters as combat. There are no combat statistics to reference. A Legendary Beast does not "fight" — it <em>is present</em>. The Concordance describes what happens when something of incalculable Aetheric weight occupies a space, not how many attacks it makes per Pulse.<br><br>
+      <strong>Principle:</strong> Do not run Legendary Beast encounters as combat. There are no combat statistics to reference. A Legendary Beast does not "fight" — it <em>is present</em>. The Game Master describes what happens when something of incalculable Aetheric weight occupies a space, not how many attacks it makes per Pulse.<br><br>
       <strong>How to run them:</strong> Describe sensory experience first (the pressure in the chest, the Aetheric resonance overwhelming perception). Describe the Beast's behavior as motivated (what is it doing? what does it want from this space?). Let the party respond. The Beast responds to the party's response — not to their attack rolls.<br><br>
-      <strong>If a player attacks:</strong> The attack simply does not land in any meaningful way. The Beast is not immune — it is not engaged. A sword swing at the Nemean Lion is not a combat action; it is a social action with potentially catastrophic social consequences. The Lion looked at this person. It remembers. Whether it decides the person is worthy or foolish depends entirely on the context the Concordance has established for this Beast in this session.<br><br>
-      <strong>Resolution:</strong> Beast encounters end when the Beast chooses to leave, or when the party successfully communicates something the Beast finds meaningful. The Concordance decides what each Beast finds meaningful based on its character established in the Zodiac Attunement document.
+      <strong>If a player attacks:</strong> The attack simply does not land in any meaningful way. The Beast is not immune — it is not engaged. A sword swing at the Nemean Lion is not a combat action; it is a social action with potentially catastrophic social consequences. The Lion looked at this person. It remembers. Whether it decides the person is worthy or foolish depends entirely on the context the Game Master has established for this Beast in this session.<br><br>
+      <strong>Resolution:</strong> Beast encounters end when the Beast chooses to leave, or when the party successfully communicates something the Beast finds meaningful. The Game Master decides what each Beast finds meaningful based on its character established in the Zodiac Attunement document.
     </div>
   </div>
 
@@ -184,7 +184,7 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
 
 <!-- SESSION PACING -->
 <div class="panel" id="panel-pacing"><div class="wrap">
-  <p class="lore">A session that feels right has a rhythm — pressure, release, discovery, consequence. The Concordance doesn't control pace through encounters alone; they control it through information management, faction activity, and when to let the party breathe.</p>
+  <p class="lore">A session that feels right has a rhythm — pressure, release, discovery, consequence. The Game Master doesn't control pace through encounters alone; they control it through information management, faction activity, and when to let the party breathe.</p>
 
   <div class="sec">The Three-Beat Session</div>
   <div class="tool open" onclick="this.classList.toggle('open')">
@@ -193,7 +193,7 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
       Most sessions work well with three distinct beats:<br><br>
       <strong>Beat 1 — The Complication:</strong> Something the party thought they understood is revealed to be more complex, or a new pressure arrives from an unexpected direction. This doesn't need to be an encounter — it can be a conversation that reveals new information, a faction move that changes the landscape, or a Fate Number reading that changes the party's understanding of their situation.<br><br>
       <strong>Beat 2 — The Engagement:</strong> The party acts on their current understanding. This is where the session's primary conflict (combat, social, exploration) occurs. The engagement should have a clear stakes established before it begins — what happens if this goes well? what happens if it doesn't?<br><br>
-      <strong>Beat 3 — The Consequence:</strong> The engagement produces a result. Something has changed. The Concordance reveals one new piece of the larger picture — a faction's response, a Fated Bond development, a world-level event that has occurred while the party was engaged. End here. Let the players carry the consequence into the next session.<br><br>
+      <strong>Beat 3 — The Consequence:</strong> The engagement produces a result. Something has changed. The Game Master reveals one new piece of the larger picture — a faction's response, a Fated Bond development, a world-level event that has occurred while the party was engaged. End here. Let the players carry the consequence into the next session.<br><br>
       <div class="note"><strong>The cliff-hanger is a Beat 3 tool.</strong> End the session at the moment of consequence revelation, not after the party has processed it. "You open the chest and find..." is a Beat 3 ending. "You open the chest, find an Eldren crown, and Aethar's agents emerge from the shadows" is two sessions compressed into one — split it.</div>
     </div>
   </div>
@@ -218,8 +218,8 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
     <div class="th"><div class="tn">The World Moves Without the Party</div><span class="ttag">Campaign Management</span></div>
     <div class="tb">
       The world of Sideros has ongoing faction activity that doesn't pause for the party's schedule. Between each session, consider which factions have had time to act:<br><br>
-      <strong>Ashen Coil:</strong> Aethar's four-stage plan is progressing. If the party isn't actively disrupting a specific stage, assume progress on that stage continues. The Concordance should track which stages have been disrupted vs. which are advancing, and escalate the active stages' visible consequences appropriately.<br><br>
-      <strong>The Loom of Fate:</strong> Serath has identified three of the Quint Bond cluster members. He has been sitting on this information for six weeks. Each session that passes, the Concordance should consider whether something has prompted him to act or share — or whether his silence is itself a signal the party might eventually detect.<br><br>
+      <strong>Ashen Coil:</strong> Aethar's four-stage plan is progressing. If the party isn't actively disrupting a specific stage, assume progress on that stage continues. The Game Master should track which stages have been disrupted vs. which are advancing, and escalate the active stages' visible consequences appropriately.<br><br>
+      <strong>The Loom of Fate:</strong> Serath has identified three of the Quint Bond cluster members. He has been sitting on this information for six weeks. Each session that passes, the Game Master should consider whether something has prompted him to act or share — or whether his silence is itself a signal the party might eventually detect.<br><br>
       <strong>The Order of Pure Reason:</strong> The Spica Monoliths operation is in planning. The Fallen Star study is ongoing. Every session without party intervention is a session closer to deployment.<br><br>
       <strong>Lord Leo:</strong> The Solar Chivalry recruitment crisis and Simha Temple political claim are both active. Without intervention, the empire continues its decay arc. With intervention, new complications arise.<br><br>
       <div class="note"><strong>Simple tracking:</strong> At the end of each session, write one sentence about what each active faction did while the party was occupied elsewhere. This creates the lived-in world texture that makes Sideros feel real rather than staged.</div>
@@ -240,7 +240,7 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
     <div class="sb-text">
       <strong>The secret:</strong> The crown is not a human artifact. It is an Eldren Empire relic — a piece of the civilization that preceded the Leonine kings by centuries. The Eldren who crafted it designed it to recognise genuine cosmic authority via Fate Number resonance, not blood lineage. This means it could theoretically recognise someone outside the Solar or Lunar lines entirely — including a Quint Bond cluster member.<br><br>
       <strong>Current status:</strong> Multiple rival factions descending simultaneously — the Order of Pure Reason (wants to identify the Lunar Queen before anyone else), a Leonine noble house (wants it for legitimacy), and an Eldren Siddha faction (knows what it actually is and wants it returned to Eldren custody). They are not coordinating. The Tomb's defenses predate all of them.<br><br>
-      <strong>Key question for the Concordance:</strong> Who reaches the crown first — and what happens when they put it on?
+      <strong>Key question for the Game Master:</strong> Who reaches the crown first — and what happens when they put it on?
     </div>
   </div>
 
@@ -283,7 +283,7 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
       <strong>What it is:</strong> The final resting place of a legendary Dunmarim king. The crown is believed to confer absolute legal authority over all disputed Dunmarim succession claims — making it enormously politically valuable to a Dunmarim establishment currently managing three competing dynastic lines.<br><br>
       <strong>The curse:</strong> The crown corrupts the holder's judgment in ways that manifest slowly and can be rationalized as wisdom. The holder becomes increasingly certain of their rightness, increasingly intolerant of opposition, and increasingly willing to use the crown's authority to remove anything that contradicts their judgment. The Karmic Mountain Monastery has documented three previous holders across history. None ended well. The Monastery guards the Tomb entrance precisely to prevent a fourth attempt.<br><br>
       <strong>Current status:</strong> The Dunmarim political establishment is applying pressure on Lady Capricorn to authorize an expedition. Lady Capricorn is stalling using treaty clauses. The Monastery is holding the entrance with both physical presence and a standing Attunement Warding Resonance field (DC 18) that makes it impossible to enter the Tomb without their awareness.<br><br>
-      <strong>Concordance note:</strong> The crown is genuinely cursed — if a player character claims it, implement the corruption slowly. The character becomes more decisive, more certain, more Alpha — which feels like growth for a Pulse or two before it becomes something else entirely. The Monastery can remove the curse if the character chooses to give up the crown.
+      <strong>Game Master note:</strong> The crown is genuinely cursed — if a player character claims it, implement the corruption slowly. The character becomes more decisive, more certain, more Alpha — which feels like growth for a Pulse or two before it becomes something else entirely. The Monastery can remove the curse if the character chooses to give up the crown.
     </div>
   </div>
 
@@ -308,7 +308,7 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
   <div class="tool open" onclick="this.classList.toggle('open')">
     <div class="th"><div class="tn">Search Action — Consolidated</div><span class="ttag">Exploration</span></div>
     <div class="tb">
-      Searching for traps and searching for secret doors or hidden objects are <strong>one action</strong> — the Search Act. A character who uses their Act to Search checks against the Concordance's hidden DC for all hidden elements in the area simultaneously. There is no separate "check for traps" and "check for secret passages" — both are covered by a single Search roll.<br><br>
+      Searching for traps and searching for secret doors or hidden objects are <strong>one action</strong> — the Search Act. A character who uses their Act to Search checks against the Game Master's hidden DC for all hidden elements in the area simultaneously. There is no separate "check for traps" and "check for secret passages" — both are covered by a single Search roll.<br><br>
       <strong>The DC:</strong> Set by how well-hidden the element is, not by its danger. A well-concealed trap (DC 18) is hard to find regardless of whether it kills you or merely inconveniences you. A poorly constructed secret door (DC 10) is easy to find regardless of what's behind it.<br><br>
       <strong>What Search covers:</strong> Traps, triggers, secret passages, hidden objects, concealed creatures within 30 ft, coded markings, recent disturbance of dust or debris. One roll, complete result.
     </div>
@@ -322,7 +322,7 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
       • Informational (a document, a map, a coded message, an Aetheric impression readable by certain Paths)<br>
       • Narrative (evidence of who was here and what they were doing, which advances a faction plot)<br>
       • Environmental (a safe rest point, a usable Working component, a Ceque node that hasn't been mapped)<br><br>
-      <strong>The principle:</strong> If the party went to the effort of searching a specific location, the Concordance owes them a return on that investment. An empty chest is a game design failure, not a narrative beat. If you hadn't planned anything for this location, improvise something small — a personal letter, a single Copper Coin with an unusual mark, a faint Aetheric residue — and let the party make it meaningful.
+      <strong>The principle:</strong> If the party went to the effort of searching a specific location, the Game Master owes them a return on that investment. An empty chest is a game design failure, not a narrative beat. If you hadn't planned anything for this location, improvise something small — a personal letter, a single Copper Coin with an unusual mark, a faint Aetheric residue — and let the party make it meaningful.
     </div>
   </div>
 
@@ -354,7 +354,7 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
 
 <!-- BONDS AT THE TABLE -->
 <div class="panel" id="panel-bonds"><div class="wrap">
-  <p class="lore">Fated Bonds are one of Sideros's most distinctive mechanical systems — and one of the most demanding to run at the table. These guidelines help the Concordance handle bond discovery, acknowledgment, and the complications that make bonds narratively interesting rather than just mechanical bonuses.</p>
+  <p class="lore">Fated Bonds are one of Sideros's most distinctive mechanical systems — and one of the most demanding to run at the table. These guidelines help the Game Master handle bond discovery, acknowledgment, and the complications that make bonds narratively interesting rather than just mechanical bonuses.</p>
 
   <div class="sec">Session Zero — Bond Setup</div>
   <div class="tool open" onclick="this.classList.toggle('open')">
@@ -362,7 +362,7 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
     <div class="tb">
       <ol class="step-list">
         <li><strong>All players roll 1d100 privately.</strong> Do not share numbers yet. Record them.</li>
-        <li><strong>Concordance collects all numbers</strong> and checks for: natural Paired Bonds (within 10), potential Triads (within 7), Void-Touched Numbers (13, 66, 99), and Quint Bond potential (within 3).</li>
+        <li><strong>Game Master collects all numbers</strong> and checks for: natural Paired Bonds (within 10), potential Triads (within 7), Void-Touched Numbers (13, 66, 99), and Quint Bond potential (within 3).</li>
         <li><strong>Void-Touched Numbers:</strong> Tell the player privately. Their character knows something is unusual about their cosmic frequency — they may have been told by a Stellar Cartographer at some point, or they may have noticed that Aetheric effects near them behave differently.</li>
         <li><strong>Natural Bonds:</strong> Reveal these to the relevant players privately — not to the full table. The characters don't know yet; the players do. This creates the specific tension of knowing what the recognition will feel like when it happens, and choosing when to name it at the table.</li>
         <li><strong>Quint Bond potential:</strong> If five numbers fall within 3 points — consider seriously whether to run this as the central campaign arc. It is extraordinarily rare and changes the scale of the narrative significantly.</li>
@@ -374,9 +374,9 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
   <div class="tool" onclick="this.classList.toggle('open')">
     <div class="th"><div class="tn">The Recognition Moment — How to Run It</div><span class="ttag">In Play</span></div>
     <div class="tb">
-      Bond recognition happens the first time two bonded characters are within 30 feet of each other. The Concordance describes the sensation to both players simultaneously — privately, as a note or whisper — and lets each player decide independently whether their character acknowledges it or pushes it away.<br><br>
+      Bond recognition happens the first time two bonded characters are within 30 feet of each other. The Game Master describes the sensation to both players simultaneously — privately, as a note or whisper — and lets each player decide independently whether their character acknowledges it or pushes it away.<br><br>
       <strong>The physical sensation description:</strong> "The world becomes slightly more real than it was a moment before. A warmth from the chest outward. The feeling of remembering someone you have never met." Adjust per Essence: Alpha feels suddenly seen; Beta feels like they finally understand what they were maintaining; Omega feels the pattern complete.<br><br>
-      <strong>The Concordance does not say "you have a Fated Bond."</strong> The Concordance describes the experience. What the characters call it — if anything — is their choice. The bond is real whether named or not. An unacknowledged bond produces the Denied Bond instability over time (see Fated Bond document).<br><br>
+      <strong>The Game Master does not say "you have a Fated Bond."</strong> The Game Master describes the experience. What the characters call it — if anything — is their choice. The bond is real whether named or not. An unacknowledged bond produces the Denied Bond instability over time (see Fated Bond document).<br><br>
       <strong>Timing:</strong> Don't rush the recognition scene. If it happens mid-combat, describe it as a flash during the chaos — something processed later. Give the players a quiet moment afterward to actually sit with what happened.
     </div>
   </div>
@@ -396,7 +396,7 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
   <div class="tool" onclick="this.classList.toggle('open')">
     <div class="th"><div class="tn">Running the Five Who Remember</div><span class="ttag">Campaign Scale</span></div>
     <div class="tb">
-      If the Quint Bond is in play, Serath has identified three of the five members. He has been withholding this from Aethar for six weeks. The Concordance's job is to let this information find its way to the party through play — not exposition, but discovery.<br><br>
+      If the Quint Bond is in play, Serath has identified three of the five members. He has been withholding this from Aethar for six weeks. The Game Master's job is to let this information find its way to the party through play — not exposition, but discovery.<br><br>
       <strong>Signals to plant:</strong> A Stellar Cartographer NPC who reads a party member's Number and reacts with uncharacteristic alarm. A Kallos-Sworn Field Agent who seems unusually interested in the party's composition. Serath himself appearing in a scene where he shouldn't be, observing and then withdrawing without engaging.<br><br>
       <strong>Aethar's Stage 5:</strong> Once the Coil becomes aware the Quint Bond is forming, they do not attack the party directly — direct attack risks triggering the bond formation (the five need only be in the same room once for the bond to establish). They attempt <em>separation</em> — manufactured crises that keep party members in different locations, missions that require the party to split, social pressure designed to cause individual members to withdraw from the group.<br><br>
       <strong>The formation scene:</strong> When all five are finally in the same room — run it. Describe the air pressure dropping. Candles extinguishing. The specific quality of recognition. Every Stellar Cartographer within 300 miles feels something happen. The Loom of Fate's sensors trigger an alert. Aethar's Stage 5 has failed. Now the campaign's final arc begins.

@@ -57,11 +57,11 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
 <div class="hero">
   <div class="hero-eyebrow">Sideros / Astrolan — Aetheric Working Reference</div>
   <h1 class="hero-title">Working Lists</h1>
-  <p class="hero-sub">Which Workings are available to which Paths — the Comet-Mage Formulation Ledger, Zodiac Priest domain Workings, Star-Born innate list, and the full Path access table.</p>
+  <p class="hero-sub">Which Workings are available to which Paths — the Comet-Magus Formulation Ledger, Zodiac Priest domain Workings, Star-Born innate list, and the full Path access table.</p>
 </div>
 <div class="nav-strip">
   <button class="nav-btn active" onclick="show('access',this)">Path Access</button>
-  <button class="nav-btn" onclick="show('comet',this)">Comet-Mage Ledger</button>
+  <button class="nav-btn" onclick="show('comet',this)">Comet-Magus Ledger</button>
   <button class="nav-btn" onclick="show('priest',this)">Zodiac Priest Domains</button>
   <button class="nav-btn" onclick="show('starborn',this)">Star-Born Innate</button>
   <button class="nav-btn" onclick="show('universal',this)">Universal Workings</button>
@@ -69,33 +69,33 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
 
 <!-- PATH ACCESS TABLE -->
 <div class="panel active" id="panel-access"><div class="wrap">
-  <p class="lore">Not every Weave-capable Path draws from the same Working pool. The Comet-Mage learns from a structured Formulation Ledger; the Zodiac Priest accesses domain Workings tied to their sign; the Star-Born carries an innate list they cannot freely expand. This table shows which Working pools each Path draws from and how many Channels they have at each Depth.</p>
+  <p class="lore">Not every Weave-capable Path draws from the same Working pool. The Comet-Magus learns from a structured Formulation Ledger; the Zodiac Priest accesses domain Workings tied to their sign; the Star-Born carries an innate list they cannot freely expand. This table shows which Working pools each Path draws from and how many Threads they have at each Depth.</p>
 
-  <div class="note"><strong>The Channel Tier System:</strong> Workings are organized in tiers 1–9. A character's Channels are likewise tiered — a 1st-tier Channel powers 1st-tier Workings, a 3rd-tier Channel powers any Working up to 3rd tier, etc. You can always spend a higher-tier Channel on a lower-tier Working. Some Workings scale — they become more powerful when powered by a higher-tier Channel (indicated in the Working's description).</div>
+  <div class="note"><strong>The Thread Tier System:</strong> Workings are organized in tiers 1–9. A character's Threads are likewise tiered — a 1st-tier Thread powers 1st-tier Workings, a 3rd-tier Thread powers any Working up to 3rd tier, etc. You can always spend a higher-tier Thread on a lower-tier Working. Some Workings scale — they become more powerful when powered by a higher-tier Thread (indicated in the Working's description).</div>
 
-  <div class="sec">Weave-Capable Paths — Channel Progression</div>
+  <div class="sec">Weave-Capable Paths — Thread Progression</div>
   <table class="access-table">
-    <tr><th>Path</th><th>Working Pool</th><th>Workings Known / Prepared</th><th>Channel Progression</th></tr>
-    <tr><td>Comet-Mage</td><td>Formulation Ledger (full)</td><td>Prepared: Acuity modifier + Resonance Depth per Deep Attunement</td><td>Standard full caster (see below)</td></tr>
+    <tr><th>Path</th><th>Working Pool</th><th>Workings Known / Prepared</th><th>Thread Progression</th></tr>
+    <tr><td>Comet-Magus</td><td>Formulation Ledger (full)</td><td>Prepared: Acuity modifier + Resonance Depth per Deep Attunement</td><td>Standard full caster (see below)</td></tr>
     <tr><td>Zodiac Priest</td><td>Domain list (sign) + Universal list</td><td>Domain Workings always prepared; Universal: Attunement modifier + Resonance Depth</td><td>Standard full caster</td></tr>
-    <tr><td>Star-Born</td><td>Innate list only (fixed)</td><td>Fixed — cannot swap; Workings Known increases by 1 per Depth</td><td>Cha-based; Channels = 2/day per tier (limited but recover on Brief Attunement for 1st–5th tier)</td></tr>
-    <tr><td>Scion-Pledged</td><td>Patron list (varies by Patron)</td><td>Fixed list; refreshes on Deep Attunement (or Brief Attunement for Patron features)</td><td>Half-caster Channels + Patron Invocations (unlimited uses)</td></tr>
+    <tr><td>Star-Born</td><td>Innate list only (fixed)</td><td>Fixed — cannot swap; Workings Known increases by 1 per Depth</td><td>Cha-based; Threads = 2/day per tier (limited but recover on Brief Attunement for 1st–5th tier)</td></tr>
+    <tr><td>Scion-Pledged</td><td>Patron list (varies by Patron)</td><td>Fixed list; refreshes on Deep Attunement (or Brief Attunement for Patron features)</td><td>Half-caster Threads + Patron Invocations (unlimited uses)</td></tr>
     <tr><td>Oathed Vanguard</td><td>Oath list (fixed per Calling) + Universal list</td><td>Oath Workings always prepared; Universal slots limited</td><td>Half-caster progression</td></tr>
-    <tr><td>Resonance Seeker</td><td>All lists (limited)</td><td>Workings Known by Depth; cannot freely swap</td><td>Full caster; unique: regain 1d3 Channels on Brief Attunement (Resonant Recovery)</td></tr>
-    <tr><td>Primal Accord</td><td>Accord Working list (nature-themed)</td><td>Prepared: Attunement modifier + Resonance Depth per Deep Attunement</td><td>Full caster; Channels recover on Deep Attunement only</td></tr>
-    <tr><td>Ashé-Medium</td><td>Ashé Vessel (not Channels)</td><td>Invocations by Depth; Vessel fills by roleplay, not time</td><td>No standard Channels — uses Ashé Vessel gauge</td></tr>
+    <tr><td>Resonance Seeker</td><td>All lists (limited)</td><td>Workings Known by Depth; cannot freely swap</td><td>Full caster; unique: regain 1d3 Threads on Brief Attunement (Resonant Recovery)</td></tr>
+    <tr><td>Primal Accord</td><td>Accord Working list (nature-themed)</td><td>Prepared: Attunement modifier + Resonance Depth per Deep Attunement</td><td>Full caster; Threads recover on Deep Attunement only</td></tr>
+    <tr><td>Ashé-Medium</td><td>Ashé Vessel (not Threads)</td><td>Invocations by Depth; Vessel fills by roleplay, not time</td><td>No standard Threads — uses Ashé Vessel gauge</td></tr>
     <tr><td>Stellar Cartographer</td><td>Limited list (fate/probability themed)</td><td>Workings Known; Fate-Knots supplement</td><td>Half-caster; Fate-Knots are a separate resource</td></tr>
-    <tr><td>Rāśi-Siddha</td><td>Tapas abilities (not Channels)</td><td>Abilities by Depth; Tapas pool is the resource</td><td>No standard Channels — uses Tapas Point pool</td></tr>
-    <tr><td>Void-Hunter</td><td>Limited list (beast/void themed)</td><td>Workings Known per Depth</td><td>Half-caster; Channel recovery on Brief Attunement possible (Primal Sense feature)</td></tr>
-    <tr><td>Fate-Breaker</td><td>Limited list (rogue-flavored)</td><td>Very limited Workings Known</td><td>Quarter-caster (2–4 Channels, never above 3rd tier)</td></tr>
+    <tr><td>Rāśi-Siddha</td><td>Tapas abilities (not Threads)</td><td>Abilities by Depth; Tapas pool is the resource</td><td>No standard Threads — uses Tapas Point pool</td></tr>
+    <tr><td>Void-Hunter</td><td>Limited list (beast/void themed)</td><td>Workings Known per Depth</td><td>Half-caster; Thread recovery on Brief Attunement possible (Primal Sense feature)</td></tr>
+    <tr><td>Fate-Breaker</td><td>Limited list (rogue-flavored)</td><td>Very limited Workings Known</td><td>Quarter-caster (2–4 Threads, never above 3rd tier)</td></tr>
     <tr><td>Solar Guard</td><td>No Workings</td><td>—</td><td>Not Weave-capable (Psi-Warrior Calling uses Psychic Dice instead)</td></tr>
     <tr><td>Primal Jarl</td><td>No Workings (Beast-Soul Calling: limited)</td><td>Beast-Soul only: 3 nature Workings Known</td><td>Not Weave-capable except Beast-Soul Calling</td></tr>
-    <tr><td>Accord-Maker</td><td>Infusions + Blueprints (not Channels)</td><td>Infusions Known and Blueprint tiers by Depth</td><td>No standard Channels — Infusions are pre-negotiated</td></tr>
-    <tr><td>Geode-Pilot</td><td>Limited list (resonance/force themed)</td><td>Workings Known per Depth</td><td>Half-caster; Frame Resonance mode reduces Channel cost by 1 tier</td></tr>
-    <tr><td>Coil-Stalker</td><td>Limited list (void/necrotic themed)</td><td>Workings Known; Lead-Scale Gauge affects cost</td><td>Half-caster; some abilities require minimum gauge rather than Channels</td></tr>
+    <tr><td>Accord-Maker</td><td>Infusions + Blueprints (not Threads)</td><td>Infusions Known and Blueprint tiers by Depth</td><td>No standard Threads — Infusions are pre-negotiated</td></tr>
+    <tr><td>Geode-Pilot</td><td>Limited list (resonance/force themed)</td><td>Workings Known per Depth</td><td>Half-caster; Frame Resonance mode reduces Thread cost by 1 tier</td></tr>
+    <tr><td>Coil-Stalker</td><td>Limited list (void/necrotic themed)</td><td>Workings Known; Lead-Scale Gauge affects cost</td><td>Half-caster; some abilities require minimum gauge rather than Threads</td></tr>
   </table>
 
-  <div class="sec">Standard Channel Progression (Full Caster)</div>
+  <div class="sec">Standard Thread Progression (Full Caster)</div>
   <table class="access-table">
     <tr><th>Depth</th><th>1st</th><th>2nd</th><th>3rd</th><th>4th</th><th>5th</th><th>6th</th><th>7th</th><th>8th</th><th>9th</th></tr>
     <tr><td>1</td><td>2</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
@@ -117,19 +117,19 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
 
 <!-- COMET-MAGE FORMULATION LEDGER -->
 <div class="panel" id="panel-comet"><div class="wrap">
-  <p class="lore">The Comet-Mage's Formulation Ledger is the most complete Working list in the world — the systematic product of centuries of Kallos-Sworn and Argent Spire research. Comet-Magi prepare Workings daily from their Ledger by selecting which Formulations to hold active. They can learn new Formulations by copying them from other Ledgers, scrolls, or Aetheric inscriptions found in the world.</p>
+  <p class="lore">The Comet-Magus's Formulation Ledger is the most complete Working list in the world — the systematic product of centuries of Kallos-Sworn and Argent Spire research. Comet-Magi prepare Workings daily from their Ledger by selecting which Formulations to hold active. They can learn new Formulations by copying them from other Ledgers, scrolls, or Aetheric inscriptions found in the world.</p>
   <p class="lore"><strong>Weaving Attribute:</strong> Acuity. <strong>Working Threshold:</strong> 8 + Mastery Bonus + Acuity modifier.</p>
 
   <div class="sec">Tier 1 Formulations</div>
   <div class="working-grid">
-    <div class="working open" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Aetheric Missile</div><span class="wt">T1 · Aether · Instant</span></div><div class="wb">Three bolts of Aetheric force, each dealing 1d4+1 force damage, hitting automatically. Each additional Channel tier adds one bolt. <strong>Cannot miss.</strong> Does not require a Strike Resonance.</div></div>
+    <div class="working open" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Aetheric Missile</div><span class="wt">T1 · Aether · Instant</span></div><div class="wb">Three bolts of Aetheric force, each dealing 1d4+1 force damage, hitting automatically. Each additional Thread tier adds one bolt. <strong>Cannot miss.</strong> Does not require a Strike Resonance.</div></div>
     <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Detect Aetheric</div><span class="wt">T1 · Divination · S.R.</span></div><div class="wb">For up to 10 minutes (Sustained Resonance), sense the presence and location of Aetheric effects within 30 ft. Know the school but not the specific Working. Blocked by 1 ft of lead or a thin sheet of Aether-Dampening Ore.</div></div>
     <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Shroud Passage</div><span class="wt">T1 · Illusion · S.R.</span></div><div class="wb">Sustained Resonance, up to 1 hour. The target creature becomes invisible until they attack, Weave a Working, or the Working ends. Anything the target is wearing or carrying is also invisible.</div></div>
     <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Thread-Shield</div><span class="wt">T1 · Abjuration · Reflex</span></div><div class="wb">Reflex: when hit by a Strike Resonance or Aetheric Missile, gain +5 Guard Rating for that hit and immunity to Aetheric Missile specifically. Lasts until your next Moment.</div></div>
     <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Charm Weave</div><span class="wt">T1 · Compulsion · 1 hour</span></div><div class="wb">One humanoid within 30 ft makes a Resonance Warding Resonance or becomes Soul-Swayed by you for 1 hour. Ends if you or allies harm the target.</div></div>
-    <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Burning Hands</div><span class="wt">T1 · Evocation · Instant</span></div><div class="wb">15-ft cone. Each creature makes Swiftness Warding Resonance DC = Working Threshold or takes 3d6 fire (half on success). Each additional Channel tier: +1d6.</div></div>
+    <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Burning Hands</div><span class="wt">T1 · Evocation · Instant</span></div><div class="wb">15-ft cone. Each creature makes Swiftness Warding Resonance DC = Working Threshold or takes 3d6 fire (half on success). Each additional Thread tier: +1d6.</div></div>
     <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Illusory Figure</div><span class="wt">T1 · Illusion · S.R. up to 10 min</span></div><div class="wb">Create a visual illusion of an object, creature, or phenomenon within 30 ft. No larger than a 10-ft cube. Static — cannot produce sound, smell, or movement. Acuity Active Resonance DC = Working Threshold to disbelieve on inspection.</div></div>
-    <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Sleep Weave</div><span class="wt">T1 · Enchantment · Instant</span></div><div class="wb">Roll 5d8. Creatures within 20 ft are affected in ascending order of Vitality until the total is consumed — each falls unconscious (Loom-Suspended) for 1 minute. Undead and immune creatures are skipped. Each additional Channel tier: +2d8.</div></div>
+    <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Sleep Weave</div><span class="wt">T1 · Enchantment · Instant</span></div><div class="wb">Roll 5d8. Creatures within 20 ft are affected in ascending order of Vitality until the total is consumed — each falls unconscious (Loom-Suspended) for 1 minute. Undead and immune creatures are skipped. Each additional Thread tier: +2d8.</div></div>
     <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Mage Armour</div><span class="wt">T1 · Abjuration · 8 hours</span></div><div class="wb">Touch a willing creature not wearing armor: Guard Rating becomes 13 + Swiftness modifier for the duration. Dismissed if they don armor.</div></div>
     <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Identify</div><span class="wt">T1 · Divination · 1 minute ritual</span></div><div class="wb">Touch an Aetheric Artifact or Working-imbued object: learn its properties, how to use it, and whether it is cursed. Also: touch a creature to learn all Workings currently affecting them.</div></div>
   </div>
@@ -138,21 +138,21 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
   <div class="working-grid">
     <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Web</div><span class="wt">T2 · Conjuration · S.R. up to 1 hour</span></div><div class="wb">Fill a 20-ft cube with thick Aetheric webbing. The area is difficult terrain. Each creature starting their Moment in the area makes Swiftness Warding Resonance DC = Working Threshold or is Seized. Can be burned away (5 fire damage clears a 5-ft cube).</div></div>
     <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Aetheric Locks</div><span class="wt">T2 · Abjuration · Until dispelled</span></div><div class="wb">Touch a door, window, or portal: it becomes Aetherically sealed. Forcing it open requires Forcefulness Active Resonance DC = Working Threshold + 10. You and designated creatures pass freely. Knock Working suppresses it for 10 minutes.</div></div>
-    <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Shatter</div><span class="wt">T2 · Evocation · Instant</span></div><div class="wb">Painful ringing sound erupts from a point within 60 ft. Each creature in a 10-ft sphere makes Endurance Warding Resonance DC = Working Threshold or takes 3d8 thunder (half on success). Nonmagical objects automatically take damage and may shatter. Each additional Channel tier: +1d8.</div></div>
+    <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Shatter</div><span class="wt">T2 · Evocation · Instant</span></div><div class="wb">Painful ringing sound erupts from a point within 60 ft. Each creature in a 10-ft sphere makes Endurance Warding Resonance DC = Working Threshold or takes 3d8 thunder (half on success). Nonmagical objects automatically take damage and may shatter. Each additional Thread tier: +1d8.</div></div>
     <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Invisibility</div><span class="wt">T2 · Illusion · S.R. up to 1 hour</span></div><div class="wb">A creature becomes invisible for the duration. Ends when they attack or Weave. At 3rd tier: Greater Invisibility — does not end when attacking.</div></div>
     <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Misty Step</div><span class="wt">T2 · Conjuration · Instinct</span></div><div class="wb">Wreathed in silver mist, teleport up to 30 ft to an unoccupied space you can see. Does not provoke Reflex Strikes.</div></div>
-    <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Hold Person</div><span class="wt">T2 · Enchantment · S.R. up to 1 min</span></div><div class="wb">One humanoid within 60 ft makes Resonance Warding Resonance DC = Working Threshold or becomes Loom-Suspended. May repeat the Warding Resonance at the end of each of their Moments. Each additional Channel tier: +1 additional target.</div></div>
-    <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Scorching Ray</div><span class="wt">T2 · Evocation · Instant</span></div><div class="wb">Create three rays of fire. Strike Resonance for each (Acuity-based). Hit: 2d6 fire. Each additional Channel tier: +1 ray.</div></div>
+    <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Hold Person</div><span class="wt">T2 · Enchantment · S.R. up to 1 min</span></div><div class="wb">One humanoid within 60 ft makes Resonance Warding Resonance DC = Working Threshold or becomes Loom-Suspended. May repeat the Warding Resonance at the end of each of their Moments. Each additional Thread tier: +1 additional target.</div></div>
+    <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Scorching Ray</div><span class="wt">T2 · Evocation · Instant</span></div><div class="wb">Create three rays of fire. Strike Resonance for each (Acuity-based). Hit: 2d6 fire. Each additional Thread tier: +1 ray.</div></div>
     <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">See Invisibility</div><span class="wt">T2 · Divination · 1 hour</span></div><div class="wb">You can see invisible creatures and objects as if they were visible, and see into the Ethereal Plane up to 60 ft.</div></div>
   </div>
 
   <div class="sec">Tier 3 Formulations</div>
   <div class="working-grid">
-    <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Fireball</div><span class="wt">T3 · Evocation · Instant</span></div><div class="wb">A bright streak from your fingertip explodes at a point within 150 ft into a 20-ft radius sphere of fire. Each creature makes Swiftness Warding Resonance DC = Working Threshold or takes 8d6 fire (half on success). Each additional Channel tier: +1d6.</div></div>
+    <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Fireball</div><span class="wt">T3 · Evocation · Instant</span></div><div class="wb">A bright streak from your fingertip explodes at a point within 150 ft into a 20-ft radius sphere of fire. Each creature makes Swiftness Warding Resonance DC = Working Threshold or takes 8d6 fire (half on success). Each additional Thread tier: +1d6.</div></div>
     <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Counterspell</div><span class="wt">T3 · Abjuration · Reflex</span></div><div class="wb">Reflex: when a creature within 60 ft Weaves a Working, attempt to disrupt it. If the Working is T3 or lower, it automatically fails. If higher, make Acuity Active Resonance DC = 10 + Working's tier. On success, it fails.</div></div>
     <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Fly</div><span class="wt">T3 · Transmutation · S.R. up to 10 min</span></div><div class="wb">Touch a willing creature: they gain fly speed of 60 ft for the duration. If the Working ends while aloft, they fall.</div></div>
     <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Haste</div><span class="wt">T3 · Transmutation · S.R. up to 1 min</span></div><div class="wb">One willing creature within 30 ft: doubled speed; +2 Guard Rating; Resonant Fortune on Swiftness Warding Resonances; gains one additional Act per Moment (only for Strike, Dash, Disengage, or Use Object). When Haste ends, they cannot move or act until after their next Moment (lethargy).</div></div>
-    <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Lightning Bolt</div><span class="wt">T3 · Evocation · Instant</span></div><div class="wb">100-ft line, 5 ft wide. Each creature makes Swiftness Warding Resonance DC = Working Threshold or takes 8d6 lightning (half on success). Each additional Channel tier: +1d6.</div></div>
+    <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Lightning Bolt</div><span class="wt">T3 · Evocation · Instant</span></div><div class="wb">100-ft line, 5 ft wide. Each creature makes Swiftness Warding Resonance DC = Working Threshold or takes 8d6 lightning (half on success). Each additional Thread tier: +1d6.</div></div>
     <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Dispel Aetheric</div><span class="wt">T3 · Abjuration · Instant</span></div><div class="wb">Choose one creature, object, or Aetheric effect within 120 ft. Any Working T3 or lower on the target automatically ends. For higher-tier Workings, make Acuity Active Resonance DC = 10 + the Working's tier. At 4th tier: automatically dispel any Working T4 or lower; no roll required.</div></div>
   </div>
 
@@ -166,12 +166,12 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
     <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Wall of Force</div><span class="wt">T5 · Evocation · S.R. up to 10 min</span></div><div class="wb">An invisible wall of Aetheric force springs into existence within 120 ft. Up to ten panels (each 10 ft × 10 ft), arranged into any shape. Immune to all damage. Dispel Aetheric (T5) can destroy it. Prevents passage of all matter and energy.</div></div>
   </div>
 
-  <div class="note"><strong>Higher Tier Formulations (6th–9th):</strong> Workings of the 6th tier and above are covered in the Argent Spire restricted records — the Concordance provides access to these when narratively appropriate. Notable high-tier Formulations include: True Sight (T6), Delayed Blast Fireball (T7), Power Word Stun (T8), Wish (T9 — theoretical only; no confirmed casting since Kallos era). The Zodiac Priest's Epic Tier extends to 10th–12th tier Workings; these are described in the Zodiac Priest Callings document.</div>
+  <div class="note"><strong>Higher Tier Formulations (6th–9th):</strong> Workings of the 6th tier and above are covered in the Argent Spire restricted records — the Game Master provides access to these when narratively appropriate. Notable high-tier Formulations include: True Sight (T6), Delayed Blast Fireball (T7), Power Word Stun (T8), Wish (T9 — theoretical only; no confirmed casting since Kallos era). The Zodiac Priest's Epic Tier extends to 10th–12th tier Workings; these are described in the Zodiac Priest Callings document.</div>
 </div></div>
 
 <!-- ZODIAC PRIEST DOMAINS -->
 <div class="panel" id="panel-priest"><div class="wrap">
-  <p class="lore">The Zodiac Priest's power is domain-driven — they access a specific cluster of Workings tied to their zodiac sign's cosmic domain, always prepared regardless of daily Channel allocation. These domain Workings are in addition to their Universal Working list. A Zodiac Priest of Simha (Leo) always has the Leo domain Workings prepared; they do not need to spend preparation slots on them.</p>
+  <p class="lore">The Zodiac Priest's power is domain-driven — they access a specific cluster of Workings tied to their zodiac sign's cosmic domain, always prepared regardless of daily Thread allocation. These domain Workings are in addition to their Universal Working list. A Zodiac Priest of Simha (Leo) always has the Leo domain Workings prepared; they do not need to spend preparation slots on them.</p>
   <p class="lore"><strong>Weaving Attribute:</strong> Attunement. <strong>Working Threshold:</strong> 8 + Mastery Bonus + Attunement modifier.</p>
 
   <div class="domain-block open" onclick="this.classList.toggle('open')">
@@ -181,7 +181,7 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
       <strong>T2:</strong> Scorching Ray, Warding Bond<br>
       <strong>T3:</strong> Fireball, Motivating Roar (all allies within 30 ft gain +1d4 to Strike Resonances for 1 minute)<br>
       <strong>T5:</strong> Flame Strike, Hold Monster<br>
-      <strong>Domain Feature — First to Act:</strong> You always roll Pulse Order with Resonant Fortune. On any Pulse in which you act before all enemies, you may Weave a T1 domain Working without expending a Channel.
+      <strong>Domain Feature — First to Act:</strong> You always roll Pulse Order with Resonant Fortune. On any Pulse in which you act before all enemies, you may Weave a T1 domain Working without expending a Thread.
     </div></div>
   </div>
 
@@ -236,7 +236,7 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
       <strong>T2:</strong> Lesser Restoration, Protection from Poison<br>
       <strong>T3:</strong> Revivify, Remove Curse<br>
       <strong>T5:</strong> Greater Restoration, Mass Cure Wounds<br>
-      <strong>Domain Feature — Flawless Service:</strong> When you restore Vitality to a creature, you may also remove one condition (Corrupted, Dazed, or Dread-Struck) at no additional Channel cost. You can spend 3 Tapas Points (if Rāśi-Siddha/Kanya hybrid) or expend a 3rd-tier Channel to cure Ashen Coil blight-rot — the only tradition with this capability.
+      <strong>Domain Feature — Flawless Service:</strong> When you restore Vitality to a creature, you may also remove one condition (Corrupted, Dazed, or Dread-Struck) at no additional Thread cost. You can spend 3 Tapas Points (if Rāśi-Siddha/Kanya hybrid) or expend a 3rd-tier Thread to cure Ashen Coil blight-rot — the only tradition with this capability.
     </div></div>
   </div>
 
@@ -258,7 +258,7 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
       <strong>T2:</strong> Blindness/Deafness, Silence<br>
       <strong>T3:</strong> Speak with Dead, Feign Death<br>
       <strong>T5:</strong> Antilife Shell, Raise Dead<br>
-      <strong>Domain Feature — Truth of the Deep:</strong> You always know when a creature within 30 ft is lying (not mistaken — deliberately deceiving). You cannot be subject to Compulsion Workings or the Soul-Swayed condition while at least one of your domain Channels remains unexpended.
+      <strong>Domain Feature — Truth of the Deep:</strong> You always know when a creature within 30 ft is lying (not mistaken — deliberately deceiving). You cannot be subject to Compulsion Workings or the Soul-Swayed condition while at least one of your domain Threads remains unexpended.
     </div></div>
   </div>
 
@@ -269,7 +269,7 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
       <strong>T2:</strong> Augury, Find Traps<br>
       <strong>T3:</strong> Clairvoyance, Sending<br>
       <strong>T5:</strong> Legend Lore, Scrying<br>
-      <strong>Domain Feature — Horizon Sight:</strong> Once per Deep Attunement, ask the Concordance one question about a location, creature, or event you know of — they answer with a short, honest, and specific true statement (not a riddle). Additionally: your ranged Working attacks ignore all cover.
+      <strong>Domain Feature — Horizon Sight:</strong> Once per Deep Attunement, ask the Game Master one question about a location, creature, or event you know of — they answer with a short, honest, and specific true statement (not a riddle). Additionally: your ranged Working attacks ignore all cover.
     </div></div>
   </div>
 
@@ -309,26 +309,26 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
 
 <!-- STAR-BORN INNATE LIST -->
 <div class="panel" id="panel-starborn"><div class="wrap">
-  <p class="lore">The Star-Born's Working list is not learned — it is inherited. These Workings are expressions of Celestial ancestry rather than trained formulations. The Star-Born cannot freely swap Workings between Depths (unlike the Comet-Mage); they receive specific Workings at specific Depths, and those Workings are permanent. They cannot copy new Workings from Ledgers.</p>
-  <p class="lore"><strong>Weaving Attribute:</strong> Resonance. <strong>Working Threshold:</strong> 8 + Mastery Bonus + Resonance modifier. <strong>Channel recovery:</strong> Regain 2 Channels per tier on Brief Attunement for tiers 1–5.</p>
+  <p class="lore">The Star-Born's Working list is not learned — it is inherited. These Workings are expressions of Celestial ancestry rather than trained formulations. The Star-Born cannot freely swap Workings between Depths (unlike the Comet-Magus); they receive specific Workings at specific Depths, and those Workings are permanent. They cannot copy new Workings from Ledgers.</p>
+  <p class="lore"><strong>Weaving Attribute:</strong> Resonance. <strong>Working Threshold:</strong> 8 + Mastery Bonus + Resonance modifier. <strong>Thread recovery:</strong> Regain 2 Threads per tier on Brief Attunement for tiers 1–5.</p>
 
   <div class="sec">Star-Born Innate Working Progression</div>
   <table class="access-table">
     <tr><th>Depth</th><th>Workings Gained</th><th>Notes</th></tr>
-    <tr><td>1</td><td>Light (Ambient), Dancing Lights (Ambient)</td><td>Ambient Workings — no Channel cost, unlimited use</td></tr>
-    <tr><td>1</td><td>Cure Wounds, Faerie Fire</td><td>1st-tier Channels; 2 Channels per tier per day</td></tr>
-    <tr><td>3</td><td>Calm Emotions, Moonbeam</td><td>2nd-tier Channels</td></tr>
-    <tr><td>5</td><td>Aura of Purity, Daylight</td><td>3rd-tier Channels</td></tr>
-    <tr><td>7</td><td>Greater Invisibility, Guardian of Faith</td><td>4th-tier Channels</td></tr>
-    <tr><td>9</td><td>Commune, Mass Cure Wounds</td><td>5th-tier Channels</td></tr>
+    <tr><td>1</td><td>Light (Ambient), Dancing Lights (Ambient)</td><td>Ambient Workings — no Thread cost, unlimited use</td></tr>
+    <tr><td>1</td><td>Cure Wounds, Faerie Fire</td><td>1st-tier Threads; 2 Threads per tier per day</td></tr>
+    <tr><td>3</td><td>Calm Emotions, Moonbeam</td><td>2nd-tier Threads</td></tr>
+    <tr><td>5</td><td>Aura of Purity, Daylight</td><td>3rd-tier Threads</td></tr>
+    <tr><td>7</td><td>Greater Invisibility, Guardian of Faith</td><td>4th-tier Threads</td></tr>
+    <tr><td>9</td><td>Commune, Mass Cure Wounds</td><td>5th-tier Threads</td></tr>
     <tr><td>11</td><td>Sunbeam</td><td>6th-tier</td></tr>
   </table>
 
   <div class="sec">Ceque-Attuned Star-Born (Clockwork Calling)</div>
-  <p class="lore">Star-Born who take the Ceque-Attuned (Clockwork Soul) Calling swap several Celestial Workings for Mechanical/Precursor-aspected alternatives at Depth 3 and above. The Concordance and player determine which Workings swap at character creation when the Calling is selected at Depth 3.</p>
+  <p class="lore">Star-Born who take the Ceque-Attuned (Clockwork Soul) Calling swap several Celestial Workings for Mechanical/Precursor-aspected alternatives at Depth 3 and above. The Game Master and player determine which Workings swap at character creation when the Calling is selected at Depth 3.</p>
   <table class="access-table">
     <tr><th>Depth</th><th>Replaces</th><th>With</th></tr>
-    <tr><td>3</td><td>Moonbeam</td><td>Aid (no Channel cost; applies to constructs)</td></tr>
+    <tr><td>3</td><td>Moonbeam</td><td>Aid (no Thread cost; applies to constructs)</td></tr>
     <tr><td>3</td><td>Calm Emotions</td><td>Alarm</td></tr>
     <tr><td>5</td><td>Aura of Purity</td><td>Tiny Servant (Accord-Maker blueprint lite — one crafted tiny helper)</td></tr>
     <tr><td>7</td><td>Guardian of Faith</td><td>Otiluke's Resilient Sphere (force bubble; resists all damage)</td></tr>
@@ -339,7 +339,7 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
 <div class="panel" id="panel-universal"><div class="wrap">
   <p class="lore">Universal Workings are accessible to any Weave-capable Path, across all traditions. They represent the foundational layer of Aetheric expression that predates any specific school or tradition — the basic grammar of Working that emerged in the Precursor civilization and was never fully lost.</p>
 
-  <div class="sec">Universal Ambient Workings (No Channel Cost)</div>
+  <div class="sec">Universal Ambient Workings (No Thread Cost)</div>
   <div class="working-grid">
     <div class="working open" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Light</div><span class="wt">Ambient · Touch</span></div><div class="wb">An object you touch sheds bright light in a 20-ft radius, dim light for another 20 ft, for 1 hour. The light's color is your choice. Extinguishing it ends the Working early.</div></div>
     <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Mending</div><span class="wt">Ambient · Touch · 1 minute</span></div><div class="wb">Repair a single break or tear in an object (up to 1 ft in any dimension). Returns the object to perfect condition but cannot restore Aetheric properties to damaged Artifacts.</div></div>
@@ -349,13 +349,13 @@ body{font-family:'EB Garamond',Georgia,serif;background:var(--void);color:var(--
 
   <div class="sec">Universal Tier 1 Workings</div>
   <div class="working-grid">
-    <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Cure Wounds</div><span class="wt">T1 · Touch · Instant</span></div><div class="wb">A creature you touch regains 1d8 + Weaving Attribute modifier Vitality. Each additional Channel tier: +1d8.</div></div>
+    <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Cure Wounds</div><span class="wt">T1 · Touch · Instant</span></div><div class="wb">A creature you touch regains 1d8 + Weaving Attribute modifier Vitality. Each additional Thread tier: +1d8.</div></div>
     <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Sanctuary</div><span class="wt">T1 · 30 ft · 1 min</span></div><div class="wb">Ward one creature. Any creature that targets the warded creature with a Strike Resonance or harmful Working must first make a Resonance Warding Resonance DC = Working Threshold; on fail, must choose a new target. Ends if the warded creature attacks or Weaves a harmful Working.</div></div>
-    <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Command</div><span class="wt">T1 · 60 ft · Instant</span></div><div class="wb">One creature that can hear you makes a Resonance Warding Resonance DC = Working Threshold or follows one-word command on their next Moment (Approach, Drop, Flee, Grovel, Halt). Cannot command self-destructive actions. Each additional Channel tier: +1 target.</div></div>
+    <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Command</div><span class="wt">T1 · 60 ft · Instant</span></div><div class="wb">One creature that can hear you makes a Resonance Warding Resonance DC = Working Threshold or follows one-word command on their next Moment (Approach, Drop, Flee, Grovel, Halt). Cannot command self-destructive actions. Each additional Thread tier: +1 target.</div></div>
     <div class="working" onclick="this.classList.toggle('open')"><div class="wh"><div class="wn">Detect Thoughts</div><span class="wt">T2 · 30 ft · S.R.</span></div><div class="wb">Probe a creature's surface thoughts (what they're actively thinking). Make an Attunement Active Resonance contested by their Resonance Active Resonance to probe deeper (memories, fears, secrets). Target becomes aware of the probing on a successful contest.</div></div>
   </div>
 
-  <div class="note"><strong>On Working Names:</strong> Sideros does not use D&D Working names in-world. The names here are labels for the Concordance's reference — in play, characters describe what they are doing in Sideros terms. A Comet-Mage doesn't cast Fireball; they Weave the Mesha Formulation of Combustive Release. A Zodiac Priest doesn't cast Cure Wounds; they Channel the Kanya Mantra of Restoration. The mechanical effects are identical; the fictional texture is different. The Concordance is encouraged to rename Workings per the tradition that Weaves them.</div>
+  <div class="note"><strong>On Working Names:</strong> Sideros does not use D&D Working names in-world. The names here are labels for the Game Master's reference — in play, characters describe what they are doing in Sideros terms. A Comet-Magus doesn't cast Fireball; they Weave the Mesha Formulation of Combustive Release. A Zodiac Priest doesn't cast Cure Wounds; they Thread the Kanya Mantra of Restoration. The mechanical effects are identical; the fictional texture is different. The Game Master is encouraged to rename Workings per the tradition that Weaves them.</div>
 </div></div>
 
 <script>
